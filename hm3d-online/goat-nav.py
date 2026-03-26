@@ -19,13 +19,12 @@ from data_utils import PQ3DModel
 import random
 
 # hyperparameter
-data_set_path = "/mnt/fillipo/zhuziyu/embodied_bench_data/our-set/goat_full_set.json"
-navigation_data_path = "/mnt/fillipo/zhuziyu/embodied_bench_data/goat/"
-hm3d_data_base_path = "/mnt/fillipo/ML/zhuofan/data/scene_datasets/hm3d/val"
-embodied_scan_dir = "/mnt/fillipo/zhuziyu/embodied_scan"
-pq3d_stage1_path = "/mnt/fillipo/zhuziyu/embodied_saved_data/saved_models/embodied-pq3d-final/stage1-pretrain-all"
-pq3d_stage2_path = "/mnt/fillipo/zhuziyu/embodied_saved_data/saved_models/embodied-pq3d-final-stage2/stage2-fine-tune-goat-image-rerun"
-output_path = "./output_dirs/goat-full-finetune-num-1.json"
+data_set_path = "/home/zhaochaoyang/datasets/mtu3d/embodied_bench/embodied_bench_data/our-set/goat_full_set.json"
+navigation_data_path = "/home/zhaochaoyang/datasets/mtu3d/embodied_bench/embodied_bench_data/goat"
+hm3d_data_base_path = "/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/datascene"
+pq3d_stage1_path = "/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/checkpoint/stage1-pretrain-all"
+pq3d_stage2_path = "/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/checkpoint/stage2-fine-tune-goat"
+output_path = "./output_dirs/goat-test.json"
 enable_visualization = False
 decision_num_min = 3
 visible_radius = 3
@@ -33,8 +32,8 @@ visible_radius = 3
 # load navigation data
 navigation_data_dict = {'val_seen': {}, 'val_seen_synonyms': {}, 'val_unseen': {}}
 split_list = ['val_seen', 'val_seen_synonyms', 'val_unseen'] 
-train_val_split = json.load(open(os.path.join(embodied_scan_dir, 'HM3D', 'hm3d_annotated_basis.scene_dataset_config.json')))
-raw_scan_ids = set([pa.split('/')[1] for pa in train_val_split['scene_instances']['paths']['.json']])
+# Build raw scan id set directly from HM3D directory, to avoid needing stage1 data.
+raw_scan_ids = set([d for d in os.listdir(hm3d_data_base_path) if os.path.isdir(os.path.join(hm3d_data_base_path, d))])
 for split in split_list:
     data_dir = os.path.join(navigation_data_path, split, 'content')
     file_list = [f for f in os.listdir(data_dir) if f[0] != '.']
@@ -51,7 +50,7 @@ for split in split_list:
             navigation_data_dict[split][raw_scan_id] = new_data
 
 # load image feature
-image_feat_dir = os.path.join('/mnt/fillipo/zhuziyu/embodied_scan_vle_data/', 'goat-clip-feat')
+image_feat_dir = os.path.join('/home/zhaochaoyang/datasets/mtu3d/embodied_vle/embodied_scan_vle_data/', 'goat-clip-feat')
 image_feat_dict = {'val_seen': {}, 'val_seen_synonyms': {}, 'val_unseen': {}}
 for split in split_list:
     file_list = os.listdir(os.path.join(image_feat_dir, split))
@@ -83,7 +82,22 @@ for split in split_list:
         # load cur episode
         scene_id = cur_data['scan_id']
         clean_scene_id = scene_id.split("-")[-1]
-        scene_path = os.path.join(hm3d_data_base_path, scene_id, f"{clean_scene_id}.basis.glb")
+        scene_dir = os.path.join(hm3d_data_base_path, scene_id)
+        scene_path_candidates = [
+            os.path.join(scene_dir, f"{clean_scene_id}.basis.glb"),
+            os.path.join(scene_dir, f"{clean_scene_id}.glb"),
+        ]
+        scene_path = None
+        for candidate in scene_path_candidates:
+            if os.path.exists(candidate):
+                scene_path = candidate
+                break
+        if scene_path is None:
+            print(
+                f"Skip episode because scene file does not exist. "
+                f"Checked: {scene_path_candidates}"
+            )
+            continue
         episode_index = cur_data['episode_index']
         cur_episode = navigation_data_dict[split][scene_id]['episodes'][episode_index]
 

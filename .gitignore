@@ -143,3 +143,31 @@ tmp
 *.png
 *.avi
 *.npy
+
+# --- MTU3D: weights, local data, runs ---
+checkpoint/
+datascene/
+output_dirs/
+
+# Dataset / scene archives (often placed in repo root by mistake)
+*.tar
+*.tar.gz
+*.tgz
+hm3d-*-glb*.tar
+hm3d-*.tar
+
+# Vendored clones (install per README; do not commit)
+MinkowskiEngine/
+habitat-lab/
+fvcore/
+CLIP/
+
+# FastSAM: upstream clone + large weights (FastSAM-x.pt)
+hm3d-online/FastSAM/
+
+
+# IDE / tooling
+.idea/
+
+# Accidental shell redirect artifact
+/ls

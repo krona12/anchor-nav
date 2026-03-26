@@ -17,12 +17,22 @@ class AnchorNavContext:
     goals: List[GoalAnchor] = field(default_factory=list)
 
 
-def on_episode_start(ctx: AnchorNavContext, all_task_descriptions: List[str], pq3d_model) -> None:
+def on_episode_start(
+    ctx: AnchorNavContext,
+    all_task_descriptions: List[str],
+    pq3d_model,
+    has_description_task: bool = False,
+) -> None:
     if ctx.registry is None:
         ctx.registry = AnchorRegistry(clip_text_model=pq3d_model.clip_text_model, clip_tokenizer=pq3d_model.tokenizer)
     ctx.registry.reset()
     if ctx.plugin_flags.get("use_gap", False):
-        ctx.goals = ctx.parser.parse_all(all_task_descriptions)
+        ctx.goals = ctx.parser.parse_all(all_task_descriptions, force_vlm=has_description_task)
+        total_anchors = sum(len(g.anchors) for g in ctx.goals)
+        print(
+            f"[AnchorNav] GAP done: goals={len(ctx.goals)}, anchors={total_anchors}, "
+            f"force_vlm={has_description_task}"
+        )
     else:
         ctx.goals = []
 

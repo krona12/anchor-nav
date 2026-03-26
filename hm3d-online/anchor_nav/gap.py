@@ -18,12 +18,13 @@ Return only a JSON array with exactly {n} items.
 
 
 class GoalAnchorParser:
-    def parse_all(self, descriptions: List[str]) -> List[GoalAnchor]:
+    def parse_all(self, descriptions: List[str], force_vlm: bool = False) -> List[GoalAnchor]:
         if not descriptions:
             return []
 
         # Simple object-only setting: skip VLM for stability.
-        if all(len(desc.split()) <= 2 for desc in descriptions):
+        if (not force_vlm) and all(len(desc.split()) <= 2 for desc in descriptions):
+            print("[AnchorNav/GAP] fast-path: object-like goals detected, skip VLM parsing")
             return [
                 GoalAnchor(target=desc.strip(), anchors=[], raw_desc=desc, sub_idx=idx)
                 for idx, desc in enumerate(descriptions)
@@ -31,16 +32,15 @@ class GoalAnchorParser:
 
         numbered = "\n".join(f"[{i + 1}] {desc}" for i, desc in enumerate(descriptions))
         prompt = PROMPT_TEMPLATE.format(n=len(descriptions), numbered=numbered)
-        parsed = None
-        try:
-            raw = call_vlm_text(prompt, model=VLM_MODEL_BEST)
-            if raw:
-                parsed = extract_json(raw)
-        except Exception as err:
-            print(f"[AnchorNav/GAP] parse failed, fallback to no-anchor mode: {err}")
-
+        print(f"[AnchorNav/GAP] calling VLM parser for {len(descriptions)} sub-goals")
+        raw = call_vlm_text(prompt, model=VLM_MODEL_BEST)
+        if not raw:
+            raise RuntimeError("[AnchorNav/GAP] VLM returned empty response")
+        parsed = extract_json(raw)
         if not isinstance(parsed, list) or len(parsed) != len(descriptions):
-            parsed = [{"target": desc.split()[0], "anchors": []} for desc in descriptions]
+            raise RuntimeError(
+                f"[AnchorNav/GAP] invalid response format, expect list len={len(descriptions)}, got={type(parsed)}"
+            )
 
         results: List[GoalAnchor] = []
         for idx, (item, desc) in enumerate(zip(parsed, descriptions)):

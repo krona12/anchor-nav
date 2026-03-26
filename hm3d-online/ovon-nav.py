@@ -21,7 +21,6 @@ import sys
 data_set_path = "/mnt/fillipo/zhuziyu/embodied_bench_data/our-set/ovon_full_set.json"
 navigation_data_path = "/mnt/fillipo/zhuziyu/embodied_bench_data/ovon/"
 hm3d_data_base_path = "/mnt/fillipo/ML/zhuofan/data/scene_datasets/hm3d/val"
-embodied_scan_dir = "/mnt/fillipo/zhuziyu/embodied_scan"
 pq3d_stage1_path = "/mnt/fillipo/zhuziyu/embodied_saved_data/saved_models/embodied-pq3d-final/stage1-pretrain-all"
 pq3d_stage2_path = "/mnt/fillipo/zhuziyu/embodied_saved_data/saved_models/embodied-pq3d-final-stage2/stage2-fine-tune-ovon"
 output_path = "./output_dirs/ovon-full-finetune-num-1.json"
@@ -32,8 +31,9 @@ visible_radius = 3
 # load navigation data
 navigation_data_dict = {'val_seen': {}, 'val_seen_synonyms': {}, 'val_unseen': {}}
 split_list = ['val_seen', 'val_seen_synonyms', 'val_unseen']
-train_val_split = json.load(open(os.path.join(embodied_scan_dir, 'HM3D', 'hm3d_annotated_basis.scene_dataset_config.json')))
-raw_scan_ids = set([pa.split('/')[1] for pa in train_val_split['scene_instances']['paths']['.json']])
+# Build raw scan id set directly from HM3D directory, to avoid needing stage1 data.
+# HM3D val directory is expected to contain scene folders like: 00800-TEEsavR23oF/
+raw_scan_ids = set([d for d in os.listdir(hm3d_data_base_path) if os.path.isdir(os.path.join(hm3d_data_base_path, d))])
 for split in split_list:
     data_dir = os.path.join(navigation_data_path, split, 'content')
     file_list = [f for f in os.listdir(data_dir) if f[0] != '.']

@@ -1,4 +1,6 @@
 from collections import defaultdict
+import atexit
+from datetime import datetime
 import gzip
 import os
 import sys
@@ -26,7 +28,48 @@ from anchor_nav import (
     on_episode_start,
     on_sub_episode_start,
 )
+from anchor_nav.vlm_adapter import probe_vlm_or_raise
 
+
+class _TeeStream:
+    def __init__(self, *streams):
+        self.streams = streams
+
+    def write(self, data):
+        for stream in self.streams:
+            stream.write(data)
+            stream.flush()
+        return len(data)
+
+    def flush(self):
+        for stream in self.streams:
+            stream.flush()
+
+
+def _setup_run_logging():
+    log_dir = os.path.join("output_dirs", "anchor_logs")
+    os.makedirs(log_dir, exist_ok=True)
+    ts = datetime.now().strftime("%Y%m%d-%H%M%S")
+    log_path = os.path.join(log_dir, f"goat-nav-anchor-{ts}.log")
+    log_fp = open(log_path, "w", encoding="utf-8", buffering=1)
+    original_stdout = sys.stdout
+    original_stderr = sys.stderr
+    sys.stdout = _TeeStream(original_stdout, log_fp)
+    sys.stderr = _TeeStream(original_stderr, log_fp)
+    print(f"[AnchorNav] logging enabled -> {os.path.abspath(log_path)}")
+
+    def _cleanup():
+        try:
+            print(f"[AnchorNav] run finished, log saved -> {os.path.abspath(log_path)}")
+        finally:
+            sys.stdout = original_stdout
+            sys.stderr = original_stderr
+            log_fp.close()
+
+    atexit.register(_cleanup)
+
+
+_setup_run_logging()
 
 # hyperparameter
 data_set_path = "/home/zhaochaoyang/datasets/mtu3d/embodied_bench/embodied_bench_data/our-set/goat_full_set.json"
@@ -90,6 +133,7 @@ plugin_cfg_path = os.path.join(os.path.dirname(__file__), "inference_config_anch
 plugins = load_anchor_plugin_config(plugin_cfg_path)
 anchor_ctx = AnchorNavContext(plugin_flags=plugins)
 print(f"[AnchorNav] plugin flags: {plugins}")
+probe_vlm_or_raise()
 
 for split in split_list:
     for cur_data in data_set[split]:
@@ -114,15 +158,22 @@ for split in split_list:
         pq3d_model.reset()
 
         all_descs = []
+        has_description_task = False
         for task in cur_episode["tasks"]:
             gc, gt = task[0], task[1]
             if gt == "description":
+                has_description_task = True
                 g_obj_id = task[2]
                 g_list = [g for g in navigation_data_dict[split][scene_id]["goals_by_category"][gc] if g["object_id"] == g_obj_id]
                 all_descs.append(g_list[0]["lang_desc"] if g_list else gc)
             else:
                 all_descs.append(gc)
-        on_episode_start(anchor_ctx, all_task_descriptions=all_descs, pq3d_model=pq3d_model)
+        on_episode_start(
+            anchor_ctx,
+            all_task_descriptions=all_descs,
+            pq3d_model=pq3d_model,
+            has_description_task=has_description_task,
+        )
 
         start_position = cur_episode["start_position"]
         start_rotation = cur_episode["start_rotation"]
