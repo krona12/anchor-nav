@@ -1,0 +1,85 @@
+{
+  "decision_num": 8,
+  "decision_target_type": "frontier",
+  "is_final_decision": false,
+  "target_position": [
+    -4.158687591552734,
+    3.1284425258636475,
+    -7.40378999710083
+  ],
+  "target_on_navmesh": [
+    -4.158687591552734,
+    3.1284425258636475,
+    -7.40378999710083
+  ],
+  "agent_position_before_goto": [
+    -1.9415714740753174,
+    3.1633780002593994,
+    -7.545360088348389
+  ],
+  "num_frontiers": 2,
+  "frontier_candidates": [
+    [
+      -4.158687591552734,
+      3.1284425258636475,
+      -7.40378999710083
+    ],
+    [
+      -5.808813571929932,
+      3.1133780479431152,
+      -0.2610512971878052
+    ]
+  ],
+  "goto_actions_len": 48,
+  "goto_actions": [
+    "turn_right",
+    "turn_right",
+    "turn_right",
+    "turn_right",
+    "turn_right",
+    "move_forward",
+    "turn_right",
+    "move_forward",
+    "turn_left",
+    "move_forward",
+    "turn_right",
+    "move_forward",
+    "turn_left",
+    "move_forward",
+    "turn_right",
+    "move_forward",
+    "turn_left",
+    "move_forward",
+    "turn_right",
+    "turn_right",
+    "move_forward",
+    "turn_right",
+    "move_forward",
+    "turn_left",
+    "move_forward",
+    "move_forward",
+    "turn_right",
+    "turn_right",
+    "move_forward",
+    "turn_right",
+    "move_forward",
+    "move_forward",
+    "move_forward",
+    "turn_left",
+    "move_forward",
+    "turn_right",
+    "move_forward",
+    "turn_right",
+    "move_forward",
+    "move_forward",
+    "move_forward",
+    "turn_right",
+    "move_forward",
+    "turn_left",
+    "move_forward",
+    "turn_left",
+    "move_forward",
+    "None"
+  ],
+  "memory_objects": 142
+}

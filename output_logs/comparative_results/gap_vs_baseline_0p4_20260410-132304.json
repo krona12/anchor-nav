@@ -1,0 +1,141 @@
+{
+  "meta": {
+    "tag": "gap_vs_baseline_0p4",
+    "created_at": "2026-04-10T13:23:04",
+    "baseline_result": "/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/output_logs/baseline/refhm3d_seq_0.0_0.4.json",
+    "anchor_result": "/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/output_logs/anchor/gap/refhm3d_seq_anchor_gap_0.0_0.4.json",
+    "langmap_root": "/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/LangMap_Annotations",
+    "level_names": [
+      "object",
+      "room",
+      "region",
+      "instance"
+    ]
+  },
+  "record_alignment": {
+    "baseline_count": 1400,
+    "anchor_count": 1400,
+    "common_count": 1400,
+    "baseline_only_count": 0,
+    "anchor_only_count": 0
+  },
+  "metrics": {
+    "baseline": {
+      "overall": {
+        "count": 1400,
+        "sr_mean": 0.4092857142857143,
+        "spl_mean": 0.2485063007560992,
+        "sr_sum": 573.0,
+        "spl_sum": 347.9088210585389
+      },
+      "by_level": {
+        "object": {
+          "count": 339,
+          "sr_mean": 0.528023598820059,
+          "spl_mean": 0.3282677723695266,
+          "sr_sum": 179.0,
+          "spl_sum": 111.28277483326951
+        },
+        "room": {
+          "count": 369,
+          "sr_mean": 0.44173441734417346,
+          "spl_mean": 0.2627221936212884,
+          "sr_sum": 163.0,
+          "spl_sum": 96.94448944625542
+        },
+        "region": {
+          "count": 389,
+          "sr_mean": 0.35732647814910024,
+          "spl_mean": 0.22826736689018767,
+          "sr_sum": 139.0,
+          "spl_sum": 88.796005720283
+        },
+        "instance": {
+          "count": 303,
+          "sr_mean": 0.30363036303630364,
+          "spl_mean": 0.16793911240505266,
+          "sr_sum": 92.0,
+          "spl_sum": 50.885551058730954
+        }
+      }
+    },
+    "anchor": {
+      "overall": {
+        "count": 1400,
+        "sr_mean": 0.4257142857142857,
+        "spl_mean": 0.2509049743470092,
+        "sr_sum": 596.0,
+        "spl_sum": 351.26696408581284
+      },
+      "by_level": {
+        "object": {
+          "count": 339,
+          "sr_mean": 0.5191740412979351,
+          "spl_mean": 0.31085966648993124,
+          "sr_sum": 176.0,
+          "spl_sum": 105.3814269400867
+        },
+        "room": {
+          "count": 369,
+          "sr_mean": 0.44986449864498645,
+          "spl_mean": 0.2624541273552309,
+          "sr_sum": 166.0,
+          "spl_sum": 96.84557299408019
+        },
+        "region": {
+          "count": 389,
+          "sr_mean": 0.40616966580976865,
+          "spl_mean": 0.2532492192853102,
+          "sr_sum": 158.0,
+          "spl_sum": 98.51394630198565
+        },
+        "instance": {
+          "count": 303,
+          "sr_mean": 0.31683168316831684,
+          "spl_mean": 0.16675253415729469,
+          "sr_sum": 96.0,
+          "spl_sum": 50.52601784966029
+        }
+      }
+    },
+    "paired_comparison_on_common_records": {
+      "overall": {
+        "count": 1400,
+        "delta_sr_mean": 0.016428571428571428,
+        "delta_spl_mean": 0.0023986735909099547,
+        "anchor_better_sr_count": 153,
+        "anchor_better_spl_count": 362
+      },
+      "by_level": {
+        "object": {
+          "count": 339,
+          "delta_sr_mean": -0.008849557522123894,
+          "delta_spl_mean": -0.017408105879595313,
+          "anchor_better_sr_count": 29,
+          "anchor_better_spl_count": 102
+        },
+        "room": {
+          "count": 369,
+          "delta_sr_mean": 0.008130081300813009,
+          "delta_spl_mean": -0.00026806626605754646,
+          "anchor_better_sr_count": 34,
+          "anchor_better_spl_count": 99
+        },
+        "region": {
+          "count": 389,
+          "delta_sr_mean": 0.04884318766066838,
+          "delta_spl_mean": 0.02498185239512248,
+          "anchor_better_sr_count": 54,
+          "anchor_better_spl_count": 104
+        },
+        "instance": {
+          "count": 303,
+          "delta_sr_mean": 0.013201320132013201,
+          "delta_spl_mean": -0.0011865782477579539,
+          "anchor_better_sr_count": 36,
+          "anchor_better_spl_count": 57
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "decision_num": 3,
+  "decision_target_type": "frontier",
+  "is_final_decision": false,
+  "target_position": [
+    -7.280401706695557,
+    3.1133780479431152,
+    -4.41989278793335
+  ],
+  "target_on_navmesh": [
+    -7.280401706695557,
+    3.1133780479431152,
+    -4.41989278793335
+  ],
+  "agent_position_before_goto": [
+    -6.700327396392822,
+    3.1133780479431152,
+    -3.9549193382263184
+  ],
+  "num_frontiers": 3,
+  "frontier_candidates": [
+    [
+      -4.9590840339660645,
+      3.11672306060791,
+      -5.695821762084961
+    ],
+    [
+      -7.280401706695557,
+      3.1133780479431152,
+      -4.41989278793335
+    ],
+    [
+      -5.808813571929932,
+      3.1133780479431152,
+      -0.2610512971878052
+    ]
+  ],
+  "goto_actions_len": 4,
+  "goto_actions": [
+    "move_forward",
+    "move_forward",
+    "move_forward",
+    "None"
+  ],
+  "memory_objects": 97
+}

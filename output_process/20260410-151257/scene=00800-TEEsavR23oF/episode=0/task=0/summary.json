@@ -1,0 +1,30 @@
+{
+  "run_tag": "20260410-151257",
+  "scene_name": "00800-TEEsavR23oF",
+  "episode_id": 0,
+  "task_id": 0,
+  "task_type": "instance",
+  "goal_category": "wardrobe",
+  "sentence": "tall brown wood wardrobe in bedroom with plain white sheets and light teal pillows on bed near Mickey Mouse plush toy",
+  "goal_object_ids": [
+    "wardrobe_9"
+  ],
+  "start_position": [
+    -4.03902006149292,
+    3.113379955291748,
+    -0.06032000109553337
+  ],
+  "end_position": [
+    -4.094871997833252,
+    3.125065565109253,
+    -7.291263580322266
+  ],
+  "start_goal_geo": 8.387184143066406,
+  "end_goal_geo": 2.4652934074401855,
+  "sr": 0.0,
+  "spl": 0.0,
+  "episode_cum_distance": 38.44271318614483,
+  "decisions": 10,
+  "steps_total": 400,
+  "trace_jsonl": "/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/output_process/20260410-151257/scene=00800-TEEsavR23oF/episode=0/task=0/logs/trace.jsonl"
+}

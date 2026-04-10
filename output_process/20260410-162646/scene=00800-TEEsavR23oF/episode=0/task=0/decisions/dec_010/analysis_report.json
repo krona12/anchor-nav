@@ -1,0 +1,278 @@
+{
+  "input_path": "/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/output_process/20260410-162646/scene=00800-TEEsavR23oF/episode=0/task=0/decisions/dec_010/decision_topk.json",
+  "decision_num": 10,
+  "num_objects_topk": 15,
+  "score_stats": {
+    "min": 0.9865810871124268,
+    "max": 0.9979332983493805,
+    "mean": 0.9916666394770288,
+    "std": 0.003118357395643405
+  },
+  "count_stats": {
+    "min": 1.0,
+    "max": 22.0,
+    "mean": 5.6
+  },
+  "interpretation": {
+    "high_scores_note": "Top-k scores都接近1并不代表同一物体；通常是候选排序头部都很高，需结合center距离和box IoU判断是否重复/同物体。",
+    "same_object_heuristic": "若两候选中心距 <= 0.80m 且 IoU较高，更可能是同一物体的重复候选。"
+  },
+  "near_pairs_by_distance": [],
+  "clusters_by_center_distance": [
+    {
+      "cluster_id": 0,
+      "size": 1,
+      "members_topk_idx": [
+        0
+      ],
+      "members_object_id": [
+        132
+      ],
+      "mean_score": 0.9979332983493805,
+      "max_score": 0.9979332983493805,
+      "mean_center_xyz": [
+        -5.831233978271484,
+        -8.256697654724121,
+        3.359433174133301
+      ]
+    },
+    {
+      "cluster_id": 1,
+      "size": 1,
+      "members_topk_idx": [
+        1
+      ],
+      "members_object_id": [
+        98
+      ],
+      "mean_score": 0.9953144192695618,
+      "max_score": 0.9953144192695618,
+      "mean_center_xyz": [
+        -8.573918342590332,
+        0.6535611748695374,
+        1.719046950340271
+      ]
+    },
+    {
+      "cluster_id": 2,
+      "size": 1,
+      "members_topk_idx": [
+        2
+      ],
+      "members_object_id": [
+        141
+      ],
+      "mean_score": 0.9952865988016129,
+      "max_score": 0.9952865988016129,
+      "mean_center_xyz": [
+        -2.6138405203819275,
+        -7.459618926048279,
+        4.170020937919617
+      ]
+    },
+    {
+      "cluster_id": 3,
+      "size": 1,
+      "members_topk_idx": [
+        3
+      ],
+      "members_object_id": [
+        118
+      ],
+      "mean_score": 0.9944488803545634,
+      "max_score": 0.9944488803545634,
+      "mean_center_xyz": [
+        1.1239742040634155,
+        -8.48551877339681,
+        3.5989723205566406
+      ]
+    },
+    {
+      "cluster_id": 4,
+      "size": 1,
+      "members_topk_idx": [
+        4
+      ],
+      "members_object_id": [
+        97
+      ],
+      "mean_score": 0.9938786029815674,
+      "max_score": 0.9938786029815674,
+      "mean_center_xyz": [
+        -7.337273836135864,
+        0.68258336186409,
+        1.6842764616012573
+      ]
+    },
+    {
+      "cluster_id": 5,
+      "size": 1,
+      "members_topk_idx": [
+        5
+      ],
+      "members_object_id": [
+        20
+      ],
+      "mean_score": 0.9920057302171533,
+      "max_score": 0.9920057302171533,
+      "mean_center_xyz": [
+        -7.172893805937333,
+        -5.493591893802991,
+        4.105238069187512
+      ]
+    },
+    {
+      "cluster_id": 6,
+      "size": 1,
+      "members_topk_idx": [
+        6
+      ],
+      "members_object_id": [
+        94
+      ],
+      "mean_score": 0.9919517040252686,
+      "max_score": 0.9919517040252686,
+      "mean_center_xyz": [
+        -12.153600692749023,
+        -3.068317413330078,
+        1.7871432304382324
+      ]
+    },
+    {
+      "cluster_id": 7,
+      "size": 1,
+      "members_topk_idx": [
+        7
+      ],
+      "members_object_id": [
+        51
+      ],
+      "mean_score": 0.9918299078941345,
+      "max_score": 0.9918299078941345,
+      "mean_center_xyz": [
+        -7.867255640029907,
+        -4.877036237716675,
+        4.882863569259644
+      ]
+    },
+    {
+      "cluster_id": 8,
+      "size": 1,
+      "members_topk_idx": [
+        8
+      ],
+      "members_object_id": [
+        79
+      ],
+      "mean_score": 0.9909757673740387,
+      "max_score": 0.9909757673740387,
+      "mean_center_xyz": [
+        -9.206099510192871,
+        -4.8558244705200195,
+        3.7390761375427246
+      ]
+    },
+    {
+      "cluster_id": 9,
+      "size": 1,
+      "members_topk_idx": [
+        9
+      ],
+      "members_object_id": [
+        111
+      ],
+      "mean_score": 0.9905770242214202,
+      "max_score": 0.9905770242214202,
+      "mean_center_xyz": [
+        -0.18276086300611494,
+        -4.902802896499633,
+        4.264222717285156
+      ]
+    },
+    {
+      "cluster_id": 10,
+      "size": 1,
+      "members_topk_idx": [
+        10
+      ],
+      "members_object_id": [
+        122
+      ],
+      "mean_score": 0.9894030392169952,
+      "max_score": 0.9894030392169952,
+      "mean_center_xyz": [
+        -1.3375830451647441,
+        -8.44849967956543,
+        3.575622797012329
+      ]
+    },
+    {
+      "cluster_id": 11,
+      "size": 1,
+      "members_topk_idx": [
+        11
+      ],
+      "members_object_id": [
+        115
+      ],
+      "mean_score": 0.9884833182607379,
+      "max_score": 0.9884833182607379,
+      "mean_center_xyz": [
+        -0.27001177838870455,
+        -6.680576460702079,
+        5.611115659986224
+      ]
+    },
+    {
+      "cluster_id": 12,
+      "size": 1,
+      "members_topk_idx": [
+        12
+      ],
+      "members_object_id": [
+        113
+      ],
+      "mean_score": 0.9882600837283665,
+      "max_score": 0.9882600837283665,
+      "mean_center_xyz": [
+        -2.1789624161190457,
+        -4.854075219896105,
+        4.124096181657579
+      ]
+    },
+    {
+      "cluster_id": 13,
+      "size": 1,
+      "members_topk_idx": [
+        13
+      ],
+      "members_object_id": [
+        93
+      ],
+      "mean_score": 0.9880701303482056,
+      "max_score": 0.9880701303482056,
+      "mean_center_xyz": [
+        -12.178817749023438,
+        -4.1920857429504395,
+        1.8183366060256958
+      ]
+    },
+    {
+      "cluster_id": 14,
+      "size": 1,
+      "members_topk_idx": [
+        14
+      ],
+      "members_object_id": [
+        116
+      ],
+      "mean_score": 0.9865810871124268,
+      "max_score": 0.9865810871124268,
+      "mean_center_xyz": [
+        2.0594869256019592,
+        -6.737933993339539,
+        3.5498040318489075
+      ]
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "decision_num": 5,
+  "decision_target_type": "frontier",
+  "is_final_decision": false,
+  "target_position": [
+    -1.8174821138381958,
+    3.1133780479431152,
+    -5.278378009796143
+  ],
+  "target_on_navmesh": [
+    -1.8174821138381958,
+    3.1133780479431152,
+    -5.278378009796143
+  ],
+  "agent_position_before_goto": [
+    -4.515128135681152,
+    3.1396164894104004,
+    -5.560368061065674
+  ],
+  "num_frontiers": 3,
+  "frontier_candidates": [
+    [
+      -3.9629006385803223,
+      3.1133780479431152,
+      -6.86044454574585
+    ],
+    [
+      -5.808813571929932,
+      3.1133780479431152,
+      -0.2610512971878052
+    ],
+    [
+      -1.8174821138381958,
+      3.1133780479431152,
+      -5.278378009796143
+    ]
+  ],
+  "goto_actions_len": 17,
+  "goto_actions": [
+    "turn_right",
+    "turn_right",
+    "move_forward",
+    "move_forward",
+    "move_forward",
+    "move_forward",
+    "move_forward",
+    "move_forward",
+    "move_forward",
+    "turn_left",
+    "move_forward",
+    "move_forward",
+    "turn_right",
+    "move_forward",
+    "turn_left",
+    "move_forward",
+    "None"
+  ],
+  "memory_objects": 115
+}
