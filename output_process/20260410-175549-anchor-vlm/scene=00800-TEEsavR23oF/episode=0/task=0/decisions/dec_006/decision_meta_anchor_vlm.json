@@ -1,0 +1,250 @@
+{
+  "decision_num": 6,
+  "baseline_target_type": "frontier",
+  "baseline_target_position": [
+    -4.158687591552734,
+    3.1284425258636475,
+    -7.40378999710083
+  ],
+  "baseline_is_final": false,
+  "corrected": true,
+  "corrected_target_position": [
+    -0.22018333276112875,
+    -6.595759709676107,
+    5.652641614278158
+  ],
+  "corrected_is_final": true,
+  "num_frontiers": 3,
+  "memory_objects": 135,
+  "new_ids": [
+    126,
+    127,
+    128,
+    129,
+    130,
+    131,
+    132,
+    133,
+    134
+  ],
+  "updated_ids": [
+    1,
+    13,
+    14,
+    15,
+    18,
+    19,
+    20,
+    23,
+    24,
+    26,
+    29,
+    30,
+    44,
+    46,
+    52,
+    67,
+    68,
+    69,
+    71,
+    72,
+    73,
+    74,
+    77,
+    78,
+    79,
+    86,
+    88,
+    108,
+    110,
+    114,
+    115,
+    117,
+    118,
+    119,
+    120,
+    121
+  ],
+  "current_top_candidates": [
+    {
+      "object_id_in_memory": 118,
+      "score": 0.9991725385189056,
+      "count": 2.0,
+      "center_xyz": [
+        1.1199814081192017,
+        -8.459410190582275,
+        3.6013346910476685
+      ]
+    },
+    {
+      "object_id_in_memory": 115,
+      "score": 0.9978997260332108,
+      "count": 4.0,
+      "center_xyz": [
+        -0.23533526808023453,
+        -6.622596740722656,
+        5.633890867233276
+      ]
+    },
+    {
+      "object_id_in_memory": 29,
+      "score": 0.9961820732463489,
+      "count": 11.0,
+      "center_xyz": [
+        -4.851294170726428,
+        0.7610907825556668,
+        4.8561483296481045
+      ]
+    },
+    {
+      "object_id_in_memory": 18,
+      "score": 0.9920889019966125,
+      "count": 20.0,
+      "center_xyz": [
+        -7.172949433326721,
+        -5.495588207244873,
+        4.106951224803925
+      ]
+    },
+    {
+      "object_id_in_memory": 26,
+      "score": 0.9831102713942528,
+      "count": 8.0,
+      "center_xyz": [
+        -5.255506277084351,
+        0.011557773395907137,
+        3.584619253873825
+      ]
+    },
+    {
+      "object_id_in_memory": 30,
+      "score": 0.9801920056343079,
+      "count": 7.0,
+      "center_xyz": [
+        -6.238272803170339,
+        0.8894725101334707,
+        4.307816505432129
+      ]
+    },
+    {
+      "object_id_in_memory": 110,
+      "score": 0.9725819031397501,
+      "count": 3.0,
+      "center_xyz": [
+        -7.870257377624512,
+        -3.848652760187785,
+        3.571492354075114
+      ]
+    },
+    {
+      "object_id_in_memory": 1,
+      "score": 0.9717245514576253,
+      "count": 13.0,
+      "center_xyz": [
+        -3.4749065179091234,
+        0.8758270694659307,
+        4.324539001171404
+      ]
+    },
+    {
+      "object_id_in_memory": 108,
+      "score": 0.9703704118728638,
+      "count": 3.0,
+      "center_xyz": [
+        -3.5455377101898193,
+        -7.925403594970703,
+        3.851863940556844
+      ]
+    },
+    {
+      "object_id_in_memory": 71,
+      "score": 0.9680899083614349,
+      "count": 8.0,
+      "center_xyz": [
+        -5.4048250913619995,
+        -5.979994058609009,
+        3.314237207174301
+      ]
+    },
+    {
+      "object_id_in_memory": 131,
+      "score": 0.9641729295253754,
+      "count": 2.0,
+      "center_xyz": [
+        -3.876228451728821,
+        -8.423384666442871,
+        3.8730874061584473
+      ]
+    },
+    {
+      "object_id_in_memory": 130,
+      "score": 0.9627344906330109,
+      "count": 2.0,
+      "center_xyz": [
+        -3.334995150566101,
+        -6.098636627197266,
+        4.16698956489563
+      ]
+    },
+    {
+      "object_id_in_memory": 120,
+      "score": 0.957880288362503,
+      "count": 2.0,
+      "center_xyz": [
+        0.1702660620212555,
+        -8.405802249908447,
+        3.878008484840393
+      ]
+    },
+    {
+      "object_id_in_memory": 14,
+      "score": 0.9549622008433708,
+      "count": 26.0,
+      "center_xyz": [
+        -4.710239006922797,
+        -3.485074208332942,
+        3.5346322518128623
+      ]
+    },
+    {
+      "object_id_in_memory": 19,
+      "score": 0.9534841271547171,
+      "count": 13.0,
+      "center_xyz": [
+        -5.818643203148476,
+        -6.086552803332989,
+        4.167449877812312
+      ]
+    }
+  ],
+  "vlm_info": {
+    "vlm_called": true,
+    "raw_text": "```json\n{\n  \"found_target\": true,\n  \"confidence\": 0.9,\n  \"force_object_query\": true,\n  \"reason\": \"The tall brown wood wardrobe, bed with plain white sheets and light teal pillows, and Mickey Mouse plush toy are all visible in the current panorama.\"\n}\n```",
+    "parsed": {
+      "found_target": true,
+      "confidence": 0.9,
+      "force_object_query": true,
+      "reason": "The tall brown wood wardrobe, bed with plain white sheets and light teal pillows, and Mickey Mouse plush toy are all visible in the current panorama."
+    },
+    "found_target": true,
+    "confidence": 0.9,
+    "force_object_query": true,
+    "reason": "The tall brown wood wardrobe, bed with plain white sheets and light teal pillows, and Mickey Mouse plush toy are all visible in the current panorama.",
+    "image_tiles": [
+      "/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/output_process/20260410-175549-anchor-vlm/scene=00800-TEEsavR23oF/episode=0/task=0/decisions/dec_005/vlm_tile_0.jpg",
+      "/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/output_process/20260410-175549-anchor-vlm/scene=00800-TEEsavR23oF/episode=0/task=0/decisions/dec_005/vlm_tile_1.jpg",
+      "/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/output_process/20260410-175549-anchor-vlm/scene=00800-TEEsavR23oF/episode=0/task=0/decisions/dec_005/vlm_tile_2.jpg"
+    ],
+    "elapsed_ms": 1217.4115655943751
+  },
+  "vlm_async_ready": true,
+  "vlm_async_source_decision": 5,
+  "vlm_async_source_target_xyz": [
+    -0.22018333276112875,
+    -6.595759709676107,
+    5.652641614278158
+  ],
+  "start_goal_geo": 8.387184143066406,
+  "cur_goal_geo_before_goto": 1.925605297088623,
+  "episode_cum_distance": 14.68224050104618
+}

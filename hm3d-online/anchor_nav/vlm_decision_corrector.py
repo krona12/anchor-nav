@@ -1,5 +1,7 @@
 import json
 import re
+import time
+import concurrent.futures
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -11,7 +13,9 @@ from .vllm_adapter import VLLMClientConfig, VLLMOpenAIClient
 
 SYSTEM_PROMPT = (
     "You are a conservative visual referee for embodied navigation. "
-    "Given panorama tiles and a target description, decide whether the target object is clearly present NOW. "
+    "Focus on the MAIN target object category in the description. "
+    "Do NOT be distracted by contextual/nearby objects. "
+    "Given panorama tiles and a target description, decide whether the main target object is clearly present NOW. "
     "Return strict JSON only."
 )
 
@@ -30,6 +34,9 @@ Candidate object summaries from CURRENT round (new/updated preferred):
 
 Question:
 Should we force object-target query now (instead of frontier exploration)?
+Decision criterion:
+- If main target object is clearly visible in current panorama: found_target=true and force_object_query=true.
+- If uncertain / ambiguous / only context objects are visible: return false.
 Return JSON with EXACT keys:
 {{"found_target": true/false, "confidence": 0.0-1.0, "force_object_query": true/false, "reason": "short reason"}}
 """
@@ -40,7 +47,7 @@ class CorrectorConfig:
     enabled: bool = True
     stride: int = 2
     min_decision_num: int = 2
-    confidence_threshold: float = 0.8
+    confidence_threshold: float = 0.6
     max_image_tiles: int = 3
     max_candidate_objects: int = 10
     base_url: str = "http://127.0.0.1:8000/v1"
@@ -140,4 +147,125 @@ class VLMDecisionCorrector:
             "reason": reason,
             "image_tiles": [str(p) for p in image_tile_paths],
         }
+
+
+class AsyncVLMDecisionCorrector:
+    """Async wrapper that owns scheduling, pending state, and cleanup."""
+
+    def __init__(self, corrector: VLMDecisionCorrector) -> None:
+        self.corrector = corrector
+        self.executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
+        self.pending_future: Optional[concurrent.futures.Future] = None
+        self.pending_meta: Optional[Dict[str, Any]] = None
+        self.calls_total: int = 0
+
+    def should_call(self, decision_num: int) -> bool:
+        return self.corrector.should_call(decision_num)
+
+    def _run_vlm_async(
+        self,
+        *,
+        description: str,
+        decision_num: int,
+        baseline_target_type: str,
+        num_frontiers: int,
+        memory_objects: int,
+        candidate_objects: List[Dict[str, Any]],
+        image_tile_paths: List[Path],
+    ) -> Dict[str, Any]:
+        t0 = time.perf_counter()
+        try:
+            out = self.corrector.evaluate(
+                description=description,
+                decision_num=decision_num,
+                baseline_target_type=baseline_target_type,
+                num_frontiers=num_frontiers,
+                memory_objects=memory_objects,
+                candidate_objects=candidate_objects,
+                image_tile_paths=image_tile_paths,
+            )
+        except Exception as e:
+            out = {"vlm_called": True, "error": str(e), "force_object_query": False}
+        out["elapsed_ms"] = float((time.perf_counter() - t0) * 1000.0)
+        return out
+
+    def submit_if_needed(
+        self,
+        *,
+        decision_num: int,
+        description: str,
+        baseline_target_type: str,
+        num_frontiers: int,
+        memory_objects: int,
+        candidate_objects: List[Dict[str, Any]],
+        image_tile_paths: List[Path],
+        source_agent_position: Optional[List[float]],
+        cleanup_tile_paths: Optional[List[Path]] = None,
+        cleanup_dir: Optional[Path] = None,
+    ) -> bool:
+        if self.pending_future is not None:
+            return False
+        if not self.should_call(decision_num):
+            return False
+        if len(image_tile_paths) == 0:
+            return False
+        self.pending_future = self.executor.submit(
+            self._run_vlm_async,
+            description=description,
+            decision_num=int(decision_num),
+            baseline_target_type=baseline_target_type,
+            num_frontiers=int(num_frontiers),
+            memory_objects=int(memory_objects),
+            candidate_objects=candidate_objects,
+            image_tile_paths=image_tile_paths,
+        )
+        self.pending_meta = {
+            "source_decision_num": int(decision_num),
+            "source_agent_position": source_agent_position,
+            "cleanup_tile_paths": cleanup_tile_paths or [],
+            "cleanup_dir": cleanup_dir,
+        }
+        self.calls_total += 1
+        return True
+
+    def poll_ready(self) -> Dict[str, Any]:
+        out = {
+            "ready": False,
+            "vlm_info": {"vlm_called": False},
+            "source_decision_num": None,
+            "source_agent_position": None,
+        }
+        if self.pending_future is None or self.pending_meta is None:
+            return out
+        if not self.pending_future.done():
+            return out
+
+        out["ready"] = True
+        out["source_decision_num"] = int(self.pending_meta.get("source_decision_num", -1))
+        out["source_agent_position"] = self.pending_meta.get("source_agent_position", None)
+        try:
+            out["vlm_info"] = self.pending_future.result(timeout=0.0)
+        except Exception as e:
+            out["vlm_info"] = {"vlm_called": True, "error": str(e), "force_object_query": False}
+
+        for p in self.pending_meta.get("cleanup_tile_paths", []):
+            try:
+                p.unlink(missing_ok=True)
+            except Exception:
+                pass
+        d = self.pending_meta.get("cleanup_dir", None)
+        if d is not None:
+            try:
+                d.rmdir()
+            except Exception:
+                pass
+
+        self.pending_future = None
+        self.pending_meta = None
+        return out
+
+    def close(self) -> None:
+        if self.pending_future is not None:
+            self.pending_future.cancel()
+        self.executor.shutdown(wait=False)
 

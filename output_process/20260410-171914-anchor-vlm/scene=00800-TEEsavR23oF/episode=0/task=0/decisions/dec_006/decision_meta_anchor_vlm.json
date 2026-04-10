@@ -1,0 +1,236 @@
+{
+  "decision_num": 6,
+  "baseline_target_type": "frontier",
+  "baseline_target_position": [
+    -1.9647088050842285,
+    3.1633780002593994,
+    -7.411473751068115
+  ],
+  "baseline_is_final": false,
+  "corrected": true,
+  "corrected_target_position": [
+    1.1203296184539795,
+    -8.43376636505127,
+    3.5699214935302734
+  ],
+  "corrected_is_final": true,
+  "num_frontiers": 3,
+  "memory_objects": 138,
+  "new_ids": [
+    120,
+    121,
+    122,
+    123,
+    124,
+    125,
+    126,
+    127,
+    128,
+    129,
+    130,
+    131,
+    132,
+    133,
+    134,
+    135,
+    136,
+    137
+  ],
+  "updated_ids": [
+    1,
+    12,
+    13,
+    17,
+    19,
+    27,
+    29,
+    30,
+    31,
+    44,
+    66,
+    67,
+    68,
+    74,
+    77,
+    82,
+    83,
+    84,
+    86,
+    98,
+    99,
+    101,
+    105,
+    117
+  ],
+  "current_top_candidates": [
+    {
+      "object_id_in_memory": 126,
+      "score": 0.9992649555206299,
+      "count": 1.0,
+      "center_xyz": [
+        1.1203296184539795,
+        -8.43376636505127,
+        3.5699214935302734
+      ]
+    },
+    {
+      "object_id_in_memory": 133,
+      "score": 0.9991165995597839,
+      "count": 2.0,
+      "center_xyz": [
+        -2.31165611743927,
+        -6.200795412063599,
+        4.042189359664917
+      ]
+    },
+    {
+      "object_id_in_memory": 120,
+      "score": 0.9972651799519856,
+      "count": 3.0,
+      "center_xyz": [
+        -0.2291967843969663,
+        -6.618249734242757,
+        5.620855649312337
+      ]
+    },
+    {
+      "object_id_in_memory": 29,
+      "score": 0.9956542005141575,
+      "count": 12.0,
+      "center_xyz": [
+        -4.844476580619811,
+        0.7597718586524328,
+        4.861748695373535
+      ]
+    },
+    {
+      "object_id_in_memory": 105,
+      "score": 0.9929902752240499,
+      "count": 3.0,
+      "center_xyz": [
+        -0.15208521485328674,
+        -4.91359011332194,
+        4.287659327189128
+      ]
+    },
+    {
+      "object_id_in_memory": 17,
+      "score": 0.9903634260682498,
+      "count": 17.0,
+      "center_xyz": [
+        -7.172145366668703,
+        -5.500898697796989,
+        4.111494569217457
+      ]
+    },
+    {
+      "object_id_in_memory": 31,
+      "score": 0.9855116009712219,
+      "count": 8.0,
+      "center_xyz": [
+        -5.255824208259582,
+        -0.0009106271900236615,
+        3.5807110369205475
+      ]
+    },
+    {
+      "object_id_in_memory": 130,
+      "score": 0.9828683137893677,
+      "count": 1.0,
+      "center_xyz": [
+        -1.4729939699172974,
+        -8.525463104248047,
+        4.0894341468811035
+      ]
+    },
+    {
+      "object_id_in_memory": 127,
+      "score": 0.9796631932258606,
+      "count": 1.0,
+      "center_xyz": [
+        0.2031734138727188,
+        -8.423745155334473,
+        3.8823490142822266
+      ]
+    },
+    {
+      "object_id_in_memory": 128,
+      "score": 0.9792256653308868,
+      "count": 2.0,
+      "center_xyz": [
+        -0.37558595836162567,
+        -8.474660873413086,
+        3.881422281265259
+      ]
+    },
+    {
+      "object_id_in_memory": 83,
+      "score": 0.9749923547108968,
+      "count": 3.0,
+      "center_xyz": [
+        2.073241790135701,
+        -6.772619088490805,
+        3.569963216781616
+      ]
+    },
+    {
+      "object_id_in_memory": 82,
+      "score": 0.9677093880517142,
+      "count": 7.0,
+      "center_xyz": [
+        1.0726814270019531,
+        -6.101013319832938,
+        3.387906517301287
+      ]
+    },
+    {
+      "object_id_in_memory": 66,
+      "score": 0.9659815192222595,
+      "count": 5.0,
+      "center_xyz": [
+        -0.1724145084619522,
+        -7.45063362121582,
+        3.819077253341675
+      ]
+    },
+    {
+      "object_id_in_memory": 99,
+      "score": 0.9656168222427367,
+      "count": 9.0,
+      "center_xyz": [
+        -0.20678355627589756,
+        -4.943866676754421,
+        3.5832588142818875
+      ]
+    },
+    {
+      "object_id_in_memory": 44,
+      "score": 0.9630589783191682,
+      "count": 8.0,
+      "center_xyz": [
+        -3.3530761301517487,
+        0.8020568341016769,
+        5.163385629653931
+      ]
+    }
+  ],
+  "vlm_info": {
+    "vlm_called": true,
+    "raw_text": "```json\n{\n  \"found_target\": true,\n  \"confidence\": 0.9,\n  \"force_object_query\": true,\n  \"reason\": \"Target features match the description\"\n}\n```",
+    "parsed": {
+      "found_target": true,
+      "confidence": 0.9,
+      "force_object_query": true,
+      "reason": "Target features match the description"
+    },
+    "found_target": true,
+    "confidence": 0.9,
+    "force_object_query": true,
+    "reason": "Target features match the description",
+    "image_tiles": [
+      "/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/output_process/20260410-171914-anchor-vlm/scene=00800-TEEsavR23oF/episode=0/task=0/decisions/dec_006/vlm_tile_0.jpg",
+      "/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/output_process/20260410-171914-anchor-vlm/scene=00800-TEEsavR23oF/episode=0/task=0/decisions/dec_006/vlm_tile_1.jpg",
+      "/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/output_process/20260410-171914-anchor-vlm/scene=00800-TEEsavR23oF/episode=0/task=0/decisions/dec_006/vlm_tile_2.jpg"
+    ]
+  }
+}

@@ -79,8 +79,9 @@ class _TeeStream:
 
 def _setup_run_logging(log_dir: str) -> None:
     os.makedirs(log_dir, exist_ok=True)
-    ts = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    log_path = os.path.join(log_dir, f"refhm3d-nav-sequence-baseline-{ts}.log")
+    ts = datetime.datetime.now().strftime("%Y%m%d-%H%M%S-%f")
+    pid = os.getpid()
+    log_path = os.path.join(log_dir, f"refhm3d-nav-sequence-baseline-{ts}-pid{pid}.log")
     log_fp = open(log_path, "w", encoding="utf-8", buffering=1)
     original_stdout = sys.stdout
     original_stderr = sys.stderr
@@ -450,10 +451,14 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                     "sr": sr,
                     "spl": spl,
                     "object_category": goal_category,
+                    "task_time_sec": episode_time,
                 }
             )
             print(f"===Episode_id {episode_id} task_id {idx}===\nSR: {sr}, SPL: {spl}, Object category: {goal_category}, goal type: {navigation_type}===\n")
-            print(f"Episode elapsed (seconds): {episode_time}")
+            print(
+                f"[baseline] task_time scene={scene_name} episode={episode_id} "
+                f"task={idx} sec={episode_time:.3f}"
+            )
 
         sim.close()
         with open(output_path, "w") as f:

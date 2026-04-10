@@ -1,0 +1,27 @@
+{
+  "run_tag": "20260410-175549",
+  "scene_name": "00800-TEEsavR23oF",
+  "episode_id": 0,
+  "task_id": 0,
+  "steps_total": 190,
+  "decisions": 7,
+  "goal_object_ids": [
+    "wardrobe_9"
+  ],
+  "start_goal_geo": 8.387184143066406,
+  "end_goal_geo": 1.925605297088623,
+  "sr": 0.0,
+  "spl": 0.0,
+  "episode_cum_distance": 14.68224050104618,
+  "success_distance": 0.25,
+  "end_position": [
+    -4.007273197174072,
+    3.1133780479431152,
+    -6.750884056091309
+  ],
+  "trace_jsonl": "/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/output_process/20260410-175549-anchor-vlm/scene=00800-TEEsavR23oF/episode=0/task=0/logs/trace.jsonl",
+  "enable_vlm_corrector": true,
+  "enable_output_logs": true,
+  "vlm_calls_total": 5,
+  "vlm_force_total": 1
+}

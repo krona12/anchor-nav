@@ -15,9 +15,15 @@ export YOLO_VERBOSE=False
 run_one () {
   local START_RATIO="$1"
   local END_RATIO="$2"
+  local OUT_JSON="output_logs/baseline/refhm3d_seq_concisedesc_${START_RATIO}_${END_RATIO}.json"
 
   local MAX_RETRY=3
   local COUNT=0
+
+  if [ -f "${OUT_JSON}" ] && [ ! -s "${OUT_JSON}" ]; then
+    echo ">>> Found empty result file, removing: ${OUT_JSON}"
+    rm -f "${OUT_JSON}"
+  fi
 
   while true; do
     echo ">>> Starting baseline concise ${START_RATIO}-${END_RATIO} (attempt $((COUNT+1)))..."

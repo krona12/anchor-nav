@@ -1,0 +1,235 @@
+{
+  "decision_num": 5,
+  "baseline_target_type": "frontier",
+  "baseline_target_position": [
+    -3.9629006385803223,
+    3.1133780479431152,
+    -6.86044454574585
+  ],
+  "baseline_is_final": false,
+  "corrected": false,
+  "corrected_target_position": [
+    -3.9629006385803223,
+    3.1133780479431152,
+    -6.86044454574585
+  ],
+  "corrected_is_final": false,
+  "num_frontiers": 3,
+  "memory_objects": 126,
+  "new_ids": [
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124,
+    125
+  ],
+  "updated_ids": [
+    13,
+    14,
+    18,
+    20,
+    67,
+    68,
+    72,
+    77,
+    86,
+    87,
+    88,
+    89,
+    102,
+    103,
+    104,
+    106,
+    112
+  ],
+  "current_top_candidates": [
+    {
+      "object_id_in_memory": 115,
+      "score": 0.9995384414990742,
+      "count": 3.0,
+      "center_xyz": [
+        -0.22018333276112875,
+        -6.595759709676107,
+        5.652641614278158
+      ]
+    },
+    {
+      "object_id_in_memory": 118,
+      "score": 0.9991476535797119,
+      "count": 1.0,
+      "center_xyz": [
+        1.1049211025238037,
+        -8.464367866516113,
+        3.609534978866577
+      ]
+    },
+    {
+      "object_id_in_memory": 112,
+      "score": 0.9960569441318512,
+      "count": 6.0,
+      "center_xyz": [
+        -0.1850031266609828,
+        -4.909306049346924,
+        4.278155088424683
+      ]
+    },
+    {
+      "object_id_in_memory": 122,
+      "score": 0.9958468079566956,
+      "count": 1.0,
+      "center_xyz": [
+        -1.2988919019699097,
+        -8.47007942199707,
+        3.581329822540283
+      ]
+    },
+    {
+      "object_id_in_memory": 18,
+      "score": 0.9914435919593362,
+      "count": 17.0,
+      "center_xyz": [
+        -7.172399548923268,
+        -5.496973402359906,
+        4.104511892094332
+      ]
+    },
+    {
+      "object_id_in_memory": 123,
+      "score": 0.9865496158599854,
+      "count": 1.0,
+      "center_xyz": [
+        -1.469415545463562,
+        -8.529044151306152,
+        4.106819152832031
+      ]
+    },
+    {
+      "object_id_in_memory": 102,
+      "score": 0.9820025116205215,
+      "count": 16.0,
+      "center_xyz": [
+        2.3298369795083995,
+        -5.797728866338729,
+        4.455398619174957
+      ]
+    },
+    {
+      "object_id_in_memory": 119,
+      "score": 0.980980396270752,
+      "count": 2.0,
+      "center_xyz": [
+        -0.3820194900035858,
+        -8.473475456237793,
+        3.8828197717666626
+      ]
+    },
+    {
+      "object_id_in_memory": 72,
+      "score": 0.9688489522252764,
+      "count": 7.0,
+      "center_xyz": [
+        -5.632138524736677,
+        -5.96452978679112,
+        3.602567025593349
+      ]
+    },
+    {
+      "object_id_in_memory": 103,
+      "score": 0.9664063728772677,
+      "count": 13.0,
+      "center_xyz": [
+        -0.16956851115593538,
+        -4.965741377610425,
+        3.595288790189303
+      ]
+    },
+    {
+      "object_id_in_memory": 120,
+      "score": 0.9663124084472656,
+      "count": 1.0,
+      "center_xyz": [
+        0.16692568361759186,
+        -8.403172492980957,
+        3.879880905151367
+      ]
+    },
+    {
+      "object_id_in_memory": 106,
+      "score": 0.9578906297683716,
+      "count": 11.0,
+      "center_xyz": [
+        1.5014328414743594,
+        -5.470285025509921,
+        3.6119658946990967
+      ]
+    },
+    {
+      "object_id_in_memory": 116,
+      "score": 0.956974446773529,
+      "count": 1.0,
+      "center_xyz": [
+        1.1982145309448242,
+        -5.520746231079102,
+        3.5198683738708496
+      ]
+    },
+    {
+      "object_id_in_memory": 14,
+      "score": 0.9517409827398218,
+      "count": 23.0,
+      "center_xyz": [
+        -4.7563933082248875,
+        -3.4945789731067154,
+        3.531848575757898
+      ]
+    },
+    {
+      "object_id_in_memory": 87,
+      "score": 0.9340773299336433,
+      "count": 8.0,
+      "center_xyz": [
+        -2.248480886220932,
+        -4.8556822538375854,
+        4.09312430024147
+      ]
+    }
+  ],
+  "vlm_info": {
+    "vlm_called": true,
+    "raw_text": "```json\n{\n  \"found_target\": false,\n  \"confidence\": 0.2,\n  \"force_object_query\": false,\n  \"reason\": \"No clear view of tall brown wood wardrobe or related bedroom elements\"\n}\n```",
+    "parsed": {
+      "found_target": false,
+      "confidence": 0.2,
+      "force_object_query": false,
+      "reason": "No clear view of tall brown wood wardrobe or related bedroom elements"
+    },
+    "found_target": false,
+    "confidence": 0.2,
+    "force_object_query": false,
+    "reason": "No clear view of tall brown wood wardrobe or related bedroom elements",
+    "image_tiles": [
+      "/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/output_process/20260410-175549-anchor-vlm/scene=00800-TEEsavR23oF/episode=0/task=0/decisions/dec_004/vlm_tile_0.jpg",
+      "/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/output_process/20260410-175549-anchor-vlm/scene=00800-TEEsavR23oF/episode=0/task=0/decisions/dec_004/vlm_tile_1.jpg",
+      "/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/output_process/20260410-175549-anchor-vlm/scene=00800-TEEsavR23oF/episode=0/task=0/decisions/dec_004/vlm_tile_2.jpg"
+    ],
+    "elapsed_ms": 1016.1579735577106
+  },
+  "vlm_async_ready": true,
+  "vlm_async_source_decision": 4,
+  "vlm_async_source_target_xyz": [
+    -0.1984509974718094,
+    -4.917868614196777,
+    4.276750564575195
+  ],
+  "start_goal_geo": 8.387184143066406,
+  "cur_goal_geo_before_goto": 0.06802384555339813,
+  "episode_cum_distance": 11.42912058532238
+}
