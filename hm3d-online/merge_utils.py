@@ -307,7 +307,9 @@ class RepresentationManager:
         self.object_count = np.zeros((0)) # M
         self.object_feat = np.zeros((0, 768)) # Mx768
         self.open_vocab_feat = np.zeros((0, 768)) # Mx768
-    
+        # 每个记忆槽首次作为新物体加入时对应的那一帧 RGB（HxWx3 uint8），与 object_score 列对齐
+        self.object_first_rgb = []
+
     def reset(self):
         self.point_cloud = np.zeros((0, 6))
         self.object_mask = np.zeros((0, 0))
@@ -317,6 +319,7 @@ class RepresentationManager:
         self.object_count = np.zeros((0))
         self.object_feat = np.zeros((0, 768))
         self.open_vocab_feat = np.zeros((0, 768))
+        self.object_first_rgb = []
     
     def save_colored_point_cloud(self):
         # Create a color map for the object masks
@@ -336,7 +339,8 @@ class RepresentationManager:
         # Save the colored point cloud to a .npy file
         np.save('colored_point_cloud.npy', colored_point_cloud)
         
-    def merge(self, pred_dict_list):
+    def merge(self, pred_dict_list, frame_rgbs=None):
+        """frame_rgbs: 与 pred_dict_list 等长，每帧完整 RGB（HxWx3），用于记录新物体首检图像。"""
         for idx in range(len(pred_dict_list)):
             # load data
             data = pred_dict_list[idx]
@@ -441,17 +445,28 @@ class RepresentationManager:
             # add new mask
             new_query_ind = np.ones((cur_mask.shape[1]), dtype=bool)
             new_query_ind[col_ind] = False
+            num_new = int(np.sum(new_query_ind))
+            snap = None
+            if frame_rgbs is not None and idx < len(frame_rgbs) and frame_rgbs[idx] is not None:
+                img = np.asarray(frame_rgbs[idx])
+                if img.ndim == 3 and img.shape[2] >= 3:
+                    snap = np.ascontiguousarray(img[:, :, :3], dtype=np.uint8)
+            for _ in range(num_new):
+                self.object_first_rgb.append(snap.copy() if snap is not None else None)
             self.object_mask = np.concatenate((self.object_mask, cur_mask[:, new_query_ind]), axis=1)
             self.object_class = np.concatenate((self.object_class, cur_class[new_query_ind]), axis=0)
             self.object_score = np.concatenate((self.object_score, cur_score[new_query_ind]), axis=0)
             self.object_box = np.concatenate((self.object_box, cur_box[new_query_ind]), axis=0)
             self.object_feat = np.concatenate((self.object_feat, cur_feat[new_query_ind]), axis=0)
             self.open_vocab_feat = np.concatenate((self.open_vocab_feat, cur_open_vocab_feat[new_query_ind]), axis=0)
-            self.object_count = np.concatenate((self.object_count, np.ones((np.sum(new_query_ind)))), axis=0)
+            self.object_count = np.concatenate((self.object_count, np.ones((num_new,))), axis=0)
             # global activation
             # If object_mask has more objects than topk_objects, select topk_objects based on top object_score
             if self.object_mask.shape[1] > self.topk_objects:
                 topk_indices = np.argsort(self.object_score)[-self.topk_objects:]
+                m_cols = self.object_mask.shape[1]
+                if len(self.object_first_rgb) == m_cols:
+                    self.object_first_rgb = [self.object_first_rgb[i] for i in topk_indices]
                 self.object_mask = self.object_mask[:, topk_indices]
                 self.object_class = self.object_class[topk_indices]
                 self.object_score = self.object_score[topk_indices]

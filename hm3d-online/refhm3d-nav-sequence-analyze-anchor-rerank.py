@@ -1,11 +1,34 @@
+"""
+单场景 / 单 episode 调试脚本：仅启用 anchor_nav.rerank（首检 RGB + 描述 → VLM 重选物体目标）。
+不含 VLMDecisionCorrector / resolve_navigation_after_vlm。
+
+默认保存调试图：每步全景帧、各记忆槽「首次检测」完整 RGB、送入 rerank 的候选图。
+用 --quiet 关闭落盘。
+
+默认使用 detailed 文本描述；需要精简时用 --description_mode concise 或 --concise_description。
+
+送入 VLM 的候选图数量由 --rerank_top_k 控制（默认 8）；另可将按 score 前 N 个首检图导出到 rerank_topN_extra_log/。
+"""
+
 from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+# 从 MTU3D 根目录运行 `python hm3d-online/本脚本.py` 时，需同时能 import
+# `common`（在仓库根）与 `data_utils`（在 hm3d-online）。
+_HM3D_ONLINE = Path(__file__).resolve().parent
+_MTU3D_ROOT = _HM3D_ONLINE.parent
+for _p in (_HM3D_ONLINE, _MTU3D_ROOT):
+    _s = str(_p)
+    if _s not in sys.path:
+        sys.path.insert(0, _s)
 
 import argparse
 import datetime as _dt
 import gzip
 import json
-import tempfile
-from pathlib import Path
+import os
 from typing import Any, Dict, List
 
 import cv2
@@ -14,6 +37,13 @@ import numpy as np
 from habitat.utils.visualizations import maps
 from omegaconf import OmegaConf
 
+from anchor_nav.rerank import (
+    RerankConfig,
+    list_rerank_candidate_memory_ids,
+    parse_levels_csv,
+    rerank_object_target,
+    should_run_rerank,
+)
 from common.embodied_utils.simulator import HabitatSimulator
 from data_utils import PQ3DModel
 from frontier_utils import (
@@ -23,12 +53,6 @@ from frontier_utils import (
     map_coors_to_pixel,
     pixel_to_map_coors,
     reveal_fog_of_war,
-)
-from anchor_nav.vlm_decision_corrector import (
-    AsyncVLMDecisionCorrector,
-    CorrectorConfig,
-    VLMDecisionCorrector,
-    resolve_navigation_after_vlm,
 )
 
 
@@ -59,18 +83,13 @@ def _resolve_scene_mesh(scene_root: Path, scene_name: str) -> Path:
     raise FileNotFoundError(f"Cannot resolve scene asset for {scene_name} under {scene_root}")
 
 
-def _make_2x2_tile(imgs: List[np.ndarray]) -> np.ndarray:
-    assert len(imgs) == 4
-    h, w, _ = imgs[0].shape
-    out = np.zeros((h * 2, w * 2, 3), dtype=imgs[0].dtype)
-    out[0:h, 0:w] = imgs[0]
-    out[0:h, w:2 * w] = imgs[1]
-    out[h:2 * h, 0:w] = imgs[2]
-    out[h:2 * h, w:2 * w] = imgs[3]
-    return out
-
-
-def _build_sentence(task_type: str, cur_task: Dict[str, Any], goals_map: Dict[str, Any], region_map: Dict[str, Any], concise: bool) -> str:
+def _build_sentence(
+    task_type: str,
+    cur_task: Dict[str, Any],
+    goals_map: Dict[str, Any],
+    region_map: Dict[str, Any],
+    concise: bool,
+) -> str:
     if task_type == "object":
         return cur_task["object_category"]
     if task_type == "room":
@@ -102,16 +121,91 @@ def _build_sentence(task_type: str, cur_task: Dict[str, Any], goals_map: Dict[st
     raise ValueError(f"unknown task_type={task_type}")
 
 
+def _save_memory_first_rgb(rep: Any, out_dir: Path) -> None:
+    """保存当前所有记忆槽对应的「首次检测」完整 RGB（与 merge_utils.object_first_rgb 对齐）。"""
+    d = _ensure_dir(out_dir)
+    rgb_list = getattr(rep, "object_first_rgb", None) or []
+    for i, img in enumerate(rgb_list):
+        if img is None:
+            continue
+        if not isinstance(img, np.ndarray) or img.ndim != 3:
+            continue
+        _imwrite_rgb(d / f"mem_{i:03d}_first_detection.jpg", img[:, :, :3])
+
+
+def _save_rerank_candidates(rep: Any, rerank_cfg: RerankConfig, out_dir: Path) -> List[int]:
+    """保存即将送入 VLM 的候选顺序（与 rerank_object_target 一致）。"""
+    d = _ensure_dir(out_dir)
+    cand = list_rerank_candidate_memory_ids(rep, top_k=rerank_cfg.top_k)
+    rgb_list = getattr(rep, "object_first_rgb", None) or []
+    for rank, mid in enumerate(cand, start=1):
+        if mid >= len(rgb_list) or rgb_list[mid] is None:
+            continue
+        _imwrite_rgb(d / f"rank_{rank:02d}_mem_{mid:03d}.jpg", rgb_list[mid])
+    return cand
+
+
+def _save_rerank_extra_topn_log(rep: Any, out_dir: Path, n: int) -> None:
+    """
+    额外日志：按 object_score 取至多 n 个「有首检 RGB」的记忆槽，导出图片 + manifest。
+    与送入 VLM 的 top_k 独立，用于核对 score 排序下的前若干张首检图。
+    """
+    if n <= 0:
+        return
+    d = _ensure_dir(out_dir)
+    cand = list_rerank_candidate_memory_ids(rep, top_k=n)
+    rgb_list = getattr(rep, "object_first_rgb", None) or []
+    scores = np.asarray(getattr(rep, "object_score", np.zeros((0,))), dtype=float).reshape(-1)
+    rows: List[Dict[str, Any]] = []
+    for rank, mid in enumerate(cand, start=1):
+        if mid < len(rgb_list) and rgb_list[mid] is not None and isinstance(rgb_list[mid], np.ndarray):
+            _imwrite_rgb(d / f"rank_{rank:02d}_mem_{mid:03d}.jpg", rgb_list[mid][:, :, :3])
+        rows.append(
+            {
+                "rank": rank,
+                "memory_index": int(mid),
+                "object_score": float(scores[mid]) if mid < len(scores) else None,
+                "image_saved": mid < len(rgb_list) and rgb_list[mid] is not None,
+            }
+        )
+    manifest = {
+        "sort": "object_score_desc_then_first_rgb_only",
+        "top_n": int(n),
+        "exported_count": len(cand),
+        "candidates": rows,
+    }
+    (d / "rerank_top_manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
 def main() -> None:
-    parser = argparse.ArgumentParser("Anchor-VLM analyze (single or multi-task)")
+    parser = argparse.ArgumentParser("Anchor-Rerank analyze（仅 rerank 模块）")
     parser.add_argument("--scene_name", type=str, required=True)
     parser.add_argument("--episode_id", type=int, required=True)
-    parser.add_argument("--task_id", type=int, default=0, help="起始 task下标（episode 内 task_sequence）")
-    parser.add_argument("--num_tasks", type=int, default=10, help="从 task_id 起连续跑几条子任务，不超过 episode 长度")
-    parser.add_argument("--description_mode", choices=["detailed", "concise"], default="detailed")
+    parser.add_argument("--task_id", type=int, default=0, help="起始 task 下标")
+    parser.add_argument("--num_tasks", type=int, default=10, help="连续跑几条子任务")
+    parser.add_argument(
+        "--description_mode",
+        choices=["detailed", "concise"],
+        default="detailed",
+        help="region/instance 等使用详细或精简标注；默认 detailed",
+    )
+    parser.add_argument(
+        "--concise_description",
+        action="store_true",
+        help="显式使用精简描述（等同 --description_mode concise）",
+    )
+    parser.add_argument(
+        "--detailed_description",
+        action="store_true",
+        help="使用详细描述（等同 --description_mode detailed）",
+    )
     parser.add_argument("--description_override", type=str, default=None)
     parser.add_argument("--run_tag", type=str, default=None)
-    parser.add_argument("--enable_output_logs", action="store_true", help="开启落盘日志/图片输出（默认关闭）")
+    parser.add_argument(
+        "--quiet",
+        action="store_true",
+        help="不保存调试图与 trace（默认会保存）",
+    )
 
     parser.add_argument("--navigation_data_path", type=str, default="LangMap_Annotations")
     parser.add_argument("--hm3d_data_base_path", type=str, default="datascene")
@@ -126,29 +220,43 @@ def main() -> None:
     parser.add_argument("--decision_num_min", type=int, default=3)
     parser.add_argument("--success_distance", type=float, default=0.25)
 
-    parser.add_argument("--enable_vlm_corrector", action="store_true")
-    parser.add_argument("--vlm_stride", type=int, default=1)
-    parser.add_argument("--vlm_min_decision_num", type=int, default=2)
-    parser.add_argument("--vlm_conf_threshold", type=float, default=0.8)
+    parser.add_argument("--rerank_levels", type=str, default="instance", help="逗号分隔: object,room,region,instance")
+    parser.add_argument("--rerank_top_k", type=int, default=8, help="送入 VLM 的首检图数量上限（默认 8）")
     parser.add_argument(
-        "--vlm_suppress_commit_conf_threshold",
-        type=float,
-        default=None,
-        help="传给 CorrectorConfig：压制错误 object-commit 时的 conf 下限；默认与 vlm_conf_threshold 相同",
+        "--rerank_extra_log_top_n",
+        type=int,
+        default=15,
+        help="额外导出：按 score 排序的前 N 个有首检 RGB 的图与 manifest，目录名 rerank_top{N}_extra_log（默认 15）",
     )
+    parser.add_argument("--rerank_min_rgb_cand", type=int, default=2)
     parser.add_argument("--vlm_base_url", type=str, default="http://127.0.0.1:8000/v1")
     parser.add_argument("--vlm_model", type=str, default="Qwen2.5-VL-32B-Instruct")
-    parser.add_argument("--vlm_mode", choices=["async", "sync"], default="sync")
     args = parser.parse_args()
+    if args.concise_description and args.detailed_description:
+        parser.error("不要同时指定 --concise_description 与 --detailed_description")
+    if args.concise_description:
+        args.description_mode = "concise"
+    if args.detailed_description:
+        args.description_mode = "detailed"
 
     project_root = Path(__file__).resolve().parents[1]
     run_tag = args.run_tag or _now_tag()
-    output_enabled = bool(args.enable_output_logs)
+    output_enabled = not bool(args.quiet)
 
-    print(f"[anchor-vlm] run_tag={run_tag}")
-    print(f"[anchor-vlm] output_enabled={output_enabled}")
-    print(f"[anchor-vlm] vlm_mode={args.vlm_mode}")
-    print(f"[anchor-vlm] task_id={args.task_id} num_tasks={args.num_tasks}")
+    rerank_cfg = RerankConfig(
+        enabled_levels=parse_levels_csv(args.rerank_levels),
+        top_k=int(args.rerank_top_k),
+        min_candidates_with_rgb=int(args.rerank_min_rgb_cand),
+        base_url=args.vlm_base_url,
+        model=args.vlm_model,
+    )
+    extra_log_n = max(0, int(args.rerank_extra_log_top_n))
+
+    print(f"[anchor-rerank] run_tag={run_tag}")
+    print(f"[anchor-rerank] output_enabled={output_enabled} rerank_levels={rerank_cfg.enabled_levels}")
+    print(f"[anchor-rerank] description_mode={args.description_mode}")
+    print(f"[anchor-rerank] rerank_top_k={args.rerank_top_k} extra_log_top_n={extra_log_n}")
+    print(f"[anchor-rerank] task_id={args.task_id} num_tasks={args.num_tasks}")
 
     scene_file = (project_root / args.navigation_data_path / f"{args.scene_name}.json.gz").resolve()
     with gzip.open(scene_file, "rt", encoding="utf-8") as f:
@@ -197,7 +305,7 @@ def main() -> None:
     total_steps = 0
 
     if output_enabled:
-        out_root = _ensure_dir(project_root / "output_process" / f"{run_tag}-anchor-vlm")
+        out_root = _ensure_dir(project_root / "output_process" / f"{run_tag}-anchor-rerank")
         _ensure_dir(out_root / f"scene={args.scene_name}" / f"episode={args.episode_id}")
     else:
         out_root = None
@@ -207,10 +315,12 @@ def main() -> None:
     for loop_tid in range(int(args.task_id), task_end):
         task_type, task_idx = task_sequence[loop_tid]
         cur_task = episode_mapping[task_type][task_idx]
-        sentence = _build_sentence(task_type, cur_task, goals_map, region_map, concise=(args.description_mode == "concise"))
+        sentence = _build_sentence(
+            task_type, cur_task, goals_map, region_map, concise=(args.description_mode == "concise")
+        )
         if args.description_override and args.description_override.strip():
             sentence = args.description_override.strip()
-        print(f"[anchor-vlm] --- task {loop_tid} level={task_type} sentence={sentence[:120]!r} ---")
+        print(f"[anchor-rerank] --- task {loop_tid} level={task_type} sentence={sentence[:120]!r} ---")
 
         goals_ids = cur_task["target_object_ids"]
         goals = [goals_map[x] for x in goals_ids]
@@ -232,32 +342,18 @@ def main() -> None:
                 return float(sp.geodesic_distance)
             return float("inf")
 
-        corrector = None
-        async_corrector = None
-        if args.enable_vlm_corrector:
-            corrector = VLMDecisionCorrector(
-                CorrectorConfig(
-                    enabled=True,
-                    stride=args.vlm_stride,
-                    min_decision_num=args.vlm_min_decision_num,
-                    confidence_threshold=args.vlm_conf_threshold,
-                    suppress_commit_conf_threshold=args.vlm_suppress_commit_conf_threshold,
-                    base_url=args.vlm_base_url,
-                    model=args.vlm_model,
-                )
-            )
-            if args.vlm_mode == "async":
-                async_corrector = AsyncVLMDecisionCorrector(corrector)
-
         if output_enabled:
             out_task = _ensure_dir(out_root / f"scene={args.scene_name}" / f"episode={args.episode_id}" / f"task={loop_tid}")
             out_dec = _ensure_dir(out_task / "decisions")
             out_logs = _ensure_dir(out_task / "logs")
             trace_path = out_logs / "trace.jsonl"
+            os.environ["RERANK_LOG_JSONL"] = str(out_logs / "rerank_vlm.jsonl")
         else:
             out_task = None
             out_dec = None
             trace_path = None
+            if "RERANK_LOG_JSONL" in os.environ:
+                del os.environ["RERANK_LOG_JSONL"]
 
         goto_rgb: List[np.ndarray] = []
         goto_depth: List[np.ndarray] = []
@@ -267,8 +363,8 @@ def main() -> None:
         sub_episode_start_position = prev_agent_state.position
         start_goal_geo = geo_dist(sub_episode_start_position, view_points)
         episode_cum_distance = 0.0
-        vlm_force_total = 0
-        vlm_calls_total = 0
+        rerank_attempts = 0
+        rerank_applied = 0
         task_t0 = _dt.datetime.now().timestamp()
 
         while total_steps < args.max_steps:
@@ -325,125 +421,69 @@ def main() -> None:
 
             target, is_final = pq3d.decision(color_list, depth_list, state_list, frontiers, sentence, decision_num)
             baseline_type = "object" if is_final else "frontier"
+            target_before_rerank = np.asarray(target, dtype=float).reshape(3).copy()
 
             rep = pq3d.representation_manager
             obj_boxes = np.asarray(getattr(rep, "object_box", np.zeros((0, 6))), dtype=float)
             obj_scores = np.asarray(getattr(rep, "object_score", np.zeros((0,))), dtype=float).reshape(-1)
             obj_counts = np.asarray(getattr(rep, "object_count", np.zeros((0,))), dtype=float).reshape(-1)
             cur_n = len(obj_scores)
-            prev_n = len(prev_obj_count)
-            new_ids = list(range(prev_n, cur_n)) if cur_n > prev_n else []
-            updated_ids = [i for i in range(min(prev_n, cur_n)) if obj_counts[i] > prev_obj_count[i]]
-            current_pool = sorted(set(new_ids + updated_ids))
-            current_pool = sorted(current_pool, key=lambda i: float(obj_scores[i]), reverse=True)[:15]
-            current_candidates = [
-                {
-                    "object_id_in_memory": int(i),
-                    "score": float(obj_scores[i]),
-                    "count": float(obj_counts[i]),
-                    "center_xyz": [float(x) for x in obj_boxes[i, :3].tolist()] if i < len(obj_boxes) else [],
-                }
-                for i in current_pool
-            ]
 
-            tiles = []
-            pano = color_list[-12:]
-            tmp_tile_dir = None
-            if len(pano) == 12:
-                if output_enabled:
-                    tmp_tile_dir = dec_dir
-                else:
-                    tmp_tile_dir = Path(tempfile.mkdtemp(prefix="anchor_vlm_tiles_"))
-                for t in range(3):
-                    tile = _make_2x2_tile(pano[t * 4 : (t + 1) * 4])
-                    tile_path = tmp_tile_dir / f"vlm_tile_{t}.jpg"
-                    _imwrite_rgb(tile_path, tile)
-                    tiles.append(tile_path)
-
-            vlm_info = {"vlm_called": False}
-            vlm_async_source_decision = None
-            vlm_async_source_target = None
-            vlm_async_ready = False
-            if async_corrector is not None and args.vlm_mode == "async":
-                polled = async_corrector.poll_ready()
-                vlm_async_ready = bool(polled.get("ready", False))
-                vlm_info = polled.get("vlm_info", {"vlm_called": False})
-                vlm_async_source_decision = polled.get("source_decision_num", None)
-                vlm_async_source_target = polled.get("source_agent_position", None)
-            elif corrector is not None and args.vlm_mode == "sync" and corrector.should_call(decision_num):
-                vlm_async_ready = True
-                vlm_async_source_decision = int(decision_num)
-                vlm_async_source_target = [float(x) for x in np.asarray(st_now.position, dtype=float).tolist()]
-                try:
-                    vlm_info = corrector.evaluate(
-                        description=sentence,
-                        decision_num=int(decision_num),
-                        baseline_target_type=baseline_type,
-                        num_frontiers=int(len(frontiers)),
-                        memory_objects=int(cur_n),
-                        candidate_objects=current_candidates,
-                        image_tile_paths=tiles,
+            rinf: Dict[str, Any] = {}
+            if is_final and should_run_rerank(task_type, rerank_cfg) and output_enabled and dec_dir is not None:
+                _save_memory_first_rgb(rep, dec_dir / "memory_first_rgb_all_slots")
+                _save_rerank_candidates(rep, rerank_cfg, dec_dir / "rerank_candidates_to_vlm")
+                if extra_log_n > 0:
+                    _save_rerank_extra_topn_log(
+                        rep,
+                        dec_dir / f"rerank_top{extra_log_n}_extra_log",
+                        extra_log_n,
                     )
-                except Exception as e:
-                    vlm_info = {"vlm_called": True, "error": str(e)}
-                vlm_calls_total += 1
 
-            mem_top = None
-            if len(current_pool) > 0 and current_pool[0] < len(obj_boxes):
-                mem_top = obj_boxes[current_pool[0], :3]
-            _cfg = (
-                corrector.cfg
-                if corrector is not None
-                else CorrectorConfig(
-                    confidence_threshold=args.vlm_conf_threshold,
-                    suppress_commit_conf_threshold=args.vlm_suppress_commit_conf_threshold,
+            if is_final and should_run_rerank(task_type, rerank_cfg):
+                rerank_attempts += 1
+                new_tp, rinf = rerank_object_target(
+                    description=sentence,
+                    rep=rep,
+                    baseline_target_xyz=target_before_rerank,
+                    decision_aux=getattr(pq3d, "last_decision_aux", {}),
+                    cfg=rerank_cfg,
                 )
-            )
-            merged = resolve_navigation_after_vlm(
-                baseline_is_final=bool(is_final),
-                baseline_target=target,
-                frontiers=frontiers,
-                agent_position=st_now.position,
-                vlm_info=vlm_info,
-                cfg=_cfg,
-                memory_top_xyz=mem_top,
-                async_agent_xyz=vlm_async_source_target,
-                sync_vlm_round=(args.vlm_mode == "sync"),
-            )
-            corrected_target = np.asarray(merged["corrected_target"], dtype=float)
-            corrected_final = bool(merged["corrected_final"])
-            corrected = bool(merged["navigation_corrected"])
-            if merged.get("vlm_force_applied"):
-                vlm_force_total += 1
+                if rinf.get("rerank_applied"):
+                    target = new_tp
+                    rerank_applied += 1
+                    print(
+                        f"[anchor-rerank] rerank applied mem={rinf.get('chosen_memory_index')} "
+                        f"baseline_mem={rinf.get('baseline_memory_index')} reason={str(rinf.get('reason', ''))[:100]!r} "
+                        f"artifact_dir={rinf.get('artifact_dir')}"
+                    )
+            else:
+                rinf = {"skipped": "not_object_final_or_level"}
 
             meta = {
                 "decision_num": int(decision_num),
                 "baseline_target_type": baseline_type,
-                "baseline_target_position": np.asarray(target, dtype=float).tolist(),
+                "baseline_target_before_rerank": target_before_rerank.tolist(),
+                "target_position_used_for_goto": np.asarray(target, dtype=float).tolist(),
                 "baseline_is_final": bool(is_final),
-                "vlm_bidir_object_final": merged.get("vlm_bidir_object_final"),
-                "corrected": corrected,
-                "corrected_target_position": corrected_target.tolist(),
-                "corrected_is_final": corrected_final,
                 "num_frontiers": int(len(frontiers)),
                 "memory_objects": int(cur_n),
-                "new_ids": new_ids,
-                "updated_ids": updated_ids,
-                "current_top_candidates": current_candidates,
-                "vlm_info": vlm_info,
-                "vlm_async_ready": bool(vlm_async_ready),
-                "vlm_async_source_decision": vlm_async_source_decision,
-                "vlm_async_source_agent_position": vlm_async_source_target,
-                "vlm_world_point": vlm_info.get("vlm_world_point"),
+                "object_scores_snapshot": obj_scores.tolist() if cur_n else [],
+                "rerank_info": rinf,
+                "last_decision_aux": getattr(pq3d, "last_decision_aux", {}),
                 "start_goal_geo": start_goal_geo,
                 "cur_goal_geo_before_goto": geo_dist(agent.get_state().position, view_points),
                 "episode_cum_distance": float(episode_cum_distance),
             }
-            if output_enabled:
-                with open(dec_dir / "decision_meta_anchor_vlm.json", "w", encoding="utf-8") as f:
+            if output_enabled and dec_dir is not None:
+                with open(dec_dir / "decision_meta_anchor_rerank.json", "w", encoding="utf-8") as f:
                     json.dump(meta, f, ensure_ascii=False, indent=2)
-                with open(trace_path, "a", encoding="utf-8") as f:
-                    f.write(json.dumps(meta, ensure_ascii=False) + "\n")
+                if trace_path is not None:
+                    with open(trace_path, "a", encoding="utf-8") as f:
+                        f.write(json.dumps(meta, ensure_ascii=False) + "\n")
+
+            corrected_final = bool(is_final)
+            corrected_target = np.asarray(target, dtype=float)
 
             if not corrected_final:
                 visited_frontier.add(tuple(np.round(corrected_target, 1)))
@@ -480,56 +520,15 @@ def main() -> None:
                     break
 
             print(
-                f"[anchor-vlm] task={loop_tid} dec={decision_num} frontiers={len(frontiers)} "
-                f"baseline={baseline_type} corrected={corrected} final={corrected_final} "
-                f"memory={cur_n} current_pool={len(current_pool)} "
-                f"vlm_called={vlm_info.get('vlm_called', False)} "
-                f"vlm_async_ready={vlm_async_ready} "
-                f"vlm_src_dec={vlm_async_source_decision} "
-                f"vlm_high_conf_visible={vlm_info.get('high_conf_visible', False)} "
-                f"vlm_found={vlm_info.get('found_target', False)} "
-                f"vlm_conf={round(float(vlm_info.get('confidence', 0.0)), 3) if vlm_info.get('vlm_called', False) else 0.0} "
-                f"vlm_ms={round(float(vlm_info.get('elapsed_ms', 0.0)), 1) if vlm_info.get('vlm_called', False) else 0.0} "
-                f"vlm_bidir={merged.get('vlm_bidir_object_final')} "
-                f"vlm_reason={str(vlm_info.get('reason', ''))[:120]}"
+                f"[anchor-rerank] task={loop_tid} dec={decision_num} frontiers={len(frontiers)} "
+                f"baseline={baseline_type} final={corrected_final} memory={cur_n} "
+                f"rerank_applied={rinf.get('rerank_applied', False)}"
             )
-
-            scheduled = False
-            if async_corrector is not None and args.vlm_mode == "async":
-                src_target_xyz = [float(x) for x in np.asarray(st_now.position, dtype=float).tolist()]
-                scheduled = async_corrector.submit_if_needed(
-                    decision_num=int(decision_num),
-                    description=sentence,
-                    baseline_target_type=baseline_type,
-                    num_frontiers=int(len(frontiers)),
-                    memory_objects=int(cur_n),
-                    candidate_objects=current_candidates,
-                    image_tile_paths=tiles,
-                    source_agent_position=src_target_xyz,
-                    cleanup_tile_paths=tiles if not output_enabled else [],
-                    cleanup_dir=tmp_tile_dir if not output_enabled else None,
-                )
-                if scheduled:
-                    vlm_calls_total += 1
-            if not scheduled and (not output_enabled) and len(tiles) > 0:
-                for p in tiles:
-                    try:
-                        p.unlink(missing_ok=True)
-                    except Exception:
-                        pass
-                try:
-                    if tmp_tile_dir is not None:
-                        tmp_tile_dir.rmdir()
-                except Exception:
-                    pass
 
             prev_obj_count = obj_counts.copy()
             decision_num += 1
             if corrected_final:
                 break
-
-        if async_corrector is not None:
-            async_corrector.close()
 
         end_state = agent.get_state()
         end_goal_geo = geo_dist(end_state.position, view_points)
@@ -554,22 +553,16 @@ def main() -> None:
             "success_distance": float(args.success_distance),
             "end_position": np.asarray(end_state.position, dtype=float).tolist(),
             "trace_jsonl": str(trace_path) if trace_path is not None else None,
-            "enable_vlm_corrector": bool(args.enable_vlm_corrector),
-            "enable_output_logs": output_enabled,
-            "vlm_mode": args.vlm_mode,
-            "vlm_calls_total": int(vlm_calls_total),
-            "vlm_force_total": int(vlm_force_total),
+            "rerank_levels": list(rerank_cfg.enabled_levels),
+            "rerank_attempts": int(rerank_attempts),
+            "rerank_applied": int(rerank_applied),
             "task_time_sec": float(_dt.datetime.now().timestamp() - task_t0),
         }
         all_summaries.append(summary)
-        if output_enabled:
+        if output_enabled and out_task is not None:
             with open(out_task / "summary.json", "w", encoding="utf-8") as f:
                 json.dump(summary, f, ensure_ascii=False, indent=2)
-        print("[anchor-vlm] summary:", json.dumps(summary, ensure_ascii=False))
-        print(
-            f"[anchor-vlm] task_time scene={args.scene_name} episode={args.episode_id} "
-            f"task={loop_tid} sec={summary['task_time_sec']:.3f}"
-        )
+        print("[anchor-rerank] summary:", json.dumps(summary, ensure_ascii=False))
 
     if output_enabled and out_root is not None:
         run_summary_path = out_root / f"scene={args.scene_name}" / f"episode={args.episode_id}" / "run_summary.json"
@@ -579,24 +572,15 @@ def main() -> None:
                     "run_tag": run_tag,
                     "scene_name": args.scene_name,
                     "episode_id": args.episode_id,
-                    "task_id_start": int(args.task_id),
-                    "num_tasks_requested": int(args.num_tasks),
                     "tasks_ran": len(all_summaries),
-                    "avg_sr": float(np.mean([s["sr"] for s in all_summaries])) if all_summaries else 0.0,
-                    "avg_spl": float(np.mean([s["spl"] for s in all_summaries])) if all_summaries else 0.0,
                     "summaries": all_summaries,
                 },
                 f,
                 ensure_ascii=False,
                 indent=2,
             )
-        print(f"[anchor-vlm] run_summary -> {run_summary_path}")
+        print(f"[anchor-rerank] run_summary -> {run_summary_path}")
 
-    print(
-        "[anchor-vlm] aggregate "
-        f"tasks={len(all_summaries)} avg_sr={float(np.mean([s['sr'] for s in all_summaries])) if all_summaries else 0.0:.4f} "
-        f"avg_spl={float(np.mean([s['spl'] for s in all_summaries])) if all_summaries else 0.0:.4f}"
-    )
     sim.close()
 
 

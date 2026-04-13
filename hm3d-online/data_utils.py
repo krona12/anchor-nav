@@ -189,9 +189,11 @@ class PQ3DModel:
         # decision params
         self.frontier_selection_mode = 'model'
         self.min_decision_num = min_decision_num if min_decision_num is not None else 3
-    
+        self.last_decision_aux = {}
+
     def reset(self):
         self.representation_manager.reset()
+        self.last_decision_aux = {}
         
     def decision(self, color_list, depth_list, agent_state_list, frontier_waypoints, sentence, decision_num, image_feat=None):
         torch.cuda.empty_cache()
@@ -413,8 +415,8 @@ class PQ3DModel:
             query = query.numpy()
             embeds = embeds.numpy()
             pred_dict_list.append({'point_cloud': raw_coordinates[bid], 'pred_masks': masks, 'pred_classes': classes, 'pred_boxes': boxes, 'pred_scores': scores, 'pred_mask_scores': mask_scores, 'pred_feats': query, 'open_vocab_feats': embeds})
-        # start to merge
-        self.representation_manager.merge(pred_dict_list)
+        # start to merge（传入每帧 RGB 以记录各物体首次检测图像）
+        self.representation_manager.merge(pred_dict_list, frame_rgbs=color_list)
         torch.cuda.empty_cache()
         # pq3d stage2
         batch = []
@@ -532,6 +534,13 @@ class PQ3DModel:
                 random_frontier_idx = np.random.randint(len(frontier_locs))
                 target_position = frontier_locs[random_frontier_idx].numpy()[:3]
         target_position[[1, 2]] = target_position[[2, 1]]
+        n_real = int(real_obj_pad_masks.sum().item())
+        self.last_decision_aux = {
+            "goto_frontier_probability": float(goto_frontier_probability),
+            "is_object_decision": bool(is_object_decision),
+            "real_object_decision_idx": int(real_object_decision_idx),
+            "n_real_objects": n_real,
+        }
         return target_position, is_object_decision
 
             

@@ -3,7 +3,6 @@ import os
 import sys
 import atexit
 import datetime
-import tempfile
 from pathlib import Path
 
 sys.stdout.reconfigure(line_buffering=True)
@@ -27,17 +26,16 @@ from frontier_utils import (
     pixel_to_map_coors,
     reveal_fog_of_war,
 )
-import cv2
 from data_utils import PQ3DModel
 from tqdm import tqdm
 import time
 import argparse
 
-from anchor_nav.vlm_decision_corrector import (
-    AsyncVLMDecisionCorrector,
-    CorrectorConfig,
-    VLMDecisionCorrector,
-    resolve_navigation_after_vlm,
+from anchor_nav.rerank import (
+    RerankConfig,
+    parse_levels_csv,
+    rerank_object_target,
+    should_run_rerank,
 )
 
 
@@ -70,17 +68,6 @@ def resolve_scene_path(hm3d_root: str, scene_name: str) -> str:
     raise FileNotFoundError(f"Scene asset not found for {scene_name}. Checked: {[str(x) for x in candidates]}")
 
 
-def make_2x2_tile(imgs):
-    assert len(imgs) == 4
-    h, w, _ = imgs[0].shape
-    out = np.zeros((h * 2, w * 2, 3), dtype=imgs[0].dtype)
-    out[0:h, 0:w] = imgs[0]
-    out[0:h, w : 2 * w] = imgs[1]
-    out[h : 2 * h, 0:w] = imgs[2]
-    out[h : 2 * h, w : 2 * w] = imgs[3]
-    return out
-
-
 class _TeeStream:
     def __init__(self, *streams):
         self.streams = streams
@@ -100,17 +87,17 @@ def _setup_run_logging(log_dir: str) -> None:
     os.makedirs(log_dir, exist_ok=True)
     ts = datetime.datetime.now().strftime("%Y%m%d-%H%M%S-%f")
     pid = os.getpid()
-    log_path = os.path.join(log_dir, f"refhm3d-nav-sequence-analyze-vlmcore-refine1-{ts}-pid{pid}.log")
+    log_path = os.path.join(log_dir, f"refhm3d-nav-sequence-analyze-anchor-rerank-refine1-{ts}-pid{pid}.log")
     log_fp = open(log_path, "w", encoding="utf-8", buffering=1)
     original_stdout = sys.stdout
     original_stderr = sys.stderr
     sys.stdout = _TeeStream(original_stdout, log_fp)
     sys.stderr = _TeeStream(original_stderr, log_fp)
-    print(f"[VLMCore] logging enabled -> {os.path.abspath(log_path)}")
+    print(f"[RerankRefine1] logging enabled -> {os.path.abspath(log_path)}")
 
     def _cleanup():
         try:
-            print(f"[VLMCore] run finished, log saved -> {os.path.abspath(log_path)}")
+            print(f"[RerankRefine1] run finished, log saved -> {os.path.abspath(log_path)}")
         finally:
             sys.stdout = original_stdout
             sys.stderr = original_stderr
@@ -141,7 +128,7 @@ def geo_dist(path_finder, start_pos, ends) -> float:
     return float("inf")
 
 
-parser = argparse.ArgumentParser(description="Run RefHM3D VLMCore refine1 batch evaluation")
+parser = argparse.ArgumentParser(description="Run RefHM3D anchor rerank refine1 batch evaluation")
 parser.add_argument("--start_ratio", type=float, default=0.0, help="Dataset start ratio")
 parser.add_argument("--end_ratio", type=float, default=0.2, help="Dataset end ratio")
 parser.add_argument("--concise_description", action="store_true", help="Use concise descriptions")
@@ -149,26 +136,43 @@ parser.add_argument("--navigation_data_path", type=str, default="/home/zhaochaoy
 parser.add_argument("--hm3d_data_base_path", type=str, default="/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/datascene")
 parser.add_argument("--pq3d_stage1_path", type=str, default="/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/checkpoint/stage1-pretrain-all")
 parser.add_argument("--pq3d_stage2_path", type=str, default="/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/checkpoint/stage2-fine-tune-goat")
-parser.add_argument("--output_log_dir", type=str, default="/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/output_logs/anchor/vlmcor")
+parser.add_argument("--output_log_dir", type=str, default="/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/output_logs/anchor/rerank")
 parser.add_argument("--max_steps", type=int, default=400)
-parser.add_argument("--enable_vlm_corrector", action="store_true")
-parser.add_argument("--vlm_mode", choices=["async", "sync"], default="sync")
-parser.add_argument("--vlm_stride", type=int, default=1)
-parser.add_argument("--vlm_min_decision_num", type=int, default=2)
-parser.add_argument("--vlm_conf_threshold", type=float, default=0.9)
 parser.add_argument(
-    "--vlm_suppress_commit_conf_threshold",
-    type=float,
-    default=None,
-    help="压制 baseline 错误 object-commit 时的 conf 下限；默认与 vlm_conf_threshold 相同",
+    "--rerank_levels",
+    type=str,
+    default="instance",
+    help="Comma-separated task levels to run rerank on (e.g. region,instance)",
 )
+parser.add_argument("--rerank_top_k", type=int, default=8)
+parser.add_argument("--rerank_min_rgb_cand", type=int, default=2, help="Min candidates with first-sight RGB to call VLM")
 parser.add_argument("--vlm_base_url", type=str, default="http://127.0.0.1:8000/v1")
 parser.add_argument("--vlm_model", type=str, default="Qwen2.5-VL-32B-Instruct")
+parser.add_argument(
+    "--rerank_save_image_log",
+    type=int,
+    default=0,
+    choices=(0, 1),
+    help="是否落盘 rerank_vlm_io/ 下 input 图片等调试文件：0=否（默认），1=是",
+)
 args = parser.parse_args()
+os.environ["RERANK_SKIP_IO_ARTIFACTS"] = "0" if args.rerank_save_image_log else "1"
 
 output_log_dir = os.path.expanduser(args.output_log_dir)
 _setup_run_logging(output_log_dir)
-print(f"[VLMCore] vlm_mode={args.vlm_mode}, enable_vlm_corrector={args.enable_vlm_corrector}")
+
+rerank_cfg = RerankConfig(
+    enabled_levels=parse_levels_csv(args.rerank_levels),
+    top_k=int(args.rerank_top_k),
+    min_candidates_with_rgb=int(args.rerank_min_rgb_cand),
+    base_url=args.vlm_base_url,
+    model=args.vlm_model,
+)
+print(
+    f"[RerankRefine1] rerank_levels={sorted(rerank_cfg.enabled_levels)} "
+    f"top_k={rerank_cfg.top_k} min_rgb_cand={rerank_cfg.min_candidates_with_rgb} "
+    f"rerank_save_image_log={args.rerank_save_image_log}"
+)
 
 hm3d_data_base_path = os.path.expanduser(args.hm3d_data_base_path)
 pq3d_stage1_path = os.path.expanduser(args.pq3d_stage1_path)
@@ -183,10 +187,19 @@ start_ratio, end_ratio = args.start_ratio, args.end_ratio
 navigation_data_path = os.path.expanduser(args.navigation_data_path)
 navigation_data_root = Path(navigation_data_path)
 os.makedirs(output_log_dir, exist_ok=True)
-if concise_description_tag:
-    output_path = os.path.join(output_log_dir, f"refhm3d_seq_vlmcor_refine1_concisedesc_{start_ratio}_{end_ratio}.json")
+
+# 分片独立 jsonl，避免多进程同目录冲突；可用环境变量覆盖
+_shard_tag = f"{start_ratio}_{end_ratio}"
+_default_rerank_log = os.path.join(output_log_dir, f"rerank_vlm_refine1_{_shard_tag}.jsonl")
+if os.environ.get("RERANK_LOG_JSONL", "").strip():
+    pass
 else:
-    output_path = os.path.join(output_log_dir, f"refhm3d_seq_vlmcor_refine1_{start_ratio}_{end_ratio}.json")
+    os.environ["RERANK_LOG_JSONL"] = _default_rerank_log
+
+if concise_description_tag:
+    output_path = os.path.join(output_log_dir, f"refhm3d_seq_rerank_refine1_concisedesc_{start_ratio}_{end_ratio}.json")
+else:
+    output_path = os.path.join(output_log_dir, f"refhm3d_seq_rerank_refine1_{start_ratio}_{end_ratio}.json")
 
 scene_data_paths = sorted(navigation_data_root.rglob("*.json.gz"))
 if len(scene_data_paths) == 0:
@@ -250,23 +263,6 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
         area_thres_in_pixels = convert_meters_to_pixel(9, map_resolution, sim)
         visibility_dist_in_pixels = convert_meters_to_pixel(visible_radius, map_resolution, sim)
 
-        corrector = None
-        async_corrector = None
-        if args.enable_vlm_corrector:
-            corrector = VLMDecisionCorrector(
-                CorrectorConfig(
-                    enabled=True,
-                    stride=args.vlm_stride,
-                    min_decision_num=args.vlm_min_decision_num,
-                    confidence_threshold=args.vlm_conf_threshold,
-                    suppress_commit_conf_threshold=args.vlm_suppress_commit_conf_threshold,
-                    base_url=args.vlm_base_url,
-                    model=args.vlm_model,
-                )
-            )
-            if args.vlm_mode == "async":
-                async_corrector = AsyncVLMDecisionCorrector(corrector)
-
         for idx, cur_task in enumerate(cur_episode["task_sequence"]):
             task_t0 = time.perf_counter()
             task_type, task_idx = cur_task
@@ -295,7 +291,6 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                     else all_navigation_goals_dict[cur_task["instance_id"]]["annot_unique_detailed_description"]
                 )
                 goal_category = goals[0]["object_category"]
-            use_vlm_for_task = bool(args.enable_vlm_corrector and task_type in ["region", "instance"])
 
             total_steps = 0
             prev_agent_state = agent.get_state()
@@ -303,8 +298,8 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
             episode_cum_distance = 0.0
             goto_color_list, goto_depth_list, goto_agent_state_list = [], [], []
             prev_obj_count = np.asarray(getattr(pq3d_model.representation_manager, "object_count", np.zeros((0,))), dtype=float)
-            vlm_calls_total = 0
-            vlm_force_total = 0
+            rerank_attempts = 0
+            rerank_applied = 0
 
             while total_steps < args.max_steps:
                 color_list, depth_list, agent_state_list = [], [], []
@@ -358,111 +353,29 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                 target_position, is_final_decision = pq3d_model.decision(
                     color_list, depth_list, agent_state_list, frontier_waypoints, sentence, decision_num
                 )
-                baseline_type = "object" if is_final_decision else "frontier"
                 decision_num += 1
 
                 rep = pq3d_model.representation_manager
-                obj_boxes = np.asarray(getattr(rep, "object_box", np.zeros((0, 6))), dtype=float)
-                obj_scores = np.asarray(getattr(rep, "object_score", np.zeros((0,))), dtype=float).reshape(-1)
                 obj_counts = np.asarray(getattr(rep, "object_count", np.zeros((0,))), dtype=float).reshape(-1)
-                cur_n = len(obj_scores)
-                prev_n = len(prev_obj_count)
-                new_ids = list(range(prev_n, cur_n)) if cur_n > prev_n else []
-                updated_ids = [i for i in range(min(prev_n, cur_n)) if obj_counts[i] > prev_obj_count[i]]
-                current_pool = sorted(set(new_ids + updated_ids))
-                current_pool = sorted(current_pool, key=lambda i: float(obj_scores[i]), reverse=True)[:15]
-                current_candidates = [
-                    {
-                        "object_id_in_memory": int(i),
-                        "score": float(obj_scores[i]),
-                        "count": float(obj_counts[i]),
-                        "center_xyz": [float(x) for x in obj_boxes[i, :3].tolist()] if i < len(obj_boxes) else [],
-                    }
-                    for i in current_pool
-                ]
+                cur_n = len(obj_counts)
 
-                tiles = []
-                tmp_tile_dir = Path(tempfile.mkdtemp(prefix="vlmcor_tiles_"))
-                pano = color_list[-12:]
-                if len(pano) == 12:
-                    for t in range(3):
-                        tile = make_2x2_tile(pano[t * 4 : (t + 1) * 4])
-                        tile_path = tmp_tile_dir / f"vlm_tile_{t}.jpg"
-                        cv2.imwrite(str(tile_path), cv2.cvtColor(tile, cv2.COLOR_RGB2BGR))
-                        tiles.append(tile_path)
+                target_before_rerank = np.asarray(target_position, dtype=float).reshape(3).copy()
+                corrected_target = target_before_rerank.copy()
+                corrected_final = bool(is_final_decision)
+                rinf: dict = {}
 
-                vlm_info = {"vlm_called": False}
-                vlm_src_pos = None
-                if async_corrector is not None and use_vlm_for_task:
-                    polled = async_corrector.poll_ready()
-                    vlm_info = polled.get("vlm_info", {"vlm_called": False})
-                    vlm_src_pos = polled.get("source_agent_position", None)
-                elif corrector is not None and use_vlm_for_task and corrector.should_call(decision_num - 1):
-                    try:
-                        vlm_info = corrector.evaluate(
-                            description=sentence,
-                            decision_num=decision_num - 1,
-                            baseline_target_type=baseline_type,
-                            num_frontiers=len(frontier_waypoints),
-                            memory_objects=cur_n,
-                            candidate_objects=current_candidates,
-                            image_tile_paths=tiles,
-                        )
-                    except Exception as e:
-                        vlm_info = {"vlm_called": True, "error": str(e)}
-                    vlm_src_pos = [float(x) for x in np.asarray(agent_state.position, dtype=float).tolist()]
-                    vlm_calls_total += 1
-
-                mem_top = None
-                if len(current_pool) > 0 and current_pool[0] < len(obj_boxes):
-                    mem_top = obj_boxes[current_pool[0], :3]
-                _cfg = (
-                    corrector.cfg
-                    if corrector is not None
-                    else CorrectorConfig(
-                        confidence_threshold=args.vlm_conf_threshold,
-                        suppress_commit_conf_threshold=args.vlm_suppress_commit_conf_threshold,
-                    )
-                )
-                merged = resolve_navigation_after_vlm(
-                    baseline_is_final=bool(is_final_decision),
-                    baseline_target=target_position,
-                    frontiers=frontier_waypoints,
-                    agent_position=agent_state.position,
-                    vlm_info=vlm_info,
-                    cfg=_cfg,
-                    memory_top_xyz=mem_top,
-                    async_agent_xyz=vlm_src_pos,
-                    sync_vlm_round=(args.vlm_mode == "sync"),
-                )
-                corrected_target = np.asarray(merged["corrected_target"], dtype=float)
-                corrected_final = bool(merged["corrected_final"])
-                if merged.get("vlm_force_applied"):
-                    vlm_force_total += 1
-
-                if async_corrector is not None and use_vlm_for_task:
-                    scheduled = async_corrector.submit_if_needed(
-                        decision_num=decision_num - 1,
+                if is_final_decision and should_run_rerank(task_type, rerank_cfg):
+                    rerank_attempts += 1
+                    new_tp, rinf = rerank_object_target(
                         description=sentence,
-                        baseline_target_type=baseline_type,
-                        num_frontiers=len(frontier_waypoints),
-                        memory_objects=cur_n,
-                        candidate_objects=current_candidates,
-                        image_tile_paths=tiles,
-                        source_agent_position=[float(x) for x in np.asarray(agent_state.position, dtype=float).tolist()],
-                        cleanup_tile_paths=tiles,
-                        cleanup_dir=tmp_tile_dir,
+                        rep=rep,
+                        baseline_target_xyz=target_before_rerank,
+                        decision_aux=getattr(pq3d_model, "last_decision_aux", {}),
+                        cfg=rerank_cfg,
                     )
-                    if scheduled:
-                        vlm_calls_total += 1
-                    else:
-                        for p in tiles:
-                            p.unlink(missing_ok=True)
-                        tmp_tile_dir.rmdir()
-                else:
-                    for p in tiles:
-                        p.unlink(missing_ok=True)
-                    tmp_tile_dir.rmdir()
+                    if rinf.get("rerank_applied"):
+                        rerank_applied += 1
+                        corrected_target = np.asarray(new_tp, dtype=float).reshape(3)
 
                 if not corrected_final:
                     visited_frontier_set.add(tuple(np.round(corrected_target, 1)))
@@ -516,6 +429,8 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                 sr = agent_end_geo_distance <= success_distance
                 spl = sr * start_end_geo_distance / max(start_end_geo_distance, episode_cum_distance)
 
+            if navigation_type not in result_dict:
+                result_dict[navigation_type] = []
             result_dict[navigation_type].append(
                 {
                     "scene_name": scene_name,
@@ -532,20 +447,17 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                     "start_goal_geo": float(start_end_geo_distance),
                     "end_goal_geo": float(agent_end_geo_distance),
                     "episode_cum_distance": float(episode_cum_distance),
-                    "vlm_mode": args.vlm_mode,
-                    "vlm_task_enabled": bool(use_vlm_for_task),
-                    "vlm_calls_total": int(vlm_calls_total),
-                    "vlm_force_total": int(vlm_force_total),
+                    "rerank_levels": sorted(rerank_cfg.enabled_levels),
+                    "rerank_attempts": int(rerank_attempts),
+                    "rerank_applied": int(rerank_applied),
                 }
             )
             print(
-                f"[vlmcore-refine1] scene={scene_name} ep={episode_id} task={idx} level={task_type} "
+                f"[rerank-refine1] scene={scene_name} ep={episode_id} task={idx} level={task_type} "
                 f"SR={sr} SPL={spl:.4f} time={task_time:.3f}s "
-                f"steps={total_steps} decisions={decision_num} vlm_calls={vlm_calls_total} vlm_force={vlm_force_total}"
+                f"steps={total_steps} decisions={decision_num} rerank_attempts={rerank_attempts} rerank_applied={rerank_applied}"
             )
 
-        if async_corrector is not None:
-            async_corrector.close()
         sim.close()
         with open(output_path, "w") as f:
             json.dump(result_dict, f)

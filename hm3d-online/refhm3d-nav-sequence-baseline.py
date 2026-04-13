@@ -147,6 +147,10 @@ args = parser.parse_args()
 
 output_log_dir = os.path.expanduser(args.output_log_dir)
 _setup_run_logging(output_log_dir)
+print(
+    "[baseline] 输出 JSON 每条记录含 task_level（object|room|region|instance），"
+    "与 vlmcore refine 及 test_scripts/aggregate_shard_results.py --by-level 一致"
+)
 
 black_task_ids = []
 print(f"NUMBER OF BLACK IDS: {len(black_task_ids)}")
@@ -447,6 +451,7 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                     "scene_name": scene_name,
                     "episode_id": episode_id,
                     "task_id": idx,
+                    "task_level": task_type,
                     "navigation_type": navigation_type,
                     "sr": sr,
                     "spl": spl,
@@ -454,9 +459,12 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                     "task_time_sec": episode_time,
                 }
             )
-            print(f"===Episode_id {episode_id} task_id {idx}===\nSR: {sr}, SPL: {spl}, Object category: {goal_category}, goal type: {navigation_type}===\n")
             print(
-                f"[baseline] task_time scene={scene_name} episode={episode_id} "
+                f"===Episode_id {episode_id} task_id {idx} task_level={task_type}===\n"
+                f"SR: {sr}, SPL: {spl}, Object category: {goal_category}, goal type: {navigation_type}===\n"
+            )
+            print(
+                f"[baseline] task_level={task_type} scene={scene_name} episode={episode_id} "
                 f"task={idx} sec={episode_time:.3f}"
             )
 
