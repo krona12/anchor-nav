@@ -10,7 +10,7 @@ set -u
 set -- "${_SAVED_ARGV[@]}"
 unset _SAVED_ARGV
 
-export CUDA_VISIBLE_DEVICES=2
+export CUDA_VISIBLE_DEVICES=4,5
 export PYTHONPATH=/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D:./:./hm3d-online:./hm3d-online/FastSAM:${PYTHONPATH:-}
 export MAGNUM_LOG=quiet
 export HABITAT_SIM_LOG=quiet
@@ -51,7 +51,7 @@ RERANK_TOP_K="${RERANK_TOP_K:-8}"
 RERANK_MIN_RGB_CAND="${RERANK_MIN_RGB_CAND:-2}"
 RERANK_SAVE_IMAGE_LOG="${RERANK_SAVE_IMAGE_LOG:-0}"
 VLM_BASE_URL="${VLM_BASE_URL:-http://127.0.0.1:8000/v1}"
-VLM_MODEL="${VLM_MODEL:-Qwen2.5-VL-32B-Instruct}"
+VLM_MODEL="${VLM_MODEL:-gpt-4o-mini}"
 
 echo ">>> Anchor rerank run tag: ${RUN_TAG}"
 echo ">>> Description mode: ${DESC_MODE}"

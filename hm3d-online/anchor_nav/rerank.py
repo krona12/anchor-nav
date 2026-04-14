@@ -29,12 +29,7 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 import cv2
 import numpy as np
 
-_VLLM_DIR = Path(__file__).resolve().parent / "vllm"
-if str(_VLLM_DIR) not in sys.path:
-    sys.path.insert(0, str(_VLLM_DIR))
-from qwen_vllm_api import VLLMAPIError  # noqa: E402
-
-from .vllm_adapter import VLLMClientConfig, VLLMOpenAIClient
+from vlm.client import BASE_URL as NEW_VLM_BASE_URL, DEFAULT_MODEL as NEW_DEFAULT_MODEL, chat_messages
 
 
 SYSTEM_PROMPT = (
@@ -66,6 +61,21 @@ Return JSON with EXACT keys:
 {{"best_index": <integer from 1 to {k}>, "reason": "<English: state if match is direct or heuristic; mention room/context cues if no clear object match>"}}
 """
 
+CONFIRM_SYSTEM_PROMPT = (
+    "You verify whether current egocentric panoramic images already show the target object requested by ONE navigation description. "
+    "Return strict JSON only."
+)
+
+CONFIRM_USER_TEMPLATE = """Navigation goal (full description):
+{description}
+
+Below are {k} panoramic downsampled views captured at the agent's current position.
+Decide whether the target object is visible now in these views.
+
+Return JSON with EXACT keys:
+{{"has_target": <true_or_false>, "reason": "<English brief reason>"}}
+"""
+
 
 @dataclass
 class RerankConfig:
@@ -74,10 +84,8 @@ class RerankConfig:
     enabled_levels: Set[str] = field(default_factory=lambda: {"instance"})
     top_k: int = 8
     min_candidates_with_rgb: int = 2
-    base_url: str = "http://127.0.0.1:8000/v1"
-    model: str = "Qwen2.5-VL-32B-Instruct"
+    model: str = NEW_DEFAULT_MODEL
     timeout: int = 120
-    api_key: str = "EMPTY"
 
 
 def parse_levels_csv(s: str) -> Set[str]:
@@ -181,7 +189,6 @@ def rerank_object_target(
     baseline_target_xyz: np.ndarray,
     decision_aux: Dict[str, Any],
     cfg: RerankConfig,
-    client: Optional[VLLMOpenAIClient] = None,
 ) -> Tuple[np.ndarray, Dict[str, Any]]:
     """
     若本轮为物体决策且候选足够，则调用 VLM 重选记忆槽；否则返回 baseline 目标。
@@ -192,14 +199,13 @@ def rerank_object_target(
     """
     info: Dict[str, Any] = {"rerank_applied": False}
     if not decision_aux.get("is_object_decision"):
-        info["skipped"] = "not_object_decision"
-        return np.asarray(baseline_target_xyz, dtype=float).reshape(3).copy(), info
+        raise RuntimeError("rerank_object_target called on non-object decision (strict mode)")
 
     cand = _top_memory_indices_with_rgb(rep, top_k=cfg.top_k)
     if len(cand) < cfg.min_candidates_with_rgb:
-        info["skipped"] = "insufficient_rgb_candidates"
-        info["cand_count"] = len(cand)
-        return np.asarray(baseline_target_xyz, dtype=float).reshape(3).copy(), info
+        raise RuntimeError(
+            f"insufficient_rgb_candidates: got {len(cand)}, require >= {cfg.min_candidates_with_rgb} (strict mode)"
+        )
 
     jsonl_path = os.environ.get("RERANK_LOG_JSONL", "").strip()
     art_root = _artifacts_root_dir()
@@ -210,15 +216,6 @@ def rerank_object_target(
             call_dir.mkdir(parents=True, exist_ok=True)
         except OSError:
             call_dir = None
-
-    cli = client or VLLMOpenAIClient(
-        VLLMClientConfig(
-            base_url=cfg.base_url,
-            model=cfg.model,
-            timeout=cfg.timeout,
-            api_key=cfg.api_key,
-        )
-    )
 
     urls: List[str] = []
     rgb_list = list(getattr(rep, "object_first_rgb", None) or [])
@@ -250,10 +247,14 @@ def rerank_object_target(
     t0 = time.perf_counter()
     raw: Optional[str] = None
     try:
-        resp = cli.chat(messages=messages, max_tokens=384, temperature=0.0)
-        raw = cli.extract_text(resp)
-    except (VLLMAPIError, ValueError) as e:
-        info["error"] = repr(e)
+        raw = chat_messages(
+            messages=messages,
+            model=cfg.model,
+            max_tokens=384,
+            temperature=0.0,
+            timeout=cfg.timeout,
+        )
+    except Exception as e:
         err_rec: Dict[str, Any] = {
             "event": "http_err",
             "ts": time.time(),
@@ -263,7 +264,7 @@ def rerank_object_target(
             "system_prompt": SYSTEM_PROMPT,
             "candidate_memory_ids": cand,
             "model": cfg.model,
-            "base_url": cfg.base_url,
+            "base_url": NEW_VLM_BASE_URL,
             "artifact_dir": str(call_dir) if call_dir else None,
             "input_image_files": input_image_files,
         }
@@ -273,7 +274,7 @@ def rerank_object_target(
                 (call_dir / "error.txt").write_text(repr(e), encoding="utf-8")
             except OSError:
                 pass
-        return np.asarray(baseline_target_xyz, dtype=float).reshape(3).copy(), info
+        raise RuntimeError(f"rerank VLM request failed via client.py endpoint (strict mode): {e!r}") from e
 
     if call_dir is not None:
         try:
@@ -285,8 +286,6 @@ def rerank_object_target(
         parsed = _parse_json(raw or "")
         best = int(parsed.get("best_index"))
     except Exception as e:
-        info["error"] = f"parse:{e!r}"
-        info["raw_preview"] = (raw or "")[:800]
         pe: Dict[str, Any] = {
             "event": "parse_err",
             "ts": time.time(),
@@ -300,10 +299,9 @@ def rerank_object_target(
             "input_image_files": input_image_files,
         }
         _append_jsonl(jsonl_path, pe)
-        return np.asarray(baseline_target_xyz, dtype=float).reshape(3).copy(), info
+        raise RuntimeError(f"rerank response parse failed (strict mode): {e!r}") from e
 
     if best < 1 or best > len(cand):
-        info["error"] = f"best_index_out_of_range:{best}"
         oor: Dict[str, Any] = {
             "event": "best_index_out_of_range",
             "ts": time.time(),
@@ -316,13 +314,12 @@ def rerank_object_target(
             "artifact_dir": str(call_dir) if call_dir else None,
         }
         _append_jsonl(jsonl_path, oor)
-        return np.asarray(baseline_target_xyz, dtype=float).reshape(3).copy(), info
+        raise RuntimeError(f"best_index_out_of_range: {best}, expected 1..{len(cand)} (strict mode)")
 
     chosen_mem = cand[best - 1]
     box = np.asarray(rep.object_box[chosen_mem], dtype=float).reshape(-1)
     if box.size < 3:
-        info["error"] = "bad_box"
-        return np.asarray(baseline_target_xyz, dtype=float).reshape(3).copy(), info
+        raise RuntimeError(f"bad_box for chosen memory {chosen_mem} (strict mode)")
 
     target = box[:3].copy()
     target[[1, 2]] = target[[2, 1]]
@@ -351,7 +348,7 @@ def rerank_object_target(
         "parsed": parsed,
         "reason": str(parsed.get("reason", "")),
         "model": cfg.model,
-        "base_url": cfg.base_url,
+        "base_url": NEW_VLM_BASE_URL,
         "elapsed_ms": info["elapsed_ms"],
         "artifact_dir": str(call_dir) if call_dir else None,
         "input_image_files": input_image_files,
@@ -379,5 +376,106 @@ def rerank_object_target(
     return target, info
 
 
+def rerank_memory_target(
+    *,
+    description: str,
+    rep: Any,
+    cfg: RerankConfig,
+    baseline_memory_index: int = -1,
+) -> Tuple[np.ndarray, Dict[str, Any]]:
+    """
+    在 frontier 阶段也可调用：直接从 memory candidates 里让 VLM 选一个 target。
+    """
+    fake_aux = {
+        "is_object_decision": True,
+        "real_object_decision_idx": int(baseline_memory_index),
+    }
+    return rerank_object_target(
+        description=description,
+        rep=rep,
+        baseline_target_xyz=np.zeros((3,), dtype=float),
+        decision_aux=fake_aux,
+        cfg=cfg,
+    )
+
+
 def should_run_rerank(task_level: str, cfg: RerankConfig) -> bool:
     return task_level in cfg.enabled_levels
+
+
+def confirm_target_visible_from_rgb_views(
+    *,
+    description: str,
+    rgb_views: List[np.ndarray],
+    cfg: RerankConfig,
+    max_images: int = 4,
+) -> Dict[str, Any]:
+    """VLM 二次确认：当前位置环视图是否已经看到目标物体。"""
+    if len(rgb_views) == 0:
+        raise RuntimeError("confirm_target_visible_from_rgb_views got empty rgb_views")
+    # 优先策略：12 帧 -> 3 张 4 合 1 拼图。帧数不足时自动降级，避免临近 max_steps 时崩溃。
+    tiles: List[np.ndarray] = []
+    picked_indices: List[int] = []
+    if len(rgb_views) >= 12:
+        pano = rgb_views[:12]
+        for t in range(3):
+            base = t * 4
+            imgs = pano[base : base + 4]
+            h, w, _ = imgs[0].shape
+            tile = np.zeros((h * 2, w * 2, 3), dtype=imgs[0].dtype)
+            tile[0:h, 0:w] = imgs[0]
+            tile[0:h, w : 2 * w] = imgs[1]
+            tile[h : 2 * h, 0:w] = imgs[2]
+            tile[h : 2 * h, w : 2 * w] = imgs[3]
+            tiles.append(tile)
+            picked_indices.append(t)
+    else:
+        # 降级：尽量按 4 帧拼图；若不足 4 帧则直接抽样原帧送 VLM。
+        full_groups = len(rgb_views) // 4
+        for g in range(full_groups):
+            base = g * 4
+            imgs = rgb_views[base : base + 4]
+            h, w, _ = imgs[0].shape
+            tile = np.zeros((h * 2, w * 2, 3), dtype=imgs[0].dtype)
+            tile[0:h, 0:w] = imgs[0]
+            tile[0:h, w : 2 * w] = imgs[1]
+            tile[h : 2 * h, 0:w] = imgs[2]
+            tile[h : 2 * h, w : 2 * w] = imgs[3]
+            tiles.append(tile)
+            picked_indices.append(g)
+        if len(tiles) == 0:
+            n = len(rgb_views)
+            k = min(max_images, n)
+            if n <= k:
+                idxs = list(range(n))
+            else:
+                idxs = np.linspace(0, n - 1, num=k, dtype=int).tolist()
+            for i in idxs:
+                tiles.append(rgb_views[i])
+            picked_indices = idxs
+
+    prompt = CONFIRM_USER_TEMPLATE.format(description=description.strip(), k=len(tiles))
+    messages = [{"role": "system", "content": CONFIRM_SYSTEM_PROMPT}]
+    content: List[Dict[str, Any]] = []
+    for tile in tiles:
+        content.append({"type": "image_url", "image_url": {"url": numpy_rgb_to_jpeg_data_url(tile)}})
+    content.append({"type": "text", "text": prompt})
+    messages.append({"role": "user", "content": content})
+
+    t0 = time.perf_counter()
+    raw = chat_messages(
+        messages=messages,
+        model=cfg.model,
+        max_tokens=256,
+        temperature=0.0,
+        timeout=cfg.timeout,
+    )
+    parsed = _parse_json(raw or "")
+    has_target = bool(parsed.get("has_target", False))
+    return {
+        "has_target": has_target,
+        "reason": str(parsed.get("reason", ""))[:1200],
+        "elapsed_ms": (time.perf_counter() - t0) * 1000.0,
+        "picked_indices": picked_indices,
+        "raw_response": raw,
+    }

@@ -29,6 +29,7 @@ import datetime as _dt
 import gzip
 import json
 import os
+import random
 from typing import Any, Dict, List
 
 import cv2
@@ -37,10 +38,13 @@ import numpy as np
 from habitat.utils.visualizations import maps
 from omegaconf import OmegaConf
 
+from vlm.client import DEFAULT_MODEL as CLIENT_DEFAULT_MODEL
 from anchor_nav.rerank import (
+    confirm_target_visible_from_rgb_views,
     RerankConfig,
     list_rerank_candidate_memory_ids,
     parse_levels_csv,
+    rerank_memory_target,
     rerank_object_target,
     should_run_rerank,
 )
@@ -229,8 +233,14 @@ def main() -> None:
         help="额外导出：按 score 排序的前 N 个有首检 RGB 的图与 manifest，目录名 rerank_top{N}_extra_log（默认 15）",
     )
     parser.add_argument("--rerank_min_rgb_cand", type=int, default=2)
-    parser.add_argument("--vlm_base_url", type=str, default="http://127.0.0.1:8000/v1")
-    parser.add_argument("--vlm_model", type=str, default="Qwen2.5-VL-32B-Instruct")
+    parser.add_argument("--disable_frontier_vlm_rescue", action="store_true")
+    parser.add_argument("--frontier_streak_trigger", type=int, default=5)
+    parser.add_argument("--frontier_vlm_prob_step", type=float, default=0.05)
+    parser.add_argument("--disable_vlm_post_arrival_confirm", action="store_true")
+    parser.add_argument("--vlm_post_arrival_confirm_max_images", type=int, default=4)
+    parser.add_argument("--vlm_post_arrival_approach_max_steps", type=int, default=30)
+    parser.add_argument("--vlm_model", type=str, default=CLIENT_DEFAULT_MODEL)
+    parser.add_argument("--vlm_api_key", type=str, default=os.environ.get("ZZZ_API_KEY", ""))
     args = parser.parse_args()
     if args.concise_description and args.detailed_description:
         parser.error("不要同时指定 --concise_description 与 --detailed_description")
@@ -243,17 +253,32 @@ def main() -> None:
     run_tag = args.run_tag or _now_tag()
     output_enabled = not bool(args.quiet)
 
-    rerank_cfg = RerankConfig(
-        enabled_levels=parse_levels_csv(args.rerank_levels),
-        top_k=int(args.rerank_top_k),
-        min_candidates_with_rgb=int(args.rerank_min_rgb_cand),
-        base_url=args.vlm_base_url,
-        model=args.vlm_model,
-    )
+    if args.vlm_api_key:
+        os.environ["ZZZ_API_KEY"] = args.vlm_api_key
+    cfg_kwargs = {
+        "enabled_levels": parse_levels_csv(args.rerank_levels),
+        "top_k": int(args.rerank_top_k),
+        "min_candidates_with_rgb": int(args.rerank_min_rgb_cand),
+    }
+    _fields = getattr(RerankConfig, "__dataclass_fields__", {})
+    if "model" in _fields:
+        cfg_kwargs["model"] = args.vlm_model
+    rerank_cfg = RerankConfig(**cfg_kwargs)
     extra_log_n = max(0, int(args.rerank_extra_log_top_n))
 
     print(f"[anchor-rerank] run_tag={run_tag}")
     print(f"[anchor-rerank] output_enabled={output_enabled} rerank_levels={rerank_cfg.enabled_levels}")
+    print(f"[anchor-rerank] vlm_model={args.vlm_model}")
+    frontier_vlm_rescue_enabled = not bool(args.disable_frontier_vlm_rescue)
+    print(
+        f"[anchor-rerank] frontier_vlm_rescue_enabled={frontier_vlm_rescue_enabled} "
+        f"frontier_streak_trigger={args.frontier_streak_trigger} frontier_vlm_prob_step={args.frontier_vlm_prob_step}"
+    )
+    vlm_post_arrival_confirm_enabled = not bool(args.disable_vlm_post_arrival_confirm)
+    print(
+        f"[anchor-rerank] vlm_post_arrival_confirm_enabled={vlm_post_arrival_confirm_enabled} "
+        f"confirm_max_images={args.vlm_post_arrival_confirm_max_images}"
+    )
     print(f"[anchor-rerank] description_mode={args.description_mode}")
     print(f"[anchor-rerank] rerank_top_k={args.rerank_top_k} extra_log_top_n={extra_log_n}")
     print(f"[anchor-rerank] task_id={args.task_id} num_tasks={args.num_tasks}")
@@ -365,6 +390,11 @@ def main() -> None:
         episode_cum_distance = 0.0
         rerank_attempts = 0
         rerank_applied = 0
+        vlm_elapsed_ms_total = 0.0
+        vlm_elapsed_ms_count = 0
+        frontier_streak = 0
+        frontier_rescue_attempts = 0
+        frontier_rescue_applied = 0
         task_t0 = _dt.datetime.now().timestamp()
 
         while total_steps < args.max_steps:
@@ -422,6 +452,10 @@ def main() -> None:
             target, is_final = pq3d.decision(color_list, depth_list, state_list, frontiers, sentence, decision_num)
             baseline_type = "object" if is_final else "frontier"
             target_before_rerank = np.asarray(target, dtype=float).reshape(3).copy()
+            if is_final:
+                frontier_streak = 0
+            else:
+                frontier_streak += 1
 
             rep = pq3d.representation_manager
             obj_boxes = np.asarray(getattr(rep, "object_box", np.zeros((0, 6))), dtype=float)
@@ -430,6 +464,7 @@ def main() -> None:
             cur_n = len(obj_scores)
 
             rinf: Dict[str, Any] = {}
+            vlm_adjusted_target = False
             if is_final and should_run_rerank(task_type, rerank_cfg) and output_enabled and dec_dir is not None:
                 _save_memory_first_rgb(rep, dec_dir / "memory_first_rgb_all_slots")
                 _save_rerank_candidates(rep, rerank_cfg, dec_dir / "rerank_candidates_to_vlm")
@@ -452,10 +487,52 @@ def main() -> None:
                 if rinf.get("rerank_applied"):
                     target = new_tp
                     rerank_applied += 1
+                    if rinf.get("elapsed_ms") is not None:
+                        vlm_elapsed_ms_total += float(rinf["elapsed_ms"])
+                        vlm_elapsed_ms_count += 1
+                    vlm_adjusted_target = True
                     print(
                         f"[anchor-rerank] rerank applied mem={rinf.get('chosen_memory_index')} "
                         f"baseline_mem={rinf.get('baseline_memory_index')} reason={str(rinf.get('reason', ''))[:100]!r} "
-                        f"artifact_dir={rinf.get('artifact_dir')}"
+                        f"elapsed_ms={rinf.get('elapsed_ms')} artifact_dir={rinf.get('artifact_dir')}"
+                    )
+            elif (
+                (not is_final)
+                and frontier_vlm_rescue_enabled
+                and should_run_rerank(task_type, rerank_cfg)
+                and frontier_streak >= int(args.frontier_streak_trigger)
+            ):
+                cand_count = len(list_rerank_candidate_memory_ids(rep, top_k=rerank_cfg.top_k))
+                rescue_prob = min(
+                    1.0,
+                    max(
+                        0.0,
+                        0.4
+                        + float(args.frontier_vlm_prob_step)
+                        * float(frontier_streak - int(args.frontier_streak_trigger)),
+                    ),
+                )
+                if cand_count >= rerank_cfg.min_candidates_with_rgb and random.random() < rescue_prob:
+                    frontier_rescue_attempts += 1
+                    print(
+                        f"[anchor-rerank] frontier-vlm-call dec={decision_num} streak={frontier_streak} "
+                        f"prob={rescue_prob:.2f} memory_candidates={cand_count}"
+                    )
+                    new_tp, rinf = rerank_memory_target(
+                        description=sentence,
+                        rep=rep,
+                        cfg=rerank_cfg,
+                        baseline_memory_index=int(getattr(pq3d, "last_decision_aux", {}).get("real_object_decision_idx", -1)),
+                    )
+                    target = new_tp
+                    frontier_rescue_applied += 1
+                    if rinf.get("elapsed_ms") is not None:
+                        vlm_elapsed_ms_total += float(rinf["elapsed_ms"])
+                        vlm_elapsed_ms_count += 1
+                    vlm_adjusted_target = True
+                    print(
+                        f"[anchor-rerank] frontier-vlm-result chosen_mem={rinf.get('chosen_memory_index')} "
+                        f"elapsed_ms={rinf.get('elapsed_ms')} reason={str(rinf.get('reason', ''))[:100]!r}"
                     )
             else:
                 rinf = {"skipped": "not_object_final_or_level"}
@@ -519,6 +596,88 @@ def main() -> None:
                 if total_steps >= args.max_steps:
                     break
 
+            if vlm_adjusted_target and vlm_post_arrival_confirm_enabled and total_steps < args.max_steps:
+                confirm_rgb: List[np.ndarray] = []
+                for _ in range(12):
+                    obs = sim.step(action="turn_left")
+                    stc = agent.get_state()
+                    confirm_rgb.append(obs["color_sensor"][:, :, :3])
+                    fog[:] = reveal_fog_of_war(
+                        top_down_map=top_down_map,
+                        current_fog_of_war_mask=fog,
+                        current_point=map_coors_to_pixel(stc.position, top_down_map, sim),
+                        current_angle=get_polar_angle(stc),
+                        fov=42,
+                        max_line_len=vis_dist,
+                        enable_debug_visualization=False,
+                    )
+                    total_steps += 1
+                    if total_steps >= args.max_steps:
+                        break
+                if len(confirm_rgb) > 0:
+                    cinfo = confirm_target_visible_from_rgb_views(
+                        description=sentence,
+                        rgb_views=confirm_rgb,
+                        cfg=rerank_cfg,
+                        max_images=int(args.vlm_post_arrival_confirm_max_images),
+                    )
+                    print(
+                        f"[anchor-rerank] post-arrival-confirm has_target={cinfo.get('has_target')} "
+                        f"elapsed_ms={cinfo.get('elapsed_ms')} reason={str(cinfo.get('reason', ''))[:120]!r}"
+                    )
+                    if cinfo.get("has_target"):
+                            # 看到目标后再走“最后一公里”：朝当前 top-1 memory box 中心再靠近一段再提交。
+                            chosen_mid = rinf.get("chosen_memory_index", None)
+                            if chosen_mid is None:
+                                cand1 = list_rerank_candidate_memory_ids(rep, top_k=1)
+                                chosen_mid = int(cand1[0]) if len(cand1) > 0 else None
+                            if chosen_mid is not None:
+                                mid = int(chosen_mid)
+                                obj_box_now = np.asarray(getattr(rep, "object_box", np.zeros((0, 6))), dtype=float)
+                                if mid < len(obj_box_now):
+                                    approach_target = obj_box_now[mid, :3].copy()
+                                    approach_target[[1, 2]] = approach_target[[2, 1]]
+                                    print(
+                                        f"[anchor-rerank] post-arrival-approach mem={mid} "
+                                        f"max_steps={args.vlm_post_arrival_approach_max_steps}"
+                                    )
+                                    cur_state = agent.get_state()
+                                    try:
+                                        island_idx = pf.get_island(cur_state.position)
+                                        approach_nav = pf.snap_point(point=np.asarray(approach_target, dtype=float), island_index=island_idx)
+                                        approach_follower = habitat_sim.GreedyGeodesicFollower(
+                                            pf, agent, forward_key="move_forward", left_key="turn_left", right_key="turn_right"
+                                        )
+                                        approach_actions = approach_follower.find_path(approach_nav) or []
+                                    except Exception:
+                                        approach_actions = []
+                                    used = 0
+                                    for a2 in approach_actions:
+                                        if not a2 or used >= int(args.vlm_post_arrival_approach_max_steps):
+                                            break
+                                        obs2 = sim.step(action=a2)
+                                        st3 = agent.get_state()
+                                        fog[:] = reveal_fog_of_war(
+                                            top_down_map=top_down_map,
+                                            current_fog_of_war_mask=fog,
+                                            current_point=map_coors_to_pixel(st3.position, top_down_map, sim),
+                                            current_angle=get_polar_angle(st3),
+                                            fov=42,
+                                            max_line_len=vis_dist,
+                                            enable_debug_visualization=False,
+                                        )
+                                        total_steps += 1
+                                        episode_cum_distance += float(np.linalg.norm(st3.position - prev_agent_state.position))
+                                        prev_agent_state = st3
+                                        used += 1
+                                        if total_steps >= args.max_steps:
+                                            break
+                                    print(f"[anchor-rerank] post-arrival-approach used_steps={used}")
+                            corrected_final = True
+                    if cinfo.get("elapsed_ms") is not None:
+                        vlm_elapsed_ms_total += float(cinfo["elapsed_ms"])
+                        vlm_elapsed_ms_count += 1
+
             print(
                 f"[anchor-rerank] task={loop_tid} dec={decision_num} frontiers={len(frontiers)} "
                 f"baseline={baseline_type} final={corrected_final} memory={cur_n} "
@@ -556,6 +715,11 @@ def main() -> None:
             "rerank_levels": list(rerank_cfg.enabled_levels),
             "rerank_attempts": int(rerank_attempts),
             "rerank_applied": int(rerank_applied),
+            "frontier_rescue_attempts": int(frontier_rescue_attempts),
+            "frontier_rescue_applied": int(frontier_rescue_applied),
+            "vlm_elapsed_ms_total": float(vlm_elapsed_ms_total),
+            "vlm_elapsed_ms_avg": (float(vlm_elapsed_ms_total / vlm_elapsed_ms_count) if vlm_elapsed_ms_count > 0 else None),
+            "vlm_elapsed_count": int(vlm_elapsed_ms_count),
             "task_time_sec": float(_dt.datetime.now().timestamp() - task_t0),
         }
         all_summaries.append(summary)

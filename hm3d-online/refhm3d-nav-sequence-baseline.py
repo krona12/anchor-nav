@@ -143,6 +143,12 @@ parser.add_argument(
     default="/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/output_logs/baseline",
     help="Output directory for both logs and metric json",
 )
+parser.add_argument(
+    "--task_levels",
+    type=str,
+    default="object,room,region,instance",
+    help="Comma-separated task levels to execute, e.g. instance or region,instance",
+)
 args = parser.parse_args()
 
 output_log_dir = os.path.expanduser(args.output_log_dir)
@@ -151,6 +157,10 @@ print(
     "[baseline] 输出 JSON 每条记录含 task_level（object|room|region|instance），"
     "与 vlmcore refine 及 test_scripts/aggregate_shard_results.py --by-level 一致"
 )
+enabled_task_levels = {x.strip() for x in args.task_levels.split(",") if x.strip()}
+if not enabled_task_levels:
+    enabled_task_levels = {"object", "room", "region", "instance"}
+print(f"[baseline] enabled_task_levels={sorted(enabled_task_levels)}")
 
 black_task_ids = []
 print(f"NUMBER OF BLACK IDS: {len(black_task_ids)}")
@@ -249,6 +259,8 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
 
         for idx, cur_task in enumerate(cur_episode["task_sequence"]):
             task_type, task_idx = cur_task
+            if task_type not in enabled_task_levels:
+                continue
             cur_task = episode_mapping[task_type][task_idx]
 
             goals_ids = cur_task["target_object_ids"]
