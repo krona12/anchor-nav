@@ -31,6 +31,14 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 LEVEL_ORDER = ("object", "room", "region", "instance", "_missing")
+REASON_ORDER = (
+    "model_decision",
+    "frontier_exhausted",
+    "timeout",
+    "decision_error",
+    "path_error",
+    "unknown",
+)
 
 
 def _project_root() -> Path:
@@ -104,6 +112,128 @@ def _metrics_by_level(tasks: Sequence[Dict[str, Any]]) -> Dict[str, Dict[str, fl
         if lv not in buckets:
             continue
         out[lv] = _metrics_from_tasks(buckets[lv])
+    return out
+
+
+def _to_float_or_none(v: Any) -> Optional[float]:
+    if v is None:
+        return None
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return None
+
+
+def _termination_reason(task: Dict[str, Any]) -> str:
+    reason = task.get("termination_reason")
+    if reason is None or reason == "":
+        return "unknown"
+    return str(reason)
+
+
+def _reason_sr_matrix(tasks: Sequence[Dict[str, Any]]) -> Dict[str, Dict[str, int]]:
+    matrix: Dict[str, Dict[str, int]] = {}
+    for t in tasks:
+        reason = _termination_reason(t)
+        if reason not in matrix:
+            matrix[reason] = {"count": 0, "sr_true": 0, "sr_false": 0}
+        matrix[reason]["count"] += 1
+        if _as_bool_sr(t.get("sr")):
+            matrix[reason]["sr_true"] += 1
+        else:
+            matrix[reason]["sr_false"] += 1
+    ordered: Dict[str, Dict[str, int]] = {}
+    for k in REASON_ORDER:
+        if k in matrix:
+            ordered[k] = matrix[k]
+    for k in sorted(matrix.keys()):
+        if k not in ordered:
+            ordered[k] = matrix[k]
+    return ordered
+
+
+def _decision_diagnostics(tasks: Sequence[Dict[str, Any]]) -> Dict[str, Any]:
+    n = len(tasks)
+    reason_matrix = _reason_sr_matrix(tasks)
+
+    # 语义相关关键格子：
+    # 模型主动判断（可认为“模型认为看到了目标”） vs SR
+    model_row = reason_matrix.get("model_decision", {"count": 0, "sr_true": 0, "sr_false": 0})
+    frontier_row = reason_matrix.get("frontier_exhausted", {"count": 0, "sr_true": 0, "sr_false": 0})
+
+    # final prob 直接阈值统计（<=0.5 为模型偏向 object）
+    prob_values: List[float] = []
+    prob_le_05_sr_true = 0
+    prob_le_05_sr_false = 0
+    prob_gt_05_sr_true = 0
+    prob_gt_05_sr_false = 0
+    for t in tasks:
+        p = _to_float_or_none(t.get("final_goto_frontier_prob"))
+        if p is None:
+            continue
+        prob_values.append(p)
+        sr = _as_bool_sr(t.get("sr"))
+        if p <= 0.5:
+            if sr:
+                prob_le_05_sr_true += 1
+            else:
+                prob_le_05_sr_false += 1
+        else:
+            if sr:
+                prob_gt_05_sr_true += 1
+            else:
+                prob_gt_05_sr_false += 1
+
+    prob_stats: Dict[str, Any] = {
+        "available_count": len(prob_values),
+        "le_0_5": {
+            "count": prob_le_05_sr_true + prob_le_05_sr_false,
+            "sr_true": prob_le_05_sr_true,
+            "sr_false": prob_le_05_sr_false,
+        },
+        "gt_0_5": {
+            "count": prob_gt_05_sr_true + prob_gt_05_sr_false,
+            "sr_true": prob_gt_05_sr_true,
+            "sr_false": prob_gt_05_sr_false,
+        },
+    }
+    if prob_values:
+        prob_stats.update(
+            {
+                "mean": sum(prob_values) / len(prob_values),
+                "min": min(prob_values),
+                "max": max(prob_values),
+            }
+        )
+
+    return {
+        "n_tasks": n,
+        "reason_sr_matrix": reason_matrix,
+        "semantic_quality": {
+            "correct_navigate_to_object_count": model_row["sr_true"],
+            "model_false_positive_count": model_row["sr_false"],
+            "model_decision_total": model_row["count"],
+            "frontier_exhausted_success_count": frontier_row["sr_true"],
+            "frontier_exhausted_fail_count": frontier_row["sr_false"],
+            "frontier_exhausted_total": frontier_row["count"],
+        },
+        "final_prob_stats": prob_stats,
+    }
+
+
+def _decision_diagnostics_by_level(tasks: Sequence[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
+    buckets: Dict[str, List[Dict[str, Any]]] = {}
+    for t in tasks:
+        lv = _task_level(t)
+        buckets.setdefault(lv, []).append(t)
+    out: Dict[str, Dict[str, Any]] = {}
+    keys = list(LEVEL_ORDER)
+    for k in buckets:
+        if k not in keys:
+            keys.append(k)
+    for lv in keys:
+        if lv in buckets:
+            out[lv] = _decision_diagnostics(buckets[lv])
     return out
 
 
@@ -220,10 +350,14 @@ def run_group(root: Path, spec: GroupSpec, verbose: bool, by_level: bool) -> Dic
         }
         if by_level:
             entry["by_level"] = _metrics_by_level(seq)
+            entry["decision_diagnostics_by_level"] = _decision_diagnostics_by_level(seq)
+        entry["decision_diagnostics"] = _decision_diagnostics(seq)
         per_file.append(entry)
 
     agg = _metrics_from_tasks(merged)
     merged_by_level = _metrics_by_level(merged)
+    merged_decision_diag = _decision_diagnostics(merged)
+    merged_decision_diag_by_level = _decision_diagnostics_by_level(merged) if by_level else {}
     return {
         "name": spec.name,
         "rel_dir": spec.rel_dir,
@@ -239,8 +373,21 @@ def run_group(root: Path, spec: GroupSpec, verbose: bool, by_level: bool) -> Dic
             "sum_task_time_sec": agg["sum_task_time_sec"],
         },
         "merged_by_level": merged_by_level,
+        "merged_decision_diagnostics": merged_decision_diag,
+        "merged_decision_diagnostics_by_level": merged_decision_diag_by_level,
         "per_file": per_file if verbose else [],
     }
+
+
+def _format_reason_sr_rows(reason_sr: Dict[str, Dict[str, int]], indent: str = "  ") -> List[str]:
+    lines = [f"{indent}{'reason':<20} {'count':>8} {'sr_true':>8} {'sr_false':>9} {'sr%':>8}"]
+    for reason, row in reason_sr.items():
+        c = int(row.get("count", 0))
+        t = int(row.get("sr_true", 0))
+        f = int(row.get("sr_false", 0))
+        sr_pct = (100.0 * t / c) if c > 0 else 0.0
+        lines.append(f"{indent}{reason:<20} {c:>8} {t:>8} {f:>9} {sr_pct:>7.2f}%")
+    return lines
 
 
 def main() -> int:
@@ -327,6 +474,45 @@ def main() -> int:
         if args.by_level and r.get("merged_by_level"):
             lines.append("  [merged by task_level]")
             lines.extend(_format_level_table_rows(r["merged_by_level"], indent="    "))
+        diag = r.get("merged_decision_diagnostics", {})
+        if diag:
+            sq = diag.get("semantic_quality", {})
+            prob = diag.get("final_prob_stats", {})
+            lines.append("  [decision diagnostics overall]")
+            lines.append(
+                "    semantic_quality: "
+                f"correct_navigate_to_object={sq.get('correct_navigate_to_object_count', 0)}, "
+                f"model_false_positive={sq.get('model_false_positive_count', 0)}, "
+                f"frontier_exhausted_success={sq.get('frontier_exhausted_success_count', 0)}, "
+                f"frontier_exhausted_fail={sq.get('frontier_exhausted_fail_count', 0)}"
+            )
+            lines.append(
+                "    final_prob_stats: "
+                f"available={prob.get('available_count', 0)}, "
+                f"le_0.5={prob.get('le_0_5', {}).get('count', 0)}, "
+                f"gt_0.5={prob.get('gt_0_5', {}).get('count', 0)}, "
+                f"mean={prob.get('mean', 0.0):.6f}" if prob.get("available_count", 0) else
+                "    final_prob_stats: available=0"
+            )
+            lines.extend(
+                _format_reason_sr_rows(
+                    diag.get("reason_sr_matrix", {}),
+                    indent="    ",
+                )
+            )
+        if args.by_level and r.get("merged_decision_diagnostics_by_level"):
+            lines.append("  [decision diagnostics by task_level]")
+            for lv in [k for k in LEVEL_ORDER if k in r["merged_decision_diagnostics_by_level"]]:
+                diag_lv = r["merged_decision_diagnostics_by_level"][lv]
+                sq = diag_lv.get("semantic_quality", {})
+                lines.append(
+                    f"    - {lv}: "
+                    f"correct_navigate_to_object={sq.get('correct_navigate_to_object_count', 0)}, "
+                    f"model_false_positive={sq.get('model_false_positive_count', 0)}, "
+                    f"frontier_exhausted_success={sq.get('frontier_exhausted_success_count', 0)}, "
+                    f"frontier_exhausted_fail={sq.get('frontier_exhausted_fail_count', 0)}"
+                )
+                lines.extend(_format_reason_sr_rows(diag_lv.get("reason_sr_matrix", {}), indent="      "))
         if args.verbose and r.get("per_file"):
             for pf in r["per_file"]:
                 if "error" in pf:
@@ -338,6 +524,12 @@ def main() -> int:
                     )
                     if args.by_level and pf.get("by_level"):
                         lines.extend(_format_level_table_rows(pf["by_level"], indent="        "))
+                    if pf.get("decision_diagnostics"):
+                        sq = pf["decision_diagnostics"].get("semantic_quality", {})
+                        lines.append(
+                            f"      decision_quality: correct_navigate_to_object={sq.get('correct_navigate_to_object_count', 0)} "
+                            f"model_false_positive={sq.get('model_false_positive_count', 0)}"
+                        )
         lines.append("")
 
     text = "\n".join(lines).rstrip() + "\n"

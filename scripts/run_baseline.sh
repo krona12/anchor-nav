@@ -24,7 +24,7 @@ export YOLO_VERBOSE=False
 # 与 refhm3d-nav-sequence-baseline.py 一致：concise 时传 --concise_description，
 # 输出文件名为 refhm3d_seq_concisedesc_{start}_{end}.json，否则为 refhm3d_seq_{start}_{end}.json。
 #
-# 数据集分片：步长 0.05，覆盖 start_ratio∈[0, 0.5) 即 [0,0.05)…[0.45,0.5)，共 10 路并行。
+# 数据集分片：步长 0.1，覆盖 start_ratio∈[0, 0.5) 即 [0,0.1)…[0.4,0.5)，共 5 路并行。
 DESC_MODE="${1:-detailed}"
 USER_TAG="${2:-}"
 if [ "${DESC_MODE}" != "detailed" ] && [ "${DESC_MODE}" != "concise" ]; then
@@ -58,9 +58,9 @@ echo ">>> Output dir: ${OUT_DIR}"
   echo "python=hm3d-online/refhm3d-nav-sequence-baseline.py"
   echo "json_naming=concise->refhm3d_seq_concisedesc_{start}_{end}.json; detailed->refhm3d_seq_{start}_{end}.json"
   echo "json_fields_note=每条结果含 task_level: object|room|region|instance"
-  echo "slice_step=0.05"
+  echo "slice_step=0.1"
   echo "slice_range=0.0-0.5"
-  echo "num_parallel_splits=10"
+  echo "num_parallel_splits=5"
 } > "${OUT_DIR}/run_args.txt"
 
 cp "$0" "${OUT_DIR}/run_baseline.sh.snapshot"
@@ -110,16 +110,11 @@ run_one () {
   done
 }
 
-run_one 0.0 0.05 &
-run_one 0.05 0.1 &
-run_one 0.1 0.15 &
-run_one 0.15 0.2 &
-run_one 0.2 0.25 &
-run_one 0.25 0.3 &
-run_one 0.3 0.35 &
-run_one 0.35 0.4 &
-run_one 0.4 0.45 &
-run_one 0.45 0.5 &
+run_one 0.0 0.1 &
+run_one 0.1 0.2 &
+run_one 0.2 0.3 &
+run_one 0.3 0.4 &
+run_one 0.4 0.5 &
 
 wait
 echo ">>> All baseline ${DESC_MODE} splits done. Output: ${OUT_DIR}"
