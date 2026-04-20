@@ -10,15 +10,14 @@ set -u
 set -- "${_SAVED_ARGV[@]}"
 unset _SAVED_ARGV
 
-export CUDA_VISIBLE_DEVICES=6
+export CUDA_VISIBLE_DEVICES=0
 export PYTHONPATH=/home/chenlin/krona/MTU3D:./:./hm3d-online:./hm3d-online/FastSAM:${PYTHONPATH:-}
 export MAGNUM_LOG=quiet
 export HABITAT_SIM_LOG=quiet
 export YOLO_VERBOSE=False
-NAVIGATION_DATA_PATH="/home/chenlin/krona/anchor-nav/LangMap_Annotations"
 
 # Usage:
-#   bash scripts/run_baseline_instance_0.05_0.1.sh [detailed|concise] [optional_tag]
+#   bash scripts/run_baseline_instance_0_0.05.sh [detailed|concise] [optional_tag]
 DESC_MODE="${1:-detailed}"
 USER_TAG="${2:-}"
 if [ "${DESC_MODE}" != "detailed" ] && [ "${DESC_MODE}" != "concise" ]; then
@@ -32,7 +31,7 @@ if [ -n "${USER_TAG}" ]; then
   RUN_TAG="${RUN_TAG}-${USER_TAG}"
 fi
 
-OUT_DIR="output_logs/baseline_instance_0.05_0.1/${RUN_TAG}"
+OUT_DIR="output_logs/baseline_instance_0_0.05/${RUN_TAG}"
 mkdir -p "${OUT_DIR}"
 
 echo ">>> Baseline instance-only run tag: ${RUN_TAG}"
@@ -45,13 +44,13 @@ echo ">>> Output dir: ${OUT_DIR}"
   echo "user_tag=${USER_TAG}"
   echo "script=$0"
   echo "task_levels=instance"
-  echo "slice_range=0.05-0.1"
+  echo "slice_range=0.0-0.05"
   echo "slice_step=0.05"
   echo "num_shards_total=1"
   echo "schedule=single_shard_single_pipeline"
 } > "${OUT_DIR}/run_args.txt"
 
-cp "$0" "${OUT_DIR}/run_baseline_instance_0.05_0.1.sh.snapshot"
+cp "$0" "${OUT_DIR}/run_baseline_instance_0_0.05.sh.snapshot"
 
 run_one () {
   local START_RATIO="$1"
@@ -74,10 +73,9 @@ run_one () {
     --end_ratio "${END_RATIO}" \
     ${DESC_FLAG} \
     --task_levels "instance" \
-    --navigation_data_path "${NAVIGATION_DATA_PATH}" \
     --output_log_dir "${OUT_DIR}"
 }
 
-run_one 0.05 0.1
+run_one 0.0 0.05
 
-echo ">>> Done baseline instance-only [0.05,0.1]. Output: ${OUT_DIR}"
+echo ">>> Done baseline instance-only [0,0.05]. Output: ${OUT_DIR}"

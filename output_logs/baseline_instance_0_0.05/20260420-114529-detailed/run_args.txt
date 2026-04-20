@@ -1,0 +1,10 @@
+timestamp=20260420-114529
+run_tag=20260420-114529-detailed
+desc_mode=detailed
+user_tag=
+script=/home/chenlin/krona/anchor-nav/scripts/run_baseline_instance_0_0.05.sh
+task_levels=instance
+slice_range=0.0-0.05
+slice_step=0.05
+num_shards_total=1
+schedule=single_shard_single_pipeline

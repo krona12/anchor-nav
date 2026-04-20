@@ -4,18 +4,19 @@ set -eo pipefail
 # 必须先清空 "$@" 再 source conda，否则第一个参数（detailed|concise）会被 activate 当成环境名。
 _SAVED_ARGV=("$@")
 set --
-source "/home/zhaochaoyang/miniforge3/bin/activate"
+source "/opt/conda/bin/activate"
 set +u
-conda activate envnameba
+conda activate mtu3d
 set -u
 set -- "${_SAVED_ARGV[@]}"
 unset _SAVED_ARGV
 
 export CUDA_VISIBLE_DEVICES=2
-export PYTHONPATH=/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D:./:./hm3d-online:./hm3d-online/FastSAM:${PYTHONPATH:-}
+export PYTHONPATH=/home/chenlin/krona/MTU3D:./:./hm3d-online:./hm3d-online/FastSAM:${PYTHONPATH:-}
 export MAGNUM_LOG=quiet
 export HABITAT_SIM_LOG=quiet
 export YOLO_VERBOSE=False
+NAVIGATION_DATA_PATH="/home/chenlin/krona/anchor-nav/LangMap_Annotations"
 
 # Usage:
 #   bash scripts/run_vlmcore_refine1.sh [detailed|concise] [optional_tag]
@@ -121,6 +122,7 @@ run_one () {
       --vlm_conf_threshold "${VLM_CONF_THRESHOLD}" \
       --vlm_base_url "${VLM_BASE_URL}" \
       --vlm_model "${VLM_MODEL}" \
+      --navigation_data_path "${NAVIGATION_DATA_PATH}" \
       --output_log_dir "${OUT_DIR}"
     EXIT_CODE=$?
 

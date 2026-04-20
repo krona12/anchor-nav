@@ -19,13 +19,13 @@ fi
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "${ROOT_DIR}"
 
-if [[ -f "/home/zhaochaoyang/miniforge3/etc/profile.d/conda.sh" ]]; then
+if [[ -f "/opt/conda/etc/profile.d/conda.sh" ]]; then
   # shellcheck disable=SC1091
-  source "/home/zhaochaoyang/miniforge3/etc/profile.d/conda.sh"
+  source "/opt/conda/etc/profile.d/conda.sh"
   # conda 的 deactivate hook 在 `set -u` 下可能访问未定义变量（如 CONDA_BACKUP_CXX）
   # 这里临时关闭 nounset，激活完成后再恢复。
   set +u
-  conda activate envnameba || true
+  conda activate mtu3d || true
   set -u
 fi
 

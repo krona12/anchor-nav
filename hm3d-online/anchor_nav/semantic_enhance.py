@@ -32,7 +32,7 @@ class SemanticEnhanceConfig:
     top_k: int = 8
     top_m: int = 5
     prob_temperature: float = 0.07
-    clip_model_path: str = "/home/zhaochaoyang/hf_models/clip-vit-large-patch14"
+    clip_model_path: str = "openai/clip-vit-large-patch14"
     clip_device: str = "cuda"
     vlm_model: str = VLM_DEFAULT_MODEL
     override_final_on_apply: bool = False

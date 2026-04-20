@@ -19,11 +19,11 @@ from data_utils import PQ3DModel
 import random
 
 # hyperparameter
-data_set_path = "/home/zhaochaoyang/datasets/mtu3d/embodied_bench/embodied_bench_data/our-set/goat_full_set.json"
-navigation_data_path = "/home/zhaochaoyang/datasets/mtu3d/embodied_bench/embodied_bench_data/goat"
-hm3d_data_base_path = "/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/datascene"
-pq3d_stage1_path = "/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/checkpoint/stage1-pretrain-all"
-pq3d_stage2_path = "/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/checkpoint/stage2-fine-tune-goat"
+data_set_path = "/disks/amax_robot_dataset/embodied/embodied_bench_data/our-set/goat_full_set.json"
+navigation_data_path = "/disks/amax_robot_dataset/embodied/embodied_bench_data/goat/"
+hm3d_data_base_path = "/home/chenlin/krona/MTU3D/datascene"
+pq3d_stage1_path = "/home/chenlin/krona/MTU3D/checkpoint/stage1-pretrain-all"
+pq3d_stage2_path = "/home/chenlin/krona/MTU3D/checkpoint/stage2-fine-tune-goat"
 output_path = "./output_dirs/goat-test.json"
 enable_visualization = False
 decision_num_min = 3
@@ -50,7 +50,7 @@ for split in split_list:
             navigation_data_dict[split][raw_scan_id] = new_data
 
 # load image feature
-image_feat_dir = os.path.join('/home/zhaochaoyang/datasets/mtu3d/embodied_vle/embodied_scan_vle_data/', 'goat-clip-feat')
+image_feat_dir = os.path.join('/disks/amax_robot_dataset/embodied/embodied_scan_vle_data', 'goat-clip-feat')
 image_feat_dict = {'val_seen': {}, 'val_seen_synonyms': {}, 'val_unseen': {}}
 for split in split_list:
     file_list = os.listdir(os.path.join(image_feat_dir, split))

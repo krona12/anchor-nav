@@ -138,7 +138,7 @@ def main() -> None:
     parser.add_argument("--semantic_top_m", type=int, default=5)
     parser.add_argument("--semantic_prob_temperature", type=float, default=0.07)
     parser.add_argument("--semantic_vlm_model", type=str, default="gpt-4o-mini")
-    parser.add_argument("--semantic_clip_model_path", type=str, default="/home/zhaochaoyang/hf_models/clip-vit-large-patch14")
+    parser.add_argument("--semantic_clip_model_path", type=str, default="openai/clip-vit-large-patch14")
     parser.add_argument("--semantic_clip_device", type=str, default="cuda")
     parser.add_argument("--semantic_api_key", type=str, default=os.environ.get("ZZZ_API_KEY", ""))
     parser.add_argument("--disable_validate", action="store_true")

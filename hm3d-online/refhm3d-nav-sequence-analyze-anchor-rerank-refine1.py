@@ -143,11 +143,11 @@ parser.add_argument(
     default="object,room,region,instance",
     help="Comma-separated task levels to execute, e.g. instance or region,instance",
 )
-parser.add_argument("--navigation_data_path", type=str, default="/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/LangMap_Annotations")
-parser.add_argument("--hm3d_data_base_path", type=str, default="/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/datascene")
-parser.add_argument("--pq3d_stage1_path", type=str, default="/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/checkpoint/stage1-pretrain-all")
-parser.add_argument("--pq3d_stage2_path", type=str, default="/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/checkpoint/stage2-fine-tune-goat")
-parser.add_argument("--output_log_dir", type=str, default="/home/zhaochaoyang/yuantingyu/3DShape2vecset/data/out/MTU3D/output_logs/anchor/rerank")
+parser.add_argument("--navigation_data_path", type=str, default="/home/chenlin/krona/anchor-nav/LangMap_Annotations")
+parser.add_argument("--hm3d_data_base_path", type=str, default="/home/chenlin/krona/MTU3D/datascene")
+parser.add_argument("--pq3d_stage1_path", type=str, default="/home/chenlin/krona/MTU3D/checkpoint/stage1-pretrain-all")
+parser.add_argument("--pq3d_stage2_path", type=str, default="/home/chenlin/krona/MTU3D/checkpoint/stage2-fine-tune-goat")
+parser.add_argument("--output_log_dir", type=str, default="/home/chenlin/krona/MTU3D/output_logs/anchor/rerank")
 parser.add_argument("--max_steps", type=int, default=400)
 parser.add_argument(
     "--rerank_levels",

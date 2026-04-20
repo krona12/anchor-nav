@@ -4,9 +4,7 @@ __pycache__/
 *$py.class
 
 # logs
-output_logs/
-output_process/
-output_dirs_refhm3d/
+
 # C extensions
 *.so
 *.pyc
