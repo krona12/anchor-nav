@@ -1,0 +1,12 @@
+timestamp=20260423-000628
+run_tag=20260423-000628-detailed
+desc_mode=detailed
+user_tag=
+script=scripts/run_triquery_instance_0.05_0.1.sh
+command=scripts/run_triquery_instance_0.05_0.1.sh detailed
+task_levels=instance
+slice_range=0.05-0.1
+slice_step=0.05
+num_shards_total=1
+schedule=single_shard_single_pipeline
+vlm_model=gpt-4o-mini

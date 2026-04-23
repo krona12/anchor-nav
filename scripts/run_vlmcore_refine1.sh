@@ -11,6 +11,9 @@ set -u
 set -- "${_SAVED_ARGV[@]}"
 unset _SAVED_ARGV
 
+RUN_CMD="$(printf '%q ' "$0" "$@")"
+RUN_CMD="${RUN_CMD% }"
+
 export CUDA_VISIBLE_DEVICES=2
 export PYTHONPATH=/home/chenlin/krona/MTU3D:./:./hm3d-online:./hm3d-online/FastSAM:${PYTHONPATH:-}
 export MAGNUM_LOG=quiet
@@ -69,6 +72,7 @@ echo ">>> VLM: mode=${VLM_MODE} conf_threshold=${VLM_CONF_THRESHOLD} stride=${VL
   echo "desc_mode=${DESC_MODE}"
   echo "user_tag=${USER_TAG}"
   echo "script=$0"
+  echo "command=${RUN_CMD}"
   echo "pwd=$(pwd)"
   echo "cuda_visible_devices=${CUDA_VISIBLE_DEVICES:-}"
   echo "argv=$*"
@@ -88,6 +92,11 @@ echo ">>> VLM: mode=${VLM_MODE} conf_threshold=${VLM_CONF_THRESHOLD} stride=${VL
 
 # Save an exact copy of current launcher script
 cp "$0" "${OUT_DIR}/run_vlmcore_refine1.sh.snapshot"
+{
+  echo "#!/usr/bin/env bash"
+  printf '%s\n' "${RUN_CMD}"
+} > "${OUT_DIR}/run_command.sh"
+chmod +x "${OUT_DIR}/run_command.sh"
 
 run_one () {
   local START_RATIO="$1"

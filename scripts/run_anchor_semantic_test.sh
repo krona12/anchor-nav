@@ -19,6 +19,9 @@ fi
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "${ROOT_DIR}"
 
+RUN_CMD="$(printf '%q ' "$0" "$@")"
+RUN_CMD="${RUN_CMD% }"
+
 if [[ -f "/opt/conda/etc/profile.d/conda.sh" ]]; then
   # shellcheck disable=SC1091
   source "/opt/conda/etc/profile.d/conda.sh"
@@ -33,8 +36,30 @@ export PYTHONPATH="${ROOT_DIR}:${ROOT_DIR}/hm3d-online:${PYTHONPATH:-}"
 export OMP_NUM_THREADS="${OMP_NUM_THREADS:-12}"
 
 RUN_TAG="$(date +%Y%m%d-%H%M%S)-semantic-test"
+OUT_DIR="output_logs/anchor/semantic_test/${RUN_TAG}"
+mkdir -p "${OUT_DIR}"
+
+{
+  echo "timestamp=$(date +%Y%m%d-%H%M%S)"
+  echo "run_tag=${RUN_TAG}"
+  echo "scene_name=${SCENE_NAME}"
+  echo "episode_id=${EPISODE_ID}"
+  echo "task_id=${TASK_ID}"
+  echo "num_tasks=${NUM_TASKS}"
+  echo "script=$0"
+  echo "command=${RUN_CMD}"
+} > "${OUT_DIR}/run_args.txt"
+
+cp "$0" "${OUT_DIR}/run_anchor_semantic_test.sh.snapshot"
+{
+  echo "#!/usr/bin/env bash"
+  printf '%s\n' "${RUN_CMD}"
+} > "${OUT_DIR}/run_command.sh"
+chmod +x "${OUT_DIR}/run_command.sh"
+
 echo ">>> run_tag=${RUN_TAG}"
 echo ">>> scene=${SCENE_NAME} episode=${EPISODE_ID} task_id=${TASK_ID} num_tasks=${NUM_TASKS}"
+echo ">>> metadata_dir=${OUT_DIR}"
 
 python3 hm3d-online/refhm3d-nav-sequence-analyze-anchor-semantic.py \
   --scene_name "${SCENE_NAME}" \

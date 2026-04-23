@@ -140,7 +140,7 @@ parser.add_argument(
 parser.add_argument(
     "--output_log_dir",
     type=str,
-    default="/home/chenlin/krona/MTU3D/output_logs/baseline",
+    default="./output_logs/baseline",
     help="Output directory for both logs and metric json",
 )
 parser.add_argument(

@@ -154,7 +154,7 @@ parser.add_argument(
 parser.add_argument(
     "--output_log_dir",
     type=str,
-    default="/home/chenlin/krona/MTU3D/output_logs/anchor",
+    default="./output_logs/anchor",
     help="Anchor root output directory",
 )
 args = parser.parse_args()

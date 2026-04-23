@@ -386,6 +386,15 @@ def run_position_vote(
         raise ValueError("main_target is empty")
     if len(state.object_node) == 0:
         return {"ok": False, "reason": "empty_object_node_binding"}
+    candidate_set = None
+    if candidate_object_indices is not None:
+        candidate_set = {int(x) for x in candidate_object_indices}
+        if len(candidate_set) == 0:
+            return {
+                "ok": False,
+                "reason": "empty_candidate_object_indices",
+                "candidate_object_indices": [],
+            }
 
     anchor_list = [str(a).strip() for a in anchors if str(a).strip()]
     weights_list: List[float] = []
@@ -403,6 +412,9 @@ def run_position_vote(
 
     def _rank_decay_mult(rank_i: int) -> float:
         return float(rank_gamma) ** int(rank_i)
+
+    def _candidate_allowed(oi: int) -> bool:
+        return candidate_set is None or int(oi) in candidate_set
 
     # vote[node]: vote_count, vote_score_sum — per-query min-max norm on scores.
     vote_count: Dict[int, float] = {}
@@ -426,6 +438,7 @@ def run_position_vote(
             sn = float(norm_scores[rank_i]) if rank_i < len(norm_scores) else 0.0
             rm = _rank_decay_mult(rank_i)
             node_id = state.object_node.get(oi, None)
+            allowed = _candidate_allowed(oi)
             rec["topk"].append(
                 {
                     "object_index": oi,
@@ -433,9 +446,10 @@ def run_position_vote(
                     "score_norm": sn,
                     "rank_decay_mult": float(rm),
                     "node_id": None if node_id is None else int(node_id),
+                    "candidate_allowed": bool(allowed),
                 }
             )
-            if node_id is None:
+            if node_id is None or not allowed:
                 continue
             w_eff = float(q_weight) * rm
             vote_count[int(node_id)] = float(vote_count.get(int(node_id), 0.0) + w_eff)
@@ -471,6 +485,7 @@ def run_position_vote(
             rm = _rank_decay_mult(i)
             w = sub_base * rm
             node_id = state.object_node.get(oi, None)
+            allowed = _candidate_allowed(oi)
             refined_topk.append(
                 {
                     "object_index": oi,
@@ -479,9 +494,10 @@ def run_position_vote(
                     "node_id": None if node_id is None else int(node_id),
                     "vote_weight": float(w),
                     "rank_decay_mult": float(rm),
+                    "candidate_allowed": bool(allowed),
                 }
             )
-            if node_id is None:
+            if node_id is None or not allowed:
                 continue
             vote_count[int(node_id)] = float(vote_count.get(int(node_id), 0.0) + w)
             vote_score_sum[int(node_id)] = float(vote_score_sum.get(int(node_id), 0.0) + (w * sn))
@@ -524,6 +540,7 @@ def run_position_vote(
             sn = float(norm_scores[rank_i]) if rank_i < len(norm_scores) else 0.0
             rm = _rank_decay_mult(rank_i)
             node_id = state.object_node.get(oi, None)
+            allowed = _candidate_allowed(oi)
             rec["topk"].append(
                 {
                     "object_index": oi,
@@ -531,9 +548,10 @@ def run_position_vote(
                     "score_norm": sn,
                     "rank_decay_mult": float(rm),
                     "node_id": None if node_id is None else int(node_id),
+                    "candidate_allowed": bool(allowed),
                 }
             )
-            if node_id is None:
+            if node_id is None or not allowed:
                 continue
             w_eff = float(eff_w) * rm
             vote_count[int(node_id)] = float(vote_count.get(int(node_id), 0.0) + w_eff)
@@ -551,15 +569,20 @@ def run_position_vote(
     node_items.sort(key=lambda x: (-x[2], -x[1], x[0]))
     best_node = int(node_items[0][0])
 
-    # collect objects bound to best node
-    node_objects = [oi for oi, nid in state.object_node.items() if int(nid) == best_node]
+    # collect objects bound to best node (candidate-filtered when provided)
+    node_objects = [
+        oi
+        for oi, nid in state.object_node.items()
+        if int(nid) == best_node and _candidate_allowed(int(oi))
+    ]
     if len(node_objects) == 0:
-        return {"ok": False, "reason": "best_node_has_no_objects", "best_node": best_node, "query_logs": query_logs}
-
-    # candidate ids are kept for diagnostics only.
-    candidate_set = None
-    if candidate_object_indices is not None:
-        candidate_set = {int(x) for x in candidate_object_indices}
+        return {
+            "ok": False,
+            "reason": "best_node_has_no_candidate_objects",
+            "best_node": best_node,
+            "query_logs": query_logs,
+            "candidate_object_indices": None if candidate_set is None else sorted(list(candidate_set)),
+        }
 
     # Fill target_score_map (vote / main_target) for diagnostics and missing-object fill
     if candidate_target_scores is not None:
@@ -630,7 +653,7 @@ def run_position_vote(
         "best_node_id": best_node,
         "best_node_objects": [int(x) for x in node_objects],
         "candidate_object_indices": None if candidate_set is None else sorted(list(candidate_set)),
-        "selected_from_candidates": False,
+        "selected_from_candidates": True if candidate_set is not None else False,
         "object_pick_score_mode": _mode,
         "object_scores_in_best_node": [
             {

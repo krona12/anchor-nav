@@ -149,7 +149,7 @@ parser.add_argument("--navigation_data_path", type=str, default="/home/chenlin/k
 parser.add_argument("--hm3d_data_base_path", type=str, default="/home/chenlin/krona/MTU3D/datascene")
 parser.add_argument("--pq3d_stage1_path", type=str, default="/home/chenlin/krona/MTU3D/checkpoint/stage1-pretrain-all")
 parser.add_argument("--pq3d_stage2_path", type=str, default="/home/chenlin/krona/MTU3D/checkpoint/stage2-fine-tune-goat")
-parser.add_argument("--output_log_dir", type=str, default="/home/chenlin/krona/MTU3D/output_logs/anchor/vlmcor")
+parser.add_argument("--output_log_dir", type=str, default="./output_logs/anchor/vlmcor")
 parser.add_argument("--max_steps", type=int, default=400)
 parser.add_argument("--enable_vlm_corrector", action="store_true")
 parser.add_argument("--vlm_mode", choices=["async", "sync"], default="sync")

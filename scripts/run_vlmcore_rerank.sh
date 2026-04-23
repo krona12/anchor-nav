@@ -10,6 +10,9 @@ set -u
 set -- "${_SAVED_ARGV[@]}"
 unset _SAVED_ARGV
 
+RUN_CMD="$(printf '%q ' "$0" "$@")"
+RUN_CMD="${RUN_CMD% }"
+
 export CUDA_VISIBLE_DEVICES=4,5
 export PYTHONPATH=/home/chenlin/krona/MTU3D:./:./hm3d-online:./hm3d-online/FastSAM:${PYTHONPATH:-}
 export MAGNUM_LOG=quiet
@@ -66,6 +69,7 @@ echo ">>> VLM: base_url=${VLM_BASE_URL} model=${VLM_MODEL}"
   echo "desc_mode=${DESC_MODE}"
   echo "user_tag=${USER_TAG}"
   echo "script=$0"
+  echo "command=${RUN_CMD}"
   echo "pwd=$(pwd)"
   echo "cuda_visible_devices=${CUDA_VISIBLE_DEVICES:-}"
   echo "argv=$*"
@@ -83,6 +87,11 @@ echo ">>> VLM: base_url=${VLM_BASE_URL} model=${VLM_MODEL}"
 } > "${OUT_DIR}/run_args.txt"
 
 cp "$0" "${OUT_DIR}/run_vlmcore_rerank.sh.snapshot"
+{
+  echo "#!/usr/bin/env bash"
+  printf '%s\n' "${RUN_CMD}"
+} > "${OUT_DIR}/run_command.sh"
+chmod +x "${OUT_DIR}/run_command.sh"
 
 run_one () {
   local START_RATIO="$1"

@@ -10,6 +10,9 @@ set -u
 set -- "${_SAVED_ARGV[@]}"
 unset _SAVED_ARGV
 
+RUN_CMD="$(printf '%q ' "$0" "$@")"
+RUN_CMD="${RUN_CMD% }"
+
 export CUDA_VISIBLE_DEVICES=6
 export PYTHONPATH=/home/chenlin/krona/MTU3D:./:./hm3d-online:./hm3d-online/FastSAM:${PYTHONPATH:-}
 export MAGNUM_LOG=quiet
@@ -43,6 +46,7 @@ echo ">>> Output dir: ${OUT_DIR}"
   echo "desc_mode=${DESC_MODE}"
   echo "user_tag=${USER_TAG}"
   echo "script=$0"
+  echo "command=${RUN_CMD}"
   echo "task_levels=instance"
   echo "slice_range=0.05-0.1"
   echo "slice_step=0.05"
@@ -51,6 +55,11 @@ echo ">>> Output dir: ${OUT_DIR}"
 } > "${OUT_DIR}/run_args.txt"
 
 cp "$0" "${OUT_DIR}/run_vote_instance_0.05_0.1.sh.snapshot"
+{
+  echo "#!/usr/bin/env bash"
+  printf '%s\n' "${RUN_CMD}"
+} > "${OUT_DIR}/run_command.sh"
+chmod +x "${OUT_DIR}/run_command.sh"
 
 run_one () {
   local START_RATIO="$1"

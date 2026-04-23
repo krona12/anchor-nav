@@ -3,8 +3,9 @@ import os
 import sys
 import atexit
 import datetime
+from collections import deque
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Deque, Dict, List, Optional, Set, Tuple
 
 sys.stdout.reconfigure(line_buffering=True)
 
@@ -165,6 +166,12 @@ parser.add_argument(
     choices=("pick", "target", "max"),
     help="胜出节点内选物体：pick=Stage2+refined_query；target=Stage2+main_target；max=二者 logits 取大",
 )
+parser.add_argument(
+    "--vote_candidate_recent_window",
+    type=int,
+    default=5,
+    help="candidate_object_indices 使用最近 N 次新增对象的并集；<=0 表示使用当前 task 内全部新增对象并集",
+)
 args = parser.parse_args()
 
 if args.vote_api_key:
@@ -285,6 +292,10 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
             vote_vlm_elapsed_ms_total = 0.0
             baseline_final_target_pos: Optional[np.ndarray] = None
             final_selected_object_pos: Optional[np.ndarray] = None
+            candidate_recent_window = int(args.vote_candidate_recent_window)
+            recent_new_object_sets: Deque[Set[int]] = deque(
+                maxlen=None if candidate_recent_window <= 0 else candidate_recent_window
+            )
 
             while total_steps < int(args.max_steps):
                 color_list, depth_list, agent_state_list = [], [], []
@@ -322,6 +333,16 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                         object_positions_xyz[int(oi)] = obj_xyz
                 bind_records = update_bindings_for_new_objects(vote_state, prev_object_count=prev_count, cur_object_count=cur_count, agent_position_xyz=agent_state.position, object_positions_xyz=object_positions_xyz, cfg=vote_cfg)
                 prev_count = cur_count
+                current_new_ids = {
+                    int(x.get("object_index"))
+                    for x in bind_records
+                    if x.get("object_index") is not None
+                }
+                if len(current_new_ids) > 0:
+                    recent_new_object_sets.append(current_new_ids)
+                candidate_pool: Set[int] = set()
+                for s in recent_new_object_sets:
+                    candidate_pool.update(s)
 
                 used_target = np.asarray(target_position, dtype=float).reshape(3).copy()
                 if is_final:
@@ -346,7 +367,7 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                         anchors=anchors,
                         anchor_weights=anchor_weights,
                         cfg=vote_cfg,
-                        candidate_object_indices=[int(x.get("object_index")) for x in bind_records],
+                        candidate_object_indices=sorted(candidate_pool) if len(candidate_pool) > 0 else None,
                         refined_pick_text=refined_query,
                     )
                     if vote_info.get("ok"):
