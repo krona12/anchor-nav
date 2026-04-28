@@ -21,6 +21,15 @@ class TriQueryConfig:
     centroid_temp: float = 0.07
     anchor_entropy_temp: float = 1.0
     anchor_entropy_scale: float = 2.0
+    redirect_frontier_enabled: bool = False
+    redirect_h_norm_threshold: float = 0.3
+    w_semantic: float = 0.9
+    w_spatial: float = 0.1
+    use_full_constraint: bool = False
+    low_entropy_semantic_only_enabled: bool = True
+    low_entropy_threshold: float = 0.4
+    skip_high_entropy_enabled: bool = True
+    high_entropy_threshold: float = 0.95
 
 
 def _min_max_normalize(scores: Sequence[float]) -> np.ndarray:
@@ -141,8 +150,14 @@ def run_tri_query(
     centroid_temp = float(getattr(cfg, "centroid_temp", 0.07))
     entropy_temp = float(getattr(cfg, "anchor_entropy_temp", 1.0))
     entropy_scale = float(getattr(cfg, "anchor_entropy_scale", 2.0))
+    w_sem = float(getattr(cfg, "w_semantic", 0.9))
+    w_spa = float(getattr(cfg, "w_spatial", 0.1))
+    use_full_constraint = bool(getattr(cfg, "use_full_constraint", False))
 
-    res_full = list(query_fn(str(description), top_k))
+    if use_full_constraint:
+        res_full = list(query_fn(str(description), top_k))
+    else:
+        res_full = []
     res_target = list(query_fn(q_target, top_k))
     if len(res_target) == 0:
         return {
@@ -165,6 +180,52 @@ def run_tri_query(
         entropy_temp=entropy_temp,
         entropy_scale=entropy_scale,
     )
+    skip_high_entropy = bool(getattr(cfg, "skip_high_entropy_enabled", True))
+    high_entropy_th = float(getattr(cfg, "high_entropy_threshold", 0.95))
+    if skip_high_entropy and float(anchor_h_norm) > float(high_entropy_th):
+        return {
+            "ok": False,
+            "reason": "anchor_entropy_too_high",
+            "skip_tqsi": True,
+            "anchor_H_norm": float(anchor_h_norm),
+            "query_logs": {
+                "full_query": str(description),
+                "target_query": q_target,
+                "anchor_query": q_anchor,
+                "full_topk": [{"object_index": int(i), "score": float(s)} for i, s in res_full],
+                "target_topk": [{"object_index": int(i), "score": float(s)} for i, s in res_target],
+                "anchor_topk": [{"object_index": int(i), "score": float(s)} for i, s in res_anchor],
+            },
+            "config": {
+                "top_k": int(top_k),
+                "sigma_anchor_base": float(sigma_anchor_base),
+                "sigma_anchor_adaptive": float(sigma_anchor),
+                "anchor_H_norm": float(anchor_h_norm),
+                "sigma_full": float(sigma_full),
+                "anchor_distance_mode": anchor_mode,
+                "full_distance_mode": full_mode,
+                "centroid_temp": float(centroid_temp),
+                "anchor_entropy_temp": float(entropy_temp),
+                "anchor_entropy_scale": float(entropy_scale),
+                "w_semantic": float(w_sem),
+                "w_spatial": float(w_spa),
+                "low_entropy_semantic_only_enabled": bool(getattr(cfg, "low_entropy_semantic_only_enabled", True)),
+                "low_entropy_threshold": float(getattr(cfg, "low_entropy_threshold", 0.4)),
+                "skip_high_entropy_enabled": bool(skip_high_entropy),
+                "high_entropy_threshold": float(high_entropy_th),
+                "use_full_constraint": bool(use_full_constraint),
+                "redirect_frontier_enabled": bool(getattr(cfg, "redirect_frontier_enabled", False)),
+                "redirect_h_norm_threshold": float(getattr(cfg, "redirect_h_norm_threshold", 0.3)),
+            },
+        }
+    low_entropy_guard = bool(getattr(cfg, "low_entropy_semantic_only_enabled", True))
+    low_entropy_th = float(getattr(cfg, "low_entropy_threshold", 0.4))
+    if low_entropy_guard and float(anchor_h_norm) < float(low_entropy_th):
+        w_sem_eff = 1.0
+        w_spa_eff = 0.0
+    else:
+        w_sem_eff = float(w_sem)
+        w_spa_eff = float(w_spa)
 
     pos_full = _build_position_array(box, res_full)
     pos_anchor = _build_position_array(box, res_anchor)
@@ -191,7 +252,10 @@ def run_tri_query(
             d_a = None
             prox_anchor = 1.0
 
-        if full_mode == "centroid" and center_full is not None:
+        if not use_full_constraint:
+            d_f = None
+            prox_full = 1.0
+        elif full_mode == "centroid" and center_full is not None:
             d_f = float(np.linalg.norm(p_i - center_full))
             prox_full = float(np.exp(-d_f / sigma_full))
         elif pos_full.shape[0] > 0:
@@ -203,7 +267,7 @@ def run_tri_query(
 
         semantic = float(target_norm_scores[rank_i]) if rank_i < len(target_norm_scores) else 0.0
         spatial = float(prox_anchor * prox_full)
-        final_score = float(semantic * spatial)
+        final_score = float(w_sem_eff * semantic + w_spa_eff * spatial)
         rows.append(
             {
                 "rank_in_target": int(rank_i + 1),
@@ -216,6 +280,7 @@ def run_tri_query(
                 "prox_full": float(prox_full),
                 "spatial_consensus": float(spatial),
                 "final_score": float(final_score),
+                "score_formula": f"{w_sem_eff:.1f}*sem+{w_spa_eff:.1f}*spa",
             }
         )
 
@@ -231,6 +296,7 @@ def run_tri_query(
         "ok": True,
         "chosen_object_index": int(chosen_obj),
         "target_xyz": chosen_xyz.tolist(),
+        "anchor_H_norm": float(anchor_h_norm),
         "final_ranking": rows,
         "query_logs": {
             "full_query": str(description),
@@ -251,6 +317,17 @@ def run_tri_query(
             "centroid_temp": float(centroid_temp),
             "anchor_entropy_temp": float(entropy_temp),
             "anchor_entropy_scale": float(entropy_scale),
+            "w_semantic": float(w_sem),
+            "w_spatial": float(w_spa),
+            "w_semantic_effective": float(w_sem_eff),
+            "w_spatial_effective": float(w_spa_eff),
+            "low_entropy_semantic_only_enabled": bool(low_entropy_guard),
+            "low_entropy_threshold": float(low_entropy_th),
+            "skip_high_entropy_enabled": bool(skip_high_entropy),
+            "high_entropy_threshold": float(high_entropy_th),
+            "use_full_constraint": bool(use_full_constraint),
+            "redirect_frontier_enabled": bool(getattr(cfg, "redirect_frontier_enabled", False)),
+            "redirect_h_norm_threshold": float(getattr(cfg, "redirect_h_norm_threshold", 0.3)),
         },
     }
 

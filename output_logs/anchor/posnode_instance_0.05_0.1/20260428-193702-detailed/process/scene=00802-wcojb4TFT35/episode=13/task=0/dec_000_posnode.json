@@ -1,0 +1,17 @@
+{
+  "task_id": 0,
+  "decision_num": 0,
+  "is_final": false,
+  "target_used": [
+    -0.6494694948196411,
+    0.04491996765136719,
+    -0.33337369561195374
+  ],
+  "registry_nodes_total": 0,
+  "registry_tail": [],
+  "auto_vlm_attempts": 0,
+  "auto_vlm_applied": 0,
+  "posnode": {
+    "ok": false
+  }
+}

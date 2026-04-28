@@ -227,6 +227,33 @@ parser.add_argument("--tri_sigma_full", type=float, default=3.0)
 parser.add_argument("--tri_anchor_distance_mode", type=str, default="centroid", choices=("min", "centroid"))
 parser.add_argument("--tri_full_distance_mode", type=str, default="centroid", choices=("min", "centroid"))
 parser.add_argument("--tri_centroid_temp", type=float, default=0.07)
+parser.add_argument("--tri_w_semantic", type=float, default=0.9)
+parser.add_argument("--tri_w_spatial", type=float, default=0.1)
+parser.add_argument(
+    "--tri_disable_low_entropy_semantic_only",
+    action="store_true",
+    help="关闭低熵保护（默认开启：anchor_H_norm 低于阈值时仅用语义）",
+)
+parser.add_argument(
+    "--tri_low_entropy_threshold",
+    type=float,
+    default=0.4,
+)
+parser.add_argument(
+    "--tri_disable_skip_high_entropy",
+    action="store_true",
+    help="关闭高熵跳过（默认开启：anchor_H_norm > threshold 时跳过 TQSI）",
+)
+parser.add_argument(
+    "--tri_high_entropy_threshold",
+    type=float,
+    default=0.95,
+)
+parser.add_argument(
+    "--tri_use_full_constraint",
+    action="store_true",
+    help="启用 Q_full 空间约束（默认关闭）",
+)
 parser.add_argument("--tri_final_topn_log", type=int, default=5)
 parser.add_argument(
     "--decision_log_interval",
@@ -249,13 +276,24 @@ parser.add_argument(
 parser.add_argument(
     "--wake_empty_path_threshold",
     type=int,
-    default=3,
+    default=8,
     help="同一 frontier 连续空路径达到阈值后标记为 blocked",
 )
 parser.add_argument(
     "--wake_force_final_decision_on_stuck",
     action="store_true",
     help="wake 无可选 frontier 时，立即触发 final decision",
+)
+parser.add_argument(
+    "--redirect_frontier_enabled",
+    action="store_true",
+    help="允许 wake 在 non-final 阶段执行 redirect_frontier（默认关闭）",
+)
+parser.add_argument(
+    "--redirect_h_norm_threshold",
+    type=float,
+    default=0.3,
+    help="仅当 anchor_H_norm 低于阈值才允许 redirect（当前仅保留参数位）",
 )
 args = parser.parse_args()
 
@@ -271,6 +309,15 @@ tri_cfg = TriQueryConfig(
     anchor_distance_mode=str(args.tri_anchor_distance_mode),
     full_distance_mode=str(args.tri_full_distance_mode),
     centroid_temp=float(args.tri_centroid_temp),
+    w_semantic=float(args.tri_w_semantic),
+    w_spatial=float(args.tri_w_spatial),
+    use_full_constraint=bool(args.tri_use_full_constraint),
+    low_entropy_semantic_only_enabled=bool(not args.tri_disable_low_entropy_semantic_only),
+    low_entropy_threshold=float(args.tri_low_entropy_threshold),
+    skip_high_entropy_enabled=bool(not args.tri_disable_skip_high_entropy),
+    high_entropy_threshold=float(args.tri_high_entropy_threshold),
+    redirect_frontier_enabled=bool(args.redirect_frontier_enabled),
+    redirect_h_norm_threshold=float(args.redirect_h_norm_threshold),
 )
 print(f"[TriQueryRefine1] tri_cfg={tri_cfg}")
 wake_cfg = WakeConfig(
@@ -472,11 +519,17 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                 )
                 if wake_info.get("triggered"):
                     if wake_info.get("redirected_target") is not None:
-                        used_target = np.asarray(wake_info["redirected_target"], dtype=float).reshape(3).copy()
-                        print(
-                            f"[triquery-refine1][wake] task={idx} dec={decision_num-1} "
-                            f"action=redirect_frontier target={used_target.tolist()}"
-                        )
+                        if bool(args.redirect_frontier_enabled):
+                            used_target = np.asarray(wake_info["redirected_target"], dtype=float).reshape(3).copy()
+                            print(
+                                f"[triquery-refine1][wake] task={idx} dec={decision_num-1} "
+                                f"action=redirect_frontier target={used_target.tolist()}"
+                            )
+                        else:
+                            print(
+                                f"[triquery-refine1][wake] task={idx} dec={decision_num-1} "
+                                "action=redirect_frontier_skipped reason=redirect_frontier_disabled"
+                            )
                     elif wake_info.get("force_final_decision"):
                         is_final = True
                         baseline_final_target_pos = used_target.copy()
@@ -508,6 +561,13 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                         tri_used += 1
                         used_target = np.asarray(tri_info["target_xyz"], dtype=float).reshape(3).copy()
                         final_selected_object_pos = used_target.copy()
+                    else:
+                        # Fallback to baseline final target when TQSI skipped/failed.
+                        final_selected_object_pos = baseline_final_target_pos.copy()
+                        print(
+                            f"[triquery-refine1][tri-fallback] task={idx} dec={decision_num-1} "
+                            f"reason={tri_info.get('reason')!r} use=baseline_final_target"
+                        )
                     final_topn = list(tri_info.get("final_ranking", []))[: max(1, int(args.tri_final_topn_log))]
                     topn_str = ", ".join(
                         f"rank={i+1}/obj={int(x.get('object_index'))}/final={float(x.get('final_score', 0.0)):.4f}"
@@ -553,6 +613,8 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                             "triquery_ok": bool(tri_info.get("ok", False)),
                             "triquery_reason": tri_info.get("reason"),
                             "wake_info": wake_info,
+                            "redirect_frontier_enabled": bool(args.redirect_frontier_enabled),
+                            "redirect_h_norm_threshold": float(args.redirect_h_norm_threshold),
                             "final_topn": final_topn,
                             "gt_hit": gt_hit,
                             "tri_info": tri_info,
@@ -672,6 +734,8 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                     "wake_repeat_threshold": int(args.wake_repeat_threshold),
                     "wake_empty_path_threshold": int(args.wake_empty_path_threshold),
                     "wake_force_final_decision_on_stuck": bool(args.wake_force_final_decision_on_stuck),
+                    "redirect_frontier_enabled": bool(args.redirect_frontier_enabled),
+                    "redirect_h_norm_threshold": float(args.redirect_h_norm_threshold),
                     "goal_positions": [gp.tolist() for gp in goal_positions],
                     "baseline_target_position": None
                     if baseline_final_target_pos is None
@@ -700,6 +764,8 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                     "wake_repeat_threshold": int(args.wake_repeat_threshold),
                     "wake_empty_path_threshold": int(args.wake_empty_path_threshold),
                     "wake_force_final_decision_on_stuck": bool(args.wake_force_final_decision_on_stuck),
+                    "redirect_frontier_enabled": bool(args.redirect_frontier_enabled),
+                    "redirect_h_norm_threshold": float(args.redirect_h_norm_threshold),
                     "task_effective_logs": task_effective_logs,
                 }
             )
