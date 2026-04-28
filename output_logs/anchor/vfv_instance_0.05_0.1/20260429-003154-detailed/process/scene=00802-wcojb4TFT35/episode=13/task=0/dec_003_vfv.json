@@ -1,0 +1,15 @@
+{
+  "task_id": 0,
+  "decision_num": 3,
+  "is_final": false,
+  "target_used": [
+    0.632859468460083,
+    0.04491996765136719,
+    -4.3082804679870605
+  ],
+  "vfv": {
+    "ok": false,
+    "phase": "phase1",
+    "triggered": false
+  }
+}

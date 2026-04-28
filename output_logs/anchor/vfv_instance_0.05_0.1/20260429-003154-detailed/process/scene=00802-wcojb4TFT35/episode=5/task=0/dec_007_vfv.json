@@ -1,0 +1,107 @@
+{
+  "task_id": 0,
+  "decision_num": 7,
+  "is_final": true,
+  "target_used": [
+    -1.8771398250873275,
+    2.7174673997438865,
+    -13.185964144193209
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase2",
+    "triggered": true,
+    "phase1_target": [
+      -1.2673896551132202,
+      3.0538711547851562,
+      -17.607616424560547
+    ],
+    "verify": {
+      "visible": false,
+      "confidence": "low",
+      "reason": "verify_parse_failed",
+      "raw": "```json\n{\"visible\": true, \"confidence\": \"high\", \"reason\": \"The image shows a bedroom with a bed featuring purple-and-grey bedding, a white nightstand with a lamp, and a light brown wooden sewing box visible in the room.\"}\n```"
+    },
+    "verify_elapsed_ms": 4359.6876645460725,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.1/20260429-003154-detailed/process/scene=00802-wcojb4TFT35/episode=5/task=0/panorama/vfv_dec_007.jpg",
+    "decompose": {
+      "target_desc": "light brown wooden sewing box",
+      "anchor_desc": "white nightstand with lamp"
+    },
+    "anchor_query": {
+      "ok": true,
+      "anchor_index": 79,
+      "anchor_position": [
+        -1.8771398250873275,
+        2.7174673997438865,
+        -13.185964144193209
+      ],
+      "anchor_topk": [
+        {
+          "object_index": 79,
+          "score": -2.373605728149414
+        },
+        {
+          "object_index": 8,
+          "score": -4.767234802246094
+        },
+        {
+          "object_index": 99,
+          "score": -5.113007545471191
+        },
+        {
+          "object_index": 102,
+          "score": -5.415946006774902
+        },
+        {
+          "object_index": 76,
+          "score": -5.7845258712768555
+        },
+        {
+          "object_index": 70,
+          "score": -6.3159403800964355
+        },
+        {
+          "object_index": 47,
+          "score": -6.540468215942383
+        },
+        {
+          "object_index": 53,
+          "score": -7.504430294036865
+        },
+        {
+          "object_index": 67,
+          "score": -7.722481727600098
+        },
+        {
+          "object_index": 46,
+          "score": -7.876076698303223
+        },
+        {
+          "object_index": 35,
+          "score": -8.018536567687988
+        },
+        {
+          "object_index": 16,
+          "score": -8.178589820861816
+        },
+        {
+          "object_index": 104,
+          "score": -8.22050666809082
+        },
+        {
+          "object_index": 74,
+          "score": -8.234670639038086
+        },
+        {
+          "object_index": 61,
+          "score": -8.244688034057617
+        },
+        {
+          "object_index": 109,
+          "score": -8.409271240234375
+        }
+      ]
+    }
+  }
+}

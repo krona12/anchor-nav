@@ -1,0 +1,107 @@
+{
+  "task_id": 0,
+  "decision_num": 9,
+  "is_final": true,
+  "target_used": [
+    0.3277759850025177,
+    -13.417356491088867,
+    2.6677958965301514
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase2",
+    "triggered": true,
+    "phase1_target": [
+      -1.9084044694900513,
+      -14.306129455566406,
+      -2.19572377204895
+    ],
+    "verify": {
+      "visible": false,
+      "confidence": "low",
+      "reason": "verify_parse_failed",
+      "raw": "```json\n{\"visible\": false, \"confidence\": \"medium\", \"reason\": \"The description mentions a fire alarm, a specific type of bin, and precise placements, which I cannot confirm due to the visual limitations in the image.\"}\n```"
+    },
+    "verify_elapsed_ms": 3740.2342446148396,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.1/20260429-003154-detailed/process/scene=00803-k1cupFYWXJ6/episode=3/task=0/panorama/vfv_dec_009.jpg",
+    "decompose": {
+      "target_desc": "silver cylindrical bin",
+      "anchor_desc": "fire alarm"
+    },
+    "anchor_query": {
+      "ok": true,
+      "anchor_index": 91,
+      "anchor_position": [
+        0.3277759850025177,
+        -13.417356491088867,
+        2.6677958965301514
+      ],
+      "anchor_topk": [
+        {
+          "object_index": 91,
+          "score": -1.3215028047561646
+        },
+        {
+          "object_index": 66,
+          "score": -3.088946580886841
+        },
+        {
+          "object_index": 89,
+          "score": -3.7715516090393066
+        },
+        {
+          "object_index": 31,
+          "score": -3.8082215785980225
+        },
+        {
+          "object_index": 54,
+          "score": -3.8546395301818848
+        },
+        {
+          "object_index": 76,
+          "score": -4.062970161437988
+        },
+        {
+          "object_index": 72,
+          "score": -4.223831653594971
+        },
+        {
+          "object_index": 82,
+          "score": -4.883387088775635
+        },
+        {
+          "object_index": 47,
+          "score": -5.341156005859375
+        },
+        {
+          "object_index": 13,
+          "score": -5.468903541564941
+        },
+        {
+          "object_index": 42,
+          "score": -5.480273723602295
+        },
+        {
+          "object_index": 22,
+          "score": -5.646924018859863
+        },
+        {
+          "object_index": 48,
+          "score": -5.749993324279785
+        },
+        {
+          "object_index": 78,
+          "score": -5.764981746673584
+        },
+        {
+          "object_index": 34,
+          "score": -6.008204460144043
+        },
+        {
+          "object_index": 65,
+          "score": -6.102428436279297
+        }
+      ]
+    }
+  }
+}

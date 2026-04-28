@@ -1,0 +1,107 @@
+{
+  "task_id": 0,
+  "decision_num": 4,
+  "is_final": true,
+  "target_used": [
+    1.6446775197982788,
+    0.39499470591545105,
+    1.1884183883666992
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase2",
+    "triggered": true,
+    "phase1_target": [
+      -0.06391707807779312,
+      2.0282235145568848,
+      1.005061149597168
+    ],
+    "verify": {
+      "visible": false,
+      "confidence": "low",
+      "reason": "verify_parse_failed",
+      "raw": "```json\n{\"visible\": false, \"confidence\": \"high\", \"reason\": \"The image depicts a living room with a television, a couch, and a bookshelf, but does not show the described black side table, armchairs, or wooden piano.\"}\n```"
+    },
+    "verify_elapsed_ms": 10287.014598026872,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.1/20260429-003154-detailed/process/scene=00802-wcojb4TFT35/episode=17/task=0/panorama/vfv_dec_004.jpg",
+    "decompose": {
+      "target_desc": "black side table with lamp",
+      "anchor_desc": "black-and-beige leaf-patterned armchairs"
+    },
+    "anchor_query": {
+      "ok": true,
+      "anchor_index": 19,
+      "anchor_position": [
+        1.6446775197982788,
+        0.39499470591545105,
+        1.1884183883666992
+      ],
+      "anchor_topk": [
+        {
+          "object_index": 19,
+          "score": -2.349696159362793
+        },
+        {
+          "object_index": 94,
+          "score": -2.436445951461792
+        },
+        {
+          "object_index": 111,
+          "score": -2.7703375816345215
+        },
+        {
+          "object_index": 49,
+          "score": -3.1804089546203613
+        },
+        {
+          "object_index": 40,
+          "score": -3.5467946529388428
+        },
+        {
+          "object_index": 113,
+          "score": -3.5664875507354736
+        },
+        {
+          "object_index": 112,
+          "score": -3.679198741912842
+        },
+        {
+          "object_index": 91,
+          "score": -4.042888164520264
+        },
+        {
+          "object_index": 16,
+          "score": -4.129280090332031
+        },
+        {
+          "object_index": 117,
+          "score": -4.482811450958252
+        },
+        {
+          "object_index": 65,
+          "score": -5.005665302276611
+        },
+        {
+          "object_index": 29,
+          "score": -5.029860019683838
+        },
+        {
+          "object_index": 21,
+          "score": -5.327929496765137
+        },
+        {
+          "object_index": 36,
+          "score": -5.788144588470459
+        },
+        {
+          "object_index": 23,
+          "score": -6.03657865524292
+        },
+        {
+          "object_index": 28,
+          "score": -6.039050102233887
+        }
+      ]
+    }
+  }
+}

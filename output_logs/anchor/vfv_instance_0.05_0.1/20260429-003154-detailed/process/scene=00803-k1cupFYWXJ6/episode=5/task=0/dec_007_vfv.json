@@ -1,0 +1,107 @@
+{
+  "task_id": 0,
+  "decision_num": 7,
+  "is_final": true,
+  "target_used": [
+    5.545167048772178,
+    6.855450736151802,
+    -2.769107845094469
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase2",
+    "triggered": true,
+    "phase1_target": [
+      4.088516712188721,
+      7.045406341552734,
+      1.0470380783081055
+    ],
+    "verify": {
+      "visible": false,
+      "confidence": "low",
+      "reason": "verify_parse_failed",
+      "raw": "```json\n{\"visible\": true, \"confidence\": \"high\", \"reason\": \"The description matches the elements visible in the panorama, including the white table, purple chairs, yellow-framed maps on the wall, and the exhibition table with a ship model.\"}\n```"
+    },
+    "verify_elapsed_ms": 8115.800284780562,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.1/20260429-003154-detailed/process/scene=00803-k1cupFYWXJ6/episode=5/task=0/panorama/vfv_dec_007.jpg",
+    "decompose": {
+      "target_desc": "white square side table with black base",
+      "anchor_desc": "purple chairs"
+    },
+    "anchor_query": {
+      "ok": true,
+      "anchor_index": 23,
+      "anchor_position": [
+        5.545167048772178,
+        6.855450736151802,
+        -2.769107845094469
+      ],
+      "anchor_topk": [
+        {
+          "object_index": 23,
+          "score": 0.10866200178861618
+        },
+        {
+          "object_index": 17,
+          "score": -0.5066790580749512
+        },
+        {
+          "object_index": 24,
+          "score": -1.2187590599060059
+        },
+        {
+          "object_index": 7,
+          "score": -1.3293813467025757
+        },
+        {
+          "object_index": 2,
+          "score": -1.9333776235580444
+        },
+        {
+          "object_index": 71,
+          "score": -2.3145852088928223
+        },
+        {
+          "object_index": 53,
+          "score": -2.7967543601989746
+        },
+        {
+          "object_index": 5,
+          "score": -2.835561752319336
+        },
+        {
+          "object_index": 74,
+          "score": -3.074718475341797
+        },
+        {
+          "object_index": 41,
+          "score": -3.606771230697632
+        },
+        {
+          "object_index": 78,
+          "score": -3.7946882247924805
+        },
+        {
+          "object_index": 56,
+          "score": -3.8007278442382812
+        },
+        {
+          "object_index": 69,
+          "score": -3.9980568885803223
+        },
+        {
+          "object_index": 19,
+          "score": -3.9983716011047363
+        },
+        {
+          "object_index": 81,
+          "score": -4.095027446746826
+        },
+        {
+          "object_index": 4,
+          "score": -4.322296142578125
+        }
+      ]
+    }
+  }
+}

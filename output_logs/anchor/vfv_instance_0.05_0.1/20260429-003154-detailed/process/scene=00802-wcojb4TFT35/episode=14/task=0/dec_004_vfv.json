@@ -1,0 +1,107 @@
+{
+  "task_id": 0,
+  "decision_num": 4,
+  "is_final": true,
+  "target_used": [
+    -1.4597147703170776,
+    0.9202442765235901,
+    0.9208112955093384
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase2",
+    "triggered": true,
+    "phase1_target": [
+      -1.4597147703170776,
+      0.9202442765235901,
+      0.9208112955093384
+    ],
+    "verify": {
+      "visible": false,
+      "confidence": "low",
+      "reason": "verify_parse_failed",
+      "raw": "```json\n{\"visible\": false, \"confidence\": \"high\", \"reason\": \"The description references a piano and specific furniture patterns that are not visible in the panorama image.\"}\n```"
+    },
+    "verify_elapsed_ms": 2857.270681299269,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.1/20260429-003154-detailed/process/scene=00802-wcojb4TFT35/episode=14/task=0/panorama/vfv_dec_004.jpg",
+    "decompose": {
+      "target_desc": "tall dried twig beside wooden upright piano",
+      "anchor_desc": "wooden upright piano"
+    },
+    "anchor_query": {
+      "ok": true,
+      "anchor_index": 67,
+      "anchor_position": [
+        -1.4597147703170776,
+        0.9202442765235901,
+        0.9208112955093384
+      ],
+      "anchor_topk": [
+        {
+          "object_index": 67,
+          "score": -6.093998432159424
+        },
+        {
+          "object_index": 12,
+          "score": -6.342769622802734
+        },
+        {
+          "object_index": 99,
+          "score": -6.403831481933594
+        },
+        {
+          "object_index": 28,
+          "score": -6.753353118896484
+        },
+        {
+          "object_index": 68,
+          "score": -6.906610488891602
+        },
+        {
+          "object_index": 101,
+          "score": -7.1831955909729
+        },
+        {
+          "object_index": 123,
+          "score": -7.3792853355407715
+        },
+        {
+          "object_index": 106,
+          "score": -7.661065101623535
+        },
+        {
+          "object_index": 100,
+          "score": -7.862640380859375
+        },
+        {
+          "object_index": 70,
+          "score": -7.990656852722168
+        },
+        {
+          "object_index": 13,
+          "score": -8.06884479522705
+        },
+        {
+          "object_index": 8,
+          "score": -8.091127395629883
+        },
+        {
+          "object_index": 2,
+          "score": -8.884424209594727
+        },
+        {
+          "object_index": 53,
+          "score": -9.13056755065918
+        },
+        {
+          "object_index": 6,
+          "score": -9.173181533813477
+        },
+        {
+          "object_index": 97,
+          "score": -9.223495483398438
+        }
+      ]
+    }
+  }
+}
