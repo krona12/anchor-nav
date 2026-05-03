@@ -5,6 +5,7 @@ __pycache__/
 
 # logs
 output_process/
+output_logs/
 # C extensions
 *.so
 *.pyc
