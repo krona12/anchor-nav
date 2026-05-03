@@ -1,0 +1,41 @@
+{
+  "task_id": 0,
+  "decision_num": 5,
+  "is_final": true,
+  "target_used": [
+    7.800503730773926,
+    0.4401985704898834,
+    0.33957985043525696
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      7.800503730773926,
+      0.4401985704898834,
+      0.33957985043525696
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "wood desk",
+      "confidence": "high",
+      "reason": "The wood desk is clearly visible in the panorama, supporting the task description.",
+      "raw": "```json\n{\"full_match\": false,\"strong_anchor_match\": true,\"matched_anchor\": \"wood desk\",\"confidence\": \"high\",\"reason\": \"The wood desk is clearly visible in the panorama, supporting the task description.\"}\n```"
+    },
+    "verify_elapsed_ms": 3718.757728114724,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00813-svBbv1Pavdk/episode=2/task=0/panorama/vfv_dec_005.jpg",
+    "decompose": {
+      "target_desc": "light gray couch with pillows",
+      "anchor_desc": "world map with adventure quote",
+      "anchor_descs": [
+        "world map with adventure quote",
+        "wood desk",
+        "potted plant on round side table"
+      ],
+      "parse_ok": true
+    }
+  }
+}

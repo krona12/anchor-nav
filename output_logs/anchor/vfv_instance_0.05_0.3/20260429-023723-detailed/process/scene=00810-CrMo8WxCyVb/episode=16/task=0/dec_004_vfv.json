@@ -1,0 +1,41 @@
+{
+  "task_id": 0,
+  "decision_num": 4,
+  "is_final": true,
+  "target_used": [
+    1.6355923414230347,
+    -2.565253973007202,
+    8.006219863891602
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      1.6355923414230347,
+      -2.565253973007202,
+      8.006219863891602
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": true,
+      "strong_anchor_match": false,
+      "matched_anchor": "",
+      "confidence": "high",
+      "reason": "The white kitchen cabinet is clearly visible directly left of the stove, thus supporting the task description fully.",
+      "raw": "{\n  \"full_match\": true,\n  \"strong_anchor_match\": false,\n  \"matched_anchor\": \"\",\n  \"confidence\": \"high\",\n  \"reason\": \"The white kitchen cabinet is clearly visible directly left of the stove, thus supporting the task description fully.\"\n}"
+    },
+    "verify_elapsed_ms": 10591.249320656061,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00810-CrMo8WxCyVb/episode=16/task=0/panorama/vfv_dec_004.jpg",
+    "decompose": {
+      "target_desc": "white kitchen cabinet",
+      "anchor_desc": "stove",
+      "anchor_descs": [
+        "stove",
+        "dining table",
+        "refrigerator"
+      ],
+      "parse_ok": true
+    }
+  }
+}

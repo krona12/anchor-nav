@@ -1,0 +1,43 @@
+{
+  "task_id": 0,
+  "decision_num": 4,
+  "is_final": true,
+  "target_used": [
+    1.3373630046844482,
+    0.30243217945098877,
+    -0.4610613286495209
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "verify_skipped": false,
+    "phase1_target": [
+      1.3373630046844482,
+      0.30243217945098877,
+      -0.4610613286495209
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "black-and-beige leaf-patterned armchairs",
+      "confidence": "high",
+      "reason": "The black-and-beige leaf-patterned armchairs are clearly visible in the panorama, supporting the task description even though the primary target (black side table with lamp) is not directly visible.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": true, \"matched_anchor\": \"black-and-beige leaf-patterned armchairs\", \"confidence\": \"high\", \"reason\": \"The black-and-beige leaf-patterned armchairs are clearly visible in the panorama, supporting the task description even though the primary target (black side table with lamp) is not directly visible.\"}\n```",
+      "parse_attempts": 1
+    },
+    "verify_elapsed_ms": 13604.741841554642,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.1/20260501-212853-detailed/process/scene=00802-wcojb4TFT35/episode=17/task=0/panorama/vfv_dec_004.jpg",
+    "decompose": {
+      "target_desc": "black side table with lamp",
+      "anchor_desc": "black-and-beige leaf-patterned armchairs",
+      "anchor_descs": [
+        "black-and-beige leaf-patterned armchairs",
+        "wooden piano",
+        "cityscape prints"
+      ],
+      "parse_ok": true
+    }
+  }
+}

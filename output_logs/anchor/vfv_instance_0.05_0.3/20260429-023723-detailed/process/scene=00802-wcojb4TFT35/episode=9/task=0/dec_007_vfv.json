@@ -1,0 +1,41 @@
+{
+  "task_id": 0,
+  "decision_num": 7,
+  "is_final": true,
+  "target_used": [
+    -1.7182499170303345,
+    0.42354169487953186,
+    -1.90523362159729
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      -1.7182499170303345,
+      0.42354169487953186,
+      -1.90523362159729
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": true,
+      "strong_anchor_match": false,
+      "matched_anchor": "",
+      "confidence": "high",
+      "reason": "The black flat-screen TV is clearly visible above the fireplace, and the tan three-seater couch is present by the window.",
+      "raw": "```json\n{\"full_match\": true, \"strong_anchor_match\": false, \"matched_anchor\": \"\", \"confidence\": \"high\", \"reason\": \"The black flat-screen TV is clearly visible above the fireplace, and the tan three-seater couch is present by the window.\"}\n```"
+    },
+    "verify_elapsed_ms": 8612.692155875266,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00802-wcojb4TFT35/episode=9/task=0/panorama/vfv_dec_007.jpg",
+    "decompose": {
+      "target_desc": "black flat-screen tv",
+      "anchor_desc": "fireplace",
+      "anchor_descs": [
+        "fireplace",
+        "tan three-seater couch",
+        "potted plant"
+      ],
+      "parse_ok": true
+    }
+  }
+}

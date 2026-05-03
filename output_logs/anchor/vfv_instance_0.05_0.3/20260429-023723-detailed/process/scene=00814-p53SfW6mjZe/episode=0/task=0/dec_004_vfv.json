@@ -1,0 +1,40 @@
+{
+  "task_id": 0,
+  "decision_num": 4,
+  "is_final": true,
+  "target_used": [
+    -11.674751281738281,
+    3.680201292037964,
+    -11.262136459350586
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      -11.674751281738281,
+      3.680201292037964,
+      -11.262136459350586
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "table tennis table",
+      "confidence": "high",
+      "reason": "The image clearly shows a table tennis table, which is the primary target. However, the small chalkboard with wooden frame is not visible.",
+      "raw": "{\n  \"full_match\": false,\n  \"strong_anchor_match\": true,\n  \"matched_anchor\": \"table tennis table\",\n  \"confidence\": \"high\",\n  \"reason\": \"The image clearly shows a table tennis table, which is the primary target. However, the small chalkboard with wooden frame is not visible.\"\n}"
+    },
+    "verify_elapsed_ms": 4329.054910689592,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00814-p53SfW6mjZe/episode=0/task=0/panorama/vfv_dec_004.jpg",
+    "decompose": {
+      "target_desc": "small chalkboard with wooden frame",
+      "anchor_desc": "table tennis table",
+      "anchor_descs": [
+        "table tennis table",
+        "board games"
+      ],
+      "parse_ok": true
+    }
+  }
+}

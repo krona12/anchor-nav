@@ -1,0 +1,41 @@
+{
+  "task_id": 0,
+  "decision_num": 5,
+  "is_final": true,
+  "target_used": [
+    0.9708057045936584,
+    1.9063260555267334,
+    5.666168689727783
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      0.9708057045936584,
+      1.9063260555267334,
+      5.666168689727783
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": true,
+      "strong_anchor_match": false,
+      "matched_anchor": "",
+      "confidence": "high",
+      "reason": "The image clearly shows a glass-front oven built into dark wooden cabinets, along with a refrigerator and a marble countertop, fully supporting the task description.",
+      "raw": "```json\n{\"full_match\": true, \"strong_anchor_match\": false, \"matched_anchor\": \"\", \"confidence\": \"high\", \"reason\": \"The image clearly shows a glass-front oven built into dark wooden cabinets, along with a refrigerator and a marble countertop, fully supporting the task description.\"}\n```"
+    },
+    "verify_elapsed_ms": 2703.706451691687,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00808-y9hTuugGdiq/episode=11/task=0/panorama/vfv_dec_005.jpg",
+    "decompose": {
+      "target_desc": "glass-front oven",
+      "anchor_desc": "dark wooden cabinets",
+      "anchor_descs": [
+        "dark wooden cabinets",
+        "refrigerator",
+        "marble countertop"
+      ],
+      "parse_ok": true
+    }
+  }
+}

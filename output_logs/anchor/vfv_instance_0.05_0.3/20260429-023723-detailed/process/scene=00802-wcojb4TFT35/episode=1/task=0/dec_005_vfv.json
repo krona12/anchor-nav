@@ -1,0 +1,41 @@
+{
+  "task_id": 0,
+  "decision_num": 5,
+  "is_final": true,
+  "target_used": [
+    2.801051139831543,
+    3.0126218795776367,
+    -6.993227005004883
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      2.801051139831543,
+      3.0126218795776367,
+      -6.993227005004883
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "white nightstand with lamp",
+      "confidence": "high",
+      "reason": "The panorama shows a white nightstand with a lamp, which is a clear anchor related to the task.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": true, \"matched_anchor\": \"white nightstand with lamp\", \"confidence\": \"high\", \"reason\": \"The panorama shows a white nightstand with a lamp, which is a clear anchor related to the task.\"}\n```"
+    },
+    "verify_elapsed_ms": 3366.1716636270285,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00802-wcojb4TFT35/episode=1/task=0/panorama/vfv_dec_005.jpg",
+    "decompose": {
+      "target_desc": "white table with pink chair",
+      "anchor_desc": "brown quilt on bed",
+      "anchor_descs": [
+        "brown quilt on bed",
+        "white nightstand with lamp",
+        "teal blanket on bed"
+      ],
+      "parse_ok": true
+    }
+  }
+}

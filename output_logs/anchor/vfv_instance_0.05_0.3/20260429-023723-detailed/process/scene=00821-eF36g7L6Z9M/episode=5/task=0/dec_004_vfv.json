@@ -1,0 +1,41 @@
+{
+  "task_id": 0,
+  "decision_num": 4,
+  "is_final": true,
+  "target_used": [
+    2.5407495498657227,
+    1.9548511505126953,
+    15.031717300415039
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      2.5407495498657227,
+      1.9548511505126953,
+      15.031717300415039
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "white countertop",
+      "confidence": "high",
+      "reason": "The white countertop is clearly visible in the image, providing a strong anchor for the task, although the black rectangular note is not explicitly visible.",
+      "raw": "{\n  \"full_match\": false,\n  \"strong_anchor_match\": true,\n  \"matched_anchor\": \"white countertop\",\n  \"confidence\": \"high\",\n  \"reason\": \"The white countertop is clearly visible in the image, providing a strong anchor for the task, although the black rectangular note is not explicitly visible.\"\n}"
+    },
+    "verify_elapsed_ms": 2517.1080008149147,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00821-eF36g7L6Z9M/episode=5/task=0/panorama/vfv_dec_004.jpg",
+    "decompose": {
+      "target_desc": "black rectangular note",
+      "anchor_desc": "white countertop",
+      "anchor_descs": [
+        "white countertop",
+        "wood kitchen cabinets",
+        "microwave"
+      ],
+      "parse_ok": true
+    }
+  }
+}

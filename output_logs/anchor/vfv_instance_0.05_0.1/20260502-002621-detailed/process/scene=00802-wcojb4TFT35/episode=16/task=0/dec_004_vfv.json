@@ -1,0 +1,42 @@
+{
+  "task_id": 0,
+  "decision_num": 4,
+  "is_final": true,
+  "target_used": [
+    -2.7533249855041504,
+    0.38721343874931335,
+    -6.771428108215332
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "verify_skipped": false,
+    "phase1_target": [
+      -2.7533249855041504,
+      0.38721343874931335,
+      -6.771428108215332
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": true,
+      "strong_anchor_match": false,
+      "matched_anchor": "",
+      "confidence": "high",
+      "reason": "The left beige-and-black fabric armchair with a leaf pattern is clearly visible in the image, fulfilling the full task description.",
+      "raw": "{\n  \"full_match\": true,\n  \"strong_anchor_match\": false,\n  \"matched_anchor\": \"\",\n  \"confidence\": \"high\",\n  \"reason\": \"The left beige-and-black fabric armchair with a leaf pattern is clearly visible in the image, fulfilling the full task description.\"\n}",
+      "parse_attempts": 1
+    },
+    "verify_elapsed_ms": 11776.178761385381,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.1/20260502-002621-detailed/process/scene=00802-wcojb4TFT35/episode=16/task=0/panorama/vfv_dec_004.jpg",
+    "decompose": {
+      "target_desc": "beige-and-black fabric armchair with leaf pattern",
+      "anchor_desc": "wooden upright piano",
+      "anchor_descs": [
+        "wooden upright piano",
+        "cityscape prints"
+      ],
+      "parse_ok": true
+    }
+  }
+}

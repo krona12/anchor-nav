@@ -1,0 +1,41 @@
+{
+  "task_id": 0,
+  "decision_num": 4,
+  "is_final": true,
+  "target_used": [
+    -4.652156352996826,
+    1.3102598190307617,
+    -3.812195062637329
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      -4.652156352996826,
+      1.3102598190307617,
+      -3.812195062637329
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": true,
+      "strong_anchor_match": false,
+      "matched_anchor": "",
+      "confidence": "high",
+      "reason": "The image clearly shows a blanket on a burgundy armchair, along with a floral curtain and a TV, fulfilling the task requirements.",
+      "raw": "```json\n{\"full_match\": true, \"strong_anchor_match\": false, \"matched_anchor\": \"\", \"confidence\": \"high\", \"reason\": \"The image clearly shows a blanket on a burgundy armchair, along with a floral curtain and a TV, fulfilling the task requirements.\"}\n```"
+    },
+    "verify_elapsed_ms": 11759.416435845196,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00815-h1zeeAwLh9Z/episode=12/task=0/panorama/vfv_dec_004.jpg",
+    "decompose": {
+      "target_desc": "blanket on burgundy armchair",
+      "anchor_desc": "floral curtain",
+      "anchor_descs": [
+        "floral curtain",
+        "tv on circular-motif cabinet",
+        "burgundy armchair"
+      ],
+      "parse_ok": true
+    }
+  }
+}

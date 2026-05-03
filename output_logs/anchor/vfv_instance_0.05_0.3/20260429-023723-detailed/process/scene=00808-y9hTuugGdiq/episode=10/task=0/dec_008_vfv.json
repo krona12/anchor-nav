@@ -1,0 +1,41 @@
+{
+  "task_id": 0,
+  "decision_num": 8,
+  "is_final": true,
+  "target_used": [
+    -1.4620938301086426,
+    1.1463342905044556,
+    3.7540478706359863
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      -1.4620938301086426,
+      1.1463342905044556,
+      3.7540478706359863
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": true,
+      "strong_anchor_match": false,
+      "matched_anchor": "",
+      "confidence": "high",
+      "reason": "The image clearly shows a dark wood kitchen cabinet underneath the stove and a light marble countertop, fulfilling the requirements of the task description.",
+      "raw": "```json\n{\"full_match\": true, \"strong_anchor_match\": false, \"matched_anchor\": \"\", \"confidence\": \"high\", \"reason\": \"The image clearly shows a dark wood kitchen cabinet underneath the stove and a light marble countertop, fulfilling the requirements of the task description.\"}\n```"
+    },
+    "verify_elapsed_ms": 3498.30334354192,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00808-y9hTuugGdiq/episode=10/task=0/panorama/vfv_dec_008.jpg",
+    "decompose": {
+      "target_desc": "dark wood kitchen cabinet",
+      "anchor_desc": "light marble countertop",
+      "anchor_descs": [
+        "light marble countertop",
+        "oven",
+        "stainless refrigerator"
+      ],
+      "parse_ok": true
+    }
+  }
+}

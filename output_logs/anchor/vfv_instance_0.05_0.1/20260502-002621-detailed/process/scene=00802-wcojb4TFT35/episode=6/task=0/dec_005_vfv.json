@@ -1,0 +1,43 @@
+{
+  "task_id": 0,
+  "decision_num": 5,
+  "is_final": true,
+  "target_used": [
+    -1.2825727462768555,
+    3.0433952808380127,
+    -17.674026489257812
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "verify_skipped": false,
+    "phase1_target": [
+      -1.2825727462768555,
+      3.0433952808380127,
+      -17.674026489257812
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": true,
+      "strong_anchor_match": false,
+      "matched_anchor": "",
+      "confidence": "high",
+      "reason": "The panorama clearly shows a purple-accented bed with a white nightstand and lamp, confirming the primary target visually.",
+      "raw": "```json\n{\"full_match\": true, \"strong_anchor_match\": false, \"matched_anchor\": \"\", \"confidence\": \"high\", \"reason\": \"The panorama clearly shows a purple-accented bed with a white nightstand and lamp, confirming the primary target visually.\"}\n```",
+      "parse_attempts": 1
+    },
+    "verify_elapsed_ms": 9083.350719884038,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.1/20260502-002621-detailed/process/scene=00802-wcojb4TFT35/episode=6/task=0/panorama/vfv_dec_005.jpg",
+    "decompose": {
+      "target_desc": "purple-accented bed",
+      "anchor_desc": "white nightstand",
+      "anchor_descs": [
+        "white nightstand",
+        "lamp",
+        "light beige carpet"
+      ],
+      "parse_ok": true
+    }
+  }
+}

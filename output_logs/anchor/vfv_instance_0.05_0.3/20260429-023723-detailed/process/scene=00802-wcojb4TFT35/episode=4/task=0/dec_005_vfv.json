@@ -1,0 +1,116 @@
+{
+  "task_id": 0,
+  "decision_num": 5,
+  "is_final": true,
+  "target_used": [
+    0.08592241257429123,
+    4.251073837280273,
+    -6.829074859619141
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase2",
+    "triggered": true,
+    "phase1_target": [
+      0.08592241257429123,
+      4.251073837280273,
+      -6.829074859619141
+    ],
+    "verify": {
+      "visible": false,
+      "full_match": false,
+      "strong_anchor_match": false,
+      "matched_anchor": "",
+      "confidence": "low",
+      "reason": "The panorama depicts a bedroom with no visible bathroom elements, including a white toilet, light-colored vanity, mirror, or shower curtain.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": false, \"matched_anchor\": \"\", \"confidence\": \"low\", \"reason\": \"The panorama depicts a bedroom with no visible bathroom elements, including a white toilet, light-colored vanity, mirror, or shower curtain.\"}\n```"
+    },
+    "verify_elapsed_ms": 2839.2264330759645,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00802-wcojb4TFT35/episode=4/task=0/panorama/vfv_dec_005.jpg",
+    "decompose": {
+      "target_desc": "white toilet with seascape print",
+      "anchor_desc": "light-colored vanity",
+      "anchor_descs": [
+        "light-colored vanity",
+        "white framed mirror",
+        "white tufted shower curtain"
+      ],
+      "parse_ok": true
+    },
+    "anchor_query": {
+      "ok": true,
+      "anchor_index": 38,
+      "anchor_position": [
+        0.08592241257429123,
+        4.251073837280273,
+        -6.829074859619141
+      ],
+      "anchor_topk": [
+        {
+          "object_index": 38,
+          "score": -3.23809814453125
+        },
+        {
+          "object_index": 91,
+          "score": -4.457714557647705
+        },
+        {
+          "object_index": 72,
+          "score": -5.570906639099121
+        },
+        {
+          "object_index": 100,
+          "score": -5.721657752990723
+        },
+        {
+          "object_index": 83,
+          "score": -5.8211669921875
+        },
+        {
+          "object_index": 89,
+          "score": -6.544331073760986
+        },
+        {
+          "object_index": 97,
+          "score": -6.558430194854736
+        },
+        {
+          "object_index": 96,
+          "score": -6.595500946044922
+        },
+        {
+          "object_index": 1,
+          "score": -6.597016334533691
+        },
+        {
+          "object_index": 73,
+          "score": -6.721707344055176
+        },
+        {
+          "object_index": 101,
+          "score": -6.808621883392334
+        },
+        {
+          "object_index": 51,
+          "score": -6.954097747802734
+        },
+        {
+          "object_index": 99,
+          "score": -7.101534843444824
+        },
+        {
+          "object_index": 86,
+          "score": -7.162728309631348
+        },
+        {
+          "object_index": 43,
+          "score": -7.299302577972412
+        },
+        {
+          "object_index": 98,
+          "score": -7.392431735992432
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "task_id": 0,
+  "decision_num": 5,
+  "is_final": true,
+  "target_used": [
+    -4.741855621337891,
+    -14.521998405456543,
+    -7.851886749267578
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "verify_skipped": false,
+    "phase1_target": [
+      -4.741855621337891,
+      -14.521998405456543,
+      -7.851886749267578
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "purple damask armchair",
+      "confidence": "medium",
+      "reason": "The panorama shows a purple damask armchair, although the view may be partially occluded. The armchair is identifiable, providing a strong anchor for the task.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": true, \"matched_anchor\": \"purple damask armchair\", \"confidence\": \"medium\", \"reason\": \"The panorama shows a purple damask armchair, although the view may be partially occluded. The armchair is identifiable, providing a strong anchor for the task.\"}\n```",
+      "parse_attempts": 1
+    },
+    "verify_elapsed_ms": 7385.647942312062,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.1/20260501-212853-detailed/process/scene=00803-k1cupFYWXJ6/episode=1/task=0/panorama/vfv_dec_005.jpg",
+    "decompose": {
+      "target_desc": "purple damask armchair",
+      "anchor_desc": "ornate plant in sculpted pot",
+      "anchor_descs": [
+        "ornate plant in sculpted pot",
+        "carved arch"
+      ],
+      "parse_ok": true
+    }
+  }
+}

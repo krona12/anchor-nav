@@ -1,0 +1,41 @@
+{
+  "task_id": 0,
+  "decision_num": 8,
+  "is_final": true,
+  "target_used": [
+    -6.976658821105957,
+    0.41462382674217224,
+    7.191031455993652
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      -6.976658821105957,
+      0.41462382674217224,
+      7.191031455993652
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "black cabinet",
+      "confidence": "high",
+      "reason": "The broad context of the kitchen is visible with the black cabinet clearly identifiable, supporting the task's requirements.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": true, \"matched_anchor\": \"black cabinet\", \"confidence\": \"high\", \"reason\": \"The broad context of the kitchen is visible with the black cabinet clearly identifiable, supporting the task's requirements.\"}\n```"
+    },
+    "verify_elapsed_ms": 10140.753121115267,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00814-p53SfW6mjZe/episode=14/task=0/panorama/vfv_dec_008.jpg",
+    "decompose": {
+      "target_desc": "turquoise board",
+      "anchor_desc": "white countertop",
+      "anchor_descs": [
+        "white countertop",
+        "black cabinet",
+        "pantry cabinet"
+      ],
+      "parse_ok": true
+    }
+  }
+}

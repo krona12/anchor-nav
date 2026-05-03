@@ -1,0 +1,41 @@
+{
+  "task_id": 0,
+  "decision_num": 11,
+  "is_final": true,
+  "target_used": [
+    -2.0101616382598877,
+    -14.23881721496582,
+    -2.130821466445923
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      -2.0101616382598877,
+      -14.23881721496582,
+      -2.130821466445923
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "purple patterned armchairs",
+      "confidence": "high",
+      "reason": "The purple patterned armchair is clearly visible in the image, supporting the task.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": true, \"matched_anchor\": \"purple patterned armchairs\", \"confidence\": \"high\", \"reason\": \"The purple patterned armchair is clearly visible in the image, supporting the task.\"}\n```"
+    },
+    "verify_elapsed_ms": 2910.8789172023535,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00803-k1cupFYWXJ6/episode=19/task=0/panorama/vfv_dec_011.jpg",
+    "decompose": {
+      "target_desc": "gray stone pedestal table with potted plant",
+      "anchor_desc": "purple patterned armchairs",
+      "anchor_descs": [
+        "purple patterned armchairs",
+        "carved arch",
+        "potted plant"
+      ],
+      "parse_ok": true
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "task_id": 0,
+  "decision_num": 4,
+  "is_final": true,
+  "target_used": [
+    5.623272895812988,
+    1.8734500408172607,
+    5.160071849822998
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      5.623272895812988,
+      1.8734500408172607,
+      5.160071849822998
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "gray couch",
+      "confidence": "high",
+      "reason": "The gray couch is clearly visible in the image, providing a distinctive anchor related to the task.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": true, \"matched_anchor\": \"gray couch\", \"confidence\": \"high\", \"reason\": \"The gray couch is clearly visible in the image, providing a distinctive anchor related to the task.\"}\n```"
+    },
+    "verify_elapsed_ms": 12295.980529859662,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00808-y9hTuugGdiq/episode=2/task=0/panorama/vfv_dec_004.jpg",
+    "decompose": {
+      "target_desc": "black amplifier",
+      "anchor_desc": "gray couch",
+      "anchor_descs": [
+        "gray couch",
+        "white rectangular coffee table",
+        "decorative fireplace"
+      ],
+      "parse_ok": true
+    }
+  }
+}

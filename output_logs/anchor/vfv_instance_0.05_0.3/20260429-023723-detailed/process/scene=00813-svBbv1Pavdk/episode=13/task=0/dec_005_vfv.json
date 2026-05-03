@@ -1,0 +1,41 @@
+{
+  "task_id": 0,
+  "decision_num": 5,
+  "is_final": true,
+  "target_used": [
+    7.925966262817383,
+    0.8173284530639648,
+    3.715561866760254
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      7.925966262817383,
+      0.8173284530639648,
+      3.715561866760254
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "gray couch",
+      "confidence": "high",
+      "reason": "The gray couch is clearly visible in the panorama, supporting the task description even though the yellow blanket is not visible.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": true, \"matched_anchor\": \"gray couch\", \"confidence\": \"high\", \"reason\": \"The gray couch is clearly visible in the panorama, supporting the task description even though the yellow blanket is not visible.\"}\n```"
+    },
+    "verify_elapsed_ms": 6800.9941363707185,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00813-svBbv1Pavdk/episode=13/task=0/panorama/vfv_dec_005.jpg",
+    "decompose": {
+      "target_desc": "yellow blanket on gray couch",
+      "anchor_desc": "white-and-black wall painting",
+      "anchor_descs": [
+        "white-and-black wall painting",
+        "tv on white stand",
+        "gray couch"
+      ],
+      "parse_ok": true
+    }
+  }
+}

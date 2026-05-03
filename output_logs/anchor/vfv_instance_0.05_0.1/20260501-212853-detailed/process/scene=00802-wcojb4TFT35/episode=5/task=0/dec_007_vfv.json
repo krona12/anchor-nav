@@ -1,0 +1,42 @@
+{
+  "task_id": 0,
+  "decision_num": 7,
+  "is_final": true,
+  "target_used": [
+    -1.2716240882873535,
+    3.053931713104248,
+    -17.593793869018555
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "verify_skipped": false,
+    "phase1_target": [
+      -1.2716240882873535,
+      3.053931713104248,
+      -17.593793869018555
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "bed with purple-and-grey bedding",
+      "confidence": "high",
+      "reason": "The bed with purple-and-grey bedding is clearly visible, supporting the task description, although the primary target (sewing box) is not present.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": true, \"matched_anchor\": \"bed with purple-and-grey bedding\", \"confidence\": \"high\", \"reason\": \"The bed with purple-and-grey bedding is clearly visible, supporting the task description, although the primary target (sewing box) is not present.\"}\n```",
+      "parse_attempts": 1
+    },
+    "verify_elapsed_ms": 3383.9390203356743,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.1/20260501-212853-detailed/process/scene=00802-wcojb4TFT35/episode=5/task=0/panorama/vfv_dec_007.jpg",
+    "decompose": {
+      "target_desc": "light brown wooden sewing box",
+      "anchor_desc": "bed with purple-and-grey bedding",
+      "anchor_descs": [
+        "bed with purple-and-grey bedding",
+        "white nightstand with lamp"
+      ],
+      "parse_ok": true
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "task_id": 0,
+  "decision_num": 6,
+  "is_final": true,
+  "target_used": [
+    -0.1913066804409027,
+    1.8305609226226807,
+    0.9111605286598206
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "verify_skipped": false,
+    "phase1_target": [
+      -0.1913066804409027,
+      1.8305609226226807,
+      0.9111605286598206
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "shelf",
+      "confidence": "medium",
+      "reason": "The shelf is visible in the panorama, but the specific chessboard is not identifiable.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": true, \"matched_anchor\": \"shelf\", \"confidence\": \"medium\", \"reason\": \"The shelf is visible in the panorama, but the specific chessboard is not identifiable.\"}\n```",
+      "parse_attempts": 1
+    },
+    "verify_elapsed_ms": 3876.407027244568,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.1/20260502-002621-detailed/process/scene=00802-wcojb4TFT35/episode=11/task=0/panorama/vfv_dec_006.jpg",
+    "decompose": {
+      "target_desc": "wooden black-and-tan checkered chessboard",
+      "anchor_desc": "shelf",
+      "anchor_descs": [
+        "shelf",
+        "tv",
+        "fireplace"
+      ],
+      "parse_ok": true
+    }
+  }
+}

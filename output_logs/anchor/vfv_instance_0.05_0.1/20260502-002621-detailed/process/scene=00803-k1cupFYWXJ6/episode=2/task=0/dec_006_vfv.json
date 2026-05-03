@@ -1,0 +1,119 @@
+{
+  "task_id": 0,
+  "decision_num": 6,
+  "is_final": true,
+  "target_used": [
+    -2.439341465632121,
+    -13.794803937276205,
+    -2.8729783958858914
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase2",
+    "triggered": true,
+    "verify_skipped": false,
+    "phase1_target": [
+      -2.486410140991211,
+      -14.325260162353516,
+      -11.419883728027344
+    ],
+    "verify": {
+      "visible": false,
+      "full_match": false,
+      "strong_anchor_match": false,
+      "matched_anchor": "",
+      "confidence": "low",
+      "reason": "The panorama is unclear and visually distorted, making it difficult to identify the left purple damask armchair or any distinct object anchors clearly.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": false, \"matched_anchor\": \"\", \"confidence\": \"low\", \"reason\": \"The panorama is unclear and visually distorted, making it difficult to identify the left purple damask armchair or any distinct object anchors clearly.\"}\n```",
+      "parse_attempts": 1
+    },
+    "verify_elapsed_ms": 7448.462936095893,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.1/20260502-002621-detailed/process/scene=00803-k1cupFYWXJ6/episode=2/task=0/panorama/vfv_dec_006.jpg",
+    "decompose": {
+      "target_desc": "left purple damask armchair",
+      "anchor_desc": "ornate plant in sculpted pot",
+      "anchor_descs": [
+        "ornate plant in sculpted pot",
+        "carved arch"
+      ],
+      "parse_ok": true
+    },
+    "anchor_query": {
+      "ok": true,
+      "anchor_index": 37,
+      "anchor_position": [
+        -2.439341465632121,
+        -13.794803937276205,
+        -2.8729783958858914
+      ],
+      "anchor_topk": [
+        {
+          "object_index": 37,
+          "score": -0.1299174427986145
+        },
+        {
+          "object_index": 55,
+          "score": -0.3992912471294403
+        },
+        {
+          "object_index": 33,
+          "score": -1.2293546199798584
+        },
+        {
+          "object_index": 7,
+          "score": -2.354123592376709
+        },
+        {
+          "object_index": 25,
+          "score": -2.628218173980713
+        },
+        {
+          "object_index": 45,
+          "score": -3.4158010482788086
+        },
+        {
+          "object_index": 22,
+          "score": -3.884255886077881
+        },
+        {
+          "object_index": 58,
+          "score": -4.331140995025635
+        },
+        {
+          "object_index": 19,
+          "score": -5.117001533508301
+        },
+        {
+          "object_index": 9,
+          "score": -5.554867267608643
+        },
+        {
+          "object_index": 31,
+          "score": -6.007490634918213
+        },
+        {
+          "object_index": 18,
+          "score": -6.59132719039917
+        },
+        {
+          "object_index": 16,
+          "score": -7.068123817443848
+        },
+        {
+          "object_index": 68,
+          "score": -7.224337577819824
+        },
+        {
+          "object_index": 35,
+          "score": -7.25368595123291
+        },
+        {
+          "object_index": 27,
+          "score": -7.661334037780762
+        }
+      ],
+      "anchor_desc_used": "ornate plant in sculpted pot",
+      "pq_top1_score": -0.1299174427986145
+    }
+  }
+}

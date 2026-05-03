@@ -1,0 +1,115 @@
+{
+  "task_id": 0,
+  "decision_num": 4,
+  "is_final": true,
+  "target_used": [
+    0.5087248484293619,
+    0.9770479798316956,
+    2.4041330814361572
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase2",
+    "triggered": true,
+    "phase1_target": [
+      1.093839168548584,
+      1.4052904844284058,
+      0.0466708280146122
+    ],
+    "verify": {
+      "visible": false,
+      "full_match": false,
+      "strong_anchor_match": false,
+      "matched_anchor": "",
+      "confidence": "low",
+      "reason": "The image does not clearly show the primary target (red fire extinguisher with blue tag) or any distinctive object anchors (washer-dryer, vacuum cleaner).",
+      "raw": "```json\n{\"full_match\":false,\"strong_anchor_match\":false,\"matched_anchor\":\"\",\"confidence\":\"low\",\"reason\":\"The image does not clearly show the primary target (red fire extinguisher with blue tag) or any distinctive object anchors (washer-dryer, vacuum cleaner).\"}\n```"
+    },
+    "verify_elapsed_ms": 2208.343567326665,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00808-y9hTuugGdiq/episode=12/task=0/panorama/vfv_dec_004.jpg",
+    "decompose": {
+      "target_desc": "red fire extinguisher with blue tag",
+      "anchor_desc": "washer-dryer",
+      "anchor_descs": [
+        "washer-dryer",
+        "vacuum cleaner"
+      ],
+      "parse_ok": true
+    },
+    "anchor_query": {
+      "ok": true,
+      "anchor_index": 33,
+      "anchor_position": [
+        0.5087248484293619,
+        0.9770479798316956,
+        2.4041330814361572
+      ],
+      "anchor_topk": [
+        {
+          "object_index": 33,
+          "score": -4.550088405609131
+        },
+        {
+          "object_index": 86,
+          "score": -4.620021820068359
+        },
+        {
+          "object_index": 51,
+          "score": -5.845385551452637
+        },
+        {
+          "object_index": 85,
+          "score": -5.885753631591797
+        },
+        {
+          "object_index": 46,
+          "score": -6.4992475509643555
+        },
+        {
+          "object_index": 108,
+          "score": -7.018620491027832
+        },
+        {
+          "object_index": 5,
+          "score": -8.048157691955566
+        },
+        {
+          "object_index": 60,
+          "score": -8.379927635192871
+        },
+        {
+          "object_index": 107,
+          "score": -8.5623779296875
+        },
+        {
+          "object_index": 69,
+          "score": -8.743961334228516
+        },
+        {
+          "object_index": 37,
+          "score": -8.94690227508545
+        },
+        {
+          "object_index": 36,
+          "score": -8.977819442749023
+        },
+        {
+          "object_index": 6,
+          "score": -9.17170524597168
+        },
+        {
+          "object_index": 43,
+          "score": -9.202352523803711
+        },
+        {
+          "object_index": 66,
+          "score": -9.301126480102539
+        },
+        {
+          "object_index": 102,
+          "score": -9.630086898803711
+        }
+      ]
+    }
+  }
+}

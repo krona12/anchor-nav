@@ -1,0 +1,40 @@
+{
+  "task_id": 4,
+  "decision_num": 5,
+  "is_final": true,
+  "target_used": [
+    7.986320972442627,
+    7.89117431640625,
+    0.03219078853726387
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      7.986320972442627,
+      7.89117431640625,
+      0.03219078853726387
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "purple armchairs",
+      "confidence": "medium",
+      "reason": "The panorama displays purple armchairs, which matches one of the preferred object anchors from the task description, but the primary target (beige ship model with red hull) is not clearly visible.",
+      "raw": "{\n  \"full_match\": false,\n  \"strong_anchor_match\": true,\n  \"matched_anchor\": \"purple armchairs\",\n  \"confidence\": \"medium\",\n  \"reason\": \"The panorama displays purple armchairs, which matches one of the preferred object anchors from the task description, but the primary target (beige ship model with red hull) is not clearly visible.\"\n}"
+    },
+    "verify_elapsed_ms": 3450.9568605571985,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00803-k1cupFYWXJ6/episode=16/task=4/panorama/vfv_dec_005.jpg",
+    "decompose": {
+      "target_desc": "beige ship model with red hull",
+      "anchor_desc": "exhibition table",
+      "anchor_descs": [
+        "exhibition table",
+        "purple armchairs"
+      ],
+      "parse_ok": true
+    }
+  }
+}

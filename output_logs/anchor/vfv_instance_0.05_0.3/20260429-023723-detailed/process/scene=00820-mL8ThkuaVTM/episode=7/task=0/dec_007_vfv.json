@@ -1,0 +1,41 @@
+{
+  "task_id": 0,
+  "decision_num": 7,
+  "is_final": true,
+  "target_used": [
+    7.201940536499023,
+    0.4710589051246643,
+    -0.7636834383010864
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      7.201940536499023,
+      0.4710589051246643,
+      -0.7636834383010864
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": true,
+      "strong_anchor_match": false,
+      "matched_anchor": "",
+      "confidence": "high",
+      "reason": "The dark gray L-shaped couch is clearly visible facing the TV near the round dining table and white cabinets by the refrigerator.",
+      "raw": "```json\n{\"full_match\": true, \"strong_anchor_match\": false, \"matched_anchor\": \"\", \"confidence\": \"high\", \"reason\": \"The dark gray L-shaped couch is clearly visible facing the TV near the round dining table and white cabinets by the refrigerator.\"}\n```"
+    },
+    "verify_elapsed_ms": 3871.5616799890995,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00820-mL8ThkuaVTM/episode=7/task=0/panorama/vfv_dec_007.jpg",
+    "decompose": {
+      "target_desc": "dark gray l-shaped couch",
+      "anchor_desc": "round dining table",
+      "anchor_descs": [
+        "round dining table",
+        "white cabinets",
+        "refrigerator"
+      ],
+      "parse_ok": true
+    }
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "task_id": 0,
+  "decision_num": 4,
+  "is_final": true,
+  "target_used": [
+    -0.6846298202872276,
+    0.45918999239802366,
+    -4.4894713163375854
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase2",
+    "triggered": true,
+    "phase1_target": [
+      -0.8768887519836426,
+      1.3560601472854614,
+      -4.346028804779053
+    ],
+    "verify": {
+      "visible": false,
+      "full_match": false,
+      "strong_anchor_match": false,
+      "matched_anchor": "",
+      "confidence": "low",
+      "reason": "The image depicts a living room with no visible bathroom or elements related to showers or sinks.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": false, \"matched_anchor\": \"\", \"confidence\": \"low\", \"reason\": \"The image depicts a living room with no visible bathroom or elements related to showers or sinks.\"}\n```"
+    },
+    "verify_elapsed_ms": 4639.853863045573,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00815-h1zeeAwLh9Z/episode=9/task=0/panorama/vfv_dec_004.jpg",
+    "decompose": {
+      "target_desc": "white-framed glass shower cabin",
+      "anchor_desc": "wide single-sink vanity",
+      "anchor_descs": [
+        "wide single-sink vanity",
+        "blue towels",
+        "white countertop"
+      ],
+      "parse_ok": true
+    },
+    "anchor_query": {
+      "ok": true,
+      "anchor_index": 113,
+      "anchor_position": [
+        -0.6846298202872276,
+        0.45918999239802366,
+        -4.4894713163375854
+      ],
+      "anchor_topk": [
+        {
+          "object_index": 113,
+          "score": -2.0855536460876465
+        },
+        {
+          "object_index": 152,
+          "score": -2.6886024475097656
+        },
+        {
+          "object_index": 128,
+          "score": -3.5132551193237305
+        },
+        {
+          "object_index": 143,
+          "score": -3.710721492767334
+        },
+        {
+          "object_index": 126,
+          "score": -3.8498198986053467
+        },
+        {
+          "object_index": 157,
+          "score": -3.9374589920043945
+        },
+        {
+          "object_index": 127,
+          "score": -4.535619735717773
+        },
+        {
+          "object_index": 75,
+          "score": -5.3221635818481445
+        },
+        {
+          "object_index": 150,
+          "score": -6.200183868408203
+        },
+        {
+          "object_index": 130,
+          "score": -6.3403639793396
+        },
+        {
+          "object_index": 146,
+          "score": -6.361424922943115
+        },
+        {
+          "object_index": 133,
+          "score": -6.3673505783081055
+        },
+        {
+          "object_index": 131,
+          "score": -6.379596710205078
+        },
+        {
+          "object_index": 57,
+          "score": -7.473682403564453
+        },
+        {
+          "object_index": 73,
+          "score": -7.576055526733398
+        },
+        {
+          "object_index": 46,
+          "score": -8.011266708374023
+        }
+      ]
+    }
+  }
+}

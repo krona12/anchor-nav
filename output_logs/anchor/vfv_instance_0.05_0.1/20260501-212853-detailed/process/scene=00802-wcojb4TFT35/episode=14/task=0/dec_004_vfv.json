@@ -1,0 +1,43 @@
+{
+  "task_id": 0,
+  "decision_num": 4,
+  "is_final": true,
+  "target_used": [
+    -1.4412811994552612,
+    0.9314109086990356,
+    0.9166628122329712
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "verify_skipped": false,
+    "phase1_target": [
+      -1.4412811994552612,
+      0.9314109086990356,
+      0.9166628122329712
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "wooden upright piano",
+      "confidence": "high",
+      "reason": "The wooden upright piano is clearly visible, supporting the task description despite the primary target (tall dried twig) not being present.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": true, \"matched_anchor\": \"wooden upright piano\", \"confidence\": \"high\", \"reason\": \"The wooden upright piano is clearly visible, supporting the task description despite the primary target (tall dried twig) not being present.\"}\n```",
+      "parse_attempts": 1
+    },
+    "verify_elapsed_ms": 15208.788759075105,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.1/20260501-212853-detailed/process/scene=00802-wcojb4TFT35/episode=14/task=0/panorama/vfv_dec_004.jpg",
+    "decompose": {
+      "target_desc": "tall dried twig",
+      "anchor_desc": "wooden upright piano",
+      "anchor_descs": [
+        "wooden upright piano",
+        "black-and-beige leaf-patterned armchairs",
+        "cityscape prints"
+      ],
+      "parse_ok": true
+    }
+  }
+}

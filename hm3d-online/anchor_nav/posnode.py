@@ -14,6 +14,11 @@ from vlm.client import chat
 
 QueryFn = Callable[[str, int], Sequence[Tuple[int, float]]]
 
+# 注册节点处「局部可见」半径（米）：过大则 candidate 近似全场景；需与 get_visible_object_indices 默认一致。
+DEFAULT_VISIBLE_MAX_DIST_M = 2.5
+# 最终决策时与节点位置对齐的空间候选半径（通常与上相同或略小）
+DEFAULT_SPATIAL_NEAR_DIST_M = 2.5
+
 
 @dataclass
 class PosNode:
@@ -210,7 +215,7 @@ def _subsample_frames_evenly(color_list: List[np.ndarray], max_frames: int) -> L
 def get_visible_object_indices(
     agent_pos: np.ndarray,
     rep: Any,
-    max_dist: float = 6.0,
+    max_dist: float = DEFAULT_VISIBLE_MAX_DIST_M,
 ) -> List[int]:
     box = np.asarray(getattr(rep, "object_box", np.zeros((0, 6))), dtype=float)
     if box.ndim != 2 or box.shape[0] == 0 or box.shape[1] < 3:
@@ -220,6 +225,99 @@ def get_visible_object_indices(
     p = np.asarray(agent_pos, dtype=float).reshape(3)
     dists = np.linalg.norm(centers - p[None, :], axis=1)
     return [int(i) for i in np.where(dists < float(max_dist))[0]]
+
+
+def candidate_indices_for_node(
+    node: PosNode,
+    merge_tracker: MergeTracker,
+    rep: Any,
+    *,
+    near_dist_m: float = DEFAULT_SPATIAL_NEAR_DIST_M,
+) -> List[int]:
+    """
+    合并「历史上记录的可见 index」与「当前 RepresentationManager 下、以节点位置为中心的局部可见 index」。
+
+    RepresentationManager 在全局 top-k 裁剪时会重排物体列下标，PosNode 内缓存的 object_indices 可能整体失效；
+    仅用 resolve_merge 无法恢复。此处用节点拍摄全景时的位置对**当前** object_box 做距离过滤，
+    得到与当下索引对齐的候选集；若与 resolve 后的历史索引有交集则优先取交，否则用空间候选。
+    """
+    box = np.asarray(getattr(rep, "object_box", np.zeros((0, 6))), dtype=float)
+    if box.ndim != 2 or box.shape[0] == 0:
+        return []
+    valid_set = set(range(int(box.shape[0])))
+    hist = merge_tracker.resolve_all([int(x) for x in node.object_indices], valid_set=valid_set)
+    hist_set = {int(x) for x in hist}
+    pos = np.asarray(node.pos, dtype=float).reshape(3)
+    fresh = get_visible_object_indices(pos, rep, max_dist=float(near_dist_m))
+    fresh_set = {int(x) for x in fresh}
+
+    if len(hist_set) > 0 and len(fresh_set) > 0:
+        inter = hist_set & fresh_set
+        chosen = inter if len(inter) > 0 else fresh_set
+    elif len(fresh_set) > 0:
+        chosen = fresh_set
+    else:
+        chosen = hist_set
+    return sorted(chosen)
+
+
+def gather_posnode_candidate_indices(
+    matched_nodes: List[PosNode],
+    merge_tracker: MergeTracker,
+    rep: Any,
+    *,
+    near_dist_m: float = DEFAULT_SPATIAL_NEAR_DIST_M,
+) -> List[int]:
+    s = set()
+    for node in matched_nodes:
+        for x in candidate_indices_for_node(node, merge_tracker, rep, near_dist_m=near_dist_m):
+            s.add(int(x))
+    return sorted(s)
+
+
+# 不宜作为 posnode 锚点的泛词 / 房间标签（参考实验诊断与 VFV anchor 过滤）
+_BAD_POSNODE_ANCHOR_LEXEMES = frozenset(
+    {
+        "window",
+        "windows",
+        "door",
+        "doors",
+        "wall",
+        "walls",
+        "floor",
+        "floors",
+        "ceiling",
+        "ceilings",
+        "room",
+        "rooms",
+        "area",
+        "space",
+        "hallway",
+        "corridor",
+        "kitchen",
+        "bedroom",
+        "bathroom",
+        "dining",
+        "region",
+    }
+)
+
+
+def _is_bad_posnode_anchor_phrase(phrase: str) -> bool:
+    p = _normalize_phrase(str(phrase))
+    if not p:
+        return True
+    parts = p.split()
+    if len(parts) == 1:
+        return parts[0] in _BAD_POSNODE_ANCHOR_LEXEMES
+    if parts[-1] in ("room", "area", "space") and len(parts) <= 3:
+        return True
+    if re.search(
+        r"^(dining room|living room|bed ?room|master bedroom|bathroom|kitchen|hallway|corridor)$",
+        p,
+    ):
+        return True
+    return False
 
 
 def decompose_description(description: str, vlm_model: str) -> Dict[str, Any]:
@@ -253,8 +351,11 @@ def decompose_description(description: str, vlm_model: str) -> Dict[str, Any]:
         anchor_descs.append(s)
     if anchor_desc_legacy and anchor_desc_legacy not in seen:
         anchor_descs.append(anchor_desc_legacy)
+    anchor_descs = [a for a in anchor_descs if not _is_bad_posnode_anchor_phrase(a)]
+    if len(anchor_descs) == 0 and anchor_desc_legacy and not _is_bad_posnode_anchor_phrase(anchor_desc_legacy):
+        anchor_descs = [anchor_desc_legacy]
     anchor_descs = anchor_descs[:3]
-    best_anchor = anchor_descs[0] if len(anchor_descs) > 0 else anchor_desc_legacy
+    best_anchor = anchor_descs[0] if len(anchor_descs) > 0 else ""
     return {
         "target_desc": target_desc,
         "anchor_desc": _normalize_phrase(best_anchor),
@@ -273,7 +374,7 @@ def update_panorama_node(
     vlm_model: str,
     step_index: int,
     panorama_dir: Optional[Path] = None,
-    max_visible_dist: float = 6.0,
+    max_visible_dist: float = DEFAULT_VISIBLE_MAX_DIST_M,
     panorama_subsample_frames: int = 12,
     min_move_dist_to_add: float = 0.4,
 ) -> Dict[str, Any]:
@@ -540,15 +641,11 @@ def select_from_topk(
 ) -> int:
     if len(topk) == 0:
         raise ValueError("empty topk")
-    mode = str(query_result.get("mode", "fallback"))
     matched_nodes = list(query_result.get("matched_nodes", []))
-    if mode != "co_occur" or len(matched_nodes) == 0:
+    if len(matched_nodes) == 0:
         return int(topk[0][0])
 
-    candidate_set = set()
-    for node in matched_nodes:
-        resolved = set(merge_tracker.resolve_all(node.object_indices, valid_set=set(range(int(np.asarray(getattr(rep, "object_box", np.zeros((0, 6))), dtype=float).shape[0])))))
-        candidate_set.update(resolved)
+    candidate_set = set(gather_posnode_candidate_indices(matched_nodes, merge_tracker, rep))
     for obj_idx, _ in topk:
         if int(obj_idx) in candidate_set:
             return int(obj_idx)
@@ -567,12 +664,7 @@ def select_nearest_object_from_nodes(
     box = np.asarray(getattr(rep, "object_box", np.zeros((0, 6))), dtype=float)
     if box.ndim != 2 or box.shape[0] == 0 or box.shape[1] < 3:
         return None
-    valid_set = set(range(int(box.shape[0])))
-    candidate_set = set()
-    for node in matched_nodes:
-        resolved = merge_tracker.resolve_all(node.object_indices, valid_set=valid_set)
-        for x in resolved:
-            candidate_set.add(int(x))
+    candidate_set = set(gather_posnode_candidate_indices(matched_nodes, merge_tracker, rep))
     if len(candidate_set) == 0:
         return None
 
@@ -612,12 +704,8 @@ def build_selection_trace(
     mode = str(query_result.get("mode", "fallback"))
     matched_nodes = list(query_result.get("matched_nodes", []))
     candidate_set = set()
-    if mode == "co_occur" and len(matched_nodes) > 0:
-        box = np.asarray(getattr(rep, "object_box", np.zeros((0, 6))), dtype=float)
-        valid_set = set(range(int(box.shape[0])))
-        for node in matched_nodes:
-            resolved = merge_tracker.resolve_all(node.object_indices, valid_set=valid_set)
-            candidate_set.update(int(x) for x in resolved)
+    if len(matched_nodes) > 0:
+        candidate_set.update(gather_posnode_candidate_indices(matched_nodes, merge_tracker, rep))
     chosen = int(topk[0][0])
     chosen_rank = 1
     fallback = True
@@ -652,6 +740,7 @@ def registry_snapshot(
     for idx in range(start, len(registry.nodes)):
         node = registry.nodes[idx]
         resolved = merge_tracker.resolve_all(node.object_indices, valid_set=valid_set)
+        spatial = candidate_indices_for_node(node, merge_tracker, rep)
         p = np.asarray(node.pos, dtype=float).reshape(3)
         out.append(
             {
@@ -661,6 +750,7 @@ def registry_snapshot(
                 "vlm_names": [str(x) for x in node.vlm_names],
                 "object_indices": [int(x) for x in node.object_indices],
                 "resolved_object_indices": [int(x) for x in resolved],
+                "spatial_candidate_indices": spatial,
                 "panorama_path": node.panorama_path,
             }
         )

@@ -1,0 +1,40 @@
+{
+  "task_id": 0,
+  "decision_num": 4,
+  "is_final": true,
+  "target_used": [
+    4.333077907562256,
+    -14.338396072387695,
+    2.6056625843048096
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      4.333077907562256,
+      -14.338396072387695,
+      2.6056625843048096
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "purple damask armchair",
+      "confidence": "high",
+      "reason": "The purple damask armchair is clearly visible in the image.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": true, \"matched_anchor\": \"purple damask armchair\", \"confidence\": \"high\", \"reason\": \"The purple damask armchair is clearly visible in the image.\"}\n```"
+    },
+    "verify_elapsed_ms": 4024.5766658335924,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00803-k1cupFYWXJ6/episode=2/task=0/panorama/vfv_dec_004.jpg",
+    "decompose": {
+      "target_desc": "purple damask armchair",
+      "anchor_desc": "ornate plant in sculpted pot",
+      "anchor_descs": [
+        "ornate plant in sculpted pot",
+        "carved arch"
+      ],
+      "parse_ok": true
+    }
+  }
+}

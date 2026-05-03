@@ -1,0 +1,40 @@
+{
+  "task_id": 0,
+  "decision_num": 6,
+  "is_final": true,
+  "target_used": [
+    -4.675041198730469,
+    0.44943374395370483,
+    9.177513122558594
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      -4.675041198730469,
+      0.44943374395370483,
+      9.177513122558594
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "glass table",
+      "confidence": "high",
+      "reason": "The image clearly shows a glass table with white chairs, supporting part of the task description.",
+      "raw": "{\"full_match\": false, \"strong_anchor_match\": true, \"matched_anchor\": \"glass table\", \"confidence\": \"high\", \"reason\": \"The image clearly shows a glass table with white chairs, supporting part of the task description.\"}"
+    },
+    "verify_elapsed_ms": 6508.111239410937,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00810-CrMo8WxCyVb/episode=9/task=0/panorama/vfv_dec_006.jpg",
+    "decompose": {
+      "target_desc": "tall brown wooden shelving cabinet",
+      "anchor_desc": "glass table",
+      "anchor_descs": [
+        "glass table",
+        "white chairs"
+      ],
+      "parse_ok": true
+    }
+  }
+}

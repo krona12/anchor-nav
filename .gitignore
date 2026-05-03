@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 
 # logs
-
+output_process/
 # C extensions
 *.so
 *.pyc

@@ -1,0 +1,42 @@
+{
+  "task_id": 0,
+  "decision_num": 5,
+  "is_final": true,
+  "target_used": [
+    1.6958085298538208,
+    6.851959705352783,
+    2.8313136100769043
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "verify_skipped": false,
+    "phase1_target": [
+      1.6958085298538208,
+      6.851959705352783,
+      2.8313136100769043
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "purple armchair",
+      "confidence": "high",
+      "reason": "The purple armchair is clearly visible in the panorama, providing a distinctive anchor related to the task.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": true, \"matched_anchor\": \"purple armchair\", \"confidence\": \"high\", \"reason\": \"The purple armchair is clearly visible in the panorama, providing a distinctive anchor related to the task.\"}\n```",
+      "parse_attempts": 1
+    },
+    "verify_elapsed_ms": 11399.699271656573,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.1/20260502-002621-detailed/process/scene=00803-k1cupFYWXJ6/episode=12/task=0/panorama/vfv_dec_005.jpg",
+    "decompose": {
+      "target_desc": "round white-top side table with black base",
+      "anchor_desc": "purple armchair",
+      "anchor_descs": [
+        "purple armchair",
+        "exhibition table with ship model"
+      ],
+      "parse_ok": true
+    }
+  }
+}

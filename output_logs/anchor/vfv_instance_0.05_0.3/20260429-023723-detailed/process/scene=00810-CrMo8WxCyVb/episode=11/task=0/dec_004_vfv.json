@@ -1,0 +1,41 @@
+{
+  "task_id": 0,
+  "decision_num": 4,
+  "is_final": true,
+  "target_used": [
+    -0.3866039514541626,
+    -2.2481133937835693,
+    -1.1219909191131592
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      -0.3866039514541626,
+      -2.2481133937835693,
+      -1.1219909191131592
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "fireplace wall with white mantel",
+      "confidence": "high",
+      "reason": "The fireplace wall with a white mantel is clearly visible in the panorama, supporting the task description well.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": true, \"matched_anchor\": \"fireplace wall with white mantel\", \"confidence\": \"high\", \"reason\": \"The fireplace wall with a white mantel is clearly visible in the panorama, supporting the task description well.\"}\n```"
+    },
+    "verify_elapsed_ms": 9302.92943213135,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00810-CrMo8WxCyVb/episode=11/task=0/panorama/vfv_dec_004.jpg",
+    "decompose": {
+      "target_desc": "fireplace wall with white mantel",
+      "anchor_desc": "tv mounted above mantel",
+      "anchor_descs": [
+        "tv mounted above mantel",
+        "plaid cushioned couch",
+        "wooden herringbone coffee table"
+      ],
+      "parse_ok": true
+    }
+  }
+}

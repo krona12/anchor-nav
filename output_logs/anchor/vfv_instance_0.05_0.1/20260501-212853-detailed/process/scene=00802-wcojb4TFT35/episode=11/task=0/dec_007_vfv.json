@@ -1,0 +1,43 @@
+{
+  "task_id": 0,
+  "decision_num": 7,
+  "is_final": true,
+  "target_used": [
+    -0.21659567952156067,
+    1.8416115045547485,
+    0.9084653258323669
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "verify_skipped": false,
+    "phase1_target": [
+      -0.21659567952156067,
+      1.8416115045547485,
+      0.9084653258323669
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": true,
+      "strong_anchor_match": false,
+      "matched_anchor": "",
+      "confidence": "high",
+      "reason": "The full task description is visually supported as the panorama shows a living room with a TV above the fireplace and a shelf present, which indicates the location for the chessboard.",
+      "raw": "```json\n{\"full_match\": true, \"strong_anchor_match\": false, \"matched_anchor\": \"\", \"confidence\": \"high\", \"reason\": \"The full task description is visually supported as the panorama shows a living room with a TV above the fireplace and a shelf present, which indicates the location for the chessboard.\"}\n```",
+      "parse_attempts": 1
+    },
+    "verify_elapsed_ms": 3401.3765631243587,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.1/20260501-212853-detailed/process/scene=00802-wcojb4TFT35/episode=11/task=0/panorama/vfv_dec_007.jpg",
+    "decompose": {
+      "target_desc": "wooden black-and-tan checkered chessboard",
+      "anchor_desc": "tv above fireplace",
+      "anchor_descs": [
+        "tv above fireplace",
+        "shelf",
+        "fireplace"
+      ],
+      "parse_ok": true
+    }
+  }
+}

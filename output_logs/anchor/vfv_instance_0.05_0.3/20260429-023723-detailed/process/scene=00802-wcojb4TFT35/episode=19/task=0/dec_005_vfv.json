@@ -1,0 +1,41 @@
+{
+  "task_id": 0,
+  "decision_num": 5,
+  "is_final": true,
+  "target_used": [
+    2.0258877277374268,
+    0.8612543344497681,
+    -10.90134334564209
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      2.0258877277374268,
+      0.8612543344497681,
+      -10.90134334564209
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": true,
+      "strong_anchor_match": false,
+      "matched_anchor": "",
+      "confidence": "high",
+      "reason": "The image clearly shows a white kitchen counter with a bunch of bananas against a tiled backsplash, fulfilling the task description.",
+      "raw": "{\n  \"full_match\": true,\n  \"strong_anchor_match\": false,\n  \"matched_anchor\": \"\",\n  \"confidence\": \"high\",\n  \"reason\": \"The image clearly shows a white kitchen counter with a bunch of bananas against a tiled backsplash, fulfilling the task description.\"\n}"
+    },
+    "verify_elapsed_ms": 3773.835588246584,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00802-wcojb4TFT35/episode=19/task=0/panorama/vfv_dec_005.jpg",
+    "decompose": {
+      "target_desc": "bunch of bananas on white kitchen counter",
+      "anchor_desc": "tiled backsplash",
+      "anchor_descs": [
+        "tiled backsplash",
+        "microwave above stove",
+        "stainless sink"
+      ],
+      "parse_ok": true
+    }
+  }
+}

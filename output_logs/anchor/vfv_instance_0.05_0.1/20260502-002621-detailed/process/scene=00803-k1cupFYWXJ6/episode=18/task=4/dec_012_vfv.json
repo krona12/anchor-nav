@@ -1,0 +1,119 @@
+{
+  "task_id": 4,
+  "decision_num": 12,
+  "is_final": true,
+  "target_used": [
+    -3.171915888786316,
+    -14.912797451019287,
+    -6.620235919952393
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase2",
+    "triggered": true,
+    "verify_skipped": false,
+    "phase1_target": [
+      -5.118335247039795,
+      -14.49060344696045,
+      -10.249893188476562
+    ],
+    "verify": {
+      "visible": false,
+      "full_match": false,
+      "strong_anchor_match": false,
+      "matched_anchor": "",
+      "confidence": "low",
+      "reason": "The panorama appears occluded and unclear, making it difficult to identify the primary object or any distinctive furniture.",
+      "raw": "{\n  \"full_match\": false,\n  \"strong_anchor_match\": false,\n  \"matched_anchor\": \"\",\n  \"confidence\": \"low\",\n  \"reason\": \"The panorama appears occluded and unclear, making it difficult to identify the primary object or any distinctive furniture.\" \n}",
+      "parse_attempts": 1
+    },
+    "verify_elapsed_ms": 4100.795943289995,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.1/20260502-002621-detailed/process/scene=00803-k1cupFYWXJ6/episode=18/task=4/panorama/vfv_dec_012.jpg",
+    "decompose": {
+      "target_desc": "beige couch with red pillows",
+      "anchor_desc": "coffee table",
+      "anchor_descs": [
+        "coffee table",
+        "entertainment center"
+      ],
+      "parse_ok": true
+    },
+    "anchor_query": {
+      "ok": true,
+      "anchor_index": 99,
+      "anchor_position": [
+        -3.171915888786316,
+        -14.912797451019287,
+        -6.620235919952393
+      ],
+      "anchor_topk": [
+        {
+          "object_index": 99,
+          "score": -0.47669532895088196
+        },
+        {
+          "object_index": 5,
+          "score": -0.670455813407898
+        },
+        {
+          "object_index": 9,
+          "score": -1.2783167362213135
+        },
+        {
+          "object_index": 39,
+          "score": -1.5022647380828857
+        },
+        {
+          "object_index": 97,
+          "score": -1.5697757005691528
+        },
+        {
+          "object_index": 68,
+          "score": -1.5752322673797607
+        },
+        {
+          "object_index": 36,
+          "score": -1.614738941192627
+        },
+        {
+          "object_index": 4,
+          "score": -1.837843894958496
+        },
+        {
+          "object_index": 98,
+          "score": -3.232356548309326
+        },
+        {
+          "object_index": 11,
+          "score": -3.4241204261779785
+        },
+        {
+          "object_index": 51,
+          "score": -3.4395222663879395
+        },
+        {
+          "object_index": 102,
+          "score": -3.6323275566101074
+        },
+        {
+          "object_index": 45,
+          "score": -3.7873175144195557
+        },
+        {
+          "object_index": 62,
+          "score": -4.203401565551758
+        },
+        {
+          "object_index": 10,
+          "score": -4.219111919403076
+        },
+        {
+          "object_index": 66,
+          "score": -4.269840240478516
+        }
+      ],
+      "anchor_desc_used": "coffee table",
+      "pq_top1_score": -0.47669532895088196
+    }
+  }
+}

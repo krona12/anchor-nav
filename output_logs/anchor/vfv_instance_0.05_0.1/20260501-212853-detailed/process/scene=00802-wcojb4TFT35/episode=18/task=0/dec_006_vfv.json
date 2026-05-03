@@ -1,0 +1,43 @@
+{
+  "task_id": 0,
+  "decision_num": 6,
+  "is_final": true,
+  "target_used": [
+    2.4943113327026367,
+    0.47546830773353577,
+    -9.937701225280762
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "verify_skipped": false,
+    "phase1_target": [
+      2.4943113327026367,
+      0.47546830773353577,
+      -9.937701225280762
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": true,
+      "strong_anchor_match": false,
+      "matched_anchor": "",
+      "confidence": "high",
+      "reason": "The image clearly shows a yellow banana under white cabinets, fulfilling the primary task description.",
+      "raw": "```json\n{\"full_match\": true, \"strong_anchor_match\": false, \"matched_anchor\": \"\", \"confidence\": \"high\", \"reason\": \"The image clearly shows a yellow banana under white cabinets, fulfilling the primary task description.\"}\n```",
+      "parse_attempts": 1
+    },
+    "verify_elapsed_ms": 5515.7803650945425,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.1/20260501-212853-detailed/process/scene=00802-wcojb4TFT35/episode=18/task=0/panorama/vfv_dec_006.jpg",
+    "decompose": {
+      "target_desc": "yellow banana",
+      "anchor_desc": "white cabinets",
+      "anchor_descs": [
+        "white cabinets",
+        "stainless refrigerator",
+        "built-in dishwasher"
+      ],
+      "parse_ok": true
+    }
+  }
+}

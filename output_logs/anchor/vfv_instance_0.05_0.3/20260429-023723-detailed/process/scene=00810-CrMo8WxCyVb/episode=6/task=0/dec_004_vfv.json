@@ -1,0 +1,41 @@
+{
+  "task_id": 0,
+  "decision_num": 4,
+  "is_final": true,
+  "target_used": [
+    1.1056904792785645,
+    0.51162189245224,
+    5.887063503265381
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      1.1056904792785645,
+      0.51162189245224,
+      5.887063503265381
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "washing machine",
+      "confidence": "medium",
+      "reason": "The view shows a washing machine, which is a primary object anchor from the task, but the stainless steel sink is not visible.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": true, \"matched_anchor\": \"washing machine\", \"confidence\": \"medium\", \"reason\": \"The view shows a washing machine, which is a primary object anchor from the task, but the stainless steel sink is not visible.\"}\n```"
+    },
+    "verify_elapsed_ms": 3731.6402550786734,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00810-CrMo8WxCyVb/episode=6/task=0/panorama/vfv_dec_004.jpg",
+    "decompose": {
+      "target_desc": "stainless steel utility sink",
+      "anchor_desc": "washing machine",
+      "anchor_descs": [
+        "washing machine",
+        "wicker basket",
+        "laundry cart"
+      ],
+      "parse_ok": true
+    }
+  }
+}

@@ -537,11 +537,20 @@ class PQ3DModel:
                 target_position = frontier_locs[random_frontier_idx].numpy()[:3]
         target_position[[1, 2]] = target_position[[2, 1]]
         n_real = int(real_obj_pad_masks.sum().item())
+        rdl = real_object_decision_logits.float()
+        if rdl.numel() >= 2:
+            vals, _ = torch.topk(rdl.flatten(), k=2)
+            obj_top1_top2_logit_gap = float(vals[0] - vals[1])
+        elif rdl.numel() == 1:
+            obj_top1_top2_logit_gap = float("inf")
+        else:
+            obj_top1_top2_logit_gap = 0.0
         self.last_decision_aux = {
             "goto_frontier_probability": float(goto_frontier_probability),
             "is_object_decision": bool(is_object_decision),
             "real_object_decision_idx": int(real_object_decision_idx),
             "n_real_objects": n_real,
+            "object_top1_top2_logit_gap": obj_top1_top2_logit_gap,
         }
         return target_position, is_object_decision
 

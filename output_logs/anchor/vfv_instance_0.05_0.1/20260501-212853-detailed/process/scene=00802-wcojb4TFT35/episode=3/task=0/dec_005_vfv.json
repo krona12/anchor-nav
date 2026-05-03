@@ -1,0 +1,42 @@
+{
+  "task_id": 0,
+  "decision_num": 5,
+  "is_final": true,
+  "target_used": [
+    -0.9122416377067566,
+    3.741898775100708,
+    -8.277645111083984
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "verify_skipped": false,
+    "phase1_target": [
+      -0.9122416377067566,
+      3.741898775100708,
+      -8.277645111083984
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "framed text picture",
+      "confidence": "high",
+      "reason": "The image clearly shows a framed text picture on the wall, which serves as a distinctive object anchor from the task.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": true, \"matched_anchor\": \"framed text picture\", \"confidence\": \"high\", \"reason\": \"The image clearly shows a framed text picture on the wall, which serves as a distinctive object anchor from the task.\"}\n```",
+      "parse_attempts": 1
+    },
+    "verify_elapsed_ms": 3042.876803316176,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.1/20260501-212853-detailed/process/scene=00802-wcojb4TFT35/episode=3/task=0/panorama/vfv_dec_005.jpg",
+    "decompose": {
+      "target_desc": "framed text picture",
+      "anchor_desc": "light-colored vanity",
+      "anchor_descs": [
+        "light-colored vanity",
+        "wall-mounted mirror"
+      ],
+      "parse_ok": true
+    }
+  }
+}

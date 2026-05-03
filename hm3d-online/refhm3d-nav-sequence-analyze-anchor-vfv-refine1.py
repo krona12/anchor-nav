@@ -26,7 +26,7 @@ from anchor_nav.posnode import _save_rgb_jpg, stitch_panorama
 from anchor_nav.vfv import (
     build_query_fn_from_pq3d_stage2,
     decompose_target_anchor,
-    select_anchor_object,
+    select_best_anchor_object,
     verify_description_visible,
 )
 from common.embodied_utils.simulator import HabitatSimulator
@@ -188,6 +188,24 @@ parser.add_argument("--vfv_api_key", type=str, default=os.environ.get("ZZZ_API_K
 parser.add_argument("--anchor_top_k", type=int, default=16)
 parser.add_argument("--panorama_subsample_frames", type=int, default=12)
 parser.add_argument(
+    "--vfv_skip_verify_if_object_logit_gap",
+    type=float,
+    default=-1.0,
+    help=">=0 时：若 PQ3D 对物体 top1/top2 的 logit 差 >= 该值则跳过全景+VLM（省步数）。默认 -1 关闭；建议从 0.2~0.5 试起（见 exp_vfv_analysis.md）",
+)
+parser.add_argument(
+    "--vfv_min_remaining_steps",
+    type=int,
+    default=0,
+    help="Phase1 跟目标点后若剩余步数 < 该值则跳过全景验证与 Phase2；建议序列任务设 50~80，0 关闭",
+)
+parser.add_argument(
+    "--vfv_verify_parse_attempts",
+    type=int,
+    default=2,
+    help="全景验证 JSON 解析失败时的最大重试次数",
+)
+parser.add_argument(
     "--decision_log_interval",
     type=int,
     default=0,
@@ -201,8 +219,9 @@ if args.vfv_api_key:
 output_log_dir = os.path.expanduser(args.output_log_dir)
 _setup_run_logging(output_log_dir)
 print(
-    f"[VFVRefine1] cfg anchor_top_k={args.anchor_top_k} "
-    f"pano_frames={args.panorama_subsample_frames}"
+    f"[VFVRefine1] cfg anchor_top_k={args.anchor_top_k} pano_frames={args.panorama_subsample_frames} "
+    f"skip_verify_if_gap>={args.vfv_skip_verify_if_object_logit_gap} "
+    f"min_remaining_steps={args.vfv_min_remaining_steps} verify_parse_attempts={args.vfv_verify_parse_attempts}"
 )
 
 enabled_task_levels = {"instance"}
@@ -306,6 +325,7 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
             print(
                 f"[vfv-refine1][task-start] scene={scene_name} ep={episode_id} task={idx} level={task_type} "
                 f"target_desc={decomp.target_desc!r} anchor_desc={decomp.anchor_desc!r} "
+                f"anchor_descs={decomp.anchor_descs!r} "
                 f"decomp_parse_ok={decomp.parse_ok} decomp_ms={decomp_ms:.1f}"
             )
             if not decomp.parse_ok:
@@ -323,6 +343,8 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
             baseline_final_target_pos: Optional[np.ndarray] = None
             final_selected_object_pos: Optional[np.ndarray] = None
             task_effective_logs: List[Dict[str, Any]] = []
+            task_pq3d_object_gap: Optional[float] = None
+            task_vfv_verify_skipped = False
 
             task_dir = out_episode_dir / f"task={idx}"
             task_dir.mkdir(parents=True, exist_ok=True)
@@ -381,8 +403,10 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                 vfv_info: Dict[str, Any] = {"ok": False, "phase": "phase1", "triggered": False}
                 if is_final:
                     baseline_final_target_pos = used_target.copy()
-                    vfv_attempts += 1
-                    # Phase1: go to baseline target.
+                    aux = getattr(pq3d_model, "last_decision_aux", {}) or {}
+                    gap = float(aux.get("object_top1_top2_logit_gap", 0.0))
+                    task_pq3d_object_gap = gap
+
                     goto_color_list, goto_depth_list, goto_agent_state_list, prev_agent_state, total_steps, episode_cum_distance = _follow_target(
                         path_finder=path_finder,
                         agent=agent,
@@ -394,75 +418,129 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                         episode_cum_distance=float(episode_cum_distance),
                     )
 
-                    verify_rgb, _, _, fog_of_war_mask, total_steps = _capture_scan_frames(
-                        sim=sim,
-                        agent=agent,
-                        top_down_map=top_down_map,
-                        fog_of_war_mask=fog_of_war_mask,
-                        visibility_dist_in_pixels=visibility_dist_in_pixels,
-                        total_steps=total_steps,
-                        max_steps=int(args.max_steps),
+                    remaining_after_p1 = int(args.max_steps) - int(total_steps)
+                    skip_gap = (
+                        float(args.vfv_skip_verify_if_object_logit_gap) >= 0.0
+                        and gap >= float(args.vfv_skip_verify_if_object_logit_gap)
                     )
-                    verify_rgb = list(reversed(verify_rgb))
-                    if int(args.panorama_subsample_frames) < len(verify_rgb):
-                        step = max(1, len(verify_rgb) // int(args.panorama_subsample_frames))
-                        verify_rgb = [verify_rgb[i] for i in range(0, len(verify_rgb), step)][: int(args.panorama_subsample_frames)]
-                    pano = stitch_panorama(verify_rgb)
-                    pano_path = pano_dir / f"vfv_dec_{int(decision_num):03d}.jpg"
-                    _save_rgb_jpg(pano, pano_path)
-
-                    t_verify = time.perf_counter()
-                    verify = verify_description_visible(
-                        description=original_sentence,
-                        image_path=str(pano_path),
-                        vlm_model=args.vfv_vlm_model,
+                    skip_steps = (
+                        int(args.vfv_min_remaining_steps) > 0
+                        and remaining_after_p1 < int(args.vfv_min_remaining_steps)
                     )
-                    verify_ms = (time.perf_counter() - t_verify) * 1000.0
-                    vfv_vlm_elapsed_ms_total += verify_ms
-                    vfv_info = {
-                        "ok": True,
-                        "phase": "phase1",
-                        "triggered": bool(not verify.get("visible", False)),
-                        "phase1_target": used_target.tolist(),
-                        "verify": verify,
-                        "verify_elapsed_ms": float(verify_ms),
-                        "panorama_path": str(pano_path),
-                        "decompose": {
-                            "target_desc": decomp.target_desc,
-                            "anchor_desc": decomp.anchor_desc,
-                            "parse_ok": bool(decomp.parse_ok),
-                        },
-                    }
+                    skip_verify = skip_gap or skip_steps
 
-                    if not bool(verify.get("visible", False)):
-                        anchor_info = select_anchor_object(
-                            anchor_desc=decomp.anchor_desc,
-                            query_fn=query_fn,
-                            rep=pq3d_model.representation_manager,
-                            top_k=int(args.anchor_top_k),
+                    if skip_verify:
+                        task_vfv_verify_skipped = True
+                        verify_ms = 0.0
+                        verify = {
+                            "visible": True,
+                            "skipped": True,
+                            "skip_reason": "object_logit_gap" if skip_gap else "remaining_steps",
+                            "object_top1_top2_logit_gap": gap,
+                            "remaining_steps_after_phase1_follow": remaining_after_p1,
+                            "full_match": True,
+                            "strong_anchor_match": False,
+                            "confidence": "high",
+                            "reason": "vfv_verify_skipped_deployable",
+                            "raw": "",
+                            "parse_attempts": 0,
+                        }
+                        vfv_info = {
+                            "ok": True,
+                            "phase": "phase1",
+                            "triggered": False,
+                            "verify_skipped": True,
+                            "phase1_target": used_target.tolist(),
+                            "verify": verify,
+                            "verify_elapsed_ms": 0.0,
+                            "panorama_path": None,
+                            "decompose": {
+                                "target_desc": decomp.target_desc,
+                                "anchor_desc": decomp.anchor_desc,
+                                "anchor_descs": list(decomp.anchor_descs),
+                                "parse_ok": bool(decomp.parse_ok),
+                            },
+                        }
+                        used_target = baseline_final_target_pos.copy()
+                    else:
+                        vfv_attempts += 1
+                        verify_rgb, _, _, fog_of_war_mask, total_steps = _capture_scan_frames(
+                            sim=sim,
+                            agent=agent,
+                            top_down_map=top_down_map,
+                            fog_of_war_mask=fog_of_war_mask,
+                            visibility_dist_in_pixels=visibility_dist_in_pixels,
+                            total_steps=total_steps,
+                            max_steps=int(args.max_steps),
                         )
-                        vfv_info["phase"] = "phase2"
-                        vfv_info["anchor_query"] = anchor_info
-                        if bool(anchor_info.get("ok", False)):
-                            used_target = np.asarray(anchor_info["anchor_position"], dtype=float).reshape(3).copy()
-                            vfv_applied += 1
-                            goto_color_list, goto_depth_list, goto_agent_state_list, prev_agent_state, total_steps, episode_cum_distance = _follow_target(
-                                path_finder=path_finder,
-                                agent=agent,
-                                sim=sim,
-                                target=used_target,
-                                prev_agent_state=prev_agent_state,
-                                total_steps=total_steps,
-                                max_steps=int(args.max_steps),
-                                episode_cum_distance=float(episode_cum_distance),
+                        verify_rgb = list(reversed(verify_rgb))
+                        if int(args.panorama_subsample_frames) < len(verify_rgb):
+                            step = max(1, len(verify_rgb) // int(args.panorama_subsample_frames))
+                            verify_rgb = [verify_rgb[i] for i in range(0, len(verify_rgb), step)][: int(args.panorama_subsample_frames)]
+                        pano = stitch_panorama(verify_rgb)
+                        pano_path = pano_dir / f"vfv_dec_{int(decision_num):03d}.jpg"
+                        _save_rgb_jpg(pano, pano_path)
+
+                        t_verify = time.perf_counter()
+                        verify = verify_description_visible(
+                            description=original_sentence,
+                            image_path=str(pano_path),
+                            vlm_model=args.vfv_vlm_model,
+                            target_desc=decomp.target_desc,
+                            anchor_hints=decomp.anchor_descs,
+                            max_parse_attempts=int(args.vfv_verify_parse_attempts),
+                        )
+                        verify_ms = (time.perf_counter() - t_verify) * 1000.0
+                        vfv_vlm_elapsed_ms_total += verify_ms
+                        vfv_info = {
+                            "ok": True,
+                            "phase": "phase1",
+                            "triggered": bool(not verify.get("visible", False)),
+                            "verify_skipped": False,
+                            "phase1_target": used_target.tolist(),
+                            "verify": verify,
+                            "verify_elapsed_ms": float(verify_ms),
+                            "panorama_path": str(pano_path),
+                            "decompose": {
+                                "target_desc": decomp.target_desc,
+                                "anchor_desc": decomp.anchor_desc,
+                                "anchor_descs": list(decomp.anchor_descs),
+                                "parse_ok": bool(decomp.parse_ok),
+                            },
+                        }
+
+                        if not bool(verify.get("visible", False)):
+                            anchor_info = select_best_anchor_object(
+                                anchor_descs=decomp.anchor_descs,
+                                query_fn=query_fn,
+                                rep=pq3d_model.representation_manager,
+                                top_k=int(args.anchor_top_k),
                             )
+                            vfv_info["phase"] = "phase2"
+                            vfv_info["anchor_query"] = anchor_info
+                            if bool(anchor_info.get("ok", False)):
+                                used_target = np.asarray(anchor_info["anchor_position"], dtype=float).reshape(3).copy()
+                                vfv_applied += 1
+                                goto_color_list, goto_depth_list, goto_agent_state_list, prev_agent_state, total_steps, episode_cum_distance = _follow_target(
+                                    path_finder=path_finder,
+                                    agent=agent,
+                                    sim=sim,
+                                    target=used_target,
+                                    prev_agent_state=prev_agent_state,
+                                    total_steps=total_steps,
+                                    max_steps=int(args.max_steps),
+                                    episode_cum_distance=float(episode_cum_distance),
+                                )
+                            else:
+                                used_target = baseline_final_target_pos.copy()
                         else:
                             used_target = baseline_final_target_pos.copy()
 
                     final_selected_object_pos = used_target.copy()
                     print(
                         f"[vfv-refine1][final] task={idx} dec={decision_num} "
-                        f"triggered={vfv_info.get('triggered')} phase={vfv_info.get('phase')} applied={bool(vfv_applied>0)}"
+                        f"triggered={vfv_info.get('triggered')} phase={vfv_info.get('phase')} "
+                        f"skipped={vfv_info.get('verify_skipped')} applied={bool(vfv_applied>0)}"
                     )
                     task_effective_logs.append(
                         {
@@ -474,6 +552,7 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                             "decompose": {
                                 "target_desc": decomp.target_desc,
                                 "anchor_desc": decomp.anchor_desc,
+                                "anchor_descs": list(decomp.anchor_descs),
                                 "parse_ok": bool(decomp.parse_ok),
                             },
                             "vfv_ok": True,
@@ -569,6 +648,8 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                     "selected_object_to_goal_l2": float(selected_object_to_goal_l2),
                     "vfv_helpful": vfv_helpful,
                     "decompose_parse_ok": bool(decomp.parse_ok),
+                    "pq3d_object_top1_top2_logit_gap": task_pq3d_object_gap,
+                    "vfv_verify_skipped": bool(task_vfv_verify_skipped),
                 }
             )
             effectiveness_dict["records"].append(

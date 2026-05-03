@@ -1,0 +1,42 @@
+{
+  "task_id": 0,
+  "decision_num": 4,
+  "is_final": true,
+  "target_used": [
+    -2.7905569076538086,
+    0.4193767309188843,
+    -8.85203742980957
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "verify_skipped": false,
+    "phase1_target": [
+      -2.7905569076538086,
+      0.4193767309188843,
+      -8.85203742980957
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "black-and-beige leaf-patterned armchairs",
+      "confidence": "high",
+      "reason": "The black-and-beige leaf-patterned armchairs are clearly visible near the window, supporting the task description despite the brown wooden upright piano not being present.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": true, \"matched_anchor\": \"black-and-beige leaf-patterned armchairs\", \"confidence\": \"high\", \"reason\": \"The black-and-beige leaf-patterned armchairs are clearly visible near the window, supporting the task description despite the brown wooden upright piano not being present.\"}\n```",
+      "parse_attempts": 1
+    },
+    "verify_elapsed_ms": 5943.616998381913,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.1/20260501-212853-detailed/process/scene=00802-wcojb4TFT35/episode=15/task=0/panorama/vfv_dec_004.jpg",
+    "decompose": {
+      "target_desc": "brown wooden upright piano",
+      "anchor_desc": "black-and-beige leaf-patterned armchairs",
+      "anchor_descs": [
+        "black-and-beige leaf-patterned armchairs",
+        "cityscape prints"
+      ],
+      "parse_ok": true
+    }
+  }
+}

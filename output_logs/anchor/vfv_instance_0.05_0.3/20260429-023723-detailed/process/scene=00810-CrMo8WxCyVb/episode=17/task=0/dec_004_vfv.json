@@ -1,0 +1,41 @@
+{
+  "task_id": 0,
+  "decision_num": 4,
+  "is_final": true,
+  "target_used": [
+    1.6966320276260376,
+    -2.547443151473999,
+    7.765527725219727
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      1.6966320276260376,
+      -2.547443151473999,
+      7.765527725219727
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "refrigerator",
+      "confidence": "high",
+      "reason": "The refrigerator is clearly visible in the image, supporting the navigation task related to the kitchen layout.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": true, \"matched_anchor\": \"refrigerator\", \"confidence\": \"high\", \"reason\": \"The refrigerator is clearly visible in the image, supporting the navigation task related to the kitchen layout.\"}\n```"
+    },
+    "verify_elapsed_ms": 4892.702532932162,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00810-CrMo8WxCyVb/episode=17/task=0/panorama/vfv_dec_004.jpg",
+    "decompose": {
+      "target_desc": "white kitchen cabinet holding kitchen utensils",
+      "anchor_desc": "refrigerator",
+      "anchor_descs": [
+        "refrigerator",
+        "dining table",
+        "upper cabinets"
+      ],
+      "parse_ok": true
+    }
+  }
+}

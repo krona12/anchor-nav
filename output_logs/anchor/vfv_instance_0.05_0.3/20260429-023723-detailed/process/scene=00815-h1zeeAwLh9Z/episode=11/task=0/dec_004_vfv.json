@@ -1,0 +1,41 @@
+{
+  "task_id": 0,
+  "decision_num": 4,
+  "is_final": true,
+  "target_used": [
+    -4.3860931396484375,
+    0.5403428673744202,
+    -3.595259666442871
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      -4.3860931396484375,
+      0.5403428673744202,
+      -3.595259666442871
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "black printer",
+      "confidence": "high",
+      "reason": "The black printer is clearly visible in the image, supporting the task without the primary target being present.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": true, \"matched_anchor\": \"black printer\", \"confidence\": \"high\", \"reason\": \"The black printer is clearly visible in the image, supporting the task without the primary target being present.\"}\n```"
+    },
+    "verify_elapsed_ms": 12425.385443493724,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00815-h1zeeAwLh9Z/episode=11/task=0/panorama/vfv_dec_004.jpg",
+    "decompose": {
+      "target_desc": "brown sideboard with glass doors",
+      "anchor_desc": "black printer",
+      "anchor_descs": [
+        "black printer",
+        "burgundy couch",
+        "tv on red cabinet with circular motifs"
+      ],
+      "parse_ok": true
+    }
+  }
+}

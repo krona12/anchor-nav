@@ -1,0 +1,42 @@
+{
+  "task_id": 4,
+  "decision_num": 12,
+  "is_final": true,
+  "target_used": [
+    -2.418203830718994,
+    -13.873429298400879,
+    -2.961839199066162
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "verify_skipped": false,
+    "phase1_target": [
+      -2.418203830718994,
+      -13.873429298400879,
+      -2.961839199066162
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "purple patterned armchairs",
+      "confidence": "medium",
+      "reason": "The purple patterned armchairs are visible, providing a distinctive anchor related to the task, even though the primary target (the decorative plant) is not fully clear.",
+      "raw": "{\n  \"full_match\": false,\n  \"strong_anchor_match\": true,\n  \"matched_anchor\": \"purple patterned armchairs\",\n  \"confidence\": \"medium\",\n  \"reason\": \"The purple patterned armchairs are visible, providing a distinctive anchor related to the task, even though the primary target (the decorative plant) is not fully clear.\"\n}",
+      "parse_attempts": 1
+    },
+    "verify_elapsed_ms": 8296.513671986759,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.1/20260502-002621-detailed/process/scene=00803-k1cupFYWXJ6/episode=19/task=4/panorama/vfv_dec_012.jpg",
+    "decompose": {
+      "target_desc": "decorative plant in stone flowerpot",
+      "anchor_desc": "purple patterned armchairs",
+      "anchor_descs": [
+        "purple patterned armchairs",
+        "carved arch"
+      ],
+      "parse_ok": true
+    }
+  }
+}

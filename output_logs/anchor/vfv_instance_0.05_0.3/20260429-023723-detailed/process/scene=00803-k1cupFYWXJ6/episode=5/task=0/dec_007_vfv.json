@@ -1,0 +1,41 @@
+{
+  "task_id": 0,
+  "decision_num": 7,
+  "is_final": true,
+  "target_used": [
+    1.3460767269134521,
+    6.865638256072998,
+    2.4598615169525146
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      1.3460767269134521,
+      6.865638256072998,
+      2.4598615169525146
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "purple chairs",
+      "confidence": "high",
+      "reason": "The panorama shows multiple purple chairs clearly, providing a distinctive object anchor from the task description.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": true, \"matched_anchor\": \"purple chairs\", \"confidence\": \"high\", \"reason\": \"The panorama shows multiple purple chairs clearly, providing a distinctive object anchor from the task description.\"}\n```"
+    },
+    "verify_elapsed_ms": 3737.3852226883173,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00803-k1cupFYWXJ6/episode=5/task=0/panorama/vfv_dec_007.jpg",
+    "decompose": {
+      "target_desc": "white square side table with black base",
+      "anchor_desc": "purple chairs",
+      "anchor_descs": [
+        "purple chairs",
+        "yellow-framed wall maps",
+        "exhibition table with ship model"
+      ],
+      "parse_ok": true
+    }
+  }
+}

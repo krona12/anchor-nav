@@ -1,0 +1,40 @@
+{
+  "task_id": 0,
+  "decision_num": 6,
+  "is_final": true,
+  "target_used": [
+    -1.7141474485397339,
+    0.44272175431251526,
+    -2.038970947265625
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      -1.7141474485397339,
+      0.44272175431251526,
+      -2.038970947265625
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": true,
+      "strong_anchor_match": false,
+      "matched_anchor": "",
+      "confidence": "high",
+      "reason": "The view clearly shows the brown three-seater couch with patterned pillows beside the window in the living room with a TV above the fireplace.",
+      "raw": "```json\n{\"full_match\": true, \"strong_anchor_match\": false, \"matched_anchor\": \"\", \"confidence\": \"high\", \"reason\": \"The view clearly shows the brown three-seater couch with patterned pillows beside the window in the living room with a TV above the fireplace.\"}\n```"
+    },
+    "verify_elapsed_ms": 9190.160918049514,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00802-wcojb4TFT35/episode=7/task=0/panorama/vfv_dec_006.jpg",
+    "decompose": {
+      "target_desc": "brown three-seater couch with patterned pillows",
+      "anchor_desc": "tv above fireplace",
+      "anchor_descs": [
+        "tv above fireplace",
+        "fireplace"
+      ],
+      "parse_ok": true
+    }
+  }
+}

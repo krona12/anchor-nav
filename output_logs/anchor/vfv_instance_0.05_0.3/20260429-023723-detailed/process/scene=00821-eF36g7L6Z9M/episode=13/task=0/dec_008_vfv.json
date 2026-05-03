@@ -1,0 +1,41 @@
+{
+  "task_id": 0,
+  "decision_num": 8,
+  "is_final": true,
+  "target_used": [
+    4.507510185241699,
+    0.6482702493667603,
+    1.9687867164611816
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      4.507510185241699,
+      0.6482702493667603,
+      1.9687867164611816
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "white couch",
+      "confidence": "high",
+      "reason": "The panorama shows a white couch, providing a clear identifiable anchor for the task, but the light gray fabric sitting bench is not visible.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": true, \"matched_anchor\": \"white couch\", \"confidence\": \"high\", \"reason\": \"The panorama shows a white couch, providing a clear identifiable anchor for the task, but the light gray fabric sitting bench is not visible.\"}\n```"
+    },
+    "verify_elapsed_ms": 6896.514263935387,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00821-eF36g7L6Z9M/episode=13/task=0/panorama/vfv_dec_008.jpg",
+    "decompose": {
+      "target_desc": "light gray fabric sitting bench",
+      "anchor_desc": "four armchairs",
+      "anchor_descs": [
+        "four armchairs",
+        "white couch",
+        "stone fireplace"
+      ],
+      "parse_ok": true
+    }
+  }
+}

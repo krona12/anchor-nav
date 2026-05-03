@@ -1,0 +1,43 @@
+{
+  "task_id": 0,
+  "decision_num": 6,
+  "is_final": true,
+  "target_used": [
+    -1.6930937767028809,
+    0.445820152759552,
+    -2.0432844161987305
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "verify_skipped": false,
+    "phase1_target": [
+      -1.6930937767028809,
+      0.445820152759552,
+      -2.0432844161987305
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": true,
+      "strong_anchor_match": false,
+      "matched_anchor": "",
+      "confidence": "high",
+      "reason": "The view clearly shows a wooden bookshelf in the living room along with a tan couch and a TV above the fireplace, supporting the task description.",
+      "raw": "```json\n{\"full_match\": true, \"strong_anchor_match\": false, \"matched_anchor\": \"\", \"confidence\": \"high\", \"reason\": \"The view clearly shows a wooden bookshelf in the living room along with a tan couch and a TV above the fireplace, supporting the task description.\"}\n```",
+      "parse_attempts": 1
+    },
+    "verify_elapsed_ms": 3510.375702753663,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.1/20260501-212853-detailed/process/scene=00802-wcojb4TFT35/episode=12/task=0/panorama/vfv_dec_006.jpg",
+    "decompose": {
+      "target_desc": "wooden bookshelf",
+      "anchor_desc": "tan couch",
+      "anchor_descs": [
+        "tan couch",
+        "tv above fireplace",
+        "fireplace"
+      ],
+      "parse_ok": true
+    }
+  }
+}

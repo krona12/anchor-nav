@@ -1,0 +1,41 @@
+{
+  "task_id": 0,
+  "decision_num": 6,
+  "is_final": true,
+  "target_used": [
+    -4.658491611480713,
+    1.327746868133545,
+    -3.8337349891662598
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      -4.658491611480713,
+      1.327746868133545,
+      -3.8337349891662598
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "tv on red cabinet",
+      "confidence": "high",
+      "reason": "The image clearly shows a TV on a red cabinet, which is a distinctive object anchor from the task.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": true, \"matched_anchor\": \"tv on red cabinet\", \"confidence\": \"high\", \"reason\": \"The image clearly shows a TV on a red cabinet, which is a distinctive object anchor from the task.\"}\n```"
+    },
+    "verify_elapsed_ms": 8907.299991697073,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00815-h1zeeAwLh9Z/episode=13/task=0/panorama/vfv_dec_006.jpg",
+    "decompose": {
+      "target_desc": "burgundy armchair with throw",
+      "anchor_desc": "green carpet",
+      "anchor_descs": [
+        "green carpet",
+        "tv on red cabinet",
+        "circular motifs"
+      ],
+      "parse_ok": true
+    }
+  }
+}

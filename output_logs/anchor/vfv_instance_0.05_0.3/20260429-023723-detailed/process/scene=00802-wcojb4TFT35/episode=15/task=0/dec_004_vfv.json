@@ -1,0 +1,40 @@
+{
+  "task_id": 0,
+  "decision_num": 4,
+  "is_final": true,
+  "target_used": [
+    -2.6373305320739746,
+    0.24336513876914978,
+    -8.80074691772461
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      -2.6373305320739746,
+      0.24336513876914978,
+      -8.80074691772461
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": true,
+      "strong_anchor_match": false,
+      "matched_anchor": "",
+      "confidence": "high",
+      "reason": "The brown wooden upright piano is clearly visible beneath the cityscape prints in the living room.",
+      "raw": "```json\n{\"full_match\": true,\"strong_anchor_match\": false,\"matched_anchor\":\"\",\"confidence\": \"high\",\"reason\": \"The brown wooden upright piano is clearly visible beneath the cityscape prints in the living room.\"}\n```"
+    },
+    "verify_elapsed_ms": 12595.09876742959,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00802-wcojb4TFT35/episode=15/task=0/panorama/vfv_dec_004.jpg",
+    "decompose": {
+      "target_desc": "brown wooden upright piano",
+      "anchor_desc": "cityscape prints",
+      "anchor_descs": [
+        "cityscape prints",
+        "black-and-beige leaf-patterned armchairs"
+      ],
+      "parse_ok": true
+    }
+  }
+}

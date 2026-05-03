@@ -1,0 +1,41 @@
+{
+  "task_id": 0,
+  "decision_num": 4,
+  "is_final": true,
+  "target_used": [
+    0.8967779278755188,
+    0.4422370195388794,
+    -1.4932960271835327
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      0.8967779278755188,
+      0.4422370195388794,
+      -1.4932960271835327
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": true,
+      "strong_anchor_match": false,
+      "matched_anchor": "",
+      "confidence": "high",
+      "reason": "The image clearly shows a brick fireplace with a white mantel, fulfilling the primary task description.",
+      "raw": "```json\n{\"full_match\": true,\"strong_anchor_match\": false,\"matched_anchor\":\"\",\"confidence\": \"high\",\"reason\": \"The image clearly shows a brick fireplace with a white mantel, fulfilling the primary task description.\"}\n```"
+    },
+    "verify_elapsed_ms": 3808.6389135569334,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00802-wcojb4TFT35/episode=10/task=0/panorama/vfv_dec_004.jpg",
+    "decompose": {
+      "target_desc": "brick fireplace with white mantel",
+      "anchor_desc": "tan couch",
+      "anchor_descs": [
+        "tan couch",
+        "tv",
+        "coffee table"
+      ],
+      "parse_ok": true
+    }
+  }
+}

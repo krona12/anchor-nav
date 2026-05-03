@@ -1,0 +1,41 @@
+{
+  "task_id": 0,
+  "decision_num": 4,
+  "is_final": true,
+  "target_used": [
+    -4.7391462326049805,
+    0.45796382427215576,
+    3.0979084968566895
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      -4.7391462326049805,
+      0.45796382427215576,
+      3.0979084968566895
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "knife holder",
+      "confidence": "high",
+      "reason": "The knife holder is clearly visible under the upper cabinet in the kitchen area, which supports the task description.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": true, \"matched_anchor\": \"knife holder\", \"confidence\": \"high\", \"reason\": \"The knife holder is clearly visible under the upper cabinet in the kitchen area, which supports the task description.\"}\n```"
+    },
+    "verify_elapsed_ms": 6520.645030774176,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00814-p53SfW6mjZe/episode=16/task=0/panorama/vfv_dec_004.jpg",
+    "decompose": {
+      "target_desc": "white kitchen cabinet with marble countertop",
+      "anchor_desc": "knife holder",
+      "anchor_descs": [
+        "knife holder",
+        "kitchen utensil",
+        "upper cabinet"
+      ],
+      "parse_ok": true
+    }
+  }
+}

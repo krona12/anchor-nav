@@ -1,0 +1,42 @@
+{
+  "task_id": 0,
+  "decision_num": 8,
+  "is_final": true,
+  "target_used": [
+    2.9713423252105713,
+    3.672849178314209,
+    -11.151483535766602
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "verify_skipped": false,
+    "phase1_target": [
+      2.9713423252105713,
+      3.672849178314209,
+      -11.151483535766602
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": true,
+      "strong_anchor_match": false,
+      "matched_anchor": "",
+      "confidence": "high",
+      "reason": "The gray ribbed hand towel is clearly visible beside the white towel below the framed text, matching the primary object description.",
+      "raw": "```json\n{\"full_match\": true, \"strong_anchor_match\": false, \"matched_anchor\": \"\", \"confidence\": \"high\", \"reason\": \"The gray ribbed hand towel is clearly visible beside the white towel below the framed text, matching the primary object description.\"}\n```",
+      "parse_attempts": 1
+    },
+    "verify_elapsed_ms": 5919.227005913854,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.1/20260501-212853-detailed/process/scene=00802-wcojb4TFT35/episode=2/task=0/panorama/vfv_dec_008.jpg",
+    "decompose": {
+      "target_desc": "gray ribbed hand towel",
+      "anchor_desc": "light-colored vanity",
+      "anchor_descs": [
+        "light-colored vanity",
+        "white-framed mirror"
+      ],
+      "parse_ok": true
+    }
+  }
+}

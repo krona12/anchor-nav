@@ -1,0 +1,40 @@
+{
+  "task_id": 4,
+  "decision_num": 12,
+  "is_final": true,
+  "target_used": [
+    2.346421957015991,
+    -14.287308692932129,
+    2.8251194953918457
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      2.346421957015991,
+      -14.287308692932129,
+      2.8251194953918457
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "beige patterned armchairs",
+      "confidence": "high",
+      "reason": "The image clearly shows beige patterned armchairs and a round wooden table, which supports the presence of the target situation, even though the black radiator is not visible.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": true, \"matched_anchor\": \"beige patterned armchairs\", \"confidence\": \"high\", \"reason\": \"The image clearly shows beige patterned armchairs and a round wooden table, which supports the presence of the target situation, even though the black radiator is not visible.\"}\n```"
+    },
+    "verify_elapsed_ms": 3516.832019202411,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00803-k1cupFYWXJ6/episode=13/task=4/panorama/vfv_dec_012.jpg",
+    "decompose": {
+      "target_desc": "black radiator",
+      "anchor_desc": "beige patterned armchairs",
+      "anchor_descs": [
+        "beige patterned armchairs",
+        "round wooden table"
+      ],
+      "parse_ok": true
+    }
+  }
+}

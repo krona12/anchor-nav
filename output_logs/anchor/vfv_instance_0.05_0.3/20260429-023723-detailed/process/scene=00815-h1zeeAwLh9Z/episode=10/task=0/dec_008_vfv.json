@@ -1,0 +1,41 @@
+{
+  "task_id": 0,
+  "decision_num": 8,
+  "is_final": true,
+  "target_used": [
+    6.002758026123047,
+    0.34157201647758484,
+    -8.658180236816406
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      6.002758026123047,
+      0.34157201647758484,
+      -8.658180236816406
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "burgundy couch",
+      "confidence": "high",
+      "reason": "The image shows a burgundy couch, which supports part of the task description, even though the specific primary target (red-black floral tv stand) is not visible.",
+      "raw": "{\n  \"full_match\": false,\n  \"strong_anchor_match\": true,\n  \"matched_anchor\": \"burgundy couch\",\n  \"confidence\": \"high\",\n  \"reason\": \"The image shows a burgundy couch, which supports part of the task description, even though the specific primary target (red-black floral tv stand) is not visible.\"\n}"
+    },
+    "verify_elapsed_ms": 5847.78618812561,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00815-h1zeeAwLh9Z/episode=10/task=0/panorama/vfv_dec_008.jpg",
+    "decompose": {
+      "target_desc": "red-black floral tv stand",
+      "anchor_desc": "burgundy couch",
+      "anchor_descs": [
+        "burgundy couch",
+        "patterned blanket",
+        "decorative vase"
+      ],
+      "parse_ok": true
+    }
+  }
+}

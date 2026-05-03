@@ -1,0 +1,41 @@
+{
+  "task_id": 0,
+  "decision_num": 6,
+  "is_final": true,
+  "target_used": [
+    -0.8411255478858948,
+    1.3377891778945923,
+    -4.345161437988281
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      -0.8411255478858948,
+      1.3377891778945923,
+      -4.345161437988281
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "wide single-sink vanity",
+      "confidence": "medium",
+      "reason": "While the primary target (blue bathroom towel) is not visible, the wide single-sink vanity is present as a distinctive object, supporting the task.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": true, \"matched_anchor\": \"wide single-sink vanity\", \"confidence\": \"medium\", \"reason\": \"While the primary target (blue bathroom towel) is not visible, the wide single-sink vanity is present as a distinctive object, supporting the task.\"}\n```"
+    },
+    "verify_elapsed_ms": 3835.2568047121167,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00815-h1zeeAwLh9Z/episode=6/task=0/panorama/vfv_dec_006.jpg",
+    "decompose": {
+      "target_desc": "right blue bathroom towel",
+      "anchor_desc": "wide single-sink vanity",
+      "anchor_descs": [
+        "wide single-sink vanity",
+        "toilet",
+        "walk-in shower"
+      ],
+      "parse_ok": true
+    }
+  }
+}

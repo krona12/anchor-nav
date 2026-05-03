@@ -1,0 +1,40 @@
+{
+  "task_id": 0,
+  "decision_num": 7,
+  "is_final": true,
+  "target_used": [
+    -4.869995594024658,
+    1.1154237985610962,
+    -2.4681613445281982
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "phase1_target": [
+      -4.869995594024658,
+      1.1154237985610962,
+      -2.4681613445281982
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": false,
+      "strong_anchor_match": true,
+      "matched_anchor": "wood slatted bench",
+      "confidence": "high",
+      "reason": "The wood slatted bench is clearly visible in the image, providing a strong anchor even though the specific flowerpot is not present.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": true, \"matched_anchor\": \"wood slatted bench\", \"confidence\": \"high\", \"reason\": \"The wood slatted bench is clearly visible in the image, providing a strong anchor even though the specific flowerpot is not present.\"}\n```"
+    },
+    "verify_elapsed_ms": 4104.65141851455,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00815-h1zeeAwLh9Z/episode=2/task=0/panorama/vfv_dec_007.jpg",
+    "decompose": {
+      "target_desc": "white-blue flowerpot with circle pattern",
+      "anchor_desc": "wood slatted bench",
+      "anchor_descs": [
+        "wood slatted bench",
+        "shelf"
+      ],
+      "parse_ok": true
+    }
+  }
+}

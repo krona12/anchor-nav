@@ -1,0 +1,116 @@
+{
+  "task_id": 0,
+  "decision_num": 7,
+  "is_final": true,
+  "target_used": [
+    -0.8309478078569685,
+    0.44852979694093975,
+    -4.592297962733677
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase2",
+    "triggered": true,
+    "phase1_target": [
+      -0.8763629794120789,
+      1.365116834640503,
+      -4.215583324432373
+    ],
+    "verify": {
+      "visible": false,
+      "full_match": false,
+      "strong_anchor_match": false,
+      "matched_anchor": "",
+      "confidence": "low",
+      "reason": "The image does not provide a view of a bathroom, window shelf, wide single-sink vanity, patterned curtain, or blue towels.",
+      "raw": "```json\n{\"full_match\": false, \"strong_anchor_match\": false, \"matched_anchor\": \"\", \"confidence\": \"low\", \"reason\": \"The image does not provide a view of a bathroom, window shelf, wide single-sink vanity, patterned curtain, or blue towels.\"}\n```"
+    },
+    "verify_elapsed_ms": 6204.210724681616,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.3/20260429-023723-detailed/process/scene=00815-h1zeeAwLh9Z/episode=8/task=0/panorama/vfv_dec_007.jpg",
+    "decompose": {
+      "target_desc": "wood window shelf",
+      "anchor_desc": "wide single-sink vanity",
+      "anchor_descs": [
+        "wide single-sink vanity",
+        "patterned curtain",
+        "blue towels"
+      ],
+      "parse_ok": true
+    },
+    "anchor_query": {
+      "ok": true,
+      "anchor_index": 158,
+      "anchor_position": [
+        -0.8309478078569685,
+        0.44852979694093975,
+        -4.592297962733677
+      ],
+      "anchor_topk": [
+        {
+          "object_index": 158,
+          "score": -1.749503254890442
+        },
+        {
+          "object_index": 211,
+          "score": -2.5124568939208984
+        },
+        {
+          "object_index": 196,
+          "score": -2.7052650451660156
+        },
+        {
+          "object_index": 152,
+          "score": -2.7961349487304688
+        },
+        {
+          "object_index": 160,
+          "score": -4.613058090209961
+        },
+        {
+          "object_index": 154,
+          "score": -4.810273170471191
+        },
+        {
+          "object_index": 194,
+          "score": -6.061642646789551
+        },
+        {
+          "object_index": 170,
+          "score": -6.162055969238281
+        },
+        {
+          "object_index": 199,
+          "score": -6.654407024383545
+        },
+        {
+          "object_index": 206,
+          "score": -6.772332191467285
+        },
+        {
+          "object_index": 151,
+          "score": -6.908790588378906
+        },
+        {
+          "object_index": 183,
+          "score": -7.132977485656738
+        },
+        {
+          "object_index": 66,
+          "score": -7.3167853355407715
+        },
+        {
+          "object_index": 134,
+          "score": -7.418327808380127
+        },
+        {
+          "object_index": 156,
+          "score": -7.68063497543335
+        },
+        {
+          "object_index": 216,
+          "score": -7.734552383422852
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "task_id": 0,
+  "decision_num": 5,
+  "is_final": true,
+  "target_used": [
+    2.790180206298828,
+    3.017118453979492,
+    -6.998893737792969
+  ],
+  "vfv": {
+    "ok": true,
+    "phase": "phase1",
+    "triggered": false,
+    "verify_skipped": false,
+    "phase1_target": [
+      2.790180206298828,
+      3.017118453979492,
+      -6.998893737792969
+    ],
+    "verify": {
+      "visible": true,
+      "full_match": true,
+      "strong_anchor_match": false,
+      "matched_anchor": "",
+      "confidence": "high",
+      "reason": "The panorama clearly shows a white table and a pink chair in the bedroom, along with a brown bed with a quilt and a teal blanket.",
+      "raw": "```json\n{\"full_match\": true, \"strong_anchor_match\": false, \"matched_anchor\": \"\", \"confidence\": \"high\", \"reason\": \"The panorama clearly shows a white table and a pink chair in the bedroom, along with a brown bed with a quilt and a teal blanket.\"}\n```",
+      "parse_attempts": 1
+    },
+    "verify_elapsed_ms": 5044.607135467231,
+    "panorama_path": "output_logs/anchor/vfv_instance_0.05_0.1/20260501-212853-detailed/process/scene=00802-wcojb4TFT35/episode=1/task=0/panorama/vfv_dec_005.jpg",
+    "decompose": {
+      "target_desc": "white table with pink chair",
+      "anchor_desc": "brown bed with quilt",
+      "anchor_descs": [
+        "brown bed with quilt",
+        "teal blanket on bed",
+        "white nightstand with lamp"
+      ],
+      "parse_ok": true
+    }
+  }
+}
