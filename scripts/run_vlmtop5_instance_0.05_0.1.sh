@@ -20,7 +20,7 @@ export HABITAT_SIM_LOG=quiet
 export YOLO_VERBOSE=False
 
 # Usage:
-#   bash scripts/run_vfv_instance_0.05_0.1.sh [detailed|concise] [optional_tag]
+#   bash scripts/run_vlmtop5_instance_0.05_0.1.sh [detailed|concise] [optional_tag]
 DESC_MODE="${1:-detailed}"
 USER_TAG="${2:-}"
 if [ "${DESC_MODE}" != "detailed" ] && [ "${DESC_MODE}" != "concise" ]; then
@@ -34,14 +34,16 @@ if [ -n "${USER_TAG}" ]; then
   RUN_TAG="${RUN_TAG}-${USER_TAG}"
 fi
 
-OUT_DIR="output_logs/anchor/vfv_instance_0.05_0.1/${RUN_TAG}"
+OUT_DIR="output_logs/anchor/vlmtop5_instance_0.05_0.1/${RUN_TAG}"
 mkdir -p "${OUT_DIR}"
 
 VLM_MODEL="${VLM_MODEL:-gpt-4o-mini}"
+VLM_TIMEOUT="${VLM_TIMEOUT:-60}"
 
-echo ">>> VFV refine1 instance-only run tag: ${RUN_TAG}"
+echo ">>> VLMTop5 refine1 instance-only run tag: ${RUN_TAG}"
 echo ">>> Output dir: ${OUT_DIR}"
 echo ">>> VLM model: ${VLM_MODEL}"
+echo ">>> VLM timeout: ${VLM_TIMEOUT}"
 
 {
   echo "timestamp=${TS}"
@@ -56,11 +58,13 @@ echo ">>> VLM model: ${VLM_MODEL}"
   echo "num_shards_total=1"
   echo "schedule=single_shard_single_pipeline"
   echo "vlm_model=${VLM_MODEL}"
+  echo "vlm_timeout=${VLM_TIMEOUT}"
+  echo "vlmtop5_top_k=5"
   echo "panorama_subsample_frames=12"
-  echo "anchor_top_k=16"
+  echo "frontier_visit_resolution_m=0.1"
 } > "${OUT_DIR}/run_args.txt"
 
-cp "$0" "${OUT_DIR}/run_vfv_instance_0.05_0.1.sh.snapshot"
+cp "$0" "${OUT_DIR}/run_vlmtop5_instance_0.05_0.1.sh.snapshot"
 {
   echo "#!/usr/bin/env bash"
   printf '%s\n' "${RUN_CMD}"
@@ -74,12 +78,12 @@ run_one () {
   local EFF_JSON
   local DESC_FLAG=""
   if [ "${DESC_MODE}" = "concise" ]; then
-    OUT_JSON="${OUT_DIR}/refhm3d_seq_vfv_refine1_concisedesc_${START_RATIO}_${END_RATIO}.json"
-    EFF_JSON="${OUT_DIR}/refhm3d_seq_vfv_refine1_effectiveness_concisedesc_${START_RATIO}_${END_RATIO}.json"
+    OUT_JSON="${OUT_DIR}/refhm3d_seq_vlmtop5_refine1_concisedesc_${START_RATIO}_${END_RATIO}.json"
+    EFF_JSON="${OUT_DIR}/refhm3d_seq_vlmtop5_refine1_effectiveness_concisedesc_${START_RATIO}_${END_RATIO}.json"
     DESC_FLAG="--concise_description"
   else
-    OUT_JSON="${OUT_DIR}/refhm3d_seq_vfv_refine1_${START_RATIO}_${END_RATIO}.json"
-    EFF_JSON="${OUT_DIR}/refhm3d_seq_vfv_refine1_effectiveness_${START_RATIO}_${END_RATIO}.json"
+    OUT_JSON="${OUT_DIR}/refhm3d_seq_vlmtop5_refine1_${START_RATIO}_${END_RATIO}.json"
+    EFF_JSON="${OUT_DIR}/refhm3d_seq_vlmtop5_refine1_effectiveness_${START_RATIO}_${END_RATIO}.json"
   fi
 
   if [ -f "${OUT_JSON}" ] && [ ! -s "${OUT_JSON}" ]; then
@@ -89,17 +93,17 @@ run_one () {
     rm -f "${EFF_JSON}"
   fi
 
-  python3 hm3d-online/refhm3d-nav-sequence-analyze-anchor-vfv-refine1.py \
+  python3 hm3d-online/refhm3d-nav-sequence-analyze-anchor-vlmtop5-refine1.py \
     --start_ratio "${START_RATIO}" \
     --end_ratio "${END_RATIO}" \
     ${DESC_FLAG} \
-    --anchor_top_k 16 \
+    --vlmtop5_top_k 5 \
     --panorama_subsample_frames 12 \
-    --vfv_vlm_model "${VLM_MODEL}" \
+    --vlmtop5_vlm_model "${VLM_MODEL}" \
+    --vlmtop5_vlm_timeout "${VLM_TIMEOUT}" \
     --output_log_dir "${OUT_DIR}"
 }
 
 run_one 0.05 0.1
 
-echo ">>> Done vfv instance-only [0.05,0.1]. Output: ${OUT_DIR}"
-
+echo ">>> Done vlmtop5 instance-only [0.05,0.1]. Output: ${OUT_DIR}"

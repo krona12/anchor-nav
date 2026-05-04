@@ -1,7 +1,10 @@
 
 
 import gc
+import json
 import os
+from pathlib import Path
+
 import numpy as np
 import quaternion
 from sklearn.cluster import KMeans
@@ -26,7 +29,9 @@ from torch.utils.data import default_collate
 from merge_utils import RepresentationManager
 import time
 
-from model.query3d_vle import Query3DVLE
+# 与仓库内 hm3d-online/FastSAM/FastSAM-x.pt 对齐，不依赖 cwd，避免误用相对路径导致加载失败或走网络
+_FASTSAM_WEIGHT = Path(__file__).resolve().parent / "FastSAM" / "FastSAM-x.pt"
+
 
 def timeit(func):
     def wrapper(*args, **kwargs):
@@ -151,6 +156,130 @@ def batch_to_cuda(batch):
             batch[key] = [tensor.cuda() for tensor in batch[key]]  # Handle list of tensors  with torch.no_grad():
     return batch
 
+
+def _model_xyz_to_habitat_xyz(p):
+    """query_locs / frontier_list 使用 [x, z, y]（与 frontier_list 构造一致），转 Habitat [x, y, z]。"""
+    p = np.asarray(p, dtype=np.float64).reshape(-1)[:3]
+    return [float(p[0]), float(p[2]), float(p[1])]
+
+
+def _dump_panorama_sam_views(analysis_output_dir, view_idx, color_rgb_hwc, group_ids_hw, fastsam_masks):
+    pano = os.path.join(analysis_output_dir, "panorama")
+    os.makedirs(pano, exist_ok=True)
+
+    def _fs_conf(m):
+        c = m["score"]
+        return float(c.detach().item()) if torch.is_tensor(c) else float(c)
+
+    sam_meta = [{"area": int(m["area"]), "fastsam_conf": _fs_conf(m)} for m in fastsam_masks[:64]]
+    with open(os.path.join(pano, f"view_{view_idx:02d}_fastsam_meta.json"), "w", encoding="utf-8") as f:
+        json.dump(sam_meta, f, ensure_ascii=False, indent=2)
+    cv2.imwrite(
+        os.path.join(pano, f"view_{view_idx:02d}_rgb.jpg"),
+        cv2.cvtColor(np.ascontiguousarray(color_rgb_hwc), cv2.COLOR_RGB2BGR),
+    )
+    gid = np.asarray(group_ids_hw, dtype=np.int32)
+    mx = int(gid.max()) if gid.size else 0
+    rng = np.random.RandomState(view_idx * 10007 + 17)
+    pal = rng.randint(30, 255, size=(max(mx + 1, 1), 3), dtype=np.uint8)
+    base = color_rgb_hwc.astype(np.float32)
+    overlay = base.copy()
+    valid = gid >= 0
+    if np.any(valid):
+        overlay[valid] = base[valid] * 0.42 + pal[gid[valid]].astype(np.float32) * 0.58
+    overlay_u8 = np.clip(overlay, 0, 255).astype(np.uint8)
+    cv2.imwrite(
+        os.path.join(pano, f"view_{view_idx:02d}_sam_instance_overlay.jpg"),
+        cv2.cvtColor(overlay_u8, cv2.COLOR_RGB2BGR),
+    )
+    inst_png = np.clip(gid + 1, 0, 65535).astype(np.uint16)
+    cv2.imwrite(os.path.join(pano, f"view_{view_idx:02d}_sam_instance_ids.png"), inst_png)
+
+
+def _dump_stage1_per_frame_json(analysis_output_dir, pred_dict_list):
+    d = os.path.join(analysis_output_dir, "stage1_per_frame")
+    os.makedirs(d, exist_ok=True)
+    for fi, p in enumerate(pred_dict_list):
+        masks = p.get("pred_masks")
+        n_inst = int(masks.shape[1]) if masks is not None and getattr(masks, "ndim", 0) == 2 else 0
+        n_pts = int(p["point_cloud"].shape[0]) if p.get("point_cloud") is not None else 0
+        rec = {
+            "frame_index": fi,
+            "n_points": n_pts,
+            "n_instances": n_inst,
+            "pred_scores": [float(x) for x in np.asarray(p["pred_scores"]).reshape(-1)],
+            "pred_classes": [int(x) for x in np.asarray(p["pred_classes"]).reshape(-1)],
+            "pred_mask_scores": [float(x) for x in np.asarray(p["pred_mask_scores"]).reshape(-1)],
+        }
+        with open(os.path.join(d, f"frame_{fi:02d}_detections.json"), "w", encoding="utf-8") as f:
+            json.dump(rec, f, ensure_ascii=False, indent=2)
+
+
+def _dump_stage2_decision_json(
+    analysis_output_dir,
+    *,
+    sentence,
+    decision_num,
+    frontier_waypoints_habitat,
+    query_locs_model,
+    query_scores,
+    real_obj_pad_masks,
+    decision_logits,
+    goto_frontier_probability,
+    is_object_decision,
+    real_object_decision_idx,
+    frontier_decision_idx,
+    target_position_habitat_xyz,
+    n_frontiers,
+):
+    n_real = int(real_obj_pad_masks.sum().item())
+    ql = query_locs_model.detach().cpu().numpy()
+    scores = query_scores.detach().cpu().numpy()
+    dlog = decision_logits.detach().cpu().numpy().astype(float)
+    objs = []
+    for i in range(n_real):
+        objs.append(
+            {
+                "slot_index": i,
+                "merged_object_score": float(scores[i]),
+                "center_habitat_xyz": _model_xyz_to_habitat_xyz(ql[i]),
+                "og3d_logit": float(dlog[i]),
+            }
+        )
+    frs = []
+    for j in range(n_frontiers):
+        gi = n_real + j
+        frs.append(
+            {
+                "frontier_index": j,
+                "center_habitat_xyz": _model_xyz_to_habitat_xyz(ql[gi]),
+                "og3d_logit": float(dlog[gi]),
+            }
+        )
+    chosen = {
+        "branch": "object" if is_object_decision else "frontier",
+        "target_habitat_xyz": [float(target_position_habitat_xyz[0]), float(target_position_habitat_xyz[1]), float(target_position_habitat_xyz[2])],
+    }
+    if is_object_decision:
+        chosen["object_slot_index"] = int(real_object_decision_idx)
+    else:
+        chosen["frontier_argmax_index"] = int(frontier_decision_idx)
+    payload = {
+        "decision_num": int(decision_num),
+        "sentence": sentence,
+        "goto_frontier_probability": float(goto_frontier_probability),
+        "n_objects_in_memory": n_real,
+        "n_frontiers": int(n_frontiers),
+        "frontier_waypoints_habitat_xyz": [[float(a[0]), float(a[1]), float(a[2])] for a in frontier_waypoints_habitat],
+        "object_candidates": objs,
+        "frontier_candidates": frs,
+        "chosen": chosen,
+    }
+    out_path = os.path.join(analysis_output_dir, "stage2_decision.json")
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+
+
 class PQ3DModel:
     def __init__(self, stage1_dir, stage2_dir, min_decision_num=None):
         # get four models, sam, dino, pq3d stage1, pq3d stage2
@@ -161,8 +290,14 @@ class PQ3DModel:
         model.eval()
         img_backbone = [processor, model]
         self.image_backbone = img_backbone
-        # sam
-        mask_generator = FastSAM('./hm3d-online/FastSAM/FastSAM-x.pt')
+        # sam：默认使用本文件同目录下 FastSAM/FastSAM-x.pt；可用环境变量 FASTSAM_WEIGHT 覆盖
+        fastsam_ckpt = Path(os.environ.get("FASTSAM_WEIGHT", str(_FASTSAM_WEIGHT))).expanduser()
+        if not fastsam_ckpt.is_file():
+            raise FileNotFoundError(
+                f"FastSAM 权重未找到: {fastsam_ckpt.resolve()}。"
+                "请将 FastSAM-x.pt 放到 hm3d-online/FastSAM/ 或设置环境变量 FASTSAM_WEIGHT。"
+            )
+        mask_generator = FastSAM(str(fastsam_ckpt))
         self.mask_generator = mask_generator
         # pq3d stage1
         config_path = "../configs/embodied-pq3d-final"
@@ -197,7 +332,7 @@ class PQ3DModel:
         self.representation_manager.reset()
         self.last_decision_aux = {}
         
-    def decision(self, color_list, depth_list, agent_state_list, frontier_waypoints, sentence, decision_num, image_feat=None):
+    def decision(self, color_list, depth_list, agent_state_list, frontier_waypoints, sentence, decision_num, image_feat=None, analysis_output_dir=None):
         torch.cuda.empty_cache()
         gc.collect()  
         torch.cuda.ipc_collect()
@@ -228,6 +363,7 @@ class PQ3DModel:
         for idx, (color, depth, agent_state) in enumerate(zip(color_list, depth_list, agent_state_list)):
             # get image feat
             img_feat = img_feats[idx]
+            color_hw_rgb = np.ascontiguousarray(color)
             # get sam result, group_ids
             try:
                 masks = format_result(everything_result[idx])
@@ -242,6 +378,8 @@ class PQ3DModel:
                 mask_now = masks[i]["segmentation"]
                 group_ids[mask_now] = group_counter
                 group_counter += 1
+            if analysis_output_dir:
+                _dump_panorama_sam_views(analysis_output_dir, idx, color_hw_rgb, group_ids, masks)
             # get pose and intrinsic
             sensor_state = agent_state.sensor_states['color_sensor']
             sensor_rot = quaternion.as_rotation_matrix(sensor_state.rotation)
@@ -417,6 +555,8 @@ class PQ3DModel:
             query = query.numpy()
             embeds = embeds.numpy()
             pred_dict_list.append({'point_cloud': raw_coordinates[bid], 'pred_masks': masks, 'pred_classes': classes, 'pred_boxes': boxes, 'pred_scores': scores, 'pred_mask_scores': mask_scores, 'pred_feats': query, 'open_vocab_feats': embeds})
+        if analysis_output_dir:
+            _dump_stage1_per_frame_json(analysis_output_dir, pred_dict_list)
         # start to merge（传入每帧 RGB 以记录各物体首次检测图像）
         self.representation_manager.merge(pred_dict_list, frame_rgbs=color_list)
         torch.cuda.empty_cache()
@@ -426,7 +566,11 @@ class PQ3DModel:
         query_box = self.representation_manager.object_box
         query_scores = self.representation_manager.object_score
         obj_openvocab_feat = self.representation_manager.open_vocab_feat
-        frontier_list = [[fw[0], fw[2], fw[1]] for fw in frontier_waypoints]
+        fw_iter = frontier_waypoints if frontier_waypoints is not None else []
+        if isinstance(fw_iter, np.ndarray):
+            fw_iter = [fw_iter[i] for i in range(len(fw_iter))]
+        frontier_habitat_xyz = [np.asarray(fw, dtype=np.float64).reshape(3) for fw in fw_iter]
+        frontier_list = [[float(p[0]), float(p[2]), float(p[1])] for p in frontier_habitat_xyz]
         # build object
         obj_boxes = torch.from_numpy(query_box).float()
         obj_locs = obj_boxes.clone()
@@ -495,6 +639,9 @@ class PQ3DModel:
         batch.append(data_dict)
         batch = default_collate(batch)
         batch = batch_to_cuda(batch)
+        s2_query_scores_cpu = None
+        if analysis_output_dir is not None:
+            s2_query_scores_cpu = batch["query_scores"][0].detach().cpu()
         # stage2 forward
         with torch.no_grad():
             stage2_output_data_dict = self.pq3d_stage2(batch)
@@ -536,6 +683,7 @@ class PQ3DModel:
                 random_frontier_idx = np.random.randint(len(frontier_locs))
                 target_position = frontier_locs[random_frontier_idx].numpy()[:3]
         target_position[[1, 2]] = target_position[[2, 1]]
+        target_habitat_xyz = np.asarray(target_position, dtype=np.float64).reshape(3)
         n_real = int(real_obj_pad_masks.sum().item())
         rdl = real_object_decision_logits.float()
         if rdl.numel() >= 2:
@@ -552,6 +700,24 @@ class PQ3DModel:
             "n_real_objects": n_real,
             "object_top1_top2_logit_gap": obj_top1_top2_logit_gap,
         }
+        if analysis_output_dir is not None and s2_query_scores_cpu is not None:
+            _dump_stage2_decision_json(
+                analysis_output_dir,
+                sentence=sentence,
+                decision_num=decision_num,
+                frontier_waypoints_habitat=frontier_habitat_xyz,
+                query_locs_model=query_locs,
+                query_scores=s2_query_scores_cpu,
+                real_obj_pad_masks=real_obj_pad_masks,
+                decision_logits=decision_logits,
+                goto_frontier_probability=float(goto_frontier_probability),
+                is_object_decision=bool(is_object_decision),
+                real_object_decision_idx=int(real_object_decision_idx),
+                frontier_decision_idx=int(frontier_decision_idx),
+                target_position_habitat_xyz=target_habitat_xyz,
+                n_frontiers=int(num_frontiers),
+            )
+            self.last_decision_aux["analysis_stage2_json"] = os.path.join(analysis_output_dir, "stage2_decision.json")
         return target_position, is_object_decision
 
             

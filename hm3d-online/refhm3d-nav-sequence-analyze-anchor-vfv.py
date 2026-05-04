@@ -1,3 +1,7 @@
+"""RefHM3D：单场景 VFV 分析（Phase1 全景验证 + Phase2 PQ3D 锚点查询）。
+
+锚点过滤规则在 ``anchor_nav.vfv.decompose_target_anchor`` 的 prompt 中；本脚本不对锚点做额外语义过滤。
+"""
 from __future__ import annotations
 
 import argparse
@@ -175,7 +179,9 @@ def _follow_target(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser("Anchor VFV analyze（Phase1+Phase2 re-decision）")
+    parser = argparse.ArgumentParser(
+        "Anchor VFV analyze（Phase1+Phase2）。锚点约束见 anchor_nav.vfv.decompose_target_anchor 内 VLM prompt。"
+    )
     parser.add_argument("--scene_name", type=str, required=True)
     parser.add_argument("--episode_id", type=int, required=True)
     parser.add_argument("--task_id", type=int, default=0)

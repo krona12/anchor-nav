@@ -11,62 +11,6 @@ from anchor_nav.posnode import build_query_fn_from_pq3d_stage2
 from vlm.client import chat
 
 
-# 禁用作为 PQ3D 问询锚点的泛环境词（门/墙/地面等），优先保留具体物体。
-# 易与场景中多处实例混淆的词（参考 exp_vfv_analysis：如 plant 导致 Phase2 错位）
-_AMBIGUOUS_OBJECT_LEXEMES = frozenset(
-    {
-        "plant",
-        "plants",
-        "vase",
-        "vases",
-        "bin",
-        "bins",
-        "mat",
-        "mats",
-        "rug",
-        "rugs",
-        "pillow",
-        "pillows",
-        "cushion",
-        "cushions",
-        "towel",
-        "towels",
-        "curtain",
-        "curtains",
-        "decoration",
-        "decorations",
-        # 单独出现时缺乏区分度；复合短语（如 stair railing）末词通常不是这些词
-        "stair",
-        "stairs",
-        "staircase",
-    }
-)
-
-_GENERIC_ENV_TOKENS = frozenset(
-    {
-        "door",
-        "doors",
-        "wall",
-        "walls",
-        "ceiling",
-        "ceilings",
-        "floor",
-        "floors",
-        "ground",
-        "window",
-        "windows",
-        "hallway",
-        "hallways",
-        "corridor",
-        "corridors",
-        "room",
-        "rooms",
-        "entryway",
-        "passage",
-    }
-)
-
-
 @dataclass
 class VfvDecompose:
     target_desc: str
@@ -83,48 +27,13 @@ def _normalize_phrase(s: str) -> str:
     return t
 
 
-def _is_ambiguous_object_lexeme(phrase: str) -> bool:
-    """末尾词或单词短语为泛指的物体类别时，不宜单独作为 Phase2 PQ3D 锚点。"""
-    p = _normalize_phrase(phrase)
-    if not p:
-        return True
-    parts = p.split()
-    if len(parts) == 1:
-        return parts[0] in _AMBIGUOUS_OBJECT_LEXEMES
-    last = parts[-1]
-    if last in _AMBIGUOUS_OBJECT_LEXEMES:
-        return True
-    return False
-
-
-def _is_generic_environment_anchor(phrase: str) -> bool:
-    """是否为缺乏区分度的环境/结构类描述（不宜作为重新导航的 PQ3D 锚点问询）。"""
-    p = _normalize_phrase(phrase)
-    if not p:
-        return True
-    parts = p.split()
-    if len(parts) == 1:
-        return parts[0] in _GENERIC_ENV_TOKENS
-    # 短语以泛环境词结尾且较短：如 "white door", "wood floor"
-    last = parts[-1]
-    if last in _GENERIC_ENV_TOKENS and len(parts) <= 3:
-        return True
-    if parts[0] in _GENERIC_ENV_TOKENS and len(parts) <= 2:
-        return True
-    return False
-
-
-def filter_anchor_candidates(phrases: Sequence[str]) -> List[str]:
-    """去重并剔除泛环境锚点，保留顺序。"""
+def dedupe_anchor_phrases(phrases: Sequence[str]) -> List[str]:
+    """规范化并去重，保序；语义过滤依赖 decompose 的 VLM prompt。"""
     out: List[str] = []
     seen: set = set()
     for ph in phrases:
         n = _normalize_phrase(str(ph))
         if not n or n in seen:
-            continue
-        if _is_generic_environment_anchor(n):
-            continue
-        if _is_ambiguous_object_lexeme(n):
             continue
         seen.add(n)
         out.append(n)
@@ -211,18 +120,32 @@ def decompose_target_anchor(
     *,
     max_attempts: int = 3,
 ) -> VfvDecompose:
+    # 规则写全在 prompt 中，由 VLM 遵守；此处仅做规范化去重
     prompt = (
         "Decompose the navigation task into a target and OBJECT anchors (for re-querying a detector).\n"
         "Rules:\n"
         "1) target_desc: the primary object to find; short noun phrase with key modifiers.\n"
-        "2) anchor_descs: 0 to 3 DISTINCTIVE movable/object anchors (furniture, appliances, lamps, "
-        "decor, fixtures that identify location). Ordered by usefulness for navigation.\n"
-        "3) NEVER use generic environment/structure as anchors: door, wall, ceiling, floor, window, "
-        "hallway, corridor, room, stairs (as the whole anchor), ground, passage—unless paired with a "
-        "clear object (e.g. ok: 'office desk', bad: 'door', bad: 'wood floor').\n"
-        "4) Do not use room-type words alone as anchors (e.g. bedroom, kitchen) without a specific object.\n"
-        "5) Prefer physical objects over bare surfaces or boundaries.\n"
-        "6) anchor_descs should name concrete instances (e.g. 'blue armchair', 'kitchen island') rather than vague references.\n"
+        "2) anchor_descs: 0 to 3 DISTINCTIVE object anchors (furniture, appliances, lamps, decor, "
+        "fixtures that identify a location). Order by usefulness for navigation (best first).\n"
+        "3) ENVIRONMENT / STRUCTURE — DO NOT use as an anchor (single token OR short phrase that is only structure):\n"
+        "   - Single-word bans: door, doors, wall, walls, ceiling, ceilings, floor, floors, ground, "
+        "window, windows, hallway, hallways, corridor, corridors, room, rooms, entryway, passage, "
+        "stair, stairs, staircase (use compound objects instead, see rule 6).\n"
+        "   - Phrases of 2–3 words whose LAST word is one of the above environment tokens "
+        "(e.g. bad: 'white door', 'wood floor', 'bathroom door'; ok to omit such anchors).\n"
+        "   - Two-word phrases whose FIRST word is one of those environment tokens "
+        "(e.g. bad: 'window sill') unless the phrase clearly names a distinctive object.\n"
+        "4) ROOM / AREA LABELS — Never use alone as an anchor (e.g. bedroom, kitchen, dining room, bathroom).\n"
+        "5) HIGHLY AMBIGUOUS OBJECT HEAD NOUNS — Do not output an anchor whose meaning collapses to "
+        "these categories alone OR whose LAST word (head noun) is one of these "
+        "(even in longer phrases): plant, plants, vase, vases, bin, bins, mat, mats, rug, rugs, "
+        "pillow, pillows, cushion, cushions, towel, towels, curtain, curtains, decoration, decorations.\n"
+        "   Examples to EXCLUDE: 'decorative plant', 'two white pillows', 'blue towels'. "
+        "Prefer anchors where the last noun is distinctive (e.g. 'oak bookshelf').\n"
+        "6) STAIRS — Bad alone ('stairs'); ALLOW compounds when distinctive: "
+        "'stair railing', 'staircase landing', 'metal banister'.\n"
+        "7) Prefer concrete instances ('blue armchair', 'kitchen island') over vague references.\n"
+        "8) Return anchor_descs only; do not repeat the same anchor twice. Do not use bare surfaces as anchors.\n"
         "Return strict JSON only: {\"target_desc\":\"...\",\"anchor_descs\":[\"...\",\"...\"]}\n\n"
         f"Description: {description}"
     )
@@ -241,12 +164,12 @@ def decompose_target_anchor(
         ad = parsed.get("anchor_descs")
         if isinstance(ad, list):
             raw_list.extend(str(x) for x in ad if str(x).strip())
-        # 仅当新字段未给出锚点时再读 anchor_desc，避免重复或与 filter 后的列表冲突（如泛词被重新塞入）
+        # 仅当新字段未给出锚点时再读 anchor_desc
         if not raw_list:
             legacy = str(parsed.get("anchor_desc", "") or "").strip()
             if legacy:
                 raw_list.append(legacy)
-        anchor_descs = filter_anchor_candidates(raw_list)
+        anchor_descs = dedupe_anchor_phrases(raw_list)
         anchor_primary = anchor_descs[0] if anchor_descs else ""
         if target_desc:
             return VfvDecompose(
@@ -278,26 +201,33 @@ def verify_description_visible(
     anchor_hints: Optional[Sequence[str]] = None,
     max_parse_attempts: int = 2,
 ) -> Dict[str, Any]:
-    hints = filter_anchor_candidates(list(anchor_hints or []))
+    hints = dedupe_anchor_phrases(list(anchor_hints or []))
     td = _normalize_phrase(target_desc)
     hint_lines = "\n".join(f"- {h}" for h in hints) if hints else "(none)"
     prompt = (
-        "You are given a navigation task and a panorama. Decide if the view SUPPORTS the task well enough "
-        "that no extra navigation pivot is needed.\n"
-        "Success if EITHER:\n"
-        "(A) full_match: the FULL task description is visually supported (target situation is credible in the image); OR\n"
-        "(B) strong_anchor_match: the PRIMARY target is NOT clearly visible, BUT a DISTINCTIVE object anchor "
-        "from the task is clearly and unambiguously visible (you can name which object).\n"
-        "For (B), only count anchors that are specific objects (furniture, appliances, props)—not bare walls/doors/floor/ceiling.\n"
-        "Be conservative on (A); for (B) require clear identification, not guess.\n"
-        "If the panorama is blurry/occluded, use low confidence and avoid strong_anchor_match.\n"
+        "You are given a navigation task and one stitched panorama from the agent.\n"
+        "Decide ONLY whether full_match is true: i.e. the primary TARGET object is adequately "
+        "visible so that no extra navigation pivot (Phase2) is needed.\n\n"
+        "Rules for full_match:\n"
+        "- full_match=true ONLY if the PRIMARY TARGET (see target phrase / task) is clearly and "
+        "unambiguously visible, identifiable at close range (roughly within 1–2 m / clearly "
+        "reachable in the scene), and consistent with the task wording.\n"
+        "- If the target is far, heavily occluded, ambiguous, only partially seen, or you are unsure, "
+        "set full_match=false.\n"
+        "- The anchor list below is INFORMATIONAL ONLY (scene context for you). It MUST NOT be used "
+        "to set full_match=true. Seeing anchors alone (e.g. vanity, curtain, bed) without the target "
+        "clearly meeting the criteria above always means full_match=false.\n"
+        "- Be conservative: when in doubt, full_match=false and use confidence=low.\n\n"
+        "Diagnostic fields (for logging only; they do NOT replace full_match): still report "
+        "strong_anchor_match=true if a distinctive anchor from the hints is clearly visible even "
+        "when the target is not; set matched_anchor to a short phrase or empty.\n\n"
         "Return strict JSON only:\n"
         "{\"full_match\": true/false, \"strong_anchor_match\": true/false, "
         "\"matched_anchor\": \"short phrase or empty\", "
         "\"confidence\": \"high|medium|low\", \"reason\": \"...\"}\n\n"
         f"Task description: {description}\n"
-        f"Target phrase (primary object): {td or '(extract from description)'}\n"
-        f"Preferred object anchors (non-environment):\n{hint_lines}\n"
+        f"Target phrase (primary object to judge): {td or '(extract from description)'}\n"
+        f"Anchor hints (informational only, do not use alone to pass):\n{hint_lines}\n"
     )
     parsed: Optional[Dict[str, Any]] = None
     raw = ""
@@ -316,6 +246,8 @@ def verify_description_visible(
             "visible": False,
             "full_match": False,
             "strong_anchor_match": False,
+            "full_match_ok": False,
+            "anchor_ok": False,
             "matched_anchor": "",
             "confidence": "low",
             "reason": "verify_parse_failed",
@@ -330,14 +262,16 @@ def verify_description_visible(
     if "full_match" not in parsed and "strong_anchor_match" not in parsed:
         full_match = bool(parsed.get("visible", False))
         strong = False
-    # full_match 与 strong_anchor 均要求中高置信，避免低置信 full_match 误判「已到达」
-    full_match_ok = full_match and conf in ("high", "medium")
-    anchor_ok = strong and conf in ("high", "medium")
-    visible = bool(full_match_ok or anchor_ok)
+    # visible：仅 full_match + 中高置信；strong_anchor_match 仅作诊断，不再用来 pass Phase1 / 压制 Phase2
+    full_match_ok = bool(full_match and conf in ("high", "medium"))
+    anchor_ok = bool(strong and conf in ("high", "medium"))
+    visible = bool(full_match_ok)
     return {
         "visible": visible,
         "full_match": full_match,
         "strong_anchor_match": strong,
+        "full_match_ok": full_match_ok,
+        "anchor_ok": anchor_ok,
         "matched_anchor": matched,
         "confidence": conf,
         "reason": str(parsed.get("reason", "")),
@@ -384,7 +318,7 @@ def select_best_anchor_object(
     依次尝试多个锚点 PQ3D 查询；取**第一个**查询成功（有有效检测）的锚点。
     不在不同查询间比较 Stage2 raw score（各查询 softmax 分母不同，不可比）。
     """
-    ordered = filter_anchor_candidates(list(anchor_descs))
+    ordered = dedupe_anchor_phrases(list(anchor_descs))
     tried: List[Dict[str, Any]] = []
 
     for ad in ordered:
@@ -410,6 +344,6 @@ __all__ = [
     "verify_description_visible",
     "select_anchor_object",
     "select_best_anchor_object",
-    "filter_anchor_candidates",
+    "dedupe_anchor_phrases",
 ]
 

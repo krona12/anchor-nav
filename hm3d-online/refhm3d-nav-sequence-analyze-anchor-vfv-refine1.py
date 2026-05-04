@@ -1,3 +1,11 @@
+"""RefHM3D：VFV refine1 批跑（全景验证 + 可选 PQ3D 锚点重选）。
+
+与 ``anchor_nav.vfv`` 一致：可用作 PQ3D 锚点的约束写在
+``decompose_target_anchor`` 的 VLM prompt 中；本脚本仅串联
+``decompose_target_anchor`` / ``verify_description_visible`` /
+``select_best_anchor_object``，不再对锚点做额外汇编语义过滤
+（库内仅规范化去重，见 ``dedupe_anchor_phrases``）。
+"""
 import argparse
 import atexit
 import datetime
@@ -16,6 +24,11 @@ from omegaconf import OmegaConf
 from tqdm import tqdm
 
 sys.stdout.reconfigure(line_buffering=True)
+
+
+def _tqdm_print(msg: str) -> None:
+    """经 tqdm 写出，避免与 progress bar 同一行拼接（见 tqdm.write 文档）。"""
+    tqdm.write(msg, file=sys.stdout)
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent
@@ -56,12 +69,12 @@ def sequence_compute_metric_results(result_dict: dict) -> None:
     sequence_results = result_dict.get("sequence", [])
     total_count = len(sequence_results)
     if total_count == 0:
-        print("[Metrics] sequence count: 0")
+        _tqdm_print("[Metrics] sequence count: 0")
         return
     total_sr = sum(float(item.get("sr", 0)) for item in sequence_results)
     total_spl = sum(float(item.get("spl", 0)) for item in sequence_results)
     total_task_time = sum(float(item.get("task_time_sec", 0.0)) for item in sequence_results)
-    print(
+    _tqdm_print(
         f"[Metrics] sequence count={total_count}, avg_sr={total_sr/total_count:.6f}, "
         f"avg_spl={total_spl/total_count:.6f}, avg_task_time_sec={total_task_time/total_count:.3f}"
     )
@@ -173,7 +186,12 @@ def _follow_target(
     return goto_color_list, goto_depth_list, goto_state_list, prev_agent_state, total_steps, float(episode_cum_distance)
 
 
-parser = argparse.ArgumentParser(description="Run RefHM3D anchor VFV refine1 batch evaluation")
+parser = argparse.ArgumentParser(
+    description=(
+        "Run RefHM3D anchor VFV refine1 batch evaluation. "
+        "Anchor eligibility is enforced by the VLM prompt in anchor_nav.vfv.decompose_target_anchor."
+    )
+)
 parser.add_argument("--start_ratio", type=float, default=0.0)
 parser.add_argument("--end_ratio", type=float, default=0.2)
 parser.add_argument("--concise_description", action="store_true")
@@ -206,6 +224,11 @@ parser.add_argument(
     help="全景验证 JSON 解析失败时的最大重试次数",
 )
 parser.add_argument(
+    "--quiet_nav_steps",
+    action="store_true",
+    help="不打印每次 decision 的 scan/frontier/pq3d 耗时行（日志更短；卡住时勿开此项）。",
+)
+parser.add_argument(
     "--decision_log_interval",
     type=int,
     default=0,
@@ -221,7 +244,8 @@ _setup_run_logging(output_log_dir)
 print(
     f"[VFVRefine1] cfg anchor_top_k={args.anchor_top_k} pano_frames={args.panorama_subsample_frames} "
     f"skip_verify_if_gap>={args.vfv_skip_verify_if_object_logit_gap} "
-    f"min_remaining_steps={args.vfv_min_remaining_steps} verify_parse_attempts={args.vfv_verify_parse_attempts}"
+    f"min_remaining_steps={args.vfv_min_remaining_steps} verify_parse_attempts={args.vfv_verify_parse_attempts} "
+    f"quiet_nav_steps={bool(args.quiet_nav_steps)}"
 )
 
 enabled_task_levels = {"instance"}
@@ -322,15 +346,21 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
             decomp = decompose_target_anchor(original_sentence, args.vfv_vlm_model)
             decomp_ms = (time.perf_counter() - decomp_t0) * 1000.0
             goal_category = goals[0]["object_category"]
-            print(
+            _tqdm_print(
                 f"[vfv-refine1][task-start] scene={scene_name} ep={episode_id} task={idx} level={task_type} "
                 f"target_desc={decomp.target_desc!r} anchor_desc={decomp.anchor_desc!r} "
                 f"anchor_descs={decomp.anchor_descs!r} "
                 f"decomp_parse_ok={decomp.parse_ok} decomp_ms={decomp_ms:.1f}"
             )
             if not decomp.parse_ok:
-                print(f"[vfv-refine1][task-start][warn] decompose VLM parse failed, using description fallback as target_desc")
-            print(f"[vfv-refine1][task-desc] {original_sentence}")
+                _tqdm_print(
+                    f"[vfv-refine1][task-start][warn] decompose VLM parse failed, using description fallback as target_desc"
+                )
+            _tqdm_print(f"[vfv-refine1][task-desc] {original_sentence}")
+            _tqdm_print(
+                f"[vfv-refine1][nav] task={idx} entering navigation loop; each step = 12×turn scan + "
+                f"frontier + PQ3D (first GPU forward can take several minutes, not a hang)."
+            )
 
             total_steps = 0
             episode_cum_distance = 0.0
@@ -362,6 +392,7 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                 depth_list.extend(goto_depth_list)
                 agent_state_list.extend(goto_agent_state_list)
 
+                t_scan = time.perf_counter()
                 scan_rgb, scan_depth, scan_states, fog_of_war_mask, total_steps = _capture_scan_frames(
                     sim=sim,
                     agent=agent,
@@ -371,12 +402,14 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                     total_steps=total_steps,
                     max_steps=int(args.max_steps),
                 )
+                scan_ms = (time.perf_counter() - t_scan) * 1000.0
                 color_list.extend(scan_rgb)
                 depth_list.extend(scan_depth)
                 agent_state_list.extend(scan_states)
                 if total_steps >= int(args.max_steps):
                     break
 
+                t_frontier = time.perf_counter()
                 agent_state = agent.get_state()
                 frontier_waypoints = detect_frontier_waypoints(
                     top_down_map,
@@ -390,11 +423,21 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                 else:
                     frontier_waypoints = pixel_to_map_coors(frontier_waypoints[:, ::-1], agent_state.position, top_down_map, sim)
                 frontier_waypoints = [w for w in frontier_waypoints if tuple(np.round(w, 1)) not in visited_frontier_set]
+                frontier_ms = (time.perf_counter() - t_frontier) * 1000.0
+
+                t_pq = time.perf_counter()
                 target_position, is_final = pq3d_model.decision(
                     color_list, depth_list, agent_state_list, frontier_waypoints, original_sentence, decision_num
                 )
+                pq_ms = (time.perf_counter() - t_pq) * 1000.0
+                if not bool(args.quiet_nav_steps):
+                    _tqdm_print(
+                        f"[vfv-refine1][step] task={idx} dec={decision_num} "
+                        f"scan_ms={scan_ms:.0f} frontier_ms={frontier_ms:.0f} pq3d_ms={pq_ms:.0f} "
+                        f"frames={len(color_list)} frontiers={len(frontier_waypoints)} final={bool(is_final)}"
+                    )
                 if int(args.decision_log_interval) > 0 and (decision_num % int(args.decision_log_interval) == 0):
-                    print(
+                    _tqdm_print(
                         f"[vfv-refine1][decision] task={idx} dec={decision_num} frontiers={len(frontier_waypoints)} "
                         f"baseline_target={np.asarray(target_position, dtype=float).reshape(-1)[:3].tolist()} final={bool(is_final)}"
                     )
@@ -537,7 +580,7 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                             used_target = baseline_final_target_pos.copy()
 
                     final_selected_object_pos = used_target.copy()
-                    print(
+                    _tqdm_print(
                         f"[vfv-refine1][final] task={idx} dec={decision_num} "
                         f"triggered={vfv_info.get('triggered')} phase={vfv_info.get('phase')} "
                         f"skipped={vfv_info.get('verify_skipped')} applied={bool(vfv_applied>0)}"
@@ -668,13 +711,33 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                     "task_effective_logs": task_effective_logs,
                 }
             )
-            print(
+            if len(goal_positions) == 0:
+                dist_bl_txt = "n/a(no_goal_xyz)"
+            elif baseline_final_target_pos is None:
+                dist_bl_txt = "n/a(no_Phase1_is_final)"
+            else:
+                dist_bl_txt = f"{baseline_target_to_goal_l2:.3f}"
+            if len(goal_positions) == 0:
+                dist_vfv_txt = "n/a(no_goal_xyz)"
+            elif int(vfv_applied) <= 0:
+                dist_vfv_txt = "n/a(vfv_unused)"
+            elif np.isfinite(selected_object_to_goal_l2):
+                dist_vfv_txt = f"{selected_object_to_goal_l2:.3f}"
+            else:
+                dist_vfv_txt = "n/a"
+
+            _tqdm_print(
                 f"[vfv-refine1] scene={scene_name} ep={episode_id} task={idx} SR={sr} SPL={spl:.4f} "
                 f"time={task_time:.3f}s steps={total_steps} decisions={decision_num} "
                 f"vfv_attempts={vfv_attempts} vfv_applied={vfv_applied} "
-                f"dist(baseline_target,goal)={baseline_target_to_goal_l2:.3f} "
-                f"dist(vfv_object,goal)={selected_object_to_goal_l2:.3f} helpful={vfv_helpful}"
+                f"dist(baseline_target,goal)={dist_bl_txt} "
+                f"dist(vfv_object,goal)={dist_vfv_txt} helpful={vfv_helpful}"
             )
+            if int(vfv_attempts) == 0 and baseline_final_target_pos is None and int(decision_num) > 0:
+                _tqdm_print(
+                    "[vfv-refine1][hint] 从未出现 PQ3D is_final → 未跑全景验证/VFV；"
+                    "上式 dist 为 n/a 属预期。可调 min_decision_num、PQ3D 或 max_steps。"
+                )
 
         sim.close()
         with open(output_path, "w", encoding="utf-8") as f:
