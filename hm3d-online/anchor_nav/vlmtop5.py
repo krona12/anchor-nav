@@ -34,45 +34,99 @@ class ObjectCandidate:
 
 
 SELECT_SYSTEM_PROMPT = (
-    "You compare ordered candidate object images for one embodied navigation task. "
-    "Choose the candidate that best matches the exact target INSTANCE, not merely the object category. "
-    "Return strict JSON only."
+    "You are an instance-matching judge for embodied navigation. "
+    "Separate visual ranking from safety gating: first identify the visually best candidate, then decide "
+    "whether it is safe to override the detector's baseline top-1 candidate. Return strict JSON only."
 )
 
 SELECT_USER_TEMPLATE = """Navigation task:
 {description}
 
-There are exactly {k} candidate object images, in the same order as the detector's baseline logit ranking.
-Image 1 is the baseline top-1 object. Images 2..{k} are the next object candidates.
+ROLE:
+You are verifying object candidates for an embodied navigation agent. The agent will navigate to the
+selected object's 3D location, so choosing the wrong repeated instance is harmful.
 
-Before choosing, infer the task's discriminative visual constraints:
-- the main target object category and attributes;
-- nearby anchors and spatial relations;
-- distinctive scene context that disambiguates this instance from similar objects.
+INPUT:
+There are exactly {k} candidate object images in detector logit order.
+- Image 1 is the baseline top-1 candidate.
+- Images 2..{k} are lower-ranked candidates.
 
-Choose the single image that best matches the COMPLETE target instance. Penalize candidates that only match a generic
-category or one common cue (for example, a table with a lamp) but miss stronger instance-specific context such as nearby
-chairs, piano, wall art, materials, colors, or spatial relations. If multiple images show the same generic object type,
-prefer the one with more of the unique anchors and relations from the full task description.
+TASK:
+Answer two separate questions:
+1. Visual ranking: which candidate image best matches the exact target INSTANCE?
+2. Safety gating: is that candidate safe to use instead of Image 1?
+
+ATTENTION:
+1. First extract the discriminative constraints from the task: target category, attributes, nearby anchors,
+   spatial relations, materials, colors, patterns, and room context.
+2. A generic category match is not enough. For example, "a table with a lamp" is weaker than a table that also
+   matches the described chair, picture, piano, wall, material, color, or relative placement.
+3. best_index is the visually best candidate, even if it is not safe to override Image 1. Do not force
+   best_index=1 just because the override is uncertain.
+4. safe_to_override_image1 is a separate boolean. Set it true only when a non-1 candidate is exact_target,
+   high confidence, and visibly satisfies important task constraints that Image 1 misses.
+5. Repeated objects are common. For carpets, couches, armchairs, pictures, tables, bins, and plants, require
+   specific anchors or spatial relations before setting safe_to_override_image1=true.
+6. Use "exact_target" only when the target object and enough unique constraints are visible to distinguish this
+   instance from similar objects. Use "partial_target" for correct category but missing key constraints. Use
+   "context_only" when only room/anchor context or a generic category cue is visible. Use "not_target" when
+   the image does not show the target category or useful target evidence.
+7. selection_confidence describes the override decision, not the visual ranking. It may be "high" only when
+   safe_to_override_image1=true is supported by strict instance-level evidence.
 
 Return strict JSON with exact keys:
-{{"best_index": <integer 1..{k}>, "match_type": "exact_target|partial_target|context_only", "reason": "<brief English reason naming the decisive constraints and any missing constraints>"}}
+{{
+  "best_index": <integer 1..{k}>,
+  "match_type": "exact_target|partial_target|context_only|not_target",
+  "selection_confidence": "high|medium|low",
+  "image1_match_type": "exact_target|partial_target|context_only|not_target",
+  "best_non1_index": <integer 2..{k}>,
+  "best_non1_match_type": "exact_target|partial_target|context_only|not_target",
+  "safe_to_override_image1": <true_or_false>,
+  "switch_is_strictly_better_than_image1": <true_or_false>,
+  "strict_advantage_constraints": ["<constraint that the non-1 candidate satisfies better than Image 1>", "..."],
+  "image1_missing_constraints": ["<constraint missing or weaker in Image 1>", "..."],
+  "decisive_constraints": ["<visible constraint>", "..."],
+  "missing_or_uncertain_constraints": ["<missing or uncertain constraint>", "..."],
+  "reason": "<brief English reason: name the visually best image, compare it to Image 1, and justify safe_to_override_image1>"
+}}
 """
 
 PANORAMA_SYSTEM_PROMPT = (
-    "You verify a stitched panorama for an embodied navigation task. Return strict JSON only."
+    "You are a conservative second-stage verifier for an embodied navigation candidate. "
+    "You may veto a candidate if the panorama only shows a generic category or lacks instance-level evidence. "
+    "Return strict JSON only."
 )
 
 PANORAMA_USER_TEMPLATE = """Navigation task:
 {description}
 
-This stitched panorama is the full 360-degree scan from the decision step associated with the selected candidate object image.
-Decide whether the panorama contains the task's target INSTANCE. Set has_task_object=true only if the target object and
-enough discriminative context from the task are visible to distinguish it from similar objects elsewhere. Do not count a
-mere room label or a generic category match as sufficient.
+ROLE:
+You are verifying whether a selected candidate's 360-degree panorama supports overriding the baseline top-1 object.
+
+INPUT:
+This stitched panorama is the full 360-degree scan from the decision step associated with the selected candidate.
+
+TASK:
+Decide whether this panorama contains the exact target INSTANCE from the navigation task.
+
+ATTENTION:
+1. Set has_task_object=true only if the target object and enough discriminative task constraints are visible.
+2. Do not accept a mere room label, a generic object category, or a common nearby anchor as sufficient.
+3. For repeated objects such as carpets, couches, armchairs, pictures, tables, bins, and plants, require distinctive
+   anchors or spatial relations from the task. If the instance cannot be distinguished, set has_task_object=false.
+4. confidence may be "high" only when the panorama supports an exact instance match. Use "medium" or "low" when
+   the target category appears but key instance constraints are missing or ambiguous.
 
 Return strict JSON with exact keys:
-{{"has_task_object": <true_or_false>, "confidence": "high|medium|low", "reason": "<brief English reason>"}}
+{{
+  "has_task_object": <true_or_false>,
+  "instance_match": "exact_target|generic_category|insufficient_context",
+  "confidence": "high|medium|low",
+  "visible_constraints": ["<visible task constraint>", "..."],
+  "missing_constraints": ["<missing or ambiguous task constraint>", "..."],
+  "reason": "<brief English reason>"
+}}
 """
 
 
@@ -85,6 +139,34 @@ def parse_json_object(raw: str) -> Dict[str, Any]:
     if not isinstance(parsed, dict):
         raise RuntimeError(f"VLM response is not a JSON object: {raw!r}")
     return parsed
+
+
+def require_choice(parsed: Mapping[str, Any], key: str, allowed: Sequence[str]) -> str:
+    value = parsed[key]
+    if not isinstance(value, str) or value not in set(allowed):
+        raise RuntimeError(f"unexpected {key}={value!r}, expected one of {sorted(allowed)!r}")
+    return value
+
+
+def require_bool(parsed: Mapping[str, Any], key: str) -> bool:
+    value = parsed[key]
+    if not isinstance(value, bool):
+        raise RuntimeError(f"unexpected {key}={value!r}, expected JSON boolean")
+    return bool(value)
+
+
+def require_int_in_range(parsed: Mapping[str, Any], key: str, lo: int, hi: int) -> int:
+    value = parsed[key]
+    if not isinstance(value, int) or isinstance(value, bool) or value < lo or value > hi:
+        raise RuntimeError(f"unexpected {key}={value!r}, expected integer {lo}..{hi}")
+    return int(value)
+
+
+def require_string_list(parsed: Mapping[str, Any], key: str) -> List[str]:
+    value = parsed[key]
+    if not isinstance(value, list) or not all(isinstance(x, str) for x in value):
+        raise RuntimeError(f"unexpected {key}={value!r}, expected list of strings")
+    return [str(x) for x in value]
 
 
 def save_rgb_jpg(rgb: np.ndarray, path: Path, *, quality: int = 92) -> None:
@@ -237,22 +319,39 @@ def call_vlm_choose_candidate(
             {"role": "user", "content": content},
         ],
         model=cfg.vlm_model,
-        max_tokens=256,
+        max_tokens=512,
         temperature=0.0,
         timeout=int(cfg.vlm_timeout),
     )
     parsed = parse_json_object(raw)
-    best = int(parsed["best_index"])
-    if best < 1 or best > len(candidates):
-        raise RuntimeError(f"VLM best_index out of range: {best}, expected 1..{len(candidates)}")
-    match_type = str(parsed["match_type"])
-    if match_type not in {"exact_target", "partial_target", "context_only"}:
-        raise RuntimeError(f"unexpected VLM match_type={match_type!r}")
+    best = require_int_in_range(parsed, "best_index", 1, len(candidates))
+    best_non1 = require_int_in_range(parsed, "best_non1_index", 2, len(candidates))
+    target_match_types = ("exact_target", "partial_target", "context_only", "not_target")
+    match_type = require_choice(parsed, "match_type", target_match_types)
+    image1_match_type = require_choice(parsed, "image1_match_type", target_match_types)
+    best_non1_match_type = require_choice(parsed, "best_non1_match_type", target_match_types)
+    selection_confidence = require_choice(parsed, "selection_confidence", ("high", "medium", "low"))
+    safe_to_override_image1 = require_bool(parsed, "safe_to_override_image1")
+    switch_is_strictly_better = require_bool(parsed, "switch_is_strictly_better_than_image1")
+    strict_advantage_constraints = require_string_list(parsed, "strict_advantage_constraints")
+    image1_missing_constraints = require_string_list(parsed, "image1_missing_constraints")
+    decisive_constraints = require_string_list(parsed, "decisive_constraints")
+    missing_or_uncertain_constraints = require_string_list(parsed, "missing_or_uncertain_constraints")
     return {
         "raw": raw,
         "parsed": parsed,
         "best_index": best,
         "match_type": match_type,
+        "selection_confidence": selection_confidence,
+        "image1_match_type": image1_match_type,
+        "best_non1_index": best_non1,
+        "best_non1_match_type": best_non1_match_type,
+        "safe_to_override_image1": safe_to_override_image1,
+        "switch_is_strictly_better_than_image1": switch_is_strictly_better,
+        "strict_advantage_constraints": strict_advantage_constraints,
+        "image1_missing_constraints": image1_missing_constraints,
+        "decisive_constraints": decisive_constraints,
+        "missing_or_uncertain_constraints": missing_or_uncertain_constraints,
         "reason": str(parsed.get("reason", "")),
         "elapsed_ms": float((time.perf_counter() - t0) * 1000.0),
     }
@@ -277,20 +376,24 @@ def call_vlm_verify_panorama(
             {"role": "user", "content": content},
         ],
         model=cfg.vlm_model,
-        max_tokens=192,
+        max_tokens=384,
         temperature=0.0,
         timeout=int(cfg.vlm_timeout),
     )
     parsed = parse_json_object(raw)
-    has_task_object = bool(parsed["has_task_object"])
-    confidence = str(parsed["confidence"])
-    if confidence not in {"high", "medium", "low"}:
-        raise RuntimeError(f"unexpected panorama confidence={confidence!r}")
+    has_task_object = require_bool(parsed, "has_task_object")
+    instance_match = require_choice(parsed, "instance_match", ("exact_target", "generic_category", "insufficient_context"))
+    confidence = require_choice(parsed, "confidence", ("high", "medium", "low"))
+    visible_constraints = require_string_list(parsed, "visible_constraints")
+    missing_constraints = require_string_list(parsed, "missing_constraints")
     return {
         "raw": raw,
         "parsed": parsed,
         "has_task_object": has_task_object,
+        "instance_match": instance_match,
         "confidence": confidence,
+        "visible_constraints": visible_constraints,
+        "missing_constraints": missing_constraints,
         "reason": str(parsed.get("reason", "")),
         "elapsed_ms": float((time.perf_counter() - t0) * 1000.0),
     }
@@ -335,12 +438,21 @@ def correct_final_decision_with_vlmtop5(
 
     selection = call_vlm_choose_candidate(description=description, candidates=candidates, cfg=cfg)
     selected = candidates[int(selection["best_index"]) - 1]
-    correction_applied = int(selection["best_index"]) != 1
+    candidate_switch_requested = int(selection["best_index"]) != 1
+    selection_gate_passed = bool(
+        candidate_switch_requested
+        and selection["match_type"] == "exact_target"
+        and selection["selection_confidence"] == "high"
+        and selection["safe_to_override_image1"]
+        and selection["switch_is_strictly_better_than_image1"]
+        and len(selection["strict_advantage_constraints"]) > 0
+    )
     panorama_verify = None
     selected_panorama_path = None
     panorama_vetoed_correction = False
+    panorama_gate_passed = None
 
-    if correction_applied:
+    if selection_gate_passed:
         if int(selected.slot_index) not in panorama_frames_by_slot:
             raise RuntimeError(f"missing panorama frames for selected slot {selected.slot_index}")
         selected_panorama_path_obj = output_dir / (
@@ -356,9 +468,35 @@ def correct_final_decision_with_vlmtop5(
             panorama_path=selected_panorama_path,
             cfg=cfg,
         )
-        panorama_vetoed_correction = not bool(panorama_verify["has_task_object"])
+        panorama_gate_passed = bool(
+            panorama_verify["has_task_object"]
+            and panorama_verify["instance_match"] == "exact_target"
+            and panorama_verify["confidence"] == "high"
+        )
+        panorama_vetoed_correction = not bool(panorama_gate_passed)
 
-    use_selected = bool(correction_applied) and not bool(panorama_vetoed_correction)
+    use_selected = bool(selection_gate_passed and panorama_gate_passed)
+    correction_applied = bool(use_selected)
+    if use_selected:
+        correction_rejected_reason = "accepted"
+    elif not candidate_switch_requested:
+        correction_rejected_reason = "kept_baseline_best_index_1"
+    elif not selection_gate_passed:
+        correction_rejected_reason = (
+            "selection_gate_failed:"
+            f"match_type={selection['match_type']},"
+            f"confidence={selection['selection_confidence']},"
+            f"safe_to_override={selection['safe_to_override_image1']},"
+            f"strictly_better={selection['switch_is_strictly_better_than_image1']},"
+            f"strict_advantage_count={len(selection['strict_advantage_constraints'])}"
+        )
+    else:
+        correction_rejected_reason = (
+            "panorama_gate_failed:"
+            f"has_task_object={panorama_verify['has_task_object']},"
+            f"instance_match={panorama_verify['instance_match']},"
+            f"confidence={panorama_verify['confidence']}"
+        )
     corrected_target = np.asarray(selected.center_habitat_xyz, dtype=float).reshape(3) if use_selected else np.asarray(
         baseline_target_xyz, dtype=float
     ).reshape(3)
@@ -374,6 +512,10 @@ def correct_final_decision_with_vlmtop5(
         "selected_rank": int(selected.rank),
         "selected_slot_index": int(selected.slot_index),
         "selected_target_xyz": [float(x) for x in selected.center_habitat_xyz],
+        "candidate_switch_requested": bool(candidate_switch_requested),
+        "selection_gate_passed": bool(selection_gate_passed),
+        "panorama_gate_passed": None if panorama_gate_passed is None else bool(panorama_gate_passed),
+        "correction_rejected_reason": correction_rejected_reason,
         "correction_applied": bool(correction_applied),
         "panorama_vetoed_correction": bool(panorama_vetoed_correction),
         "selected_target_used": bool(use_selected),
