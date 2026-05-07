@@ -40,11 +40,19 @@ def sequence_compute_metric_results(result_dict: dict) -> None:
         print("[Metrics] sequence count: 0")
         return
 
+    # Navigation follower errors are valid failed trials and must remain in
+    # the denominator. Decision/model exceptions are raised before appending
+    # a row, so they cannot silently pollute SR/SPL.
     total_sr = sum(float(item.get("sr", 0)) for item in sequence_results)
     total_spl = sum(float(item.get("spl", 0)) for item in sequence_results)
     avg_sr = total_sr / total_count
     avg_spl = total_spl / total_count
-    print(f"[Metrics] sequence count: {total_count}, avg_sr: {avg_sr:.6f}, avg_spl: {avg_spl:.6f}")
+    invalid_count = sum(1 for item in sequence_results if not bool(item.get("valid_for_metric", True)))
+    follower_error_count = sum(1 for item in sequence_results if item.get("end_reason") == "follower_error")
+    print(
+        f"[Metrics] sequence count: {total_count}, invalid_count: {invalid_count}, "
+        f"follower_error_count: {follower_error_count}, avg_sr: {avg_sr:.6f}, avg_spl: {avg_spl:.6f}"
+    )
 
 
 def resolve_scene_path(hm3d_root: str, scene_name: str) -> str:
@@ -300,6 +308,8 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
             goto_color_list = []
             goto_depth_list = []
             goto_agent_state_list = []
+            task_end_reason = "max_steps"
+            follower_error_info = None
 
             t_episode_start = time.perf_counter()
             while total_steps < 400:
@@ -363,8 +373,27 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                         decision_num,
                     )
                 except Exception as e:
-                    print(f"Error in decision making, episode_id: {episode_id}, task_id: {idx}, scene_id: {scene_name}, {e}")
-                    break
+                    error_info = {
+                        "scene_name": scene_name,
+                        "episode_id": int(episode_id),
+                        "task_id": int(idx),
+                        "task_level": task_type,
+                        "error_type": type(e).__name__,
+                        "error_message": str(e),
+                        "decision_num": int(decision_num),
+                        "steps_total": int(total_steps),
+                    }
+                    error_path = os.path.join(output_log_dir, "baseline_decision_error.json")
+                    with open(error_path, "w", encoding="utf-8") as f:
+                        json.dump(error_info, f, ensure_ascii=False, indent=2)
+                    print(
+                        f"[baseline][decision-error] scene={scene_name} episode_id={episode_id} "
+                        f"task_id={idx} task_level={task_type} error={type(e).__name__}: {e}"
+                    )
+                    raise RuntimeError(
+                        f"baseline decision failed for scene={scene_name} episode={episode_id} task={idx}; "
+                        f"wrote {error_path}"
+                    ) from e
                 decision_num += 1
                 if not is_final_decision:
                     visited_frontier_set.add(tuple(np.round(target_position, 1)))
@@ -374,7 +403,15 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                 follower = habitat_sim.GreedyGeodesicFollower(path_finder, agent, forward_key="move_forward", left_key="turn_left", right_key="turn_right")
                 try:
                     action_list = follower.find_path(target_on_navmesh)
-                except Exception:
+                except Exception as e:
+                    follower_error_info = {
+                        "error_type": type(e).__name__,
+                        "error_message": str(e),
+                        "raw_target": np.asarray(target_position, dtype=float).reshape(3).tolist(),
+                        "snapped_target": np.asarray(target_on_navmesh, dtype=float).reshape(3).tolist(),
+                        "decision_num": int(decision_num - 1),
+                        "is_final": bool(is_final_decision),
+                    }
                     if not path_finder.is_navigable(target_on_navmesh):
                         print("Target is not navigable")
                     if not path_finder.is_navigable(agent_state.position):
@@ -384,9 +421,19 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                     path.requested_end = target_on_navmesh
                     if sim.pathfinder.find_path(path):
                         print(f"geodesic_distance: {path.geodesic_distance}")
+                        follower_error_info["shortest_path_found"] = True
+                        follower_error_info["shortest_path_geodesic_distance"] = float(path.geodesic_distance)
                     else:
                         print("cannt find path")
+                        follower_error_info["shortest_path_found"] = False
+                        follower_error_info["shortest_path_geodesic_distance"] = float("inf")
+                    print(
+                        f"[baseline][follow-error] scene={scene_name} episode_id={episode_id} task_id={idx} "
+                        f"task_level={task_type} final={bool(is_final_decision)} "
+                        f"error={follower_error_info['error_type']} path_found={follower_error_info.get('shortest_path_found')}"
+                    )
                     action_list = []
+                    task_end_reason = "follower_error"
                     break
 
                 goto_color_list = []
@@ -417,6 +464,7 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                         episode_cum_distance += np.linalg.norm(agent_state.position - prev_agent_state.position)
                         prev_agent_state = agent_state
                 if is_final_decision:
+                    task_end_reason = "final_decision"
                     break
 
             t_episode_end = time.perf_counter()
@@ -449,14 +497,17 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                 agent_end_geo_distance = np.inf
 
             if start_end_geo_distance == np.inf:
-                sr = 0
-                spl = 0
+                raw_sr = 0
+                raw_spl = 0
             elif agent_end_geo_distance == np.inf:
-                sr = 0
-                spl = 0
+                raw_sr = 0
+                raw_spl = 0
             else:
-                sr = agent_end_geo_distance <= 0.25
-                spl = sr * start_end_geo_distance / max(start_end_geo_distance, episode_cum_distance)
+                raw_sr = bool(agent_end_geo_distance <= 0.25)
+                raw_spl = raw_sr * start_end_geo_distance / max(start_end_geo_distance, episode_cum_distance)
+            valid_for_metric = True
+            sr = 0 if task_end_reason == "follower_error" else raw_sr
+            spl = 0 if task_end_reason == "follower_error" else raw_spl
 
             result_dict[navigation_type].append(
                 {
@@ -467,6 +518,13 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                     "navigation_type": navigation_type,
                     "sr": sr,
                     "spl": spl,
+                    "raw_sr_from_end_position": raw_sr,
+                    "raw_spl_from_end_position": raw_spl,
+                    "valid_for_metric": bool(valid_for_metric),
+                    "end_reason": task_end_reason,
+                    "steps_total": int(total_steps),
+                    "decisions": int(decision_num),
+                    "follower_error_info": follower_error_info,
                     "object_category": goal_category,
                     "task_time_sec": episode_time,
                 }
