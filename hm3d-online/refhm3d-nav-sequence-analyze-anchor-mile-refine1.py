@@ -787,9 +787,9 @@ def main() -> None:
                     corrected_target = baseline_target.copy()
                     mile_info: Dict[str, Any] = {"mile_called": False}
                     effectiveness: Optional[Dict[str, Any]] = None
+                    is_object_decision = bool(aux.get("is_object_decision", False))
 
-                    if bool(is_final):
-                        baseline_final_target = baseline_target.copy()
+                    if is_object_decision and not bool(is_final):
                         try:
                             corrected_target, mile_info = correct_final_decision_with_mile(
                                 rep=pq3d.representation_manager,
@@ -815,36 +815,12 @@ def main() -> None:
                                 "error_type": type(exc).__name__,
                                 "error_message": str(exc),
                             }
-                            final_mile_info = mile_info
                             corrected_target = baseline_target.copy()
                             effectiveness_dict.setdefault("module_status_counts", {})
                             effectiveness_dict["module_status_counts"]["mile_rejected"] = int(
                                 effectiveness_dict["module_status_counts"].get("mile_rejected", 0)
                             ) + 1
                             _write_json(dec_dir / "mile" / "mile_rejected.json", mile_info)
-                            _write_json(
-                                dec_dir / "mile_step_summary.json",
-                                {
-                                    "task_id": int(idx),
-                                    "task_level": task_type,
-                                    "decision_num": int(decision_num),
-                                    "is_final": True,
-                                    "baseline_target": baseline_target.tolist(),
-                                    "corrected_target": corrected_target.tolist(),
-                                    "used_target": corrected_target.tolist(),
-                                    "pq3d_last_decision_aux": aux,
-                                    "frontier_filter_info": frontier_filter_info,
-                                    "register_info": register_info,
-                                    "follow_info": None,
-                                    "mile": mile_info,
-                                    "effectiveness": None,
-                                },
-                            )
-                            _tqdm_print(
-                                f"[mile-refine1][module-rejected] scene={scene_name} ep={episode_id} task={idx} "
-                                f"dec={decision_num} explicit_noop=True use_baseline_target=True "
-                                f"error={type(exc).__name__}: {exc}"
-                            )
                         except Exception as exc:
                             mile_info = {
                                 "mile_called": True,
@@ -861,9 +837,155 @@ def main() -> None:
                             _write_json(dec_dir / "mile" / "mile_error.json", mile_info)
                             _tqdm_print(
                                 f"[mile-refine1][module-error] scene={scene_name} ep={episode_id} task={idx} "
-                                f"dec={decision_num} error={type(exc).__name__}: {exc}"
+                                f"dec={decision_num} final=False error={type(exc).__name__}: {exc}"
                             )
                             raise
+
+                        eval_goals, goal_positions, view_points, goal_category = _eval_goal_bundle(cur_task, eval_goals_map)
+                        effectiveness = build_effectiveness_record(
+                            baseline_target_xyz=baseline_target,
+                            corrected_target_xyz=corrected_target,
+                            goal_positions_xyz=goal_positions,
+                            threshold_m=float(args.effectiveness_threshold_m),
+                        )
+                        effectiveness = _augment_viewpoint_effectiveness(
+                            effectiveness,
+                            pf=pf,
+                            baseline_target_xyz=baseline_target,
+                            corrected_target_xyz=corrected_target,
+                            view_points=view_points,
+                            threshold_m=float(args.effectiveness_threshold_m),
+                        )
+                        mile_info["effectiveness"] = effectiveness
+                        _write_json(dec_dir / "mile" / "mile_decision.json", mile_info)
+                        case = str(effectiveness["case"])
+                        effectiveness_dict.setdefault("case_counts", {"00": 0, "01": 0, "10": 0, "11": 0})
+                        effectiveness_dict["case_counts"][case] = int(effectiveness_dict["case_counts"].get(case, 0)) + 1
+                        effectiveness_dict.setdefault("module_status_counts", {})
+                        if bool(mile_info.get("correction_applied", False)):
+                            effectiveness_dict["module_status_counts"]["mile_applied"] = int(
+                                effectiveness_dict["module_status_counts"].get("mile_applied", 0)
+                            ) + 1
+                        else:
+                            effectiveness_dict["module_status_counts"]["mile_kept_baseline"] = int(
+                                effectiveness_dict["module_status_counts"].get("mile_kept_baseline", 0)
+                            ) + 1
+                        task_effective_logs.append(
+                            {
+                                "scene_name": scene_name,
+                                "episode_id": int(episode_id),
+                                "task_id": int(idx),
+                                "task_level": task_type,
+                                "decision_num": int(decision_num),
+                                "sentence": sentence,
+                                "is_final": False,
+                                "mile": mile_info,
+                                "effectiveness": effectiveness,
+                            }
+                        )
+                        _tqdm_print(
+                            f"[mile-refine1][module] scene={scene_name} ep={episode_id} task={idx} dec={decision_num} "
+                            f"final=False called={mile_info['mile_called']} source={mile_info['target_source']} "
+                            f"correction_applied={mile_info['correction_applied']} "
+                            f"viewpoint_applied={mile_info['viewpoint_correction_applied']} "
+                            f"followability_ok={mile_info.get('followability_selected_precheck', {}).get('precheck_ok', None)} "
+                            f"rejected_reason={mile_info.get('rejected_reason', None)} "
+                            f"case_metric={effectiveness['case_metric']} case={case} "
+                            f"baseline_gt_viewpoint_in_1m={effectiveness['baseline_gt_viewpoint_in_1m']} "
+                            f"corrected_gt_viewpoint_in_1m={effectiveness['corrected_gt_viewpoint_in_1m']} "
+                            f"baseline_vp_geo={effectiveness['baseline_nearest_gt_viewpoint_geo_m']:.3f} "
+                            f"corrected_vp_geo={effectiveness['corrected_nearest_gt_viewpoint_geo_m']:.3f} "
+                            f"object_l2_case={effectiveness['object_l2_case']} "
+                            f"baseline_obj_l2={effectiveness['baseline_nearest_goal_dist_m']:.3f} "
+                            f"corrected_obj_l2={effectiveness['corrected_nearest_goal_dist_m']:.3f}"
+                        )
+
+                    if bool(is_final):
+                        baseline_final_target = baseline_target.copy()
+                        if is_object_decision:
+                            try:
+                                corrected_target, mile_info = correct_final_decision_with_mile(
+                                    rep=pq3d.representation_manager,
+                                    decision_aux=aux,
+                                    baseline_target_xyz=baseline_target,
+                                    output_dir=dec_dir / "mile",
+                                    path_finder=pf,
+                                    agent_position_xyz=agent.get_state().position,
+                                    cfg=cfg,
+                                )
+                                corrected_target, mile_info = _apply_followability_filter(
+                                    mile_info=mile_info,
+                                    baseline_target=baseline_target,
+                                    pf=pf,
+                                    agent=agent,
+                                )
+                            except MileRejectedError as exc:
+                                mile_info = {
+                                    "mile_called": True,
+                                    "target_source": "mile_rejected",
+                                    "correction_applied": False,
+                                    "viewpoint_correction_applied": False,
+                                    "error_type": type(exc).__name__,
+                                    "error_message": str(exc),
+                                }
+                                final_mile_info = mile_info
+                                corrected_target = baseline_target.copy()
+                                effectiveness_dict.setdefault("module_status_counts", {})
+                                effectiveness_dict["module_status_counts"]["mile_rejected"] = int(
+                                    effectiveness_dict["module_status_counts"].get("mile_rejected", 0)
+                                ) + 1
+                                _write_json(dec_dir / "mile" / "mile_rejected.json", mile_info)
+                                _write_json(
+                                    dec_dir / "mile_step_summary.json",
+                                    {
+                                        "task_id": int(idx),
+                                        "task_level": task_type,
+                                        "decision_num": int(decision_num),
+                                        "is_final": True,
+                                        "baseline_target": baseline_target.tolist(),
+                                        "corrected_target": corrected_target.tolist(),
+                                        "used_target": corrected_target.tolist(),
+                                        "pq3d_last_decision_aux": aux,
+                                        "frontier_filter_info": frontier_filter_info,
+                                        "register_info": register_info,
+                                        "follow_info": None,
+                                        "mile": mile_info,
+                                        "effectiveness": None,
+                                    },
+                                )
+                                _tqdm_print(
+                                    f"[mile-refine1][module-rejected] scene={scene_name} ep={episode_id} task={idx} "
+                                    f"dec={decision_num} explicit_noop=True use_baseline_target=True "
+                                    f"error={type(exc).__name__}: {exc}"
+                                )
+                            except Exception as exc:
+                                mile_info = {
+                                    "mile_called": True,
+                                    "target_source": "mile_error",
+                                    "correction_applied": False,
+                                    "viewpoint_correction_applied": False,
+                                    "error_type": type(exc).__name__,
+                                    "error_message": str(exc),
+                                }
+                                effectiveness_dict.setdefault("module_status_counts", {})
+                                effectiveness_dict["module_status_counts"]["mile_error"] = int(
+                                    effectiveness_dict["module_status_counts"].get("mile_error", 0)
+                                ) + 1
+                                _write_json(dec_dir / "mile" / "mile_error.json", mile_info)
+                                _tqdm_print(
+                                    f"[mile-refine1][module-error] scene={scene_name} ep={episode_id} task={idx} "
+                                    f"dec={decision_num} error={type(exc).__name__}: {exc}"
+                                )
+                                raise
+                        else:
+                            mile_info = {
+                                "mile_called": False,
+                                "target_source": "non_object_decision_explicit_keep_baseline",
+                                "correction_applied": False,
+                                "viewpoint_correction_applied": False,
+                                "rejected_reason": "decision_aux_is_not_object_decision",
+                            }
+                            corrected_target = baseline_target.copy()
                         eval_goals, goal_positions, view_points, goal_category = _eval_goal_bundle(cur_task, eval_goals_map)
                         effectiveness = build_effectiveness_record(
                             baseline_target_xyz=baseline_target,
@@ -993,9 +1115,10 @@ def main() -> None:
                         decision_num += 1
                         break
 
-                    used_target = baseline_target.copy()
+                    used_target = corrected_target.copy()
                     used_frontier_key = _frontier_visit_key(used_target)
-                    visited_frontier.add(used_frontier_key)
+                    if not bool(mile_info.get("mile_called", False)):
+                        visited_frontier.add(used_frontier_key)
                     try:
                         goto_rgb, goto_depth, goto_state, prev_agent_state, total_steps, episode_cum_distance, follow_info = _follow_target(
                             pf=pf,
@@ -1044,13 +1167,15 @@ def main() -> None:
                                 "decision_num": int(decision_num),
                                 "is_final": False,
                                 "baseline_target": baseline_target.tolist(),
+                                "corrected_target": corrected_target.tolist(),
                                 "used_target": used_target.tolist(),
-                                "used_frontier_key": list(used_frontier_key),
+                                "used_frontier_key": None if bool(mile_info.get("mile_called", False)) else list(used_frontier_key),
                                 "pq3d_last_decision_aux": aux,
                                 "frontier_filter_info": frontier_filter_info,
                                 "register_info": register_info,
                                 "follow_info": follow_info,
                                 "mile": mile_info,
+                                "effectiveness": effectiveness,
                             },
                         )
                         _tqdm_print(
@@ -1069,13 +1194,15 @@ def main() -> None:
                             "decision_num": int(decision_num),
                             "is_final": False,
                             "baseline_target": baseline_target.tolist(),
+                            "corrected_target": corrected_target.tolist(),
                             "used_target": used_target.tolist(),
-                            "used_frontier_key": list(used_frontier_key),
+                            "used_frontier_key": None if bool(mile_info.get("mile_called", False)) else list(used_frontier_key),
                             "pq3d_last_decision_aux": aux,
                             "frontier_filter_info": frontier_filter_info,
                             "register_info": register_info,
                             "follow_info": follow_info,
                             "mile": mile_info,
+                            "effectiveness": effectiveness,
                         },
                     )
                     decision_num += 1
@@ -1087,11 +1214,17 @@ def main() -> None:
                 start_goal_geo = _geo_dist_to_viewpoints(pf, sub_episode_start_position, view_points)
                 end_goal_geo = _geo_dist_to_viewpoints(pf, end_state.position, view_points)
                 if np.isinf(start_goal_geo) or np.isinf(end_goal_geo):
+                    raw_sr = 0.0
+                    raw_spl = 0.0
+                else:
+                    raw_sr = 1.0 if end_goal_geo <= float(args.success_distance) else 0.0
+                    raw_spl = float(raw_sr * start_goal_geo / max(start_goal_geo, max(episode_cum_distance, 1e-12)))
+                if task_end_reason == "follower_error":
                     sr = 0.0
                     spl = 0.0
                 else:
-                    sr = 1.0 if end_goal_geo <= float(args.success_distance) else 0.0
-                    spl = float(sr * start_goal_geo / max(start_goal_geo, max(episode_cum_distance, 1e-12)))
+                    sr = float(raw_sr)
+                    spl = float(raw_spl)
 
                 baseline_target_to_goal_l2 = _nearest_goal_dist(baseline_final_target, goal_positions)
                 corrected_target_to_goal_l2 = _nearest_goal_dist(corrected_final_target, goal_positions)
@@ -1122,6 +1255,9 @@ def main() -> None:
                     "navigation_type": navigation_type,
                     "sr": float(sr),
                     "spl": float(spl),
+                    "raw_sr_from_end_position": float(raw_sr),
+                    "raw_spl_from_end_position": float(raw_spl),
+                    "metric_policy": "follower_error_forces_zero_like_baseline",
                     "object_category": goal_category,
                     "task_time_sec": task_time,
                     "steps_total": int(total_steps),
