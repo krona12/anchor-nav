@@ -657,6 +657,15 @@ class AnchorConditionedSoftDecomposition:
         best = ranked[0]
         level_name = str(policy.get("task_level", ""))
         room_anchor = str(decomposition.get("room_anchor", "")).strip()
+        best_baseline_distance = float(
+            np.linalg.norm(
+                _as_np3(best["center_habitat_xyz"], name=f"best object candidate {best.get('slot_index')} center")
+                - _as_np3(
+                    baseline_rank["center_habitat_xyz"],
+                    name=f"baseline object candidate {baseline_slot} center",
+                )
+            )
+        )
         room_local_target_override_gate = False
         if False and level_name == "room" and room_anchor and not bool(baseline_rank.get("correction_eligible", False)):
             baseline_center = _as_np3(
@@ -759,6 +768,11 @@ class AnchorConditionedSoftDecomposition:
             and float(best["target_match_score"]) >= 0.85
             and float(baseline_rank["target_match_score"]) <= 0.90
             and target_advantage >= 0.18
+            and (
+                float(best["anchor_match_score"]) >= 0.60
+                or anchor_advantage >= -0.20
+                or best_baseline_distance <= 0.85
+            )
             and float(best["acsd_score"]) >= float(baseline_rank["acsd_score"]) + 0.04
         )
         region_exact_target_rescue_gate = bool(
@@ -768,6 +782,11 @@ class AnchorConditionedSoftDecomposition:
             and float(best["target_match_score"]) >= 0.98
             and float(baseline_rank["target_match_score"]) <= 0.05
             and target_advantage >= 0.95
+            and (
+                float(best["anchor_match_score"]) >= 0.60
+                or anchor_advantage >= -0.20
+                or best_baseline_distance <= 0.85
+            )
             and float(best["acsd_score"]) >= float(baseline_rank["acsd_score"]) + 0.15
         )
         region_low_raw_exact_target_rescue_gate = bool(
@@ -794,6 +813,51 @@ class AnchorConditionedSoftDecomposition:
             and anchor_advantage >= 0.0
             and float(best["acsd_score"]) >= float(baseline_rank["acsd_score"]) + 0.15
         )
+        region_lower_conf_target_context_rescue_gate = bool(
+            level_name == "region"
+            and int(best["slot_index"]) != baseline_slot
+            and 0.62 <= float(best["baseline_object_score"]) < 0.80
+            and float(best["target_match_score"]) >= 0.92
+            and float(baseline_rank["target_match_score"]) <= 0.10
+            and target_advantage >= 0.80
+            and float(best["anchor_match_score"]) >= 0.72
+            and anchor_advantage >= 0.10
+            and float(best["acsd_score"]) >= float(baseline_rank["acsd_score"]) + 0.20
+        )
+        region_low_conf_target_anchor_rescue_gate = bool(
+            level_name == "region"
+            and int(best["slot_index"]) != baseline_slot
+            and 0.55 <= float(best["baseline_object_score"]) < 0.68
+            and float(best["target_match_score"]) >= 0.98
+            and float(baseline_rank["target_match_score"]) >= 0.70
+            and 0.12 <= target_advantage <= 0.35
+            and float(best["anchor_match_score"]) >= 0.55
+            and float(baseline_rank["anchor_match_score"]) <= 0.10
+            and anchor_advantage >= 0.55
+            and float(best["acsd_score"]) >= float(baseline_rank["acsd_score"]) + 0.10
+        )
+        region_target_context_advantage_gate = bool(
+            level_name == "region"
+            and (
+                (
+                    target_advantage >= 0.45
+                    and (
+                        float(best["anchor_match_score"]) >= 0.60
+                        or anchor_advantage >= -0.20
+                        or best_baseline_distance <= 0.85
+                    )
+                )
+                or (target_advantage >= 0.18 and anchor_advantage >= 0.60)
+            )
+        )
+        region_anchor_regression_nonlocal_block = bool(
+            level_name == "region"
+            and int(best["slot_index"]) != baseline_slot
+            and target_advantage >= 0.45
+            and float(best["anchor_match_score"]) < 0.60
+            and anchor_advantage < -0.20
+            and best_baseline_distance > 0.85
+        )
         # Human navigation often accepts a lower raw PQ3D logit for region-level
         # targets when the candidate is strongly supported by both the target
         # noun and the surrounding context cluster. Keep this escape hatch
@@ -801,10 +865,7 @@ class AnchorConditionedSoftDecomposition:
         if (
             level_name == "region"
             and float(best["baseline_object_score"]) >= 0.08
-            and (
-                target_advantage >= 0.45
-                or (target_advantage >= 0.18 and anchor_advantage >= 0.60)
-            )
+            and region_target_context_advantage_gate
         ):
             candidate_confidence_gate = True
         if (
@@ -815,12 +876,14 @@ class AnchorConditionedSoftDecomposition:
             or region_exact_target_rescue_gate
             or region_low_raw_exact_target_rescue_gate
             or region_mid_conf_target_context_rescue_gate
+            or region_lower_conf_target_context_rescue_gate
+            or region_low_conf_target_anchor_rescue_gate
         ):
             semantic_gate = True
             candidate_confidence_gate = True
         if (
             level_name == "instance"
-            and float(best["baseline_object_score"]) >= 0.70
+            and float(best["baseline_object_score"]) >= 0.80
             and target_advantage >= 0.55
             and anchor_advantage >= -0.40
         ):
@@ -912,15 +975,14 @@ class AnchorConditionedSoftDecomposition:
             and float(best["baseline_object_score"]) < 0.95
             and not region_low_raw_exact_target_rescue_gate
             and not region_mid_conf_target_context_rescue_gate
+            and not region_lower_conf_target_context_rescue_gate
+            and not region_low_conf_target_anchor_rescue_gate
         ):
             candidate_confidence_gate = False
         margin_gate = float(best["acsd_score"]) >= float(baseline_rank["acsd_score"]) + float(policy["margin"])
         if (
             level_name == "region"
-            and (
-                target_advantage >= 0.45
-                or (target_advantage >= 0.18 and anchor_advantage >= 0.60)
-            )
+            and region_target_context_advantage_gate
         ):
             margin_gate = True
         if (
@@ -931,16 +993,22 @@ class AnchorConditionedSoftDecomposition:
             or region_exact_target_rescue_gate
             or region_low_raw_exact_target_rescue_gate
             or region_mid_conf_target_context_rescue_gate
+            or region_lower_conf_target_context_rescue_gate
+            or region_low_conf_target_anchor_rescue_gate
         ):
             margin_gate = True
         if region_anchor_substitute_rescue_gate or region_context_probe_rescue_gate:
             margin_gate = True
-        if level_name == "instance" and target_advantage >= 0.55 and float(best["baseline_object_score"]) >= 0.70:
+        if level_name == "instance" and target_advantage >= 0.55 and float(best["baseline_object_score"]) >= 0.80:
             margin_gate = True
         if instance_target_context_rescue_gate or instance_anchor_identity_rescue_gate:
             margin_gate = True
         if room_target_override_gate or room_local_target_override_gate or room_exact_target_rescue_gate:
             margin_gate = True
+        if region_anchor_regression_nonlocal_block:
+            semantic_gate = False
+            candidate_confidence_gate = False
+            margin_gate = False
         correction_eligibility_gate = (
             bool(baseline_rank.get("correction_eligible", False))
             or region_target_anchor_rescue_gate
@@ -949,6 +1017,8 @@ class AnchorConditionedSoftDecomposition:
             or region_exact_target_rescue_gate
             or region_low_raw_exact_target_rescue_gate
             or region_mid_conf_target_context_rescue_gate
+            or region_lower_conf_target_context_rescue_gate
+            or region_low_conf_target_anchor_rescue_gate
             or region_anchor_substitute_rescue_gate
             or region_context_probe_rescue_gate
             or instance_target_context_rescue_gate
@@ -982,6 +1052,7 @@ class AnchorConditionedSoftDecomposition:
             "level_policy": dict(policy),
             "target_advantage": float(target_advantage),
             "anchor_advantage": float(anchor_advantage),
+            "best_baseline_distance": float(best_baseline_distance),
             "semantic_gate": bool(semantic_gate),
             "region_context_override_gate": bool(region_context_override_gate),
             "region_target_anchor_rescue_gate": bool(region_target_anchor_rescue_gate),
@@ -990,6 +1061,10 @@ class AnchorConditionedSoftDecomposition:
             "region_exact_target_rescue_gate": bool(region_exact_target_rescue_gate),
             "region_low_raw_exact_target_rescue_gate": bool(region_low_raw_exact_target_rescue_gate),
             "region_mid_conf_target_context_rescue_gate": bool(region_mid_conf_target_context_rescue_gate),
+            "region_lower_conf_target_context_rescue_gate": bool(region_lower_conf_target_context_rescue_gate),
+            "region_low_conf_target_anchor_rescue_gate": bool(region_low_conf_target_anchor_rescue_gate),
+            "region_target_context_advantage_gate": bool(region_target_context_advantage_gate),
+            "region_anchor_regression_nonlocal_block": bool(region_anchor_regression_nonlocal_block),
             "region_anchor_substitute_rescue_gate": bool(region_anchor_substitute_rescue_gate),
             "region_context_probe_rescue_gate": bool(region_context_probe_rescue_gate),
             "instance_target_context_rescue_gate": bool(instance_target_context_rescue_gate),
