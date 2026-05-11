@@ -3,6 +3,7 @@ import os
 import sys
 import atexit
 import datetime
+import random
 from pathlib import Path
 
 sys.stdout.reconfigure(line_buffering=True)
@@ -16,6 +17,7 @@ from habitat.utils.visualizations import maps
 import json
 import habitat_sim
 import numpy as np
+import torch
 from omegaconf import OmegaConf
 from common.embodied_utils.simulator import HabitatSimulator
 from frontier_utils import (
@@ -53,6 +55,48 @@ def sequence_compute_metric_results(result_dict: dict) -> None:
         f"[Metrics] sequence count: {total_count}, invalid_count: {invalid_count}, "
         f"follower_error_count: {follower_error_count}, avg_sr: {avg_sr:.6f}, avg_spl: {avg_spl:.6f}"
     )
+
+
+def baseline_live_metric_log(result_dict: dict, *, scene_name: str, episode_id: int, task_id: int, task_level: str) -> None:
+    rows = result_dict.get("sequence", [])
+    if not rows:
+        print("[BASELINE_LIVE_METRICS] rows=0")
+        return
+    avg_sr = sum(float(item.get("sr", 0.0)) for item in rows) / len(rows)
+    avg_spl = sum(float(item.get("spl", 0.0)) for item in rows) / len(rows)
+    by_level = {}
+    for item in rows:
+        level = str(item.get("task_level", "unknown"))
+        bucket = by_level.setdefault(level, {"count": 0, "sr_sum": 0.0, "spl_sum": 0.0})
+        bucket["count"] += 1
+        bucket["sr_sum"] += float(item.get("sr", 0.0))
+        bucket["spl_sum"] += float(item.get("spl", 0.0))
+    by_level_out = {
+        level: {
+            "count": int(bucket["count"]),
+            "avg_sr": float(bucket["sr_sum"] / bucket["count"]),
+            "avg_spl": float(bucket["spl_sum"] / bucket["count"]),
+        }
+        for level, bucket in sorted(by_level.items())
+    }
+    follower_error_count = sum(1 for item in rows if item.get("end_reason") == "follower_error")
+    print(
+        "[BASELINE_LIVE_METRICS] "
+        f"rows={len(rows)} avg_sr={avg_sr:.6f} avg_spl={avg_spl:.6f} "
+        f"follower_error_count={follower_error_count} "
+        f"latest_scene={scene_name} latest_episode={episode_id} latest_task={task_id} latest_level={task_level} "
+        f"by_level={json.dumps(by_level_out, ensure_ascii=False, sort_keys=True)}",
+        flush=True,
+    )
+
+
+def set_reproducibility_seed(seed: int) -> None:
+    seed = int(seed)
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    print(f"[baseline] reproducibility_seed={seed}")
 
 
 def resolve_scene_path(hm3d_root: str, scene_name: str) -> str:
@@ -157,10 +201,12 @@ parser.add_argument(
     default="object,room,region,instance",
     help="Comma-separated task levels to execute, e.g. instance or region,instance",
 )
+parser.add_argument("--seed", type=int, default=1234, help="Random seed for reproducible baseline/ACSD comparison")
 args = parser.parse_args()
 
 output_log_dir = os.path.expanduser(args.output_log_dir)
 _setup_run_logging(output_log_dir)
+set_reproducibility_seed(args.seed)
 print(
     "[baseline] 输出 JSON 每条记录含 task_level（object|room|region|instance），"
     "与 vlmcore refine 及 test_scripts/aggregate_shard_results.py --by-level 一致"
@@ -536,6 +582,15 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
             print(
                 f"[baseline] task_level={task_type} scene={scene_name} episode={episode_id} "
                 f"task={idx} sec={episode_time:.3f}"
+            )
+            with open(output_path, "w") as f:
+                json.dump(result_dict, f)
+            baseline_live_metric_log(
+                result_dict,
+                scene_name=scene_name,
+                episode_id=int(episode_id),
+                task_id=int(idx),
+                task_level=str(task_type),
             )
 
         sim.close()

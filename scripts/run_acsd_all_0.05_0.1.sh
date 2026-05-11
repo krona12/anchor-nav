@@ -14,6 +14,7 @@ RUN_CMD="$(printf '%q ' "$0" "$@")"
 RUN_CMD="${RUN_CMD% }"
 
 export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0}"
+unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY all_proxy ALL_PROXY
 export PYTHONPATH=/home/chenlin/krona/MTU3D:./:./hm3d-online:./hm3d-online/FastSAM:${PYTHONPATH:-}
 export MAGNUM_LOG=quiet
 export HABITAT_SIM_LOG=quiet
@@ -30,7 +31,7 @@ if [ "${DESC_MODE}" != "detailed" ] && [ "${DESC_MODE}" != "concise" ]; then
 fi
 
 TS="$(date +%Y%m%d-%H%M%S)"
-RUN_TAG="${TS}-${DESC_MODE}-component4-removed-normalized-anchors"
+RUN_TAG="${TS}-${DESC_MODE}-vlm-anchors-object-only"
 if [ -n "${USER_TAG}" ]; then
   RUN_TAG="${RUN_TAG}-${USER_TAG}"
 fi
@@ -40,11 +41,18 @@ mkdir -p "${OUT_DIR}"
 
 VLM_MODEL="${VLM_MODEL:-gpt-4o-mini}"
 ACSD_TOP_K="${ACSD_TOP_K:-4}"
+ACSD_SEED="${ACSD_SEED:-1234}"
+ACSD_CORRECTION_MARGIN="${ACSD_CORRECTION_MARGIN:-0.015}"
+ACSD_OBJECT_CORRECTION_MIN_BASELINE_SCORE="${ACSD_OBJECT_CORRECTION_MIN_BASELINE_SCORE:-0.90}"
 
 echo ">>> ACSD refine1 all-task run tag: ${RUN_TAG}"
 echo ">>> Output dir: ${OUT_DIR}"
 echo ">>> VLM model: ${VLM_MODEL}"
-echo ">>> ACSD component 4: removed"
+echo ">>> ACSD seed: ${ACSD_SEED}"
+echo ">>> ACSD correction_margin: ${ACSD_CORRECTION_MARGIN}"
+echo ">>> ACSD object_correction_min_baseline_score: ${ACSD_OBJECT_CORRECTION_MIN_BASELINE_SCORE}"
+echo ">>> ACSD decomposition: VLM-extracted target/room/object anchors"
+echo ">>> ACSD correction: object-only origin-anchor rerank; exploration frontiers pass through unchanged"
 echo ">>> ACSD scoring: normalized dynamic weights, soft top-k anchors"
 
 {
@@ -61,9 +69,14 @@ echo ">>> ACSD scoring: normalized dynamic weights, soft top-k anchors"
   echo "schedule=single_shard_single_pipeline"
   echo "vlm_model=${VLM_MODEL}"
   echo "acsd_top_k=${ACSD_TOP_K}"
-  echo "component4_removed=true"
+  echo "seed=${ACSD_SEED}"
+  echo "correction_margin=${ACSD_CORRECTION_MARGIN}"
+  echo "object_correction_min_baseline_score=${ACSD_OBJECT_CORRECTION_MIN_BASELINE_SCORE}"
+  echo "decomposition=vlm_only"
+  echo "correction_scope=object_only"
+  echo "frontier_correction=false"
   echo "score_normalization=minmax_neutral_0.5_dynamic_weight_sum"
-  echo "anchor_policy=soft_topk_not_all_required"
+  echo "anchor_policy=vlm_extracted_soft_topk_not_all_required"
 } > "${OUT_DIR}/run_args.txt"
 
 cp "$0" "${OUT_DIR}/run_acsd_all_0.05_0.1.sh.snapshot"
@@ -89,6 +102,9 @@ run_one () {
     --navigation_data_path "${NAVIGATION_DATA_PATH}" \
     --acsd_top_k "${ACSD_TOP_K}" \
     --vlm_model "${VLM_MODEL}" \
+    --seed "${ACSD_SEED}" \
+    --correction_margin "${ACSD_CORRECTION_MARGIN}" \
+    --object_correction_min_baseline_score "${ACSD_OBJECT_CORRECTION_MIN_BASELINE_SCORE}" \
     --output_log_dir "${OUT_DIR}"
 }
 

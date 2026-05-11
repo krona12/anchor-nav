@@ -41,6 +41,8 @@ mkdir -p "${OUT_DIR}"
 echo ">>> Baseline all-task run tag: ${RUN_TAG}"
 echo ">>> Output dir: ${OUT_DIR}"
 echo ">>> CUDA_VISIBLE_DEVICES: ${CUDA_VISIBLE_DEVICES}"
+BASELINE_SEED="${BASELINE_SEED:-1234}"
+echo ">>> Baseline seed: ${BASELINE_SEED}"
 
 {
   echo "timestamp=${TS}"
@@ -54,6 +56,7 @@ echo ">>> CUDA_VISIBLE_DEVICES: ${CUDA_VISIBLE_DEVICES}"
   echo "slice_step=0.05"
   echo "num_shards_total=1"
   echo "schedule=single_shard_single_pipeline"
+  echo "seed=${BASELINE_SEED}"
 } > "${OUT_DIR}/run_args.txt"
 
 cp "$0" "${OUT_DIR}/run_baseline_all_0.05_0.1.sh.snapshot"
@@ -85,6 +88,7 @@ run_one () {
     ${DESC_FLAG} \
     --task_levels "object,room,region,instance" \
     --navigation_data_path "${NAVIGATION_DATA_PATH}" \
+    --seed "${BASELINE_SEED}" \
     --output_log_dir "${OUT_DIR}"
 }
 

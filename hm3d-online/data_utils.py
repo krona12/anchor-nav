@@ -215,8 +215,7 @@ def _dump_stage1_per_frame_json(analysis_output_dir, pred_dict_list):
             json.dump(rec, f, ensure_ascii=False, indent=2)
 
 
-def _dump_stage2_decision_json(
-    analysis_output_dir,
+def _build_stage2_decision_payload(
     *,
     sentence,
     decision_num,
@@ -275,9 +274,18 @@ def _dump_stage2_decision_json(
         "frontier_candidates": frs,
         "chosen": chosen,
     }
+    return payload
+
+
+def _dump_stage2_decision_json(
+    analysis_output_dir,
+    **kwargs,
+):
+    payload = _build_stage2_decision_payload(**kwargs)
     out_path = os.path.join(analysis_output_dir, "stage2_decision.json")
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
+    return payload
 
 
 class PQ3DModel:
@@ -327,10 +335,12 @@ class PQ3DModel:
         self.frontier_selection_mode = 'model'
         self.min_decision_num = min_decision_num if min_decision_num is not None else 3
         self.last_decision_aux = {}
+        self.last_stage2_decision = {}
 
     def reset(self):
         self.representation_manager.reset()
         self.last_decision_aux = {}
+        self.last_stage2_decision = {}
         
     def decision(self, color_list, depth_list, agent_state_list, frontier_waypoints, sentence, decision_num, image_feat=None, analysis_output_dir=None):
         torch.cuda.empty_cache()
@@ -639,9 +649,7 @@ class PQ3DModel:
         batch.append(data_dict)
         batch = default_collate(batch)
         batch = batch_to_cuda(batch)
-        s2_query_scores_cpu = None
-        if analysis_output_dir is not None:
-            s2_query_scores_cpu = batch["query_scores"][0].detach().cpu()
+        s2_query_scores_cpu = batch["query_scores"][0].detach().cpu()
         # stage2 forward
         with torch.no_grad():
             stage2_output_data_dict = self.pq3d_stage2(batch)
@@ -700,28 +708,23 @@ class PQ3DModel:
             "n_real_objects": n_real,
             "object_top1_top2_logit_gap": obj_top1_top2_logit_gap,
         }
-        if analysis_output_dir is not None and s2_query_scores_cpu is not None:
-            _dump_stage2_decision_json(
-                analysis_output_dir,
-                sentence=sentence,
-                decision_num=decision_num,
-                frontier_waypoints_habitat=frontier_habitat_xyz,
-                query_locs_model=query_locs,
-                query_scores=s2_query_scores_cpu,
-                real_obj_pad_masks=real_obj_pad_masks,
-                decision_logits=decision_logits,
-                goto_frontier_probability=float(goto_frontier_probability),
-                is_object_decision=bool(is_object_decision),
-                real_object_decision_idx=int(real_object_decision_idx),
-                frontier_decision_idx=int(frontier_decision_idx),
-                target_position_habitat_xyz=target_habitat_xyz,
-                n_frontiers=int(num_frontiers),
-            )
+        stage2_payload_kwargs = dict(
+            sentence=sentence,
+            decision_num=decision_num,
+            frontier_waypoints_habitat=frontier_habitat_xyz,
+            query_locs_model=query_locs,
+            query_scores=s2_query_scores_cpu,
+            real_obj_pad_masks=real_obj_pad_masks,
+            decision_logits=decision_logits,
+            goto_frontier_probability=float(goto_frontier_probability),
+            is_object_decision=bool(is_object_decision),
+            real_object_decision_idx=int(real_object_decision_idx),
+            frontier_decision_idx=int(frontier_decision_idx),
+            target_position_habitat_xyz=target_habitat_xyz,
+            n_frontiers=int(num_frontiers),
+        )
+        self.last_stage2_decision = _build_stage2_decision_payload(**stage2_payload_kwargs)
+        if analysis_output_dir is not None:
+            _dump_stage2_decision_json(analysis_output_dir, **stage2_payload_kwargs)
             self.last_decision_aux["analysis_stage2_json"] = os.path.join(analysis_output_dir, "stage2_decision.json")
         return target_position, is_object_decision
-
-            
-             
-            
-            
-            

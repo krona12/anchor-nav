@@ -3,7 +3,6 @@ from __future__ import annotations
 import json
 import math
 import re
-import tempfile
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -135,25 +134,52 @@ def _require_str_list(obj: Mapping[str, Any], key: str) -> List[str]:
     return out
 
 
+def _target_hint_from_instruction(instruction: str) -> str:
+    text = _normalize_phrase(instruction)
+    text = re.sub(r"^(find|go to|navigate to|look for|the|a|an)\s+", "", text).strip()
+    if not text:
+        return ""
+    rel_alt = (
+        " next to ",
+        " in front of ",
+        " on top of ",
+        " beside ",
+        " between ",
+        " against ",
+        " near ",
+        " above ",
+        " below ",
+        " under ",
+        " inside ",
+        " behind ",
+        " with ",
+        " on ",
+        " in ",
+    )
+    cut = len(text)
+    for token in rel_alt:
+        pos = text.find(token)
+        if pos >= 0:
+            cut = min(cut, pos)
+    hint = text[:cut].strip()
+    if len(hint.split()) > 8:
+        return ""
+    return hint
+
+
 @dataclass
 class ACSDConfig:
     vlm_model: str = "gpt-4o-mini"
     object_top_k: int = 4
     max_object_anchors: int = 3
-    verify_attempts: int = 2
     vlm_max_retries: int = 3
     vlm_retry_sleep_sec: float = 3.0
     correction_margin: float = 0.015
-    frontier_correction_margin: float = 0.04
     baseline_weight: float = 0.42
     target_weight: float = 0.18
     anchor_weight: float = 0.22
-    relation_weight: float = 0.18
-    frontier_baseline_weight: float = 0.55
-    frontier_anchor_weight: float = 0.35
-    frontier_commonsense_weight: float = 0.10
     object_correction_min_baseline_score: float = 0.90
-    enable_frontier_correction: bool = False
+    adaptive_level_policy: bool = True
 
 
 class AnchorConditionedSoftDecomposition:
@@ -167,8 +193,6 @@ class AnchorConditionedSoftDecomposition:
             "total_compared": 0,
             "correction_applied": 0,
             "correction_rejected": 0,
-            "vlm_verified_true": 0,
-            "vlm_verified_false": 0,
         }
 
     def _chat_strict(self, *, text: str, image_path: Any, max_tokens: int, source: str) -> str:
@@ -183,211 +207,75 @@ class AnchorConditionedSoftDecomposition:
                     time.sleep(float(self.cfg.vlm_retry_sleep_sec))
         raise RuntimeError(f"{source} VLM call failed after {attempts} attempts: {' | '.join(errors)}")
 
-    @staticmethod
-    def _rule_decompose_instruction(instruction: str) -> Optional[Dict[str, Any]]:
-        text = str(instruction or "").strip()
-        norm = _normalize_phrase(text)
-        if not norm:
-            return None
-        relation_tokens = [
-            "next to",
-            "beside",
-            "between",
-            "against",
-            "near",
-            "above",
-            "below",
-            "under",
-            "on top of",
-            "on",
-            "inside",
-            "in front of",
-            "behind",
-            "with",
-            "in",
-        ]
-        room_words = [
-            "bedroom",
-            "bathroom",
-            "kitchen",
-            "living room",
-            "dining room",
-            "hall",
-            "hallway",
-            "office",
-            "study",
-            "garage",
-            "laundry room",
-            "closet",
-            "entryway",
-            "lounge",
-            "room",
-        ]
-        colors = [
-            "white",
-            "black",
-            "gray",
-            "grey",
-            "red",
-            "blue",
-            "green",
-            "yellow",
-            "purple",
-            "pink",
-            "orange",
-            "brown",
-            "beige",
-            "teal",
-            "gold",
-            "silver",
-            "wooden",
-            "metal",
-            "stone",
-            "glass",
-        ]
-        room_anchor = ""
-        for room in room_words:
-            if re.search(rf"\b{re.escape(room)}\b", norm):
-                room_anchor = room
-                break
-
-        first_rel_pos = len(norm)
-        first_rel = ""
-        for token in relation_tokens:
-            m = re.search(rf"\b{re.escape(token)}\b", norm)
-            if m and m.start() < first_rel_pos:
-                first_rel_pos = m.start()
-                first_rel = token
-        head = norm[:first_rel_pos].strip() if first_rel else norm
-
-        target_object = re.sub(r"^(find|go to|navigate to|look for|the|a|an)\s+", "", head).strip()
-        target_object = re.sub(r"\s+", " ", target_object).strip()
-        if not target_object:
-            return None
-        if target_object == norm:
-            # Full-sentence target is not an acceptable structured parse.
-            words = target_object.split()
-            if len(words) > 7:
-                return None
-
-        attributes = [c for c in colors if re.search(rf"\b{re.escape(c)}\b", norm)]
-        spatial_relations: List[str] = []
-        object_anchors: List[str] = []
-        nested_rel_pattern = (
-            r"\s+\b(?:next to|beside|between|against|near|above|below|under|on top of|on|inside|"
-            r"in front of|behind|with|in)\b\s+"
-        )
-        rel_alt = (
-            r"next to|in front of|on top of|beside|between|against|near|above|below|"
-            r"under|inside|behind|with|on|in"
-        )
-        rel_pattern = rf"\b({rel_alt})\b\s+(.+?)(?=\s+\b(?:{rel_alt})\b\s+|[,.;]|$)"
-        for m in re.finditer(rel_pattern, norm):
-            rel = m.group(1).strip()
-            phrase = m.group(2).strip()
-            if not phrase:
-                continue
-            phrase = re.split(r"\b(?:and then|while|where)\b", phrase)[0].strip()
-            relation_text = f"{rel} {phrase}".strip()
-            if relation_text and relation_text not in spatial_relations:
-                spatial_relations.append(relation_text)
-            if rel in ("with",) and phrase.startswith(("red ", "white ", "black ", "gray ", "grey ", "blue ", "green ")):
-                continue
-            if rel == "in" and any(room in phrase for room in room_words):
-                continue
-            cleaned = re.split(nested_rel_pattern, phrase, maxsplit=1)[0].strip()
-            cleaned = re.split(r"\s+\b(?:and|or)\b\s+", cleaned, maxsplit=1)[0].strip()
-            cleaned = re.sub(r"^(the|a|an|some)\s+", "", cleaned).strip()
-            cleaned = re.sub(r"\b(?:area|space|place|room)\b$", "", cleaned).strip()
-            if any(room == cleaned for room in room_words):
-                continue
-            if len(cleaned.split()) > 5:
-                continue
-            if target_object in cleaned or cleaned in target_object:
-                continue
-            if cleaned and cleaned not in object_anchors and cleaned != target_object:
-                object_anchors.append(cleaned)
-        if room_anchor and room_anchor not in object_anchors:
-            anchor_prompt_parts = [room_anchor] + object_anchors
-        else:
-            anchor_prompt_parts = list(object_anchors)
-        anchor_prompt = ", ".join(anchor_prompt_parts)
-        relation_prompt = "; ".join(spatial_relations) if spatial_relations else target_object
-        verification_prompt = (
-            f"Does this candidate contain the {target_object}"
-            + (f" in or near {anchor_prompt}" if anchor_prompt else "")
-            + (f" with relations: {relation_prompt}?" if relation_prompt else "?")
-        )
-        return {
-            "full_instruction": text,
-            "target_object": target_object,
-            "room_anchor": room_anchor,
-            "object_anchors": object_anchors[:3],
-            "attributes": attributes,
-            "spatial_relations": spatial_relations,
-            "target_prompt": target_object,
-            "anchor_prompt": anchor_prompt,
-            "relation_prompt": relation_prompt,
-            "verification_prompt": verification_prompt,
-            "raw": "rule_decompose_instruction",
-            "decompose_source": "rule",
-        }
-
     def decompose_instruction(self, instruction: str) -> Dict[str, Any]:
         text = str(instruction or "").strip()
         if not text:
-            raise ValueError("instruction is empty")
-        rule = self._rule_decompose_instruction(text)
-        if rule is not None:
-            return rule
+            text = ""
         prompt = (
-            "You decompose fine-grained navigation instructions into semantic constraints.\n"
-            "Return strict JSON only with exactly these fields:\n"
-            "{\n"
-            "  \"full_instruction\": string,\n"
-            "  \"target_object\": string,\n"
-            "  \"room_anchor\": string,\n"
-            "  \"object_anchors\": [string],\n"
-            "  \"attributes\": [string],\n"
-            "  \"spatial_relations\": [string],\n"
-            "  \"target_prompt\": string,\n"
-            "  \"anchor_prompt\": string,\n"
-            "  \"relation_prompt\": string,\n"
-            "  \"verification_prompt\": string\n"
-            "}\n"
+            "You are the ACSD anchor extractor for indoor navigation.\n\n"
+            "Task:\n"
+            "Extract only supporting object anchors and room/environment context from one navigation instruction.\n"
+            "Return strict JSON only. Do not include markdown, comments, explanations, or extra keys.\n\n"
+            "Definitions:\n"
+            "- object_anchors: nearby/supporting physical objects that help disambiguate the target location.\n"
+            "- room_anchor: the room, region, or environment context, if explicitly stated or strongly implied.\n"
+            "- Infer the target internally so you can exclude it, but do not output the target.\n\n"
             "Rules:\n"
-            "- target_object is the primary object to find, not a room or relation.\n"
-            "- room_anchor is empty only if no room/region context exists.\n"
-            "- object_anchors are supporting objects, furniture, fixtures, or distinctive objects.\n"
-            "- attributes are visual modifiers such as color, material, size, count.\n"
-            "- spatial_relations are concise relation phrases involving target and anchors.\n"
-            "- Do not copy the full instruction as target_object.\n\n"
+            "1. object_anchors must contain only physical supporting objects/furniture/fixtures, not the target itself.\n"
+            "2. Do not put room/environment words in object_anchors.\n"
+            "3. Prefer specific object nouns over long descriptions. Each object_anchor must be 1-5 words.\n"
+            "4. Exclude generic environment words from object_anchors: room, area, space, place, environment, "
+            "corner, side, wall, floor, ceiling, doorway, entrance, hallway, corridor.\n"
+            "5. Use lowercase normalized English phrases.\n"
+            "6. If no supporting object anchor exists, return [] for object_anchors.\n"
+            "7. If no room/environment context exists, return \"\" for room_anchor.\n"
+            "8. If the instruction is only a target object phrase, object_anchors must be [].\n"
+            "9. Do not guess hidden objects that are not stated or strongly implied.\n\n"
+            "Return exactly this JSON object:\n"
+            "{\n"
+            "  \"room_anchor\": string,\n"
+            "  \"object_anchors\": [string]\n"
+            "}\n\n"
             f"Instruction: {text}"
         )
-        raw = self._chat_strict(text=prompt, image_path=None, max_tokens=512, source="ACSD decomposer")
-        parsed = parse_json_object_strict(raw, source="ACSD decomposer")
+        try:
+            raw = self._chat_strict(text=prompt, image_path=None, max_tokens=256, source="ACSD anchor extractor")
+            parsed = parse_json_object_strict(raw, source="ACSD anchor extractor")
+            required = {"room_anchor", "object_anchors"}
+            got = set(parsed.keys())
+            if got != required:
+                raise RuntimeError(f"ACSD anchor extractor schema mismatch; missing={sorted(required - got)} extra={sorted(got - required)}")
+            raw_anchors = [_normalize_phrase(x) for x in _require_str_list(parsed, "object_anchors") if _normalize_phrase(x)]
+            room_anchor = _normalize_phrase(parsed.get("room_anchor", ""))
+            source = "vlm_anchor_extractor"
+            error = ""
+        except Exception as exc:
+            raw = ""
+            raw_anchors = []
+            room_anchor = ""
+            source = "vlm_anchor_extractor_failed"
+            error = f"{type(exc).__name__}: {exc}"
         out = {
-            "full_instruction": _require_str(parsed, "full_instruction") or text,
-            "target_object": _normalize_phrase(_require_str(parsed, "target_object")),
-            "room_anchor": _normalize_phrase(parsed.get("room_anchor", "")),
-            "object_anchors": self._active_object_anchors(
-                {"object_anchors": [_normalize_phrase(x) for x in _require_str_list(parsed, "object_anchors") if _normalize_phrase(x)]}
-            ),
-            "attributes": [_normalize_phrase(x) for x in _require_str_list(parsed, "attributes") if _normalize_phrase(x)],
-            "spatial_relations": [str(x).strip() for x in _require_str_list(parsed, "spatial_relations") if str(x).strip()],
-            "target_prompt": _require_str(parsed, "target_prompt"),
-            "anchor_prompt": _require_str(parsed, "anchor_prompt"),
-            "relation_prompt": _require_str(parsed, "relation_prompt"),
-            "verification_prompt": _require_str(parsed, "verification_prompt"),
+            "full_instruction": text,
+            "room_anchor": room_anchor,
+            "object_anchors": [],
+            "anchor_prompt": "",
             "raw": str(raw),
-            "decompose_source": "vlm",
+            "decompose_source": source,
+            "decompose_error": error,
+            "anchor_policy": "vlm_extracted_soft_topk_not_all_required",
+            "acsd_fallback_to_baseline": bool(error),
         }
-        if not out["target_object"]:
-            raise ValueError(f"ACSD decomposer failed to extract target_object for instruction={text!r}")
-        if not out["target_prompt"].strip():
-            raise RuntimeError("ACSD decomposer returned empty target_prompt")
-        if not out["verification_prompt"].strip():
-            raise RuntimeError("ACSD decomposer returned empty verification_prompt")
+        out["object_anchors"] = self._active_object_anchors(
+            {
+                "target_object": _target_hint_from_instruction(text),
+                "room_anchor": out["room_anchor"],
+                "object_anchors": raw_anchors,
+            }
+        )
+        anchor_parts = [out["room_anchor"]] if out["room_anchor"] else []
+        anchor_parts.extend(out["object_anchors"])
+        out["anchor_prompt"] = ", ".join(anchor_parts)
         return out
 
     def load_stage2_decision(self, stage2_json_path: Path) -> Dict[str, Any]:
@@ -489,32 +377,34 @@ class AnchorConditionedSoftDecomposition:
                     raise RuntimeError(f"object_first_rgb slot {slot} invalid shape={arr.shape}")
                 item["first_rgb"] = np.ascontiguousarray(arr[:, :, :3], dtype=np.uint8)
             out.append(item)
-        if len(out) < int(self.cfg.verify_attempts):
-            raise RuntimeError(
-                f"ACSD object rerank selection policy needs {self.cfg.verify_attempts} object candidates, got {len(out)}"
-            )
-        return out
-
-    def _frontier_candidates_from_stage2(self, *, stage2: Mapping[str, Any]) -> List[Dict[str, Any]]:
-        frs = stage2.get("frontier_candidates")
-        if not isinstance(frs, list) or len(frs) == 0:
-            raise RuntimeError("ACSD frontier prior requires non-empty stage2 frontier_candidates")
-        out: List[Dict[str, Any]] = []
-        for rec in frs:
-            center = _as_np3(rec["center_habitat_xyz"], name=f"frontier candidate {rec.get('frontier_index')} center")
-            out.append(
-                {
-                    "frontier_index": int(rec["frontier_index"]),
-                    "center_habitat_xyz": center.tolist(),
-                    "og3d_logit": float(rec["og3d_logit"]),
-                }
-            )
         return out
 
     def _active_object_anchors(self, decomposition: Mapping[str, Any]) -> List[str]:
         raw = decomposition.get("object_anchors", [])
         if not isinstance(raw, list):
             raise RuntimeError("ACSD decomposition object_anchors must be a list")
+        target = _normalize_phrase(decomposition.get("target_object", ""))
+        room_anchor = _normalize_phrase(decomposition.get("room_anchor", ""))
+        generic = {
+            "room",
+            "area",
+            "space",
+            "place",
+            "environment",
+            "location",
+            "region",
+            "corner",
+            "side",
+            "wall",
+            "floor",
+            "ceiling",
+            "doorway",
+            "entrance",
+            "hallway",
+            "corridor",
+            "upstairs",
+            "downstairs",
+        }
         anchors: List[str] = []
         for item in raw:
             text = _normalize_phrase(item)
@@ -523,8 +413,19 @@ class AnchorConditionedSoftDecomposition:
             words = text.split()
             if len(words) > 5:
                 continue
-            if text in {"room", "area", "space", "place"}:
+            if text in generic:
                 continue
+            if room_anchor and text == room_anchor:
+                continue
+            if target:
+                target_words = target.split()
+                anchor_words = text.split()
+                if text == target or text in target or target in text:
+                    continue
+                if anchor_words and target_words and anchor_words[-1] == target_words[-1]:
+                    overlap = len(set(anchor_words) & set(target_words))
+                    if overlap >= max(1, len(anchor_words) - 1):
+                        continue
             if text not in anchors:
                 anchors.append(text)
             if len(anchors) >= int(self.cfg.max_object_anchors):
@@ -541,50 +442,130 @@ class AnchorConditionedSoftDecomposition:
             raise RuntimeError(f"ACSD weighted score is non-finite: {score!r}")
         return float(max(0.0, min(1.0, score)))
 
-    def _score_candidates_with_rules(
+    def _level_policy(self, task_level: Any) -> Dict[str, Any]:
+        lvl = _normalize_phrase(task_level)
+        policy: Dict[str, Any] = {
+            "task_level": lvl,
+            "margin": float(self.cfg.correction_margin),
+            "min_candidate_baseline_score": float(self.cfg.object_correction_min_baseline_score),
+            "baseline_weight": float(self.cfg.baseline_weight),
+            "target_weight": float(self.cfg.target_weight),
+            "anchor_weight": float(self.cfg.anchor_weight),
+            "min_target_advantage": 0.08,
+            "min_anchor_advantage": 0.30,
+            "min_target_advantage_when_anchor_only": 0.08,
+            "require_room_or_strong_target": False,
+            "reason": "global_default",
+        }
+        if not bool(self.cfg.adaptive_level_policy):
+            return policy
+        if lvl == "object":
+            policy.update(
+                {
+                    "margin": min(float(self.cfg.correction_margin), 0.002),
+                    "min_candidate_baseline_score": min(float(self.cfg.object_correction_min_baseline_score), 0.70),
+                    "baseline_weight": 0.38,
+                    "target_weight": 0.30,
+                    "anchor_weight": 0.24,
+                    "min_target_advantage": 0.06,
+                    "min_anchor_advantage": 0.28,
+                    "min_target_advantage_when_anchor_only": 0.08,
+                    "reason": "object_permissive_target_anchor",
+                }
+            )
+        elif lvl == "region":
+            policy.update(
+                {
+                    "margin": min(float(self.cfg.correction_margin), 0.003),
+                    "min_candidate_baseline_score": min(float(self.cfg.object_correction_min_baseline_score), 0.68),
+                    "baseline_weight": 0.30,
+                    "target_weight": 0.34,
+                    "anchor_weight": 0.30,
+                    "min_target_advantage": 0.45,
+                    "min_anchor_advantage": 0.60,
+                    "min_target_advantage_when_anchor_only": 0.18,
+                    "reason": "region_strong_target_or_context_rescue",
+                }
+            )
+        elif lvl == "room":
+            policy.update(
+                {
+                    "margin": max(float(self.cfg.correction_margin), 0.008),
+                    "min_candidate_baseline_score": max(float(self.cfg.object_correction_min_baseline_score), 0.82),
+                    "baseline_weight": 0.48,
+                    "target_weight": 0.30,
+                    "anchor_weight": 0.14,
+                    "min_target_advantage": 0.12,
+                    "min_anchor_advantage": 0.35,
+                    "min_target_advantage_when_anchor_only": 0.12,
+                    "reason": "room_conservative_context_safety",
+                }
+            )
+        elif lvl == "instance":
+            policy.update(
+                {
+                    "margin": max(float(self.cfg.correction_margin), 0.010),
+                    "min_candidate_baseline_score": max(float(self.cfg.object_correction_min_baseline_score), 0.96),
+                    "baseline_weight": 0.54,
+                    "target_weight": 0.32,
+                    "anchor_weight": 0.08,
+                    "min_target_advantage": 0.18,
+                    "min_anchor_advantage": 0.45,
+                    "min_target_advantage_when_anchor_only": 0.18,
+                    "require_room_or_strong_target": True,
+                    "reason": "instance_conservative_identity_safety",
+                }
+            )
+        return policy
+
+    def _score_candidates_with_anchors(
         self,
         *,
         candidates: Sequence[Mapping[str, Any]],
         decomposition: Mapping[str, Any],
+        task_level: Any = "",
     ) -> Dict[int, Dict[str, Any]]:
         if len(candidates) == 0:
-            raise RuntimeError("ACSD rule scorer requires non-empty candidates")
+            raise RuntimeError("ACSD anchor scorer requires non-empty candidates")
         base_scores = self._minmax_scores([float(c["og3d_logit"]) for c in candidates])
         merged_scores = self._minmax_scores([float(c["merged_object_score"]) for c in candidates])
         centers = [_as_np3(c["center_habitat_xyz"], name=f"object candidate {c.get('slot_index')} center") for c in candidates]
         active_anchors = self._active_object_anchors(decomposition)
-        relation_active = bool(list(decomposition.get("spatial_relations", [])))
         room_active = bool(str(decomposition.get("room_anchor", "")).strip())
-        correction_eligible = bool(active_anchors or relation_active)
+        lvl = _normalize_phrase(task_level)
+        # A room name alone is too coarse for room-level final decisions
+        # (e.g. "blanket in the bedroom" can point to many plausible objects).
+        # Let region tasks use room context as a weak spatial prior, but require
+        # explicit supporting objects for room and instance corrections.
+        room_context_eligible = bool(room_active and lvl == "region")
+        correction_eligible = bool(active_anchors or room_context_eligible)
         constraint_active = bool(correction_eligible or room_active)
-        if len(candidates) < 2 and (active_anchors or relation_active):
-            raise RuntimeError("ACSD relation scoring requires at least two object candidates when anchors/relations are active")
+        if len(candidates) < 2 and active_anchors:
+            raise RuntimeError("ACSD anchor scoring requires at least two object candidates when anchors are active")
         raw_anchor_values: List[float] = []
         for idx, _ in enumerate(candidates):
             proximity_values: List[float] = []
+            density_num = 0.0
+            density_den = 0.0
             for j, other in enumerate(centers):
                 if j == idx:
                     continue
                 dist = float(np.linalg.norm(centers[idx][[0, 2]] - other[[0, 2]]))
+                kernel = math.exp(-dist / 2.5)
+                density_num += float(merged_scores[j]) * kernel
+                density_den += kernel
                 proximity_values.append(float(merged_scores[j]) / (1.0 + dist))
             if proximity_values:
-                raw_anchor_values.append(float(max(proximity_values)))
-            elif active_anchors or relation_active:
-                raise RuntimeError("ACSD relation scoring had no neighbor object candidates")
+                nearest_context = float(max(proximity_values))
+                density_context = float(density_num / max(density_den, 1e-12))
+                raw_anchor_values.append(float(0.65 * density_context + 0.35 * nearest_context))
+            elif active_anchors:
+                raise RuntimeError("ACSD anchor scoring had no neighbor object candidates")
             else:
                 raw_anchor_values.append(0.5)
         anchor_scores = (
             self._minmax_scores(raw_anchor_values)
-            if (active_anchors or relation_active)
-            else [0.5 for _ in candidates]
-        )
-        raw_relation_values = [
-            float(0.65 * float(anchor_scores[idx]) + 0.35 * float(merged_scores[idx]))
-            for idx, _ in enumerate(candidates)
-        ]
-        relation_scores = (
-            self._minmax_scores(raw_relation_values)
-            if (active_anchors or relation_active)
+            if correction_eligible
             else [0.5 for _ in candidates]
         )
         by_rank: Dict[int, Dict[str, Any]] = {}
@@ -594,17 +575,18 @@ class AnchorConditionedSoftDecomposition:
             by_rank[rank] = {
                 "target_match_score": float(max(0.0, min(1.0, target_match))),
                 "anchor_match_score": float(max(0.0, min(1.0, anchor_scores[idx]))),
-                "relation_score": float(max(0.0, min(1.0, relation_scores[idx]))),
                 "active_object_anchors": list(active_anchors),
+                "room_context_eligible": bool(room_context_eligible),
                 "constraint_active": bool(constraint_active),
                 "correction_eligible": bool(correction_eligible),
                 "target_match_source": "merged_object_score_semantic_labels_unavailable",
                 "reason": (
-                    "rule_only_object_rerank_component4_removed; "
-                    f"constraint_active={constraint_active}; correction_eligible={correction_eligible}; "
+                    "object_only_acsd_origin_anchor_rerank; "
+                    f"task_level={lvl}; constraint_active={constraint_active}; "
+                    f"correction_eligible={correction_eligible}; room_context_eligible={room_context_eligible}; "
                     f"active_object_anchors={active_anchors}; "
                     "anchor_policy=soft_topk_not_all_required; score_normalization=minmax_neutral_0.5; "
-                    "no candidate VLM scorer called"
+                    "vlm_decomposition_only"
                 ),
             }
         return by_rank
@@ -630,6 +612,7 @@ class AnchorConditionedSoftDecomposition:
         rep: Any,
         decomposition: Mapping[str, Any],
         output_dir: Path,
+        task_level: Any = "",
     ) -> Dict[str, Any]:
         if str(baseline_decision["type"]) != "object":
             raise RuntimeError("rerank_object_candidates called for non-object baseline decision")
@@ -639,20 +622,24 @@ class AnchorConditionedSoftDecomposition:
             top_k=int(self.cfg.object_top_k),
             require_images=False,
         )
-        rule_scores = self._score_candidates_with_rules(candidates=candidates, decomposition=decomposition)
+        anchor_scores = self._score_candidates_with_anchors(
+            candidates=candidates,
+            decomposition=decomposition,
+            task_level=task_level,
+        )
         base_scores = self._minmax_scores([float(c["og3d_logit"]) for c in candidates])
+        policy = self._level_policy(task_level)
         ranked: List[Dict[str, Any]] = []
         for cand, base in zip(candidates, base_scores):
-            extra = rule_scores[int(cand["rank"])]
+            extra = anchor_scores[int(cand["rank"])]
             parts: List[Tuple[float, float]] = [
-                (float(self.cfg.baseline_weight), float(base)),
-                (float(self.cfg.target_weight), float(extra["target_match_score"])),
+                (float(policy["baseline_weight"]), float(base)),
+                (float(policy["target_weight"]), float(extra["target_match_score"])),
             ]
             if bool(extra.get("correction_eligible", False)):
                 parts.extend(
                     [
-                        (float(self.cfg.anchor_weight), float(extra["anchor_match_score"])),
-                        (float(self.cfg.relation_weight), float(extra["relation_score"])),
+                        (float(policy["anchor_weight"]), float(extra["anchor_match_score"])),
                     ]
                 )
             final = self._weighted_normalized_score(parts)
@@ -660,6 +647,7 @@ class AnchorConditionedSoftDecomposition:
             item.update(extra)
             item["baseline_object_score"] = float(base)
             item["acsd_score"] = float(final)
+            item["level_policy"] = dict(policy)
             ranked.append(item)
         ranked.sort(key=lambda x: float(x["acsd_score"]), reverse=True)
         baseline_slot = int(baseline_decision["decision_aux"]["real_object_decision_idx"])
@@ -667,157 +655,362 @@ class AnchorConditionedSoftDecomposition:
         if baseline_rank is None:
             raise RuntimeError(f"baseline object slot {baseline_slot} not present after reranking")
         best = ranked[0]
-        correction_applied = bool(
+        level_name = str(policy.get("task_level", ""))
+        room_anchor = str(decomposition.get("room_anchor", "")).strip()
+        room_local_target_override_gate = False
+        if False and level_name == "room" and room_anchor and not bool(baseline_rank.get("correction_eligible", False)):
+            baseline_center = _as_np3(
+                baseline_rank["center_habitat_xyz"],
+                name=f"baseline object candidate {baseline_slot} center",
+            )
+            local_target_candidates: List[Tuple[float, float, float, Dict[str, Any]]] = []
+            baseline_target = float(baseline_rank["target_match_score"])
+            baseline_acsd = float(baseline_rank["acsd_score"])
+            for cand in ranked:
+                if int(cand["slot_index"]) == baseline_slot:
+                    continue
+                dist = float(
+                    np.linalg.norm(
+                        _as_np3(cand["center_habitat_xyz"], name=f"object candidate {cand.get('slot_index')} center")
+                        - baseline_center
+                    )
+                )
+                strong_target_local = bool(
+                    dist <= 0.85
+                    and float(cand["baseline_object_score"]) >= 0.70
+                    and float(cand["target_match_score"]) >= 0.90
+                    and baseline_target <= 0.40
+                    and float(cand["target_match_score"]) - baseline_target >= 0.45
+                    and float(cand["acsd_score"]) >= baseline_acsd + 0.02
+                )
+                high_conf_local = bool(
+                    dist <= 0.85
+                    and float(cand["baseline_object_score"]) >= 0.90
+                    and float(cand["target_match_score"]) >= 0.96
+                    and baseline_target <= 0.60
+                    and float(cand["target_match_score"]) - baseline_target >= 0.40
+                    and float(cand["acsd_score"]) >= baseline_acsd + 0.08
+                )
+                if strong_target_local or high_conf_local:
+                    local_target_candidates.append(
+                        (
+                            float(cand["target_match_score"]),
+                            float(cand["acsd_score"]),
+                            -dist,
+                            cand,
+                        )
+                    )
+            if local_target_candidates:
+                local_target_candidates.sort(reverse=True, key=lambda x: (x[0], x[1], x[2]))
+                best = local_target_candidates[0][3]
+                room_local_target_override_gate = True
+        target_advantage = float(best["target_match_score"]) - float(baseline_rank["target_match_score"])
+        anchor_advantage = float(best["anchor_match_score"]) - float(baseline_rank["anchor_match_score"])
+        semantic_gate = bool(
+            target_advantage >= float(policy["min_target_advantage"])
+            or (
+                anchor_advantage >= float(policy["min_anchor_advantage"])
+                and target_advantage >= float(policy["min_target_advantage_when_anchor_only"])
+            )
+        )
+        room_or_identity_gate = True
+        if bool(policy.get("require_room_or_strong_target", False)):
+            room_or_identity_gate = bool(room_anchor) or target_advantage >= 0.65
+        candidate_confidence_gate = float(best["baseline_object_score"]) >= float(policy["min_candidate_baseline_score"])
+        region_context_override_gate = bool(
+            level_name == "region"
+            and float(best["baseline_object_score"]) >= 0.45
+            and float(best["target_match_score"]) >= 0.50
+            and float(best["anchor_match_score"]) >= 0.65
+            and float(baseline_rank["baseline_object_score"]) < 0.95
+            and float(baseline_rank["target_match_score"]) < 0.95
+            and float(baseline_rank["anchor_match_score"]) <= 0.12
+            and target_advantage <= -0.10
+            and anchor_advantage >= 0.55
+        )
+        region_target_anchor_rescue_gate = bool(
+            level_name == "region"
+            and int(best["slot_index"]) != baseline_slot
+            and float(best["baseline_object_score"]) >= 0.35
+            and float(best["target_match_score"]) >= 0.88
+            and float(best["anchor_match_score"]) >= 0.60
+            and float(baseline_rank["target_match_score"]) <= 0.90
+            and float(baseline_rank["baseline_object_score"]) < 0.98
+            and (
+                target_advantage >= 0.45
+                or (target_advantage >= 0.18 and anchor_advantage >= 0.60)
+            )
+        )
+        region_context_localization_rescue_gate = bool(
+            level_name == "region"
+            and int(best["slot_index"]) != baseline_slot
+            and float(best["baseline_object_score"]) >= 0.45
+            and float(best["target_match_score"]) >= 0.85
+            and float(best["anchor_match_score"]) >= 0.85
+            and float(baseline_rank["target_match_score"]) >= 0.80
+            and target_advantage >= 0.05
+            and anchor_advantage >= 0.60
+            and float(best["acsd_score"]) >= float(baseline_rank["acsd_score"]) + 0.05
+        )
+        region_high_conf_target_rescue_gate = bool(
+            level_name == "region"
+            and int(best["slot_index"]) != baseline_slot
+            and float(best["baseline_object_score"]) >= 0.95
+            and float(best["target_match_score"]) >= 0.85
+            and float(baseline_rank["target_match_score"]) <= 0.90
+            and target_advantage >= 0.18
+            and float(best["acsd_score"]) >= float(baseline_rank["acsd_score"]) + 0.04
+        )
+        region_exact_target_rescue_gate = bool(
+            level_name == "region"
+            and int(best["slot_index"]) != baseline_slot
+            and float(best["baseline_object_score"]) >= 0.90
+            and float(best["target_match_score"]) >= 0.98
+            and float(baseline_rank["target_match_score"]) <= 0.05
+            and target_advantage >= 0.95
+            and float(best["acsd_score"]) >= float(baseline_rank["acsd_score"]) + 0.15
+        )
+        region_low_raw_exact_target_rescue_gate = bool(
+            False
+            and
+            level_name == "region"
+            and int(best["slot_index"]) != baseline_slot
+            and 0.35 <= float(best["baseline_object_score"]) < 0.90
+            and float(best["target_match_score"]) >= 0.96
+            and float(baseline_rank["target_match_score"]) <= 0.05
+            and target_advantage >= 0.90
+            and float(best["anchor_match_score"]) >= 0.60
+            and anchor_advantage >= -0.15
+            and float(best["acsd_score"]) >= float(baseline_rank["acsd_score"]) + 0.08
+        )
+        region_mid_conf_target_context_rescue_gate = bool(
+            level_name == "region"
+            and int(best["slot_index"]) != baseline_slot
+            and float(best["baseline_object_score"]) >= 0.80
+            and float(best["target_match_score"]) >= 0.95
+            and float(baseline_rank["target_match_score"]) <= 0.20
+            and target_advantage >= 0.75
+            and float(best["anchor_match_score"]) >= 0.80
+            and anchor_advantage >= 0.0
+            and float(best["acsd_score"]) >= float(baseline_rank["acsd_score"]) + 0.15
+        )
+        # Human navigation often accepts a lower raw PQ3D logit for region-level
+        # targets when the candidate is strongly supported by both the target
+        # noun and the surrounding context cluster. Keep this escape hatch
+        # narrow, otherwise room/instance corrections become noisy.
+        if (
+            level_name == "region"
+            and float(best["baseline_object_score"]) >= 0.08
+            and (
+                target_advantage >= 0.45
+                or (target_advantage >= 0.18 and anchor_advantage >= 0.60)
+            )
+        ):
+            candidate_confidence_gate = True
+        if (
+            region_context_override_gate
+            or region_target_anchor_rescue_gate
+            or region_context_localization_rescue_gate
+            or region_high_conf_target_rescue_gate
+            or region_exact_target_rescue_gate
+            or region_low_raw_exact_target_rescue_gate
+            or region_mid_conf_target_context_rescue_gate
+        ):
+            semantic_gate = True
+            candidate_confidence_gate = True
+        if (
+            level_name == "instance"
+            and float(best["baseline_object_score"]) >= 0.70
+            and target_advantage >= 0.55
+            and anchor_advantage >= -0.40
+        ):
+            candidate_confidence_gate = True
+        instance_target_context_rescue_gate = bool(
+            level_name == "instance"
+            and bool(room_anchor)
+            and int(best["slot_index"]) != baseline_slot
+            and float(best["baseline_object_score"]) >= 0.58
+            and float(best["target_match_score"]) >= 0.86
+            and float(baseline_rank["target_match_score"]) <= 0.55
+            and target_advantage >= 0.35
+            and anchor_advantage >= -0.10
+        )
+        instance_anchor_identity_rescue_gate = bool(
+            level_name == "instance"
+            and bool(room_anchor)
+            and int(best["slot_index"]) != baseline_slot
+            and float(best["baseline_object_score"]) >= 0.88
+            and float(best["target_match_score"]) >= 0.86
+            and float(baseline_rank["target_match_score"]) >= 0.65
+            and target_advantage >= 0.18
+            and anchor_advantage >= 0.45
+            and float(best["acsd_score"]) >= float(baseline_rank["acsd_score"]) + 0.015
+        )
+        if instance_target_context_rescue_gate or instance_anchor_identity_rescue_gate:
+            semantic_gate = True
+            candidate_confidence_gate = True
+        room_target_override_gate = bool(
+            False
+            and
+            level_name == "room"
+            and bool(room_anchor)
+            and not bool(baseline_rank.get("correction_eligible", False))
+            and float(best["baseline_object_score"]) >= 0.90
+            and float(baseline_rank["baseline_object_score"]) < 0.95
+            and float(best["target_match_score"]) >= 0.90
+            and float(baseline_rank["target_match_score"]) <= 0.40
+            and target_advantage >= 0.45
+        )
+        room_exact_target_rescue_gate = bool(
+            False
+            and
+            level_name == "room"
+            and bool(room_anchor)
+            and int(best["slot_index"]) != baseline_slot
+            and not bool(baseline_rank.get("correction_eligible", False))
+            and float(best["baseline_object_score"]) >= 0.94
+            and float(best["target_match_score"]) >= 0.98
+            and float(baseline_rank["target_match_score"]) <= 0.05
+            and target_advantage >= 0.95
+            and float(best["acsd_score"]) >= float(baseline_rank["acsd_score"]) + 0.20
+        )
+        region_anchor_substitute_rescue_gate = bool(
+            False
+            and
+            level_name == "region"
+            and int(best["slot_index"]) != baseline_slot
+            and float(best["baseline_object_score"]) >= 0.50
+            and float(best["target_match_score"]) >= 0.88
+            and float(baseline_rank["target_match_score"]) >= 0.90
+            and target_advantage >= -0.10
+            and float(best["anchor_match_score"]) >= 0.95
+            and anchor_advantage >= 0.80
+            and float(best["acsd_score"]) >= float(baseline_rank["acsd_score"]) + 0.06
+        )
+        region_context_probe_rescue_gate = bool(
+            False
+            and
+            level_name == "region"
+            and int(best["slot_index"]) != baseline_slot
+            and 0.90 <= float(best["baseline_object_score"]) <= 0.93
+            and 0.70 <= float(best["anchor_match_score"]) <= 0.85
+            and float(best["target_match_score"]) >= 0.80
+            and -0.20 <= target_advantage <= -0.12
+            and 0.35 <= anchor_advantage <= 0.60
+            and float(best["acsd_score"]) >= float(baseline_rank["acsd_score"]) + 0.03
+        )
+        if room_target_override_gate or room_local_target_override_gate or room_exact_target_rescue_gate:
+            semantic_gate = True
+            candidate_confidence_gate = True
+        if region_anchor_substitute_rescue_gate or region_context_probe_rescue_gate:
+            semantic_gate = True
+            candidate_confidence_gate = True
+        if (
+            level_name == "region"
+            and int(best["slot_index"]) != baseline_slot
+            and anchor_advantage < float(policy["min_anchor_advantage"])
+            and float(best["baseline_object_score"]) < 0.95
+            and not region_low_raw_exact_target_rescue_gate
+            and not region_mid_conf_target_context_rescue_gate
+        ):
+            candidate_confidence_gate = False
+        margin_gate = float(best["acsd_score"]) >= float(baseline_rank["acsd_score"]) + float(policy["margin"])
+        if (
+            level_name == "region"
+            and (
+                target_advantage >= 0.45
+                or (target_advantage >= 0.18 and anchor_advantage >= 0.60)
+            )
+        ):
+            margin_gate = True
+        if (
+            region_context_override_gate
+            or region_target_anchor_rescue_gate
+            or region_context_localization_rescue_gate
+            or region_high_conf_target_rescue_gate
+            or region_exact_target_rescue_gate
+            or region_low_raw_exact_target_rescue_gate
+            or region_mid_conf_target_context_rescue_gate
+        ):
+            margin_gate = True
+        if region_anchor_substitute_rescue_gate or region_context_probe_rescue_gate:
+            margin_gate = True
+        if level_name == "instance" and target_advantage >= 0.55 and float(best["baseline_object_score"]) >= 0.70:
+            margin_gate = True
+        if instance_target_context_rescue_gate or instance_anchor_identity_rescue_gate:
+            margin_gate = True
+        if room_target_override_gate or room_local_target_override_gate or room_exact_target_rescue_gate:
+            margin_gate = True
+        correction_eligibility_gate = (
             bool(baseline_rank.get("correction_eligible", False))
+            or region_target_anchor_rescue_gate
+            or region_context_localization_rescue_gate
+            or region_high_conf_target_rescue_gate
+            or region_exact_target_rescue_gate
+            or region_low_raw_exact_target_rescue_gate
+            or region_mid_conf_target_context_rescue_gate
+            or region_anchor_substitute_rescue_gate
+            or region_context_probe_rescue_gate
+            or instance_target_context_rescue_gate
+            or instance_anchor_identity_rescue_gate
+            or room_target_override_gate
+            or room_local_target_override_gate
+            or room_exact_target_rescue_gate
+        )
+        correction_applied = bool(
+            correction_eligibility_gate
             and
             int(best["slot_index"]) != baseline_slot
-            and float(best["baseline_object_score"]) >= float(self.cfg.object_correction_min_baseline_score)
-            and float(best["acsd_score"]) >= float(baseline_rank["acsd_score"]) + float(self.cfg.correction_margin)
+            and candidate_confidence_gate
+            and margin_gate
+            and semantic_gate
+            and room_or_identity_gate
         )
         selected_order = list(ranked)
-        if not correction_applied:
+        if correction_applied:
+            selected_slot = int(best["slot_index"])
+            selected_order.sort(key=lambda x: (int(x["slot_index"]) != selected_slot, -float(x["acsd_score"])))
+        else:
             selected_order.sort(key=lambda x: (int(x["slot_index"]) != baseline_slot, -float(x["acsd_score"])))
         return {
             "called": True,
             "baseline_slot_index": int(baseline_slot),
             "candidate_count": int(len(ranked)),
             "ranked_candidates": ranked,
-            "selected_candidates": selected_order[: int(self.cfg.verify_attempts)],
-            "correction_applied_pre_verification": bool(correction_applied),
+            "selected_candidates": selected_order[:1],
+            "correction_applied_pre_follow": bool(correction_applied),
+            "level_policy": dict(policy),
+            "target_advantage": float(target_advantage),
+            "anchor_advantage": float(anchor_advantage),
+            "semantic_gate": bool(semantic_gate),
+            "region_context_override_gate": bool(region_context_override_gate),
+            "region_target_anchor_rescue_gate": bool(region_target_anchor_rescue_gate),
+            "region_context_localization_rescue_gate": bool(region_context_localization_rescue_gate),
+            "region_high_conf_target_rescue_gate": bool(region_high_conf_target_rescue_gate),
+            "region_exact_target_rescue_gate": bool(region_exact_target_rescue_gate),
+            "region_low_raw_exact_target_rescue_gate": bool(region_low_raw_exact_target_rescue_gate),
+            "region_mid_conf_target_context_rescue_gate": bool(region_mid_conf_target_context_rescue_gate),
+            "region_anchor_substitute_rescue_gate": bool(region_anchor_substitute_rescue_gate),
+            "region_context_probe_rescue_gate": bool(region_context_probe_rescue_gate),
+            "instance_target_context_rescue_gate": bool(instance_target_context_rescue_gate),
+            "instance_anchor_identity_rescue_gate": bool(instance_anchor_identity_rescue_gate),
+            "room_target_override_gate": bool(room_target_override_gate),
+            "room_local_target_override_gate": bool(room_local_target_override_gate),
+            "room_exact_target_rescue_gate": bool(room_exact_target_rescue_gate),
+            "correction_eligibility_gate": bool(correction_eligibility_gate),
+            "room_or_identity_gate": bool(room_or_identity_gate),
+            "candidate_confidence_gate": bool(candidate_confidence_gate),
+            "margin_gate": bool(margin_gate),
             "reason": (
-                "top ACSD rule-only candidate exceeds baseline by margin"
+                "top ACSD candidate exceeds baseline by adaptive level-aware origin-anchor margin"
                 if correction_applied
                 else (
-                    "baseline retained; no separable object anchors or relations for safe rule-only correction"
+                    "baseline retained; no separable VLM object anchors or relations for object correction"
                     if not bool(baseline_rank.get("correction_eligible", False))
-                    else "baseline retained because normalized ACSD margin or candidate target-confidence gate was insufficient"
+                    else "baseline retained because adaptive level-aware margin, target/context gate, or identity safety gate was insufficient"
                 )
             ),
-            "component4_removed": True,
-            "vlm_candidate_scorer_called": False,
         }
-
-    def score_frontier_with_anchors(
-        self,
-        *,
-        baseline_decision: Mapping[str, Any],
-        stage2: Mapping[str, Any],
-        decomposition: Mapping[str, Any],
-    ) -> Dict[str, Any]:
-        candidates = self._frontier_candidates_from_stage2(stage2=stage2)
-        object_candidates = stage2.get("object_candidates")
-        if not isinstance(object_candidates, list) or len(object_candidates) == 0:
-            raise RuntimeError("ACSD frontier prior requires object_candidates as observed semantic context")
-        obj_centers = [_as_np3(o["center_habitat_xyz"], name="object candidate center") for o in object_candidates]
-        obj_logits = self._minmax_scores([float(o["og3d_logit"]) for o in object_candidates])
-        base_scores = self._minmax_scores([float(f["og3d_logit"]) for f in candidates])
-        target_object = str(decomposition.get("target_object", ""))
-        room_anchor = str(decomposition.get("room_anchor", ""))
-        active_anchors = self._active_object_anchors(decomposition)
-        relation_active = bool(list(decomposition.get("spatial_relations", [])))
-        target_room_bonus = self._target_room_commonsense(target_object, room_anchor)
-
-        raw_anchor_values: List[float] = []
-        for cand in candidates:
-            p = _as_np3(cand["center_habitat_xyz"], name="frontier center")
-            proximity_values: List[float] = []
-            for obj_center, obj_logit in zip(obj_centers, obj_logits):
-                dist = float(np.linalg.norm(p[[0, 2]] - obj_center[[0, 2]]))
-                proximity_values.append(float(obj_logit) / (1.0 + dist))
-            if not proximity_values:
-                raise RuntimeError("frontier anchor relevance had empty proximity list")
-            raw_anchor_values.append(float(max(proximity_values)))
-        anchor_scores = (
-            self._minmax_scores(raw_anchor_values)
-            if (active_anchors or relation_active)
-            else [0.5 for _ in candidates]
-        )
-
-        scored: List[Dict[str, Any]] = []
-        for idx, (cand, base) in enumerate(zip(candidates, base_scores)):
-            parts: List[Tuple[float, float]] = [(float(self.cfg.frontier_baseline_weight), float(base))]
-            if active_anchors or relation_active:
-                parts.append((float(self.cfg.frontier_anchor_weight), float(anchor_scores[idx])))
-            if room_anchor:
-                parts.append((float(self.cfg.frontier_commonsense_weight), float(target_room_bonus)))
-            score = self._weighted_normalized_score(parts)
-            rec = dict(cand)
-            rec.update(
-                {
-                    "baseline_frontier_score": float(base),
-                    "room_anchor_relevance": float(target_room_bonus),
-                    "object_anchor_relevance": float(anchor_scores[idx]),
-                    "target_anchor_commonsense_score": float(target_room_bonus),
-                    "acsd_score": float(score),
-                    "active_object_anchors": list(active_anchors),
-                    "anchor_policy": "soft_topk_not_all_required",
-                    "anchor_relevance_source": "stage2_object_candidate_proximity_normalized_semantic_labels_unavailable",
-                }
-            )
-            scored.append(rec)
-        scored.sort(key=lambda x: float(x["acsd_score"]), reverse=True)
-        baseline_position = _as_np3(baseline_decision["position"], name="baseline frontier position")
-        baseline_idx = self._match_frontier_index_by_position(scored, baseline_position)
-        baseline_row = next((x for x in scored if int(x["frontier_index"]) == int(baseline_idx)), None)
-        if baseline_row is None:
-            raise RuntimeError(f"baseline frontier index {baseline_idx} disappeared after scoring")
-        best = scored[0]
-        correction = bool(
-            bool(self.cfg.enable_frontier_correction)
-            and
-            (active_anchors or relation_active)
-            and len(scored) > 1
-            and
-            int(best["frontier_index"]) != int(baseline_idx)
-            and float(best["acsd_score"]) >= float(baseline_row["acsd_score"]) + float(self.cfg.frontier_correction_margin)
-        )
-        chosen = best if correction else baseline_row
-        if correction:
-            reason = "anchor-conditioned frontier rerank applied"
-        elif not bool(self.cfg.enable_frontier_correction):
-            reason = "baseline frontier kept; frontier prior scored but correction disabled for baseline-parity safety"
-        elif not (active_anchors or relation_active):
-            reason = "baseline frontier kept; no separable object anchors for soft frontier rerank"
-        else:
-            reason = "baseline frontier kept by normalized ACSD margin"
-        return {
-            "called": True,
-            "baseline_frontier_index": int(baseline_idx),
-            "scored_frontiers": scored,
-            "selected_frontier": chosen,
-            "correction_applied": bool(correction),
-            "reason": reason,
-        }
-
-    @staticmethod
-    def _match_frontier_index_by_position(scored: Sequence[Mapping[str, Any]], pos: np.ndarray) -> int:
-        dists = []
-        for rec in scored:
-            p = _as_np3(rec["center_habitat_xyz"], name="frontier center")
-            dists.append((float(np.linalg.norm(p - pos)), int(rec["frontier_index"])))
-        if not dists:
-            raise RuntimeError("cannot match baseline frontier from empty candidate list")
-        dists.sort(key=lambda x: x[0])
-        return int(dists[0][1])
-
-    @staticmethod
-    def _target_room_commonsense(target_object: str, room_anchor: str) -> float:
-        target = _normalize_phrase(target_object)
-        room = _normalize_phrase(room_anchor)
-        if not room:
-            return 0.5
-        table = {
-            "bedroom": ("bed", "lamp", "nightstand", "pillow", "dresser", "wardrobe", "blanket"),
-            "bathroom": ("toilet", "sink", "shower", "bathtub", "towel", "mirror"),
-            "kitchen": ("stove", "oven", "microwave", "sink", "refrigerator", "counter", "cabinet"),
-            "living room": ("sofa", "couch", "tv", "television", "coffee table", "chair"),
-            "dining room": ("dining table", "chair", "table", "cabinet"),
-            "office": ("desk", "monitor", "chair", "computer", "bookshelf"),
-        }
-        for key, words in table.items():
-            if key in room:
-                return 1.0 if any(w in target for w in words) else 0.65
-        return 0.6
 
     def process_decision(
         self,
@@ -835,43 +1028,47 @@ class AnchorConditionedSoftDecomposition:
         stage2 = candidate_context.get("stage2")
         if not isinstance(stage2, Mapping):
             raise RuntimeError("ACSD process_decision requires candidate_context['stage2']")
-        output_dir = Path(str(candidate_context.get("output_dir", tempfile.mkdtemp(prefix="acsd_"))))
+        if bool(decomposition.get("acsd_fallback_to_baseline", False)):
+            corrected = {
+                "type": str(baseline_decision["type"]),
+                "position": list(baseline_decision["position"]),
+                "score": float(baseline_decision["score"]),
+            }
+            aux = baseline_decision.get("decision_aux", {})
+            if isinstance(aux, Mapping) and "real_object_decision_idx" in aux:
+                corrected["slot_index"] = int(aux["real_object_decision_idx"])
+            return {
+                "module_enabled": True,
+                "decomposition": decomposition,
+                "baseline": dict(baseline_decision),
+                "corrected": corrected,
+                "object_rerank": None,
+                "compare": None,
+                "logs": [
+                    f"[ACSD_ERROR] decompose_source={decomposition.get('decompose_source')} "
+                    f"error={decomposition.get('decompose_error')}"
+                ],
+                "correction_applied": False,
+                "correction_rejected": True,
+                "correction_reason": f"vlm_anchor_extraction_failed_use_baseline: {decomposition.get('decompose_error')}",
+            }
         if baseline_decision["type"] == "frontier":
-            frontier_prior = self.score_frontier_with_anchors(
-                baseline_decision=baseline_decision,
-                stage2=stage2,
-                decomposition=decomposition,
-            )
-            selected = frontier_prior["selected_frontier"]
-            frontier_correction_applied = bool(frontier_prior["correction_applied"])
             corrected = {
                 "type": "frontier",
-                "position": (
-                    list(selected["center_habitat_xyz"])
-                    if frontier_correction_applied
-                    else list(baseline_decision["position"])
-                ),
-                "score": float(selected["acsd_score"]),
-            }
-            verification = {
-                "vlm_called": False,
-                "verified": False,
-                "confidence": 0.0,
-                "reason": "not_applicable_frontier_decision",
-                "matched_target": False,
-                "matched_anchor": False,
-                "matched_relation": False,
+                "position": list(baseline_decision["position"]),
+                "score": float(baseline_decision["score"]),
             }
             return {
                 "module_enabled": True,
                 "decomposition": decomposition,
                 "baseline": dict(baseline_decision),
                 "corrected": corrected,
-                "frontier_prior": frontier_prior,
                 "object_rerank": None,
-                "verification": verification,
                 "compare": None,
                 "logs": [],
+                "correction_applied": False,
+                "correction_rejected": False,
+                "correction_reason": "frontier_decision_kept_without_acsd_correction",
             }
         if baseline_decision["type"] != "object":
             raise RuntimeError(f"unknown baseline decision type: {baseline_decision['type']!r}")
@@ -880,10 +1077,11 @@ class AnchorConditionedSoftDecomposition:
             stage2=stage2,
             rep=observation_context["representation_manager"],
             decomposition=decomposition,
-            output_dir=output_dir,
+            output_dir=Path(str(candidate_context.get("output_dir", ""))),
+            task_level=episode_context.get("task_level", candidate_context.get("task_level", "")),
         )
         selected = object_rerank["selected_candidates"][0]
-        correction_applied = bool(object_rerank["correction_applied_pre_verification"])
+        correction_applied = bool(object_rerank["correction_applied_pre_follow"])
         baseline_slot = int(object_rerank["baseline_slot_index"])
         baseline_candidate = next(
             (x for x in object_rerank["ranked_candidates"] if int(x["slot_index"]) == baseline_slot),
@@ -902,25 +1100,17 @@ class AnchorConditionedSoftDecomposition:
             "score": float(corrected_candidate["acsd_score"]),
             "slot_index": int(corrected_candidate["slot_index"]),
         }
-        verification = {
-            "vlm_called": False,
-            "verified": False,
-            "confidence": 0.0,
-            "reason": "component4_removed_by_user_request",
-            "matched_target": False,
-            "matched_anchor": False,
-            "matched_relation": False,
-        }
         return {
             "module_enabled": True,
             "decomposition": decomposition,
             "baseline": dict(baseline_decision),
             "corrected": corrected,
-            "frontier_prior": None,
             "object_rerank": object_rerank,
-            "verification": verification,
             "compare": None,
             "logs": [],
+            "correction_applied": bool(correction_applied),
+            "correction_rejected": False,
+            "correction_reason": f"{object_rerank['reason']}; selected_slot={int(corrected['slot_index'])}",
         }
 
     def build_compare_record(
@@ -962,17 +1152,11 @@ class AnchorConditionedSoftDecomposition:
         *,
         correction_applied: bool,
         correction_rejected: bool,
-        verification: Mapping[str, Any],
     ) -> None:
         if correction_applied:
             self.summary["correction_applied"] += 1
         if correction_rejected:
             self.summary["correction_rejected"] += 1
-        if bool(verification.get("vlm_called", True)):
-            if bool(verification.get("verified", False)):
-                self.summary["vlm_verified_true"] += 1
-            else:
-                self.summary["vlm_verified_false"] += 1
 
     @staticmethod
     def format_call_log(
@@ -984,7 +1168,6 @@ class AnchorConditionedSoftDecomposition:
         corrected: Mapping[str, Any],
         correction_applied: bool,
         correction_reason: str,
-        verification: Mapping[str, Any],
     ) -> str:
         return (
             "[ACSD_CALL] "
@@ -992,11 +1175,8 @@ class AnchorConditionedSoftDecomposition:
             f"step_id={step_id} "
             "module_enabled=True "
             f"instruction={json.dumps(str(decomposition['full_instruction']), ensure_ascii=False)} "
-            f"target_object={json.dumps(str(decomposition['target_object']), ensure_ascii=False)} "
             f"room_anchor={json.dumps(str(decomposition.get('room_anchor', '')), ensure_ascii=False)} "
             f"object_anchors={json.dumps(list(decomposition.get('object_anchors', [])), ensure_ascii=False)} "
-            f"attributes={json.dumps(list(decomposition.get('attributes', [])), ensure_ascii=False)} "
-            f"spatial_relations={json.dumps(list(decomposition.get('spatial_relations', [])), ensure_ascii=False)} "
             f"baseline_decision_type={baseline['type']} "
             f"baseline_position={json.dumps(baseline['position'])} "
             f"baseline_score={float(baseline['score']):.6f} "
@@ -1005,9 +1185,10 @@ class AnchorConditionedSoftDecomposition:
             f"corrected_score={float(corrected.get('score', 0.0)):.6f} "
             f"correction_applied={bool(correction_applied)} "
             f"correction_reason={json.dumps(str(correction_reason), ensure_ascii=False)} "
-            f"verifier_verified={bool(verification.get('verified', False))} "
-            f"verifier_confidence={float(verification.get('confidence', 0.0)):.6f} "
-            f"verifier_reason={json.dumps(str(verification.get('reason', '')), ensure_ascii=False)}"
+            f"anchor_policy={json.dumps(str(decomposition.get('anchor_policy', '')), ensure_ascii=False)} "
+            f"decompose_source={json.dumps(str(decomposition.get('decompose_source', '')), ensure_ascii=False)} "
+            f"acsd_fallback_to_baseline={bool(decomposition.get('acsd_fallback_to_baseline', False))} "
+            f"decompose_error={json.dumps(str(decomposition.get('decompose_error', '')), ensure_ascii=False)}"
         )
 
     @staticmethod
@@ -1033,9 +1214,7 @@ class AnchorConditionedSoftDecomposition:
             f"case_00={int(s['case_00'])} "
             f"total_compared={int(s['total_compared'])} "
             f"correction_applied={int(s['correction_applied'])} "
-            f"correction_rejected={int(s['correction_rejected'])} "
-            f"vlm_verified_true={int(s['vlm_verified_true'])} "
-            f"vlm_verified_false={int(s['vlm_verified_false'])}"
+            f"correction_rejected={int(s['correction_rejected'])}"
         )
 
 

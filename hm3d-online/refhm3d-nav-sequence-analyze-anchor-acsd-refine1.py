@@ -1,8 +1,7 @@
-"""RefHM3D ACSD refine1 batch run with ACSD component 4 removed.
+"""RefHM3D ACSD refine1 batch run.
 
-This batch script removes ACSD component 4 per the current experiment:
-no panorama capture and no VLM stop verification. It still runs decomposition,
-frontier prior, object reranking, ACSD_CALL, ACSD_COMPARE, and ACSD_SUMMARY.
+ACSD now performs VLM instruction decomposition and object-only
+origin-anchor reranking. Exploration frontiers are passed through unchanged.
 """
 from __future__ import annotations
 
@@ -11,6 +10,7 @@ import gzip
 import importlib.util
 import json
 import os
+import random
 import sys
 import time
 from pathlib import Path
@@ -18,6 +18,7 @@ from typing import Any, Dict, List, Mapping
 
 import habitat_sim
 import numpy as np
+import torch
 from habitat.utils.visualizations import maps
 from omegaconf import OmegaConf
 from tqdm import tqdm
@@ -43,8 +44,10 @@ from data_utils import PQ3DModel
 from frontier_utils import (
     convert_meters_to_pixel,
     detect_frontier_waypoints,
+    get_polar_angle,
     map_coors_to_pixel,
     pixel_to_map_coors,
+    reveal_fog_of_war,
 )
 from vlm.client import DEFAULT_MODEL as CLIENT_DEFAULT_MODEL
 
@@ -65,6 +68,15 @@ def _sequence_compute_metric_results(result_dict: Dict[str, Any]) -> None:
         f"[Metrics] sequence count={len(rows)}, avg_sr={avg_sr:.6f}, "
         f"avg_spl={avg_spl:.6f}, avg_task_time_sec={avg_time:.3f}"
     )
+
+
+def _set_reproducibility_seed(seed: int) -> None:
+    seed = int(seed)
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    _tqdm_print(f"[ACSDRefine1] reproducibility_seed={seed}")
 
 
 def _load_json_if_exists(path: Path, default: Any) -> Any:
@@ -112,7 +124,6 @@ def _compare_and_log(
     correction_applied: bool,
     correction_rejected: bool,
     correction_reason: str,
-    verification: Mapping[str, Any],
 ) -> Dict[str, Any]:
     compare = acsd.build_compare_record(
         episode_id=episode_id,
@@ -131,20 +142,18 @@ def _compare_and_log(
             corrected=corrected,
             correction_applied=bool(correction_applied),
             correction_reason=correction_reason,
-            verification=verification,
         )
     )
     _tqdm_print(acsd.format_compare_log(compare))
     acsd.update_summary_from_decision(
         correction_applied=bool(correction_applied),
         correction_rejected=bool(correction_rejected),
-        verification=verification,
     )
     return compare
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser("RefHM3D ACSD refine1 batch, stop verifier disabled")
+    parser = argparse.ArgumentParser("RefHM3D ACSD refine1 batch")
     parser.add_argument("--start_ratio", type=float, default=0.0)
     parser.add_argument("--end_ratio", type=float, default=0.2)
     parser.add_argument("--concise_description", action="store_true")
@@ -162,7 +171,10 @@ def main() -> None:
     parser.add_argument("--vlm_model", type=str, default=CLIENT_DEFAULT_MODEL)
     parser.add_argument("--vlm_api_key", type=str, default=os.environ.get("ZZZ_API_KEY", ""))
     parser.add_argument("--acsd_top_k", type=int, default=4)
+    parser.add_argument("--correction_margin", type=float, default=0.015)
+    parser.add_argument("--object_correction_min_baseline_score", type=float, default=0.90)
     parser.add_argument("--quiet_nav_steps", action="store_true")
+    parser.add_argument("--seed", type=int, default=1234, help="Random seed for reproducible baseline/ACSD comparison")
     args = parser.parse_args()
 
     if args.vlm_api_key:
@@ -170,6 +182,7 @@ def main() -> None:
 
     output_log_dir = Path(args.output_log_dir).expanduser().resolve()
     _helpers._setup_run_logging(output_log_dir)
+    _set_reproducibility_seed(args.seed)
     enabled_task_levels = {x.strip() for x in str(args.task_levels).split(",") if x.strip()}
     if not enabled_task_levels:
         raise RuntimeError("--task_levels resolved to empty set")
@@ -178,12 +191,16 @@ def main() -> None:
         ACSDConfig(
             vlm_model=args.vlm_model,
             object_top_k=int(args.acsd_top_k),
-            verify_attempts=1,
+            correction_margin=float(args.correction_margin),
+            object_correction_min_baseline_score=float(args.object_correction_min_baseline_score),
         )
     )
     _tqdm_print(
         f"[ACSDRefine1] cfg levels={sorted(enabled_task_levels)} start_ratio={args.start_ratio} "
-        f"end_ratio={args.end_ratio} top_k={args.acsd_top_k} component4_removed=True"
+        f"end_ratio={args.end_ratio} top_k={args.acsd_top_k} "
+        f"correction_margin={args.correction_margin} "
+        f"object_correction_min_baseline_score={args.object_correction_min_baseline_score} "
+        f"mode=vlm_decompose_object_only"
     )
 
     navigation_data_root = Path(args.navigation_data_path).expanduser().resolve()
@@ -208,7 +225,6 @@ def main() -> None:
             "records": [],
             "case_counts": {"00": 0, "01": 0, "10": 0, "11": 0},
             "module_status_counts": {},
-            "component4_removed": True,
         },
     )
 
@@ -279,8 +295,9 @@ def main() -> None:
                     decomposition = acsd.decompose_instruction(sentence)
                     _tqdm_print(
                         f"[ACSDRefine1][task-start] scene={scene_name} ep={episode_id} task={task_id} "
-                        f"level={task_type} target={decomposition['target_object']!r} "
-                        f"room={decomposition.get('room_anchor', '')!r} anchors={decomposition.get('object_anchors', [])!r}"
+                        f"level={task_type} room={decomposition.get('room_anchor', '')!r} "
+                        f"anchors={decomposition.get('object_anchors', [])!r} "
+                        f"fallback={bool(decomposition.get('acsd_fallback_to_baseline', False))}"
                     )
 
                     task_dir = output_log_dir / "process" / f"scene={scene_name}" / f"episode={episode_id}" / f"task={task_id}"
@@ -311,20 +328,24 @@ def main() -> None:
                         depth_list.extend(goto_depth)
                         state_list.extend(goto_states)
 
-                        scan_rgb, scan_depth, scan_states, fog, total_steps = _helpers._capture_scan_frames(
-                            sim=sim,
-                            agent=agent,
-                            top_down_map=top_down_map,
-                            fog=fog,
-                            vis_dist=vis_dist,
-                            total_steps=total_steps,
-                            max_steps=int(args.max_steps),
-                        )
-                        color_list.extend(scan_rgb)
-                        depth_list.extend(scan_depth)
-                        state_list.extend(scan_states)
-                        if total_steps >= int(args.max_steps):
-                            break
+                        for _ in range(12):
+                            obs = sim.step(action="turn_left")
+                            color = obs["color_sensor"][:, :, :3]
+                            depth = obs["depth_sensor"][:, :]
+                            agent_state = agent.get_state()
+                            color_list.append(color)
+                            depth_list.append(depth)
+                            state_list.append(agent_state)
+                            fog = reveal_fog_of_war(
+                                top_down_map=top_down_map,
+                                current_fog_of_war_mask=fog,
+                                current_point=map_coors_to_pixel(agent_state.position, top_down_map, sim),
+                                current_angle=get_polar_angle(agent_state),
+                                fov=42,
+                                max_line_len=vis_dist,
+                                enable_debug_visualization=False,
+                            )
+                            total_steps += 1
 
                         agent_state = agent.get_state()
                         fw = detect_frontier_waypoints(
@@ -350,8 +371,11 @@ def main() -> None:
                             frontiers,
                             sentence,
                             decision_num,
-                            analysis_output_dir=str(dec_dir),
                         )
+                        stage2_payload = getattr(pq3d, "last_stage2_decision", None)
+                        if not isinstance(stage2_payload, dict) or not stage2_payload:
+                            raise RuntimeError("PQ3D did not expose last_stage2_decision after decision()")
+                        _write_json(dec_dir / "stage2_decision.json", stage2_payload)
                         stage2 = acsd.load_stage2_decision(dec_dir / "stage2_decision.json")
                         baseline = acsd.build_baseline_decision(
                             target_position=target_position,
@@ -365,113 +389,124 @@ def main() -> None:
                                 f"dec={decision_num} baseline_type={baseline['type']} frontiers={len(frontiers)}"
                             )
 
-                        process = acsd.process_decision(
-                            instruction=sentence,
-                            baseline_decision=baseline,
-                            observation_context={"representation_manager": pq3d.representation_manager},
-                            candidate_context={"stage2": stage2, "decomposition": decomposition, "output_dir": str(dec_dir / "acsd")},
-                            episode_context={"scene_name": scene_name, "episode_id": episode_id, "task_id": task_id},
-                            gt_context={"goal_positions": [g.tolist() for g in goals]},
-                        )
-                        follow_failed = False
-
-                        if baseline["type"] == "frontier":
+                        if baseline["type"] == "object":
+                            process = acsd.process_decision(
+                                instruction=sentence,
+                                baseline_decision=baseline,
+                                observation_context={"representation_manager": pq3d.representation_manager},
+                                candidate_context={"stage2": stage2, "decomposition": decomposition, "output_dir": str(dec_dir / "acsd")},
+                                episode_context={
+                                    "scene_name": scene_name,
+                                    "episode_id": episode_id,
+                                    "task_id": task_id,
+                                    "task_level": task_type,
+                                },
+                                gt_context={"goal_positions": [g.tolist() for g in goals]},
+                            )
+                            for log_line in process.get("logs", []):
+                                _tqdm_print(str(log_line))
                             corrected = dict(process["corrected"])
-                            verification = dict(process["verification"])
-                            correction_reason = str(process["frontier_prior"]["reason"])
-                            correction_applied = bool(process["frontier_prior"]["correction_applied"])
-                            correction_rejected = False
-                            visited_frontier.add(tuple(np.round(np.asarray(corrected["position"], dtype=float), 1)))
-                            try:
-                                goto_rgb, goto_depth, goto_states, prev_agent_state, total_steps, episode_cum_distance = _helpers._follow_target(
-                                    path_finder=path_finder,
-                                    agent=agent,
-                                    sim=sim,
-                                    top_down_map=top_down_map,
-                                    fog=fog,
-                                    vis_dist=vis_dist,
-                                    target=corrected["position"],
-                                    prev_agent_state=prev_agent_state,
-                                    total_steps=total_steps,
-                                    max_steps=int(args.max_steps),
-                                    episode_cum_distance=float(episode_cum_distance),
-                                )
-                            except Exception as exc:
-                                follower_error_info = {
-                                    "error_type": type(exc).__name__,
-                                    "error_message": str(exc),
-                                    "decision_num": int(decision_num),
-                                    "baseline_type": str(baseline["type"]),
-                                    "corrected_type": str(corrected["type"]),
-                                    "baseline_position": list(baseline["position"]),
-                                    "corrected_position": list(corrected["position"]),
-                                    "correction_applied": bool(correction_applied),
-                                }
-                                task_end_reason = "follower_error"
-                                follow_failed = True
-                                _tqdm_print(
-                                    f"[ACSD_FATAL] scene={scene_name} ep={episode_id} task={task_id} "
-                                    f"dec={decision_num} type=frontier error={type(exc).__name__}: {exc}"
-                                )
-                        else:
-                            selected = process["object_rerank"]["selected_candidates"][0]
-                            verification = {
-                                "vlm_called": False,
-                                "verified": False,
-                                "confidence": 0.0,
-                                "reason": "component4_removed_by_user_request",
-                                "matched_target": False,
-                                "matched_anchor": False,
-                                "matched_relation": False,
+                            correction_applied = bool(process["correction_applied"])
+                            correction_rejected = bool(process.get("correction_rejected", False))
+                            correction_reason = str(process["correction_reason"])
+                        elif baseline["type"] == "frontier":
+                            corrected = {
+                                "type": "frontier",
+                                "position": list(baseline["position"]),
+                                "score": float(baseline["score"]),
                             }
-                            corrected = dict(process["corrected"])
-                            correction_applied = bool(
-                                np.linalg.norm(
-                                    np.asarray(corrected["position"], dtype=float).reshape(3)
-                                    - np.asarray(baseline["position"], dtype=float).reshape(3)
-                                )
-                                > 1e-6
-                            )
+                            process = {
+                                "module_enabled": True,
+                                "decomposition": decomposition,
+                                "baseline": dict(baseline),
+                                "corrected": corrected,
+                                "object_rerank": None,
+                                "compare": None,
+                                "logs": [],
+                                "correction_applied": False,
+                                "correction_rejected": False,
+                                "correction_reason": "frontier_passthrough_no_acsd_object_correction",
+                            }
+                            correction_applied = False
                             correction_rejected = False
-                            correction_reason = (
-                                "ACSD component 4 removed by user request; "
-                                f"{process['object_rerank']['reason']}; "
-                                f"selected_slot={int(corrected['slot_index'])}"
+                            correction_reason = "frontier_passthrough_no_acsd_object_correction"
+                        else:
+                            raise RuntimeError(f"unknown baseline decision type: {baseline['type']!r}")
+                        follow_failed = False
+                        follow_target = np.asarray(corrected["position"], dtype=float).reshape(3)
+                        if corrected["type"] == "frontier":
+                            visited_frontier.add(tuple(np.round(follow_target, 1)))
+                        episode_decision_num += 1
+                        task_decision_count += 1
+
+                        agent_island = path_finder.get_island(agent_state.position)
+                        target_nav = path_finder.snap_point(point=follow_target, island_index=agent_island)
+                        follower = habitat_sim.GreedyGeodesicFollower(
+                            path_finder,
+                            agent,
+                            forward_key="move_forward",
+                            left_key="turn_left",
+                            right_key="turn_right",
+                        )
+                        try:
+                            action_list = follower.find_path(target_nav)
+                        except Exception as exc:
+                            follower_error_info = {
+                                "error_type": type(exc).__name__,
+                                "error_message": str(exc),
+                                "raw_target": follow_target.tolist(),
+                                "snapped_target": np.asarray(target_nav, dtype=float).reshape(3).tolist(),
+                                "decision_num": int(decision_num),
+                                "baseline_type": str(baseline["type"]),
+                                "corrected_type": str(corrected["type"]),
+                                "baseline_position": list(baseline["position"]),
+                                "corrected_position": list(corrected["position"]),
+                                "correction_applied": bool(correction_applied),
+                            }
+                            if "slot_index" in corrected:
+                                follower_error_info["slot_index"] = int(corrected["slot_index"])
+                            path = habitat_sim.ShortestPath()
+                            path.requested_start = agent_state.position
+                            path.requested_end = target_nav
+                            if sim.pathfinder.find_path(path):
+                                follower_error_info["shortest_path_found"] = True
+                                follower_error_info["shortest_path_geodesic_distance"] = float(path.geodesic_distance)
+                            else:
+                                follower_error_info["shortest_path_found"] = False
+                                follower_error_info["shortest_path_geodesic_distance"] = float("inf")
+                            task_end_reason = "follower_error"
+                            follow_failed = True
+                            action_list = []
+                            _tqdm_print(
+                                f"[ACSD_FOLLOW_ERROR] scene={scene_name} ep={episode_id} task={task_id} "
+                                f"dec={decision_num} type={corrected['type']} error={type(exc).__name__} "
+                                f"path_found={follower_error_info['shortest_path_found']}"
                             )
-                            task_end_reason = "final_decision"
-                            try:
-                                goto_rgb, goto_depth, goto_states, prev_agent_state, total_steps, episode_cum_distance = _helpers._follow_target(
-                                    path_finder=path_finder,
-                                    agent=agent,
-                                    sim=sim,
+
+                        goto_rgb = []
+                        goto_depth = []
+                        goto_states = []
+                        for action in action_list:
+                            if action:
+                                obs = sim.step(action=action)
+                                agent_state = agent.get_state()
+                                color = obs["color_sensor"][:, :, :3]
+                                depth = obs["depth_sensor"][:, :]
+                                goto_rgb.append(color)
+                                goto_depth.append(depth)
+                                goto_states.append(agent_state)
+                                fog = reveal_fog_of_war(
                                     top_down_map=top_down_map,
-                                    fog=fog,
-                                    vis_dist=vis_dist,
-                                    target=corrected["position"],
-                                    prev_agent_state=prev_agent_state,
-                                    total_steps=total_steps,
-                                    max_steps=int(args.max_steps),
-                                    episode_cum_distance=float(episode_cum_distance),
+                                    current_fog_of_war_mask=fog,
+                                    current_point=map_coors_to_pixel(agent_state.position, top_down_map, sim),
+                                    current_angle=get_polar_angle(agent_state),
+                                    fov=42,
+                                    max_line_len=vis_dist,
+                                    enable_debug_visualization=False,
                                 )
-                            except Exception as exc:
-                                follower_error_info = {
-                                    "error_type": type(exc).__name__,
-                                    "error_message": str(exc),
-                                    "decision_num": int(decision_num),
-                                    "baseline_type": str(baseline["type"]),
-                                    "corrected_type": str(corrected["type"]),
-                                    "baseline_position": list(baseline["position"]),
-                                    "corrected_position": list(corrected["position"]),
-                                    "correction_applied": bool(correction_applied),
-                                    "slot_index": int(corrected["slot_index"]),
-                                }
-                                task_end_reason = "follower_error"
-                                follow_failed = True
-                                _tqdm_print(
-                                    f"[ACSD_FATAL] scene={scene_name} ep={episode_id} task={task_id} "
-                                    f"dec={decision_num} type=object slot={int(corrected['slot_index'])} "
-                                    f"error={type(exc).__name__}: {exc}"
-                                )
+                                total_steps += 1
+                                episode_cum_distance += float(np.linalg.norm(agent_state.position - prev_agent_state.position))
+                                prev_agent_state = agent_state
 
                         compare = _compare_and_log(
                             acsd=acsd,
@@ -484,7 +519,6 @@ def main() -> None:
                             correction_applied=bool(correction_applied),
                             correction_rejected=bool(correction_rejected),
                             correction_reason=correction_reason,
-                            verification=verification,
                         )
                         final_compare = compare
                         final_correction_applied = bool(correction_applied)
@@ -499,7 +533,6 @@ def main() -> None:
                                 "decomposition": decomposition,
                                 "baseline": baseline,
                                 "corrected": corrected,
-                                "verification": verification,
                                 "compare": compare,
                                 "process": process,
                                 "correction_applied": bool(correction_applied),
@@ -507,11 +540,10 @@ def main() -> None:
                                 "correction_reason": correction_reason,
                             },
                         )
-                        episode_decision_num += 1
-                        task_decision_count += 1
                         if follow_failed:
                             break
-                        if baseline["type"] == "object" and corrected["type"] == "object":
+                        if corrected["type"] == "object":
+                            task_end_reason = "final_decision"
                             break
 
                     task_time = float(time.perf_counter() - task_t0)
@@ -554,7 +586,6 @@ def main() -> None:
                         "start_goal_geo": float(start_end_geo),
                         "end_goal_geo": float(end_geo),
                         "episode_cum_distance": float(episode_cum_distance),
-                        "acsd_component4_removed": True,
                         "acsd_case": None if final_compare is None else final_compare.get("case"),
                         "acsd_correction_applied": bool(final_correction_applied),
                         "follower_error_info": follower_error_info,
