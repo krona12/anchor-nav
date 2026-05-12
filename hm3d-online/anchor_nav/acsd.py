@@ -824,6 +824,17 @@ class AnchorConditionedSoftDecomposition:
             and anchor_advantage >= 0.10
             and float(best["acsd_score"]) >= float(baseline_rank["acsd_score"]) + 0.07
         )
+        region_strong_anchor_moderate_target_rescue_gate = bool(
+            level_name == "region"
+            and int(best["slot_index"]) != baseline_slot
+            and float(best["baseline_object_score"]) >= 0.85
+            and float(best["target_match_score"]) >= 0.90
+            and float(best["anchor_match_score"]) >= 0.98
+            and float(baseline_rank["target_match_score"]) <= 0.10
+            and target_advantage >= 0.85
+            and anchor_advantage >= 0.10
+            and float(best["acsd_score"]) >= float(baseline_rank["acsd_score"]) + 0.25
+        )
         region_lower_conf_target_context_rescue_gate = bool(
             level_name == "region"
             and int(best["slot_index"]) != baseline_slot
@@ -904,6 +915,7 @@ class AnchorConditionedSoftDecomposition:
             or region_low_raw_exact_target_rescue_gate
             or region_mid_conf_target_context_rescue_gate
             or region_high_context_target_rescue_gate
+            or region_strong_anchor_moderate_target_rescue_gate
             or region_lower_conf_target_context_rescue_gate
             or region_low_conf_target_anchor_rescue_gate
         ):
@@ -1004,6 +1016,7 @@ class AnchorConditionedSoftDecomposition:
             and not region_low_raw_exact_target_rescue_gate
             and not region_mid_conf_target_context_rescue_gate
             and not region_high_context_target_rescue_gate
+            and not region_strong_anchor_moderate_target_rescue_gate
             and not region_lower_conf_target_context_rescue_gate
             and not region_low_conf_target_anchor_rescue_gate
         ):
@@ -1023,6 +1036,7 @@ class AnchorConditionedSoftDecomposition:
             or region_low_raw_exact_target_rescue_gate
             or region_mid_conf_target_context_rescue_gate
             or region_high_context_target_rescue_gate
+            or region_strong_anchor_moderate_target_rescue_gate
             or region_lower_conf_target_context_rescue_gate
             or region_low_conf_target_anchor_rescue_gate
         ):
@@ -1048,6 +1062,7 @@ class AnchorConditionedSoftDecomposition:
             or region_low_raw_exact_target_rescue_gate
             or region_mid_conf_target_context_rescue_gate
             or region_high_context_target_rescue_gate
+            or region_strong_anchor_moderate_target_rescue_gate
             or region_lower_conf_target_context_rescue_gate
             or region_low_conf_target_anchor_rescue_gate
             or region_anchor_substitute_rescue_gate
@@ -1093,6 +1108,7 @@ class AnchorConditionedSoftDecomposition:
             "region_low_raw_exact_target_rescue_gate": bool(region_low_raw_exact_target_rescue_gate),
             "region_mid_conf_target_context_rescue_gate": bool(region_mid_conf_target_context_rescue_gate),
             "region_high_context_target_rescue_gate": bool(region_high_context_target_rescue_gate),
+            "region_strong_anchor_moderate_target_rescue_gate": bool(region_strong_anchor_moderate_target_rescue_gate),
             "region_lower_conf_target_context_rescue_gate": bool(region_lower_conf_target_context_rescue_gate),
             "region_low_conf_target_anchor_rescue_gate": bool(region_low_conf_target_anchor_rescue_gate),
             "region_target_context_advantage_gate": bool(region_target_context_advantage_gate),
