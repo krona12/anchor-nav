@@ -869,6 +869,22 @@ class AnchorConditionedSoftDecomposition:
             and anchor_advantage < -0.20
             and best_baseline_distance > 0.85
         )
+        region_strong_baseline_protection_gate = bool(
+            level_name == "region"
+            and int(best["slot_index"]) != baseline_slot
+            and float(baseline_rank["baseline_object_score"]) >= 0.99
+            and float(baseline_rank["target_match_score"]) >= 0.40
+            and (
+                (
+                    float(best["target_match_score"]) < 0.90
+                    and float(best["baseline_object_score"]) < 0.85
+                )
+                or (
+                    float(baseline_rank["target_match_score"]) >= 0.85
+                    and target_advantage < 0.15
+                )
+            )
+        )
         # Human navigation often accepts a lower raw PQ3D logit for region-level
         # targets when the candidate is strongly supported by both the target
         # noun and the surrounding context cluster. Keep this escape hatch
@@ -1019,7 +1035,7 @@ class AnchorConditionedSoftDecomposition:
             margin_gate = True
         if room_target_override_gate or room_local_target_override_gate or room_exact_target_rescue_gate:
             margin_gate = True
-        if region_anchor_regression_nonlocal_block:
+        if region_anchor_regression_nonlocal_block or region_strong_baseline_protection_gate:
             semantic_gate = False
             candidate_confidence_gate = False
             margin_gate = False
@@ -1081,6 +1097,7 @@ class AnchorConditionedSoftDecomposition:
             "region_low_conf_target_anchor_rescue_gate": bool(region_low_conf_target_anchor_rescue_gate),
             "region_target_context_advantage_gate": bool(region_target_context_advantage_gate),
             "region_anchor_regression_nonlocal_block": bool(region_anchor_regression_nonlocal_block),
+            "region_strong_baseline_protection_gate": bool(region_strong_baseline_protection_gate),
             "region_anchor_substitute_rescue_gate": bool(region_anchor_substitute_rescue_gate),
             "region_context_probe_rescue_gate": bool(region_context_probe_rescue_gate),
             "instance_target_context_rescue_gate": bool(instance_target_context_rescue_gate),
