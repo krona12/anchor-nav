@@ -825,6 +825,8 @@ class AnchorConditionedSoftDecomposition:
             and float(best["acsd_score"]) >= float(baseline_rank["acsd_score"]) + 0.07
         )
         region_strong_anchor_moderate_target_rescue_gate = bool(
+            False
+            and
             level_name == "region"
             and int(best["slot_index"]) != baseline_slot
             and float(best["baseline_object_score"]) >= 0.85
@@ -949,7 +951,24 @@ class AnchorConditionedSoftDecomposition:
             and anchor_advantage >= 0.45
             and float(best["acsd_score"]) >= float(baseline_rank["acsd_score"]) + 0.015
         )
-        if instance_target_context_rescue_gate or instance_anchor_identity_rescue_gate:
+        instance_low_raw_exact_target_rescue_gate = bool(
+            level_name == "instance"
+            and bool(room_anchor)
+            and int(best["slot_index"]) != baseline_slot
+            and 0.62 <= float(best["baseline_object_score"]) < 0.70
+            and float(best["target_match_score"]) >= 0.995
+            and float(baseline_rank["target_match_score"]) <= 0.05
+            and target_advantage >= 0.95
+            and float(best["anchor_match_score"]) <= 0.20
+            and anchor_advantage <= -0.50
+            and float(best.get("merged_object_score", 0.0)) >= 0.99
+            and float(best["acsd_score"]) >= float(baseline_rank["acsd_score"]) + 0.08
+        )
+        if (
+            instance_target_context_rescue_gate
+            or instance_anchor_identity_rescue_gate
+            or instance_low_raw_exact_target_rescue_gate
+        ):
             semantic_gate = True
             candidate_confidence_gate = True
         room_target_override_gate = bool(
@@ -1045,7 +1064,11 @@ class AnchorConditionedSoftDecomposition:
             margin_gate = True
         if level_name == "instance" and target_advantage >= 0.55 and float(best["baseline_object_score"]) >= 0.80:
             margin_gate = True
-        if instance_target_context_rescue_gate or instance_anchor_identity_rescue_gate:
+        if (
+            instance_target_context_rescue_gate
+            or instance_anchor_identity_rescue_gate
+            or instance_low_raw_exact_target_rescue_gate
+        ):
             margin_gate = True
         if room_target_override_gate or room_local_target_override_gate or room_exact_target_rescue_gate:
             margin_gate = True
@@ -1069,6 +1092,7 @@ class AnchorConditionedSoftDecomposition:
             or region_context_probe_rescue_gate
             or instance_target_context_rescue_gate
             or instance_anchor_identity_rescue_gate
+            or instance_low_raw_exact_target_rescue_gate
             or room_target_override_gate
             or room_local_target_override_gate
             or room_exact_target_rescue_gate
@@ -1118,6 +1142,7 @@ class AnchorConditionedSoftDecomposition:
             "region_context_probe_rescue_gate": bool(region_context_probe_rescue_gate),
             "instance_target_context_rescue_gate": bool(instance_target_context_rescue_gate),
             "instance_anchor_identity_rescue_gate": bool(instance_anchor_identity_rescue_gate),
+            "instance_low_raw_exact_target_rescue_gate": bool(instance_low_raw_exact_target_rescue_gate),
             "room_target_override_gate": bool(room_target_override_gate),
             "room_local_target_override_gate": bool(room_local_target_override_gate),
             "room_exact_target_rescue_gate": bool(room_exact_target_rescue_gate),
