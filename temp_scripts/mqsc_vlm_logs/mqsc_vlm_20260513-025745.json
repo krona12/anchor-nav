@@ -1,0 +1,640 @@
+{
+  "timestamp": "2026-05-13T02:57:27",
+  "cfg": {
+    "use_vlm": true,
+    "vlm_model": "gpt-4o-mini",
+    "vlm_max_retries": 2,
+    "vlm_no_proxy": true,
+    "repeat_per_task": 2
+  },
+  "records": [
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 0,
+      "task_id": 0,
+      "task_type": "instance",
+      "target_category": "wardrobe",
+      "sentence": "tall brown wood wardrobe in bedroom with plain white sheets and light teal pillows on bed near Mickey Mouse plush toy",
+      "repeat_idx": 0,
+      "parse_ok": true,
+      "source": "vlm",
+      "error_type": "",
+      "target_desc": "wardrobe",
+      "target_aliases": [
+        "tall wardrobe",
+        "brown wardrobe"
+      ],
+      "anchor_primary": [
+        "bed",
+        "plush toy"
+      ],
+      "anchor_support": [
+        "white sheets",
+        "light teal pillows"
+      ],
+      "room_context": [
+        "bedroom"
+      ],
+      "target_leaks_to_anchor": false,
+      "role_queries": [
+        {
+          "role": "full",
+          "text": "tall brown wood wardrobe in bedroom with plain white sheets and light teal pillows on bed near Mickey Mouse plush toy"
+        },
+        {
+          "role": "target",
+          "text": "wardrobe, tall wardrobe, brown wardrobe"
+        },
+        {
+          "role": "anchor_primary",
+          "text": "bed, plush toy"
+        },
+        {
+          "role": "anchor_support",
+          "text": "white sheets, light teal pillows"
+        },
+        {
+          "role": "room_context",
+          "text": "bedroom"
+        }
+      ],
+      "raw": "{\"target_desc\":\"wardrobe\",\"target_aliases\":[\"tall wardrobe\",\"brown wardrobe\"],\"anchor_primary\":[\"bed\",\"plush toy\"],\"anchor_support\":[\"white sheets\",\"light teal pillows\"],\"room_context\":[\"bedroom\"],\"relations\":\"\"}"
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 0,
+      "task_id": 0,
+      "task_type": "instance",
+      "target_category": "wardrobe",
+      "sentence": "tall brown wood wardrobe in bedroom with plain white sheets and light teal pillows on bed near Mickey Mouse plush toy",
+      "repeat_idx": 1,
+      "parse_ok": true,
+      "source": "vlm",
+      "error_type": "",
+      "target_desc": "wardrobe",
+      "target_aliases": [
+        "wooden wardrobe",
+        "furniture"
+      ],
+      "anchor_primary": [
+        "bed",
+        "mickey mouse plush toy"
+      ],
+      "anchor_support": [
+        "plain white sheets",
+        "light teal pillows"
+      ],
+      "room_context": [
+        "bedroom"
+      ],
+      "target_leaks_to_anchor": false,
+      "role_queries": [
+        {
+          "role": "full",
+          "text": "tall brown wood wardrobe in bedroom with plain white sheets and light teal pillows on bed near Mickey Mouse plush toy"
+        },
+        {
+          "role": "target",
+          "text": "wardrobe, wooden wardrobe, furniture"
+        },
+        {
+          "role": "anchor_primary",
+          "text": "bed, mickey mouse plush toy"
+        },
+        {
+          "role": "anchor_support",
+          "text": "plain white sheets, light teal pillows"
+        },
+        {
+          "role": "room_context",
+          "text": "bedroom"
+        }
+      ],
+      "raw": "{\"target_desc\":\"wardrobe\",\"target_aliases\":[\"wooden wardrobe\",\"furniture\"],\"anchor_primary\":[\"bed\",\"Mickey Mouse plush toy\"],\"anchor_support\":[\"plain white sheets\",\"light teal pillows\"],\"room_context\":[\"bedroom\"],\"relations\":\"\"}"
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 0,
+      "task_id": 1,
+      "task_type": "region",
+      "target_category": "blanket",
+      "sentence": "blanket in the office that has computer desk with printer and black PC tower, black office chair below colorful painting, rack with books and wicker basket, brown leather couch with diamond-patterned blanket by railing",
+      "repeat_idx": 0,
+      "parse_ok": true,
+      "source": "vlm",
+      "error_type": "",
+      "target_desc": "blanket",
+      "target_aliases": [
+        "throw",
+        "cover"
+      ],
+      "anchor_primary": [
+        "computer desk",
+        "black office chair"
+      ],
+      "anchor_support": [
+        "printer",
+        "black pc tower",
+        "books rack",
+        "wicker basket"
+      ],
+      "room_context": [
+        "office"
+      ],
+      "target_leaks_to_anchor": false,
+      "role_queries": [
+        {
+          "role": "full",
+          "text": "blanket in the office that has computer desk with printer and black PC tower, black office chair below colorful painting, rack with books and wicker basket, brown leather couch with diamond-patterned blanket by railing"
+        },
+        {
+          "role": "target",
+          "text": "blanket, throw, cover"
+        },
+        {
+          "role": "anchor_primary",
+          "text": "computer desk, black office chair"
+        },
+        {
+          "role": "anchor_support",
+          "text": "printer, black pc tower, books rack, wicker basket"
+        },
+        {
+          "role": "room_context",
+          "text": "office"
+        }
+      ],
+      "raw": "{\"target_desc\":\"blanket\",\"target_aliases\":[\"throw\",\"cover\"],\"anchor_primary\":[\"computer desk\",\"black office chair\"],\"anchor_support\":[\"printer\",\"black PC tower\",\"books rack\",\"wicker basket\"],\"room_context\":[\"office\"],\"relations\":\"on\"}"
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 0,
+      "task_id": 1,
+      "task_type": "region",
+      "target_category": "blanket",
+      "sentence": "blanket in the office that has computer desk with printer and black PC tower, black office chair below colorful painting, rack with books and wicker basket, brown leather couch with diamond-patterned blanket by railing",
+      "repeat_idx": 1,
+      "parse_ok": true,
+      "source": "vlm",
+      "error_type": "",
+      "target_desc": "blanket",
+      "target_aliases": [
+        "throw",
+        "covering"
+      ],
+      "anchor_primary": [
+        "computer desk",
+        "brown leather couch"
+      ],
+      "anchor_support": [
+        "printer",
+        "black pc tower",
+        "black office chair",
+        "rack with books"
+      ],
+      "room_context": [
+        "office"
+      ],
+      "target_leaks_to_anchor": false,
+      "role_queries": [
+        {
+          "role": "full",
+          "text": "blanket in the office that has computer desk with printer and black PC tower, black office chair below colorful painting, rack with books and wicker basket, brown leather couch with diamond-patterned blanket by railing"
+        },
+        {
+          "role": "target",
+          "text": "blanket, throw, covering"
+        },
+        {
+          "role": "anchor_primary",
+          "text": "computer desk, brown leather couch"
+        },
+        {
+          "role": "anchor_support",
+          "text": "printer, black pc tower, black office chair, rack with books"
+        },
+        {
+          "role": "room_context",
+          "text": "office"
+        }
+      ],
+      "raw": "{\"target_desc\":\"blanket\",\"target_aliases\":[\"throw\",\"covering\"],\"anchor_primary\":[\"computer desk\",\"brown leather couch\"],\"anchor_support\":[\"printer\",\"black PC tower\",\"black office chair\",\"rack with books\"],\"room_context\":[\"office\"],\"relations\":\"on\"}"
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 0,
+      "task_id": 2,
+      "task_type": "region",
+      "target_category": "nightstand",
+      "sentence": "nightstand in the bedroom that has bed with plain white sheets and light teal pillows, tall wooden headboard, Mickey Mouse plush on dark wood nightstand, matching wardrobe and beige armchair, TV on wood cabinet",
+      "repeat_idx": 0,
+      "parse_ok": true,
+      "source": "vlm",
+      "error_type": "",
+      "target_desc": "nightstand",
+      "target_aliases": [
+        "end table",
+        "bedside table"
+      ],
+      "anchor_primary": [
+        "tall wooden headboard",
+        "beige armchair"
+      ],
+      "anchor_support": [
+        "mickey mouse plush",
+        "matching wardrobe",
+        "tv on wood cabinet"
+      ],
+      "room_context": [
+        "bedroom"
+      ],
+      "target_leaks_to_anchor": false,
+      "role_queries": [
+        {
+          "role": "full",
+          "text": "nightstand in the bedroom that has bed with plain white sheets and light teal pillows, tall wooden headboard, Mickey Mouse plush on dark wood nightstand, matching wardrobe and beige armchair, TV on wood cabinet"
+        },
+        {
+          "role": "target",
+          "text": "nightstand, end table, bedside table"
+        },
+        {
+          "role": "anchor_primary",
+          "text": "tall wooden headboard, beige armchair"
+        },
+        {
+          "role": "anchor_support",
+          "text": "mickey mouse plush, matching wardrobe, tv on wood cabinet"
+        },
+        {
+          "role": "room_context",
+          "text": "bedroom"
+        }
+      ],
+      "raw": "{\"target_desc\":\"nightstand\",\"target_aliases\":[\"end table\",\"bedside table\"],\"anchor_primary\":[\"tall wooden headboard\",\"beige armchair\"],\"anchor_support\":[\"Mickey Mouse plush\",\"matching wardrobe\",\"TV on wood cabinet\"],\"room_context\":[\"bedroom\"],\"relations\":\"near\"}"
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 0,
+      "task_id": 2,
+      "task_type": "region",
+      "target_category": "nightstand",
+      "sentence": "nightstand in the bedroom that has bed with plain white sheets and light teal pillows, tall wooden headboard, Mickey Mouse plush on dark wood nightstand, matching wardrobe and beige armchair, TV on wood cabinet",
+      "repeat_idx": 1,
+      "parse_ok": true,
+      "source": "vlm",
+      "error_type": "",
+      "target_desc": "nightstand",
+      "target_aliases": [
+        "wood nightstand",
+        "dark wood nightstand"
+      ],
+      "anchor_primary": [
+        "bed",
+        "wardrobe"
+      ],
+      "anchor_support": [
+        "plush toy",
+        "armchair",
+        "tv",
+        "cabinet"
+      ],
+      "room_context": [
+        "bedroom"
+      ],
+      "target_leaks_to_anchor": false,
+      "role_queries": [
+        {
+          "role": "full",
+          "text": "nightstand in the bedroom that has bed with plain white sheets and light teal pillows, tall wooden headboard, Mickey Mouse plush on dark wood nightstand, matching wardrobe and beige armchair, TV on wood cabinet"
+        },
+        {
+          "role": "target",
+          "text": "nightstand, wood nightstand, dark wood nightstand"
+        },
+        {
+          "role": "anchor_primary",
+          "text": "bed, wardrobe"
+        },
+        {
+          "role": "anchor_support",
+          "text": "plush toy, armchair, tv, cabinet"
+        },
+        {
+          "role": "room_context",
+          "text": "bedroom"
+        }
+      ],
+      "raw": "{\"target_desc\":\"nightstand\",\"target_aliases\":[\"wood nightstand\",\"dark wood nightstand\"],\"anchor_primary\":[\"bed\",\"wardrobe\"],\"anchor_support\":[\"plush toy\",\"armchair\",\"tv\",\"cabinet\"],\"room_context\":[\"bedroom\"],\"relations\":\"\"}"
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 0,
+      "task_id": 3,
+      "task_type": "room",
+      "target_category": "side table",
+      "sentence": "side table in the office",
+      "repeat_idx": 0,
+      "parse_ok": true,
+      "source": "vlm",
+      "error_type": "",
+      "target_desc": "side table",
+      "target_aliases": [
+        "small table",
+        "work table"
+      ],
+      "anchor_primary": [
+        "office chair",
+        "desk"
+      ],
+      "anchor_support": [
+        "lamp",
+        "notebook",
+        "computer"
+      ],
+      "room_context": [
+        "office"
+      ],
+      "target_leaks_to_anchor": false,
+      "role_queries": [
+        {
+          "role": "full",
+          "text": "side table in the office"
+        },
+        {
+          "role": "target",
+          "text": "side table, small table, work table"
+        },
+        {
+          "role": "anchor_primary",
+          "text": "office chair, desk"
+        },
+        {
+          "role": "anchor_support",
+          "text": "lamp, notebook, computer"
+        },
+        {
+          "role": "room_context",
+          "text": "office"
+        }
+      ],
+      "raw": "{\"target_desc\":\"side table\",\"target_aliases\":[\"small table\",\"work table\"],\"anchor_primary\":[\"office chair\",\"desk\"],\"anchor_support\":[\"lamp\",\"notebook\",\"computer\"],\"room_context\":[\"office\"],\"relations\":\"next to\"}"
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 0,
+      "task_id": 3,
+      "task_type": "room",
+      "target_category": "side table",
+      "sentence": "side table in the office",
+      "repeat_idx": 1,
+      "parse_ok": true,
+      "source": "vlm",
+      "error_type": "",
+      "target_desc": "side table",
+      "target_aliases": [
+        "end table",
+        "nightstand"
+      ],
+      "anchor_primary": [
+        "office chair",
+        "desk"
+      ],
+      "anchor_support": [
+        "lamp",
+        "bookshelf",
+        "notebook"
+      ],
+      "room_context": [
+        "office"
+      ],
+      "target_leaks_to_anchor": false,
+      "role_queries": [
+        {
+          "role": "full",
+          "text": "side table in the office"
+        },
+        {
+          "role": "target",
+          "text": "side table, end table, nightstand"
+        },
+        {
+          "role": "anchor_primary",
+          "text": "office chair, desk"
+        },
+        {
+          "role": "anchor_support",
+          "text": "lamp, bookshelf, notebook"
+        },
+        {
+          "role": "room_context",
+          "text": "office"
+        }
+      ],
+      "raw": "{\"target_desc\":\"side table\",\"target_aliases\":[\"end table\",\"nightstand\"],\"anchor_primary\":[\"office chair\",\"desk\"],\"anchor_support\":[\"lamp\",\"bookshelf\",\"notebook\"],\"room_context\":[\"office\"],\"relations\":\"\"}"
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 0,
+      "task_id": 4,
+      "task_type": "region",
+      "target_category": "bathroom cabinet",
+      "sentence": "bathroom cabinet in the bathroom that has toilet beside black toilet brush, dark wood single-sink vanity by dark blue bath mat, hanging beige towel, blue shower curtain with seashell, starfish, and coral motifs",
+      "repeat_idx": 0,
+      "parse_ok": true,
+      "source": "vlm",
+      "error_type": "",
+      "target_desc": "bathroom cabinet",
+      "target_aliases": [
+        "cabinet",
+        "bathroom storage"
+      ],
+      "anchor_primary": [
+        "dark wood single-sink vanity",
+        "black toilet brush"
+      ],
+      "anchor_support": [
+        "beige towel",
+        "dark blue bath mat",
+        "blue shower curtain"
+      ],
+      "room_context": [],
+      "target_leaks_to_anchor": false,
+      "role_queries": [
+        {
+          "role": "full",
+          "text": "bathroom cabinet in the bathroom that has toilet beside black toilet brush, dark wood single-sink vanity by dark blue bath mat, hanging beige towel, blue shower curtain with seashell, starfish, and coral motifs"
+        },
+        {
+          "role": "target",
+          "text": "bathroom cabinet, cabinet, bathroom storage"
+        },
+        {
+          "role": "anchor_primary",
+          "text": "dark wood single-sink vanity, black toilet brush"
+        },
+        {
+          "role": "anchor_support",
+          "text": "beige towel, dark blue bath mat, blue shower curtain"
+        }
+      ],
+      "raw": "{\"target_desc\":\"bathroom cabinet\",\"target_aliases\":[\"cabinet\",\"bathroom storage\"],\"anchor_primary\":[\"dark wood single-sink vanity\",\"black toilet brush\"],\"anchor_support\":[\"beige towel\",\"dark blue bath mat\",\"blue shower curtain\"],\"room_context\":[\"bathroom\"],\"relations\":\"beside\"}"
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 0,
+      "task_id": 4,
+      "task_type": "region",
+      "target_category": "bathroom cabinet",
+      "sentence": "bathroom cabinet in the bathroom that has toilet beside black toilet brush, dark wood single-sink vanity by dark blue bath mat, hanging beige towel, blue shower curtain with seashell, starfish, and coral motifs",
+      "repeat_idx": 1,
+      "parse_ok": true,
+      "source": "vlm",
+      "error_type": "",
+      "target_desc": "bathroom cabinet",
+      "target_aliases": [
+        "cabinet",
+        "storage unit"
+      ],
+      "anchor_primary": [
+        "dark wood single-sink vanity",
+        "black toilet brush"
+      ],
+      "anchor_support": [
+        "dark blue bath mat",
+        "hanging beige towel",
+        "blue shower curtain"
+      ],
+      "room_context": [],
+      "target_leaks_to_anchor": false,
+      "role_queries": [
+        {
+          "role": "full",
+          "text": "bathroom cabinet in the bathroom that has toilet beside black toilet brush, dark wood single-sink vanity by dark blue bath mat, hanging beige towel, blue shower curtain with seashell, starfish, and coral motifs"
+        },
+        {
+          "role": "target",
+          "text": "bathroom cabinet, cabinet, storage unit"
+        },
+        {
+          "role": "anchor_primary",
+          "text": "dark wood single-sink vanity, black toilet brush"
+        },
+        {
+          "role": "anchor_support",
+          "text": "dark blue bath mat, hanging beige towel, blue shower curtain"
+        }
+      ],
+      "raw": "{\"target_desc\":\"bathroom cabinet\",\"target_aliases\":[\"cabinet\",\"storage unit\"],\"anchor_primary\":[\"dark wood single-sink vanity\",\"black toilet brush\"],\"anchor_support\":[\"dark blue bath mat\",\"hanging beige towel\",\"blue shower curtain\"],\"room_context\":[\"bathroom\"],\"relations\":\"\"}"
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 1,
+      "task_id": 0,
+      "task_type": "instance",
+      "target_category": "wardrobe",
+      "sentence": "wood dresser below TV in bedroom with bed with plain white sheets and light teal pillows near Mickey Mouse plush toy",
+      "repeat_idx": 0,
+      "parse_ok": true,
+      "source": "vlm",
+      "error_type": "",
+      "target_desc": "wood dresser",
+      "target_aliases": [
+        "dresser",
+        "wooden dresser"
+      ],
+      "anchor_primary": [
+        "tv"
+      ],
+      "anchor_support": [
+        "bed",
+        "mickey mouse plush toy"
+      ],
+      "room_context": [
+        "bedroom"
+      ],
+      "target_leaks_to_anchor": false,
+      "role_queries": [
+        {
+          "role": "full",
+          "text": "wood dresser below TV in bedroom with bed with plain white sheets and light teal pillows near Mickey Mouse plush toy"
+        },
+        {
+          "role": "target",
+          "text": "wood dresser, dresser, wooden dresser"
+        },
+        {
+          "role": "anchor_primary",
+          "text": "tv"
+        },
+        {
+          "role": "anchor_support",
+          "text": "bed, mickey mouse plush toy"
+        },
+        {
+          "role": "room_context",
+          "text": "bedroom"
+        }
+      ],
+      "raw": "{\"target_desc\":\"wood dresser\",\"target_aliases\":[\"dresser\",\"wooden dresser\"],\"anchor_primary\":[\"TV\"],\"anchor_support\":[\"bed\",\"Mickey Mouse plush toy\"],\"room_context\":[\"bedroom\"],\"relations\":\"below\"}"
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 1,
+      "task_id": 0,
+      "task_type": "instance",
+      "target_category": "wardrobe",
+      "sentence": "wood dresser below TV in bedroom with bed with plain white sheets and light teal pillows near Mickey Mouse plush toy",
+      "repeat_idx": 1,
+      "parse_ok": true,
+      "source": "vlm",
+      "error_type": "",
+      "target_desc": "wood dresser",
+      "target_aliases": [
+        "dresser"
+      ],
+      "anchor_primary": [
+        "tv"
+      ],
+      "anchor_support": [
+        "bed",
+        "mickey mouse plush toy",
+        "plain white sheets",
+        "light teal pillows"
+      ],
+      "room_context": [
+        "bedroom"
+      ],
+      "target_leaks_to_anchor": false,
+      "role_queries": [
+        {
+          "role": "full",
+          "text": "wood dresser below TV in bedroom with bed with plain white sheets and light teal pillows near Mickey Mouse plush toy"
+        },
+        {
+          "role": "target",
+          "text": "wood dresser, dresser"
+        },
+        {
+          "role": "anchor_primary",
+          "text": "tv"
+        },
+        {
+          "role": "anchor_support",
+          "text": "bed, mickey mouse plush toy, plain white sheets, light teal pillows"
+        },
+        {
+          "role": "room_context",
+          "text": "bedroom"
+        }
+      ],
+      "raw": "{\"target_desc\":\"wood dresser\",\"target_aliases\":[\"dresser\"],\"anchor_primary\":[\"TV\"],\"anchor_support\":[\"bed\",\"Mickey Mouse plush toy\",\"plain white sheets\",\"light teal pillows\"],\"room_context\":[\"bedroom\"],\"relations\":\"\"}"
+    }
+  ],
+  "summary": {
+    "total": 12,
+    "parse_ok": 12,
+    "parse_ok_rate": 1.0,
+    "target_leak_count": 0
+  }
+}

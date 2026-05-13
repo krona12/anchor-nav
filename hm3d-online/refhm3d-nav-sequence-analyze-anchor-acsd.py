@@ -10,6 +10,7 @@ import datetime as _dt
 import gzip
 import json
 import os
+import random
 import sys
 import time
 from pathlib import Path
@@ -17,6 +18,7 @@ from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
 
 import habitat_sim
 import numpy as np
+import torch
 from habitat.utils.visualizations import maps
 from omegaconf import OmegaConf
 
@@ -77,6 +79,15 @@ def _setup_run_logging(log_dir: Path) -> Path:
 
     atexit.register(_cleanup)
     return path
+
+
+def _set_reproducibility_seed(seed: int) -> None:
+    seed = int(seed)
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    print(f"[ACSDTest] reproducibility_seed={seed}")
 
 
 def _now_tag() -> str:
@@ -244,19 +255,6 @@ def _goal_positions(cur_task: Mapping[str, Any], goals_map: Mapping[str, Any]) -
     return out
 
 
-def _highest_stage2_frontier(stage2: Mapping[str, Any]) -> Dict[str, Any]:
-    frs = stage2.get("frontier_candidates")
-    if not isinstance(frs, list) or len(frs) == 0:
-        raise RuntimeError("ACSD object rejection requires frontier candidates, but stage2 has none")
-    ranked = sorted(frs, key=lambda x: float(x["og3d_logit"]), reverse=True)
-    top = ranked[0]
-    return {
-        "type": "frontier",
-        "position": [float(x) for x in top["center_habitat_xyz"]],
-        "score": float(top["og3d_logit"]),
-    }
-
-
 def _write_json(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
@@ -282,9 +280,9 @@ def main() -> None:
     parser.add_argument("--vlm_model", type=str, default=CLIENT_DEFAULT_MODEL)
     parser.add_argument("--vlm_api_key", type=str, default=os.environ.get("ZZZ_API_KEY", ""))
     parser.add_argument("--acsd_top_k", type=int, default=4)
-    parser.add_argument("--acsd_verify_attempts", type=int, default=1, help="Retained for compatibility; component 4 is removed.")
     parser.add_argument("--output_root", type=str, default=str(PROJECT_ROOT / "output_process"))
     parser.add_argument("--run_tag", type=str, default=None)
+    parser.add_argument("--seed", type=int, default=1234, help="Random seed for reproducible baseline/ACSD comparison")
     args = parser.parse_args()
 
     if args.vlm_api_key:
@@ -293,17 +291,17 @@ def main() -> None:
     run_tag = args.run_tag or f"{_now_tag()}-acsd-minimal"
     out_root = _ensure_dir(Path(args.output_root).expanduser().resolve() / run_tag)
     _setup_run_logging(out_root)
+    _set_reproducibility_seed(args.seed)
     print(
         f"[ACSDTest] run_tag={run_tag} scene={args.scene_name} episode={args.episode_id} "
         f"task_id={args.task_id} num_tasks={args.num_tasks} top_k={args.acsd_top_k} "
-        f"selected_candidates={args.acsd_verify_attempts} component4_removed=True"
+        f"mode=vlm_decompose_object_only"
     )
 
     acsd = AnchorConditionedSoftDecomposition(
         ACSDConfig(
             vlm_model=args.vlm_model,
             object_top_k=int(args.acsd_top_k),
-            verify_attempts=int(args.acsd_verify_attempts),
         )
     )
 
@@ -370,8 +368,10 @@ def main() -> None:
             decomp_ms = (time.perf_counter() - decomp_t0) * 1000.0
             print(
                 f"[ACSDTest][task-start] task={loop_tid} level={task_type} "
-                f"target={decomposition['target_object']!r} room={decomposition.get('room_anchor', '')!r} "
-                f"anchors={decomposition.get('object_anchors', [])!r} decomp_ms={decomp_ms:.1f}"
+                f"room={decomposition.get('room_anchor', '')!r} "
+                f"anchors={decomposition.get('object_anchors', [])!r} "
+                f"fallback={bool(decomposition.get('acsd_fallback_to_baseline', False))} "
+                f"decomp_ms={decomp_ms:.1f}"
             )
             print(f"[ACSDTest][instruction] {sentence}")
 
@@ -436,8 +436,11 @@ def main() -> None:
                     frontiers,
                     sentence,
                     decision_num,
-                    analysis_output_dir=str(dec_dir),
                 )
+                stage2_payload = getattr(pq3d, "last_stage2_decision", None)
+                if not isinstance(stage2_payload, dict) or not stage2_payload:
+                    raise RuntimeError("PQ3D did not expose last_stage2_decision after decision()")
+                _write_json(dec_dir / "stage2_decision.json", stage2_payload)
                 stage2 = acsd.load_stage2_decision(dec_dir / "stage2_decision.json")
                 aux = dict(getattr(pq3d, "last_decision_aux", {}) or {})
                 baseline = acsd.build_baseline_decision(
@@ -451,25 +454,31 @@ def main() -> None:
                     f"baseline_type={baseline['type']} frontiers={len(frontiers)} pos={baseline['position']}"
                 )
 
-                process = acsd.process_decision(
-                    instruction=sentence,
-                    baseline_decision=baseline,
-                    observation_context={"representation_manager": pq3d.representation_manager},
-                    candidate_context={"stage2": stage2, "decomposition": decomposition, "output_dir": str(dec_dir / "acsd")},
-                    episode_context={"scene_name": args.scene_name, "episode_id": args.episode_id, "task_id": loop_tid},
-                    gt_context={"goal_positions": [g.tolist() for g in goals]},
-                )
-
                 corrected: Dict[str, Any]
-                verification: Dict[str, Any]
                 correction_reason: str
                 correction_rejected = False
 
                 if baseline["type"] == "frontier":
-                    corrected = dict(process["corrected"])
-                    verification = dict(process["verification"])
-                    correction_reason = str(process["frontier_prior"]["reason"])
-                    correction_applied = bool(process["frontier_prior"]["correction_applied"])
+                    corrected = {
+                        "type": "frontier",
+                        "position": list(baseline["position"]),
+                        "score": float(baseline["score"]),
+                    }
+                    process = {
+                        "module_enabled": True,
+                        "decomposition": decomposition,
+                        "baseline": dict(baseline),
+                        "corrected": corrected,
+                        "object_rerank": None,
+                        "compare": None,
+                        "logs": [],
+                        "correction_applied": False,
+                        "correction_rejected": False,
+                        "correction_reason": "frontier_passthrough_no_acsd_object_correction",
+                    }
+                    correction_reason = "frontier_passthrough_no_acsd_object_correction"
+                    correction_applied = False
+                    correction_rejected = False
                     visited_frontier.add(tuple(np.round(np.asarray(corrected["position"], dtype=float), 1)))
                     goto_rgb, goto_depth, goto_states, prev_agent_state, total_steps, episode_cum_distance = _follow_target(
                         path_finder=path_finder,
@@ -485,11 +494,16 @@ def main() -> None:
                         episode_cum_distance=float(episode_cum_distance),
                     )
                 else:
-                    selected_candidates = list(process["object_rerank"]["selected_candidates"])
-                    if len(selected_candidates) < 1:
-                        raise RuntimeError("ACSD object rerank returned zero selected candidates")
-                    verifier_records: List[Dict[str, Any]] = []
-                    candidate = selected_candidates[0]
+                    process = acsd.process_decision(
+                        instruction=sentence,
+                        baseline_decision=baseline,
+                        observation_context={"representation_manager": pq3d.representation_manager},
+                        candidate_context={"stage2": stage2, "decomposition": decomposition, "output_dir": str(dec_dir / "acsd")},
+                        episode_context={"scene_name": args.scene_name, "episode_id": args.episode_id, "task_id": loop_tid},
+                        gt_context={"goal_positions": [g.tolist() for g in goals]},
+                    )
+                    for log_line in process.get("logs", []):
+                        print(str(log_line))
                     corrected = dict(process["corrected"])
                     goto_rgb, goto_depth, goto_states, prev_agent_state, total_steps, episode_cum_distance = _follow_target(
                         path_finder=path_finder,
@@ -504,28 +518,11 @@ def main() -> None:
                         max_steps=int(args.max_steps),
                         episode_cum_distance=float(episode_cum_distance),
                     )
-                    verification = {
-                        "vlm_called": False,
-                        "verified": False,
-                        "confidence": 0.0,
-                        "reason": "component4_removed_by_user_request",
-                        "matched_target": False,
-                        "matched_anchor": False,
-                        "matched_relation": False,
-                    }
-                    verifier_records.append(
-                        {
-                            "attempt": 0,
-                            "slot_index": int(candidate["slot_index"]),
-                            "candidate": dict(candidate),
-                            "verification": verification,
-                        }
-                    )
-                    print(
-                        f"[ACSDTest][component4-removed] task={loop_tid} dec={decision_num} "
-                        f"slot={candidate['slot_index']} reason={verification['reason']}"
-                    )
-                    corrected["verifier_records"] = verifier_records
+                    if process.get("object_rerank") is not None:
+                        selected_candidates = list(process["object_rerank"]["selected_candidates"])
+                        if len(selected_candidates) < 1:
+                            raise RuntimeError("ACSD object rerank returned zero selected candidates")
+                        corrected["selected_candidate"] = dict(selected_candidates[0])
                     correction_applied = bool(
                         np.linalg.norm(
                             np.asarray(corrected["position"], dtype=float).reshape(3)
@@ -533,12 +530,8 @@ def main() -> None:
                         )
                         > 1e-6
                     )
-                    correction_rejected = False
-                    correction_reason = (
-                        "ACSD component 4 removed by user request; "
-                        f"{process['object_rerank']['reason']}; "
-                        f"selected_slot={int(corrected['slot_index'])}"
-                    )
+                    correction_rejected = bool(process.get("correction_rejected", False))
+                    correction_reason = str(process["correction_reason"])
                     task_end_reason = "final_decision"
 
                 compare = acsd.build_compare_record(
@@ -558,14 +551,12 @@ def main() -> None:
                         corrected=corrected,
                         correction_applied=bool(correction_applied),
                         correction_reason=correction_reason,
-                        verification=verification,
                     )
                 )
                 print(acsd.format_compare_log(compare))
                 acsd.update_summary_from_decision(
                     correction_applied=bool(correction_applied),
                     correction_rejected=bool(correction_rejected),
-                    verification=verification,
                 )
                 decision_record = {
                     "task_id": int(loop_tid),
@@ -574,7 +565,6 @@ def main() -> None:
                     "decomposition": decomposition,
                     "baseline": baseline,
                     "corrected": corrected,
-                    "verification": verification,
                     "compare": compare,
                     "process": process,
                     "correction_applied": bool(correction_applied),

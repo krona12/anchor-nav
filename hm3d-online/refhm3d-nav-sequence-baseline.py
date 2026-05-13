@@ -57,13 +57,13 @@ def sequence_compute_metric_results(result_dict: dict) -> None:
     )
 
 
-def baseline_live_metric_log(result_dict: dict, *, scene_name: str, episode_id: int, task_id: int, task_level: str) -> None:
+TASK_LEVEL_ORDER = ("object", "room", "region", "instance")
+
+
+def _baseline_metric_snapshot(result_dict: dict) -> dict:
     rows = result_dict.get("sequence", [])
-    if not rows:
-        print("[BASELINE_LIVE_METRICS] rows=0")
-        return
-    avg_sr = sum(float(item.get("sr", 0.0)) for item in rows) / len(rows)
-    avg_spl = sum(float(item.get("spl", 0.0)) for item in rows) / len(rows)
+    avg_sr = sum(float(item.get("sr", 0.0)) for item in rows) / len(rows) if rows else 0.0
+    avg_spl = sum(float(item.get("spl", 0.0)) for item in rows) / len(rows) if rows else 0.0
     by_level = {}
     for item in rows:
         level = str(item.get("task_level", "unknown"))
@@ -71,23 +71,72 @@ def baseline_live_metric_log(result_dict: dict, *, scene_name: str, episode_id: 
         bucket["count"] += 1
         bucket["sr_sum"] += float(item.get("sr", 0.0))
         bucket["spl_sum"] += float(item.get("spl", 0.0))
-    by_level_out = {
-        level: {
-            "count": int(bucket["count"]),
-            "avg_sr": float(bucket["sr_sum"] / bucket["count"]),
-            "avg_spl": float(bucket["spl_sum"] / bucket["count"]),
+
+    ordered_levels = list(TASK_LEVEL_ORDER)
+    ordered_levels.extend(sorted(level for level in by_level if level not in TASK_LEVEL_ORDER))
+    by_level_out = {}
+    for level in ordered_levels:
+        bucket = by_level.get(level, {"count": 0, "sr_sum": 0.0, "spl_sum": 0.0})
+        count = int(bucket["count"])
+        by_level_out[level] = {
+            "count": count,
+            "avg_sr": float(bucket["sr_sum"] / count) if count else 0.0,
+            "avg_spl": float(bucket["spl_sum"] / count) if count else 0.0,
         }
-        for level, bucket in sorted(by_level.items())
+
+    return {
+        "rows": len(rows),
+        "avg_sr": float(avg_sr),
+        "avg_spl": float(avg_spl),
+        "follower_error_count": sum(1 for item in rows if item.get("end_reason") == "follower_error"),
+        "by_level": by_level_out,
     }
-    follower_error_count = sum(1 for item in rows if item.get("end_reason") == "follower_error")
+
+
+def _format_baseline_metric_snapshot(snapshot: dict) -> str:
+    level_parts = []
+    for level in TASK_LEVEL_ORDER:
+        metrics = snapshot["by_level"].get(level, {"count": 0, "avg_sr": 0.0, "avg_spl": 0.0})
+        level_parts.append(
+            f"{level}:n={metrics['count']},sr={metrics['avg_sr']:.6f},spl={metrics['avg_spl']:.6f}"
+        )
+    return (
+        f"rows={snapshot['rows']} avg_sr={snapshot['avg_sr']:.6f} avg_spl={snapshot['avg_spl']:.6f} "
+        f"follower_error_count={snapshot['follower_error_count']} levels=[{'; '.join(level_parts)}]"
+    )
+
+
+def baseline_live_metric_log(
+    result_dict: dict,
+    *,
+    scene_name: str,
+    episode_id: int,
+    task_id: int,
+    task_level: str,
+    metrics_log_path: str,
+) -> None:
+    snapshot = _baseline_metric_snapshot(result_dict)
+    snapshot.update(
+        {
+            "timestamp": datetime.datetime.now().isoformat(timespec="seconds"),
+            "latest_scene": scene_name,
+            "latest_episode": int(episode_id),
+            "latest_task": int(task_id),
+            "latest_level": task_level,
+        }
+    )
+    formatted = _format_baseline_metric_snapshot(snapshot)
     print(
         "[BASELINE_LIVE_METRICS] "
-        f"rows={len(rows)} avg_sr={avg_sr:.6f} avg_spl={avg_spl:.6f} "
-        f"follower_error_count={follower_error_count} "
+        f"{formatted} "
         f"latest_scene={scene_name} latest_episode={episode_id} latest_task={task_id} latest_level={task_level} "
-        f"by_level={json.dumps(by_level_out, ensure_ascii=False, sort_keys=True)}",
+        f"by_level={json.dumps(snapshot['by_level'], ensure_ascii=False, sort_keys=True)}",
         flush=True,
     )
+    with open(metrics_log_path, "a", encoding="utf-8") as f:
+        f.write("[BASELINE_LIVE_METRICS] " + formatted + "\n")
+        f.write(json.dumps(snapshot, ensure_ascii=False, sort_keys=True) + "\n")
+        f.flush()
 
 
 def set_reproducibility_seed(seed: int) -> None:
@@ -235,6 +284,8 @@ if concise_description_tag:
     output_path = os.path.join(output_log_dir, f"refhm3d_seq_concisedesc_{start_ratio}_{end_ratio}.json")
 else:
     output_path = os.path.join(output_log_dir, f"refhm3d_seq_{start_ratio}_{end_ratio}.json")
+metrics_log_path = os.path.join(output_log_dir, f"baseline_live_metrics_{start_ratio}_{end_ratio}.log")
+print(f"[baseline] live metrics log -> {os.path.abspath(metrics_log_path)}")
 
 scene_data_paths = sorted(navigation_data_root.rglob("*.json.gz"))
 if len(scene_data_paths) == 0:
@@ -251,6 +302,14 @@ print(f"\n\nTotal selected number of scenes {len(scene_data_paths)}: {scene_data
 if os.path.exists(output_path):
     result_dict = json.load(open(output_path, "r"))
     sequence_compute_metric_results(result_dict)
+    baseline_live_metric_log(
+        result_dict,
+        scene_name="resume_existing_output",
+        episode_id=-1,
+        task_id=-1,
+        task_level="resume",
+        metrics_log_path=metrics_log_path,
+    )
     existing_episodes = {
         "_".join([result["scene_name"], result["navigation_type"], str(result["episode_id"])])
         for goal_type in result_dict
@@ -591,6 +650,7 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                 episode_id=int(episode_id),
                 task_id=int(idx),
                 task_level=str(task_type),
+                metrics_log_path=metrics_log_path,
             )
 
         sim.close()

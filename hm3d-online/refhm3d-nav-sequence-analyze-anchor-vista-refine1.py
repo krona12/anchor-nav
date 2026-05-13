@@ -31,10 +31,10 @@ try:
 except AttributeError:
     pass
 
-from anchor_nav.mile import (
-    MileConfig,
-    MileRejectedError,
-    correct_final_decision_with_mile,
+from anchor_nav.vista import (
+    VistaConfig,
+    VistaRejectedError,
+    correct_final_decision_with_vista,
 )
 from common.embodied_utils.simulator import HabitatSimulator
 from data_utils import PQ3DModel
@@ -70,16 +70,16 @@ class _TeeStream:
 def _setup_run_logging(log_dir: Path) -> None:
     log_dir.mkdir(parents=True, exist_ok=True)
     ts = _dt.datetime.now().strftime("%Y%m%d-%H%M%S-%f")
-    log_path = log_dir / f"refhm3d-nav-sequence-analyze-anchor-mile-refine1-{ts}-pid{os.getpid()}.log"
+    log_path = log_dir / f"refhm3d-nav-sequence-analyze-anchor-vista-refine1-{ts}-pid{os.getpid()}.log"
     log_fp = open(log_path, "w", encoding="utf-8", buffering=1)
     old_out, old_err = sys.stdout, sys.stderr
     sys.stdout = _TeeStream(old_out, log_fp)
     sys.stderr = _TeeStream(old_err, log_fp)
-    print(f"[MileRefine1] logging enabled -> {log_path.resolve()}")
+    print(f"[VistaRefine1] logging enabled -> {log_path.resolve()}")
 
     def _cleanup() -> None:
         try:
-            print(f"[MileRefine1] run finished, log saved -> {log_path.resolve()}")
+            print(f"[VistaRefine1] run finished, log saved -> {log_path.resolve()}")
         finally:
             sys.stdout, sys.stderr = old_out, old_err
             log_fp.close()
@@ -93,7 +93,7 @@ def set_reproducibility_seed(seed: int) -> None:
     np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
-    _tqdm_print(f"[mile-refine1] reproducibility_seed={seed}")
+    _tqdm_print(f"[vista-refine1] reproducibility_seed={seed}")
 
 
 def _object_slot_info(rep: Any, prev_object_count: int) -> Dict[str, Any]:
@@ -186,7 +186,7 @@ def _greedy_follower_precheck(
     return info
 
 
-def _select_followable_navigation_target(
+def _select_planner_safe_target(
     *,
     pf: Any,
     agent: Any,
@@ -209,10 +209,14 @@ def _select_followable_navigation_target(
     if bool(base_pre.get("precheck_ok", False)):
         return target.copy(), {
             "called": True,
+            "component": "planner_filter",
+            "policy": "greedy_follower_precheck_then_nearest_local_followable_repair",
             "adjustment_applied": False,
             "selected_role": "original",
             "selected_target": target.tolist(),
             "original_precheck_ok": True,
+            "prevented_follower_error": False,
+            "unresolved_follower_error_risk": False,
             "records": records,
         }
 
@@ -267,10 +271,14 @@ def _select_followable_navigation_target(
     if not followable:
         return target.copy(), {
             "called": True,
+            "component": "planner_filter",
+            "policy": "greedy_follower_precheck_then_nearest_local_followable_repair",
             "adjustment_applied": False,
             "selected_role": "original_unfollowable",
             "selected_target": target.tolist(),
             "original_precheck_ok": False,
+            "prevented_follower_error": False,
+            "unresolved_follower_error_risk": True,
             "rejected_reason": "no_local_followable_candidate",
             "records": records,
         }
@@ -280,10 +288,14 @@ def _select_followable_navigation_target(
     selected_rec["selected"] = True
     return selected.copy(), {
         "called": True,
+        "component": "planner_filter",
+        "policy": "greedy_follower_precheck_then_nearest_local_followable_repair",
         "adjustment_applied": True,
         "selected_role": "local_repair",
         "selected_target": selected.tolist(),
         "original_precheck_ok": False,
+        "prevented_follower_error": True,
+        "unresolved_follower_error_risk": False,
         "selected_l2_to_original_m": float(np.linalg.norm(selected - target)),
         "selected_radius_m": float(selected_rec.get("radius_m", 0.0)),
         "selected_angle_rad": selected_rec.get("angle_rad"),
@@ -292,168 +304,90 @@ def _select_followable_navigation_target(
     }
 
 
-def _apply_followability_filter(
-    *,
-    mile_info: Dict[str, Any],
-    baseline_target: np.ndarray,
-    pf: Any,
-    agent: Any,
-    cfg: MileConfig,
-) -> Tuple[np.ndarray, Dict[str, Any]]:
-    baseline = np.asarray(baseline_target, dtype=float).reshape(3)
-    updated = dict(mile_info)
-    if not bool(updated.get("correction_applied", False)):
-        updated["followability_policy"] = "noop_no_extra_follower_precheck"
-        return baseline.copy(), updated
-    if not bool(getattr(cfg, "enable_vvd_replacement", False)):
-        updated.update(
-            {
-                "target_source": "vvd_diagnostic_explicit_keep_baseline",
-                "viewpoint_correction_applied": False,
-                "correction_applied": False,
-                "corrected_target_xyz": baseline.tolist(),
-                "rejected_reason": "vvd_replacement_disabled_followability_repair_only",
-                "followability_policy": "vvd_diagnostic_only_then_navigation_target_repair",
-            }
-        )
-        return baseline.copy(), updated
-    updated["baseline_followability_precheck"] = _greedy_follower_precheck(
-        pf=pf,
-        agent=agent,
-        raw_target=baseline,
-    )
+def _parse_float_list(text: str, *, arg_name: str) -> Tuple[float, ...]:
+    values = tuple(float(x.strip()) for x in str(text).split(",") if x.strip())
+    if len(values) == 0 or any(x <= 0.0 for x in values):
+        raise RuntimeError(f"{arg_name} must contain positive comma-separated floats, got {text!r}")
+    return values
 
-    visibility = dict(updated.get("visibility", {}) or {})
-    records = list(visibility.get("visibility_records", []) or [])
-    min_score = max(0.0, float(visibility.get("min_visibility_score", 0.0) or 0.0))
-    tie_epsilon = max(0.0, float(getattr(cfg, "visibility_tie_epsilon", 0.0)))
-    prechecks: List[Dict[str, Any]] = []
-    followable: List[Tuple[Dict[str, Any], Dict[str, Any], np.ndarray]] = []
-    sorted_records = sorted(
-        records,
-        key=lambda x: (-float(x.get("visibility_score", 0.0)), int(x.get("accepted_rank", x.get("candidate_index", 0)))),
-    )
-    for rec in sorted_records:
-        score = float(rec.get("visibility_score", 0.0))
-        if score <= min_score:
-            continue
-        vp = rec.get("viewpoint_xyz")
-        if vp is None:
-            continue
-        target = np.asarray(vp, dtype=float).reshape(3)
-        pre = _greedy_follower_precheck(pf=pf, agent=agent, raw_target=target)
-        pre.update(
-            {
-                "candidate_index": int(rec.get("candidate_index", -1)),
-                "accepted_rank": int(rec.get("accepted_rank", -1)),
-                "visibility_score": float(score),
-                "agent_l2_distance_m": float(rec.get("agent_l2_distance_m", float("inf"))),
-                "baseline_l2_distance_m": float(np.linalg.norm(target - baseline)),
-            }
-        )
-        prechecks.append(pre)
-        if bool(pre.get("precheck_ok", False)):
-            followable.append((rec, pre, target))
 
-    updated["followability_prechecks"] = prechecks
-    if not followable:
-        updated.update(
-            {
-                "target_source": "vvd_rejected_no_followable_candidate_explicit_keep_baseline",
-                "viewpoint_correction_applied": False,
-                "correction_applied": False,
-                "corrected_target_xyz": baseline.tolist(),
-                "rejected_reason": "no_followable_vvd_candidate",
-            }
-        )
-        visibility["followability_selected_candidate_index"] = None
-        visibility["followability_selected_visibility_score"] = None
-        updated["visibility"] = visibility
-        return baseline.copy(), updated
+TASK_LEVEL_ORDER = ("object", "room", "region", "instance")
 
-    selected_rec, selected_pre, selected_target = followable[0]
-    max_followable_visibility = float(max(float(item[0].get("visibility_score", 0.0)) for item in followable))
-    baseline_followable_items = [
-        item for item in followable
-        if bool(item[0].get("is_baseline_candidate", False))
-        and float(item[0].get("visibility_score", 0.0)) > min_score
-    ]
-    if bool(getattr(cfg, "prefer_visible_baseline", True)) and baseline_followable_items:
-        baseline_rec, baseline_pre, baseline_selected_target = baseline_followable_items[0]
-        updated.update(
-            {
-                "target_source": "baseline_positive_visibility_explicit_keep_baseline",
-                "viewpoint_correction_applied": False,
-                "correction_applied": False,
-                "corrected_target_xyz": baseline.tolist(),
-                "followability_selected_precheck": baseline_pre,
-                "followability_selection_policy": "msgnav_first_max_followable_visibility_no_baseline_threshold",
-                "followability_max_visibility_score": float(max_followable_visibility),
-                "followability_baseline_visibility_score": float(baseline_rec.get("visibility_score", 0.0)),
-                "followability_candidate_count": int(len(followable)),
-                "rejected_reason": "baseline_followable_and_positive_visibility",
-            }
-        )
-        visibility["followability_selected_candidate_index"] = -1
-        visibility["followability_selected_accepted_rank"] = int(baseline_rec.get("accepted_rank", -1))
-        visibility["followability_selected_visibility_score"] = float(baseline_rec.get("visibility_score", 0.0))
-        visibility["followability_selected_viewpoint_xyz"] = baseline_selected_target.tolist()
-        visibility["followability_selection_policy"] = "msgnav_first_max_followable_visibility_no_baseline_threshold"
-        visibility["followability_max_visibility_score"] = float(max_followable_visibility)
-        visibility["followability_baseline_visibility_score"] = float(baseline_rec.get("visibility_score", 0.0))
-        visibility["followability_candidate_count"] = int(len(followable))
-        updated["visibility"] = visibility
-        return baseline.copy(), updated
-    if bool(selected_rec.get("is_baseline_candidate", False)):
-        updated.update(
-            {
-                "target_source": "baseline_visibility_candidate_explicit_keep_baseline",
-                "viewpoint_correction_applied": False,
-                "correction_applied": False,
-                "corrected_target_xyz": baseline.tolist(),
-                "followability_selected_precheck": selected_pre,
-                "followability_selection_policy": "msgnav_first_max_followable_visibility_no_baseline_threshold",
-                "followability_max_visibility_score": float(max_followable_visibility),
-                "followability_visibility_tie_epsilon": float(tie_epsilon),
-                "followability_candidate_count": int(len(followable)),
-                "rejected_reason": "baseline_candidate_selected_by_visibility_efficiency",
-            }
-        )
-        visibility["followability_selected_candidate_index"] = -1
-        visibility["followability_selected_accepted_rank"] = int(selected_rec.get("accepted_rank", -1))
-        visibility["followability_selected_visibility_score"] = float(selected_rec.get("visibility_score", 0.0))
-        visibility["followability_selected_viewpoint_xyz"] = selected_target.tolist()
-        visibility["followability_selection_policy"] = "msgnav_first_max_followable_visibility_no_baseline_threshold"
-        visibility["followability_max_visibility_score"] = float(max_followable_visibility)
-        visibility["followability_visibility_tie_epsilon"] = float(tie_epsilon)
-        visibility["followability_candidate_count"] = int(len(followable))
-        updated["visibility"] = visibility
-        return baseline.copy(), updated
 
-    correction_applied = bool(np.linalg.norm(selected_target - baseline) > 1e-6)
-    updated.update(
-        {
-            "target_source": "baseline_vvd_viewpoint_followability_checked",
-            "viewpoint_correction_applied": True,
-            "correction_applied": bool(correction_applied),
-            "corrected_target_xyz": selected_target.tolist(),
-            "followability_selected_precheck": selected_pre,
-            "followability_selection_policy": "msgnav_first_max_followable_visibility_no_baseline_threshold",
-            "followability_max_visibility_score": float(max_followable_visibility),
-            "followability_visibility_tie_epsilon": float(tie_epsilon),
-            "followability_candidate_count": int(len(followable)),
+def _vista_metric_snapshot(result_dict: Dict[str, Any]) -> Dict[str, Any]:
+    rows = result_dict.get("sequence", [])
+    avg_sr = sum(float(item.get("sr", 0.0)) for item in rows) / len(rows) if rows else 0.0
+    avg_spl = sum(float(item.get("spl", 0.0)) for item in rows) / len(rows) if rows else 0.0
+    by_level: Dict[str, Dict[str, float]] = {}
+    for item in rows:
+        level = str(item.get("task_level", "unknown"))
+        bucket = by_level.setdefault(level, {"count": 0, "sr_sum": 0.0, "spl_sum": 0.0})
+        bucket["count"] += 1
+        bucket["sr_sum"] += float(item.get("sr", 0.0))
+        bucket["spl_sum"] += float(item.get("spl", 0.0))
+    ordered = list(TASK_LEVEL_ORDER)
+    ordered.extend(sorted(level for level in by_level if level not in TASK_LEVEL_ORDER))
+    by_level_out: Dict[str, Dict[str, float]] = {}
+    for level in ordered:
+        bucket = by_level.get(level, {"count": 0, "sr_sum": 0.0, "spl_sum": 0.0})
+        count = int(bucket["count"])
+        by_level_out[level] = {
+            "count": count,
+            "avg_sr": float(bucket["sr_sum"] / count) if count else 0.0,
+            "avg_spl": float(bucket["spl_sum"] / count) if count else 0.0,
         }
+    return {
+        "rows": len(rows),
+        "avg_sr": float(avg_sr),
+        "avg_spl": float(avg_spl),
+        "follower_error_count": sum(1 for item in rows if item.get("end_reason") == "follower_error"),
+        "planner_filter_adjusted_count": sum(1 for item in rows if item.get("planner_filter_adjustment_applied")),
+        "by_level": by_level_out,
+    }
+
+
+def _write_vista_live_metrics(
+    result_dict: Dict[str, Any],
+    *,
+    output_log_dir: Path,
+    start_ratio: float,
+    end_ratio: float,
+    scene_name: str,
+    episode_id: int,
+    task_id: int,
+    task_level: str,
+) -> None:
+    snapshot = _vista_metric_snapshot(result_dict)
+    parts = []
+    for level in TASK_LEVEL_ORDER:
+        metrics = snapshot["by_level"].get(level, {"count": 0, "avg_sr": 0.0, "avg_spl": 0.0})
+        parts.append(f"{level}:n={metrics['count']},sr={metrics['avg_sr']:.6f},spl={metrics['avg_spl']:.6f}")
+    line = (
+        f"rows={snapshot['rows']} avg_sr={snapshot['avg_sr']:.6f} avg_spl={snapshot['avg_spl']:.6f} "
+        f"follower_error_count={snapshot['follower_error_count']} "
+        f"planner_filter_adjusted_count={snapshot['planner_filter_adjusted_count']} "
+        f"levels=[{'; '.join(parts)}] latest_scene={scene_name} latest_episode={episode_id} "
+        f"latest_task={task_id} latest_level={task_level} by_level={json.dumps(snapshot['by_level'], sort_keys=True)}"
     )
-    visibility["followability_selected_candidate_index"] = int(selected_rec.get("candidate_index", -1))
-    visibility["followability_selected_accepted_rank"] = int(selected_rec.get("accepted_rank", -1))
-    visibility["followability_selected_visibility_score"] = float(selected_rec.get("visibility_score", 0.0))
-    visibility["followability_selected_viewpoint_xyz"] = selected_target.tolist()
-    visibility["followability_selection_policy"] = "msgnav_first_max_followable_visibility_no_baseline_threshold"
-    visibility["followability_max_visibility_score"] = float(max_followable_visibility)
-    visibility["followability_visibility_tie_epsilon"] = float(tie_epsilon)
-    visibility["followability_candidate_count"] = int(len(followable))
-    updated["visibility"] = visibility
-    return selected_target.copy(), updated
+    _tqdm_print("[VISTA_LIVE_METRICS] " + line)
+    live_path = output_log_dir / f"vista_live_metrics_{start_ratio}_{end_ratio}.log"
+    with open(live_path, "a", encoding="utf-8") as f:
+        f.write("[VISTA_LIVE_METRICS] " + line + "\n")
+
+
+def _record_planner_filter_status(effectiveness_dict: Dict[str, Any], nav_adjust_info: Dict[str, Any]) -> None:
+    counts = effectiveness_dict.setdefault("module_status_counts", {})
+    if not bool(nav_adjust_info.get("called", False)):
+        counts["planner_filter_disabled"] = int(counts.get("planner_filter_disabled", 0)) + 1
+        return
+    if bool(nav_adjust_info.get("adjustment_applied", False)):
+        counts["planner_filter_adjusted"] = int(counts.get("planner_filter_adjusted", 0)) + 1
+    elif bool(nav_adjust_info.get("original_precheck_ok", False)):
+        counts["planner_filter_passed_original"] = int(counts.get("planner_filter_passed_original", 0)) + 1
+    else:
+        counts["planner_filter_unresolved"] = int(counts.get("planner_filter_unresolved", 0)) + 1
+    if bool(nav_adjust_info.get("prevented_follower_error", False)):
+        counts["planner_filter_prevented_follower_error"] = int(counts.get("planner_filter_prevented_follower_error", 0)) + 1
 
 
 def _resolve_scene_mesh(scene_root: Path, scene_name: str) -> Path:
@@ -760,7 +694,7 @@ def _sequence_compute_metric_results(result_dict: Dict[str, Any]) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser("RefHM3D anchor mile refine1 batch analysis")
+    parser = argparse.ArgumentParser("RefHM3D anchor vista refine1 batch analysis")
     parser.add_argument("--start_ratio", type=float, default=0.0)
     parser.add_argument("--end_ratio", type=float, default=0.2)
     parser.add_argument("--concise_description", action="store_true")
@@ -770,27 +704,30 @@ def main() -> None:
     parser.add_argument("--agent_config", type=str, default=str(PROJECT_ROOT / "configs/habitat/goat_agent_config.yaml"))
     parser.add_argument("--pq3d_stage1_path", type=str, default=str(PROJECT_ROOT / "checkpoint/stage1-pretrain-all"))
     parser.add_argument("--pq3d_stage2_path", type=str, default=str(PROJECT_ROOT / "checkpoint/stage2-fine-tune-goat"))
-    parser.add_argument("--output_log_dir", type=str, default=str(PROJECT_ROOT / "output_logs/anchor/mile"))
+    parser.add_argument("--output_log_dir", type=str, default=str(PROJECT_ROOT / "output_logs/anchor/vista"))
     parser.add_argument("--task_levels", type=str, default="object,room,region,instance")
     parser.add_argument("--max_steps", type=int, default=400)
     parser.add_argument("--decision_num_min", type=int, default=3)
     parser.add_argument("--success_distance", type=float, default=0.25)
     parser.add_argument("--effectiveness_threshold_m", type=float, default=1.0)
-    parser.add_argument("--mile_decision_radius_m", type=float, default=0.75)
-    parser.add_argument("--mile_candidate_radii_m", type=str, default="0.5,0.75")
-    parser.add_argument("--mile_candidate_view_count", type=int, default=20)
-    parser.add_argument("--mile_enable_vvd_replacement", action="store_true")
-    parser.add_argument("--mile_disable_visible_baseline_guard", action="store_true")
-    parser.add_argument("--mile_camera_height_m", type=float, default=1.50)
-    parser.add_argument("--mile_max_snap_distance_m", type=float, default=0.60)
-    parser.add_argument("--mile_scene_sample_count", type=int, default=0)
-    parser.add_argument("--mile_max_ray_sample_count", type=int, default=1000)
-    parser.add_argument("--mile_occlusion_radius_m", type=float, default=0.05)
-    parser.add_argument("--mile_min_visibility_score", type=float, default=0.0)
-    parser.add_argument("--mile_visibility_tie_epsilon", type=float, default=0.0)
-    parser.add_argument("--mile_apply_task_levels", type=str, default="object,room,region,instance")
-    parser.add_argument("--mile_apply_non_final_object_decisions", action="store_true")
-    parser.add_argument("--mile_enable_navigation_target_repair", action="store_true")
+    parser.add_argument("--vista_decision_radius_m", type=float, default=0.75)
+    parser.add_argument("--vista_candidate_radii_m", type=str, default="0.5,0.75")
+    parser.add_argument("--vista_candidate_view_count", type=int, default=20)
+    parser.add_argument("--vista_enable_vvd_replacement", action="store_true")
+    parser.add_argument("--vista_disable_visible_baseline_guard", action="store_true")
+    parser.add_argument("--vista_camera_height_m", type=float, default=1.50)
+    parser.add_argument("--vista_max_snap_distance_m", type=float, default=0.60)
+    parser.add_argument("--vista_scene_sample_count", type=int, default=0)
+    parser.add_argument("--vista_max_ray_sample_count", type=int, default=1000)
+    parser.add_argument("--vista_occlusion_radius_m", type=float, default=0.05)
+    parser.add_argument("--vista_min_visibility_score", type=float, default=0.0)
+    parser.add_argument("--vista_visibility_tie_epsilon", type=float, default=0.0)
+    parser.add_argument("--vista_path_efficiency_exponent", type=float, default=0.15)
+    parser.add_argument("--vista_apply_task_levels", type=str, default="object,room,region,instance")
+    parser.add_argument("--vista_apply_non_final_object_decisions", action="store_true")
+    parser.add_argument("--vista_enable_planner_filter", action="store_true")
+    parser.add_argument("--vista_planner_repair_radii_m", type=str, default="0.20,0.40,0.60,0.80")
+    parser.add_argument("--vista_planner_candidates_per_radius", type=int, default=16)
     parser.add_argument("--max_eval_tasks", type=int, default=0)
     parser.add_argument("--quiet_nav_steps", action="store_true")
     parser.add_argument("--seed", type=int, default=1234)
@@ -802,40 +739,43 @@ def main() -> None:
     enabled_task_levels = {x.strip() for x in str(args.task_levels).split(",") if x.strip()}
     if not enabled_task_levels:
         raise RuntimeError("--task_levels resolved to empty set")
-    mile_apply_task_levels = {x.strip() for x in str(args.mile_apply_task_levels).split(",") if x.strip()}
-    if not mile_apply_task_levels:
-        raise RuntimeError("--mile_apply_task_levels resolved to empty set")
-    candidate_radii = tuple(float(x.strip()) for x in str(args.mile_candidate_radii_m).split(",") if x.strip())
-    if len(candidate_radii) == 0 or any(x <= 0.0 for x in candidate_radii):
-        raise RuntimeError(f"--mile_candidate_radii_m must contain positive radii, got {args.mile_candidate_radii_m!r}")
-    cfg = MileConfig(
-        decision_radius_m=float(args.mile_decision_radius_m),
+    vista_apply_task_levels = {x.strip() for x in str(args.vista_apply_task_levels).split(",") if x.strip()}
+    if not vista_apply_task_levels:
+        raise RuntimeError("--vista_apply_task_levels resolved to empty set")
+    candidate_radii = _parse_float_list(args.vista_candidate_radii_m, arg_name="--vista_candidate_radii_m")
+    planner_repair_radii = _parse_float_list(args.vista_planner_repair_radii_m, arg_name="--vista_planner_repair_radii_m")
+    cfg = VistaConfig(
+        decision_radius_m=float(args.vista_decision_radius_m),
         candidate_radii_m=candidate_radii,
-        candidate_view_count=int(args.mile_candidate_view_count),
-        enable_vvd_replacement=bool(args.mile_enable_vvd_replacement),
-        prefer_visible_baseline=not bool(args.mile_disable_visible_baseline_guard),
-        camera_height_m=float(args.mile_camera_height_m),
-        max_snap_distance_m=float(args.mile_max_snap_distance_m),
-        scene_sample_count=int(args.mile_scene_sample_count),
-        max_ray_sample_count=int(args.mile_max_ray_sample_count),
-        occlusion_radius_m=float(args.mile_occlusion_radius_m),
-        min_visibility_score=float(args.mile_min_visibility_score),
-        visibility_tie_epsilon=float(args.mile_visibility_tie_epsilon),
+        candidate_view_count=int(args.vista_candidate_view_count),
+        enable_vvd_replacement=bool(args.vista_enable_vvd_replacement),
+        prefer_visible_baseline=not bool(args.vista_disable_visible_baseline_guard),
+        camera_height_m=float(args.vista_camera_height_m),
+        max_snap_distance_m=float(args.vista_max_snap_distance_m),
+        scene_sample_count=int(args.vista_scene_sample_count),
+        max_ray_sample_count=int(args.vista_max_ray_sample_count),
+        occlusion_radius_m=float(args.vista_occlusion_radius_m),
+        min_visibility_score=float(args.vista_min_visibility_score),
+        visibility_tie_epsilon=float(args.vista_visibility_tie_epsilon),
+        path_efficiency_exponent=float(args.vista_path_efficiency_exponent),
     )
     _tqdm_print(
-        f"[MileRefine1] cfg levels={sorted(enabled_task_levels)} module=lastmile_vvd_only "
+        f"[VistaRefine1] cfg levels={sorted(enabled_task_levels)} module=vista_visibility_soft_target_adjustment "
         f"radius={cfg.decision_radius_m} candidate_radii={list(cfg.candidate_radii_m)} "
         f"view_count={cfg.candidate_view_count} "
         f"camera_height={cfg.camera_height_m} max_snap={cfg.max_snap_distance_m} "
         f"scene_sample_count={cfg.scene_sample_count} occlusion_radius={cfg.occlusion_radius_m} "
         f"max_ray_samples={cfg.max_ray_sample_count} min_visibility={cfg.min_visibility_score} "
         f"visibility_tie_epsilon={cfg.visibility_tie_epsilon} "
-        f"selection_policy=msgnav_first_max_followable_visibility_no_baseline_threshold "
+        f"path_efficiency_exponent={cfg.path_efficiency_exponent} "
+        f"selection_policy=vista_visibility_soft_path_efficiency "
         f"enable_vvd_replacement={bool(cfg.enable_vvd_replacement)} "
         f"prefer_visible_baseline={bool(cfg.prefer_visible_baseline)} "
-        f"mile_apply_task_levels={sorted(mile_apply_task_levels)} "
-        f"mile_apply_non_final_object_decisions={bool(args.mile_apply_non_final_object_decisions)} "
-        f"mile_enable_navigation_target_repair={bool(args.mile_enable_navigation_target_repair)} "
+        f"vista_apply_task_levels={sorted(vista_apply_task_levels)} "
+        f"vista_apply_non_final_object_decisions={bool(args.vista_apply_non_final_object_decisions)} "
+        f"vista_enable_planner_filter={bool(args.vista_enable_planner_filter)} "
+        f"vista_planner_repair_radii={list(planner_repair_radii)} "
+        f"vista_planner_candidates_per_radius={int(args.vista_planner_candidates_per_radius)} "
         f"start_ratio={args.start_ratio} end_ratio={args.end_ratio} max_eval_tasks={args.max_eval_tasks}"
     )
 
@@ -845,11 +785,11 @@ def main() -> None:
         raise FileNotFoundError(f"No *.json.gz found under navigation_data_path={navigation_data_root}")
     scene_data_paths = scene_data_paths[int(args.start_ratio * len(scene_data_paths)): int(args.end_ratio * len(scene_data_paths))]
 
-    out_name = f"refhm3d_seq_mile_refine1_{args.start_ratio}_{args.end_ratio}.json"
-    eff_name = f"refhm3d_seq_mile_refine1_effectiveness_{args.start_ratio}_{args.end_ratio}.json"
+    out_name = f"refhm3d_seq_vista_refine1_{args.start_ratio}_{args.end_ratio}.json"
+    eff_name = f"refhm3d_seq_vista_refine1_effectiveness_{args.start_ratio}_{args.end_ratio}.json"
     if args.concise_description:
-        out_name = f"refhm3d_seq_mile_refine1_concisedesc_{args.start_ratio}_{args.end_ratio}.json"
-        eff_name = f"refhm3d_seq_mile_refine1_effectiveness_concisedesc_{args.start_ratio}_{args.end_ratio}.json"
+        out_name = f"refhm3d_seq_vista_refine1_concisedesc_{args.start_ratio}_{args.end_ratio}.json"
+        eff_name = f"refhm3d_seq_vista_refine1_effectiveness_concisedesc_{args.start_ratio}_{args.end_ratio}.json"
     output_path = output_log_dir / out_name
     effectiveness_path = output_log_dir / eff_name
 
@@ -879,10 +819,14 @@ def main() -> None:
             "records": [],
             "case_counts": {"00": 0, "01": 0, "10": 0, "11": 0},
             "module_status_counts": {
-                "mile_applied": 0,
-                "mile_kept_baseline": 0,
-                "mile_rejected": 0,
-                "mile_error": 0,
+                "vista_applied": 0,
+                "vista_kept_baseline": 0,
+                "vista_rejected": 0,
+                "vista_error": 0,
+                "planner_filter_passed_original": 0,
+                "planner_filter_adjusted": 0,
+                "planner_filter_unresolved": 0,
+                "planner_filter_prevented_follower_error": 0,
                 "follower_error": 0,
             },
         }
@@ -946,7 +890,7 @@ def main() -> None:
                     continue
                 task_key = "_".join([scene_name, navigation_type, str(episode_id), str(idx), str(task_type)])
                 if task_key in existing_tasks:
-                    _tqdm_print(f"[mile-refine1][skip] already processed {task_key}")
+                    _tqdm_print(f"[vista-refine1][skip] already processed {task_key}")
                     continue
                 task_t0 = time.perf_counter()
                 cur_task = episode_mapping[task_type][task_idx]
@@ -957,7 +901,7 @@ def main() -> None:
                 goal_category = cur_task.get("object_category", "")
                 out_task = out_episode_dir / f"task={idx}"
                 out_task.mkdir(parents=True, exist_ok=True)
-                _tqdm_print(f"[mile-refine1][task-start] scene={scene_name} ep={episode_id} task={idx} level={task_type} sentence={sentence!r}")
+                _tqdm_print(f"[vista-refine1][task-start] scene={scene_name} ep={episode_id} task={idx} level={task_type} sentence={sentence!r}")
 
                 total_steps = 0
                 prev_agent_state = agent.get_state()
@@ -968,9 +912,10 @@ def main() -> None:
                 goto_state: List[Any] = []
                 baseline_final_target: Optional[np.ndarray] = None
                 corrected_final_target: Optional[np.ndarray] = None
-                final_mile_info: Dict[str, Any] = {"mile_called": False}
+                final_vista_info: Dict[str, Any] = {"vista_called": False}
                 final_effectiveness: Optional[Dict[str, Any]] = None
                 final_follow_info: Optional[Dict[str, Any]] = None
+                final_planner_filter_info: Optional[Dict[str, Any]] = None
                 task_effective_logs: List[Dict[str, Any]] = []
                 task_end_reason = "max_steps"
 
@@ -1042,44 +987,37 @@ def main() -> None:
                     aux = dict(getattr(pq3d, "last_decision_aux", {}) or {})
                     if not args.quiet_nav_steps:
                         _tqdm_print(
-                            f"[mile-refine1][decision] scene={scene_name} ep={episode_id} task={idx} "
+                            f"[vista-refine1][decision] scene={scene_name} ep={episode_id} task={idx} "
                             f"dec={decision_num} final={bool(is_final)} frontiers={len(frontiers)}/{len(raw_frontiers)} "
                             f"baseline_target={baseline_target.tolist()}"
                         )
 
                     corrected_target = baseline_target.copy()
-                    mile_info: Dict[str, Any] = {"mile_called": False}
+                    vista_info: Dict[str, Any] = {"vista_called": False}
                     effectiveness: Optional[Dict[str, Any]] = None
                     is_object_decision = bool(aux.get("is_object_decision", False))
 
-                    mile_level_enabled = task_type in mile_apply_task_levels
+                    vista_level_enabled = task_type in vista_apply_task_levels
                     if (
-                        bool(args.mile_apply_non_final_object_decisions)
+                        bool(args.vista_apply_non_final_object_decisions)
                         and is_object_decision
-                        and mile_level_enabled
+                        and vista_level_enabled
                         and not bool(is_final)
                     ):
                         try:
-                            corrected_target, mile_info = correct_final_decision_with_mile(
+                            corrected_target, vista_info = correct_final_decision_with_vista(
                                 rep=pq3d.representation_manager,
                                 decision_aux=aux,
                                 baseline_target_xyz=baseline_target,
-                                output_dir=dec_dir / "mile",
+                                output_dir=dec_dir / "vista",
                                 path_finder=pf,
                                 agent_position_xyz=agent.get_state().position,
                                 cfg=cfg,
                             )
-                            corrected_target, mile_info = _apply_followability_filter(
-                                mile_info=mile_info,
-                                baseline_target=baseline_target,
-                                pf=pf,
-                                agent=agent,
-                                cfg=cfg,
-                            )
-                        except MileRejectedError as exc:
-                            mile_info = {
-                                "mile_called": True,
-                                "target_source": "mile_rejected",
+                        except VistaRejectedError as exc:
+                            vista_info = {
+                                "vista_called": True,
+                                "target_source": "vista_rejected",
                                 "correction_applied": False,
                                 "viewpoint_correction_applied": False,
                                 "error_type": type(exc).__name__,
@@ -1087,26 +1025,26 @@ def main() -> None:
                             }
                             corrected_target = baseline_target.copy()
                             effectiveness_dict.setdefault("module_status_counts", {})
-                            effectiveness_dict["module_status_counts"]["mile_rejected"] = int(
-                                effectiveness_dict["module_status_counts"].get("mile_rejected", 0)
+                            effectiveness_dict["module_status_counts"]["vista_rejected"] = int(
+                                effectiveness_dict["module_status_counts"].get("vista_rejected", 0)
                             ) + 1
-                            _write_json(dec_dir / "mile" / "mile_rejected.json", mile_info)
+                            _write_json(dec_dir / "vista" / "vista_rejected.json", vista_info)
                         except Exception as exc:
-                            mile_info = {
-                                "mile_called": True,
-                                "target_source": "mile_error",
+                            vista_info = {
+                                "vista_called": True,
+                                "target_source": "vista_error",
                                 "correction_applied": False,
                                 "viewpoint_correction_applied": False,
                                 "error_type": type(exc).__name__,
                                 "error_message": str(exc),
                             }
                             effectiveness_dict.setdefault("module_status_counts", {})
-                            effectiveness_dict["module_status_counts"]["mile_error"] = int(
-                                effectiveness_dict["module_status_counts"].get("mile_error", 0)
+                            effectiveness_dict["module_status_counts"]["vista_error"] = int(
+                                effectiveness_dict["module_status_counts"].get("vista_error", 0)
                             ) + 1
-                            _write_json(dec_dir / "mile" / "mile_error.json", mile_info)
+                            _write_json(dec_dir / "vista" / "vista_error.json", vista_info)
                             _tqdm_print(
-                                f"[mile-refine1][module-error] scene={scene_name} ep={episode_id} task={idx} "
+                                f"[vista-refine1][module-error] scene={scene_name} ep={episode_id} task={idx} "
                                 f"dec={decision_num} final=False error={type(exc).__name__}: {exc}"
                             )
                             raise
@@ -1126,19 +1064,19 @@ def main() -> None:
                             view_points=view_points,
                             threshold_m=float(args.effectiveness_threshold_m),
                         )
-                        mile_info["effectiveness"] = effectiveness
-                        _write_json(dec_dir / "mile" / "mile_decision.json", mile_info)
+                        vista_info["effectiveness"] = effectiveness
+                        _write_json(dec_dir / "vista" / "vista_decision.json", vista_info)
                         case = str(effectiveness["case"])
                         effectiveness_dict.setdefault("case_counts", {"00": 0, "01": 0, "10": 0, "11": 0})
                         effectiveness_dict["case_counts"][case] = int(effectiveness_dict["case_counts"].get(case, 0)) + 1
                         effectiveness_dict.setdefault("module_status_counts", {})
-                        if bool(mile_info.get("correction_applied", False)):
-                            effectiveness_dict["module_status_counts"]["mile_applied"] = int(
-                                effectiveness_dict["module_status_counts"].get("mile_applied", 0)
+                        if bool(vista_info.get("correction_applied", False)):
+                            effectiveness_dict["module_status_counts"]["vista_applied"] = int(
+                                effectiveness_dict["module_status_counts"].get("vista_applied", 0)
                             ) + 1
                         else:
-                            effectiveness_dict["module_status_counts"]["mile_kept_baseline"] = int(
-                                effectiveness_dict["module_status_counts"].get("mile_kept_baseline", 0)
+                            effectiveness_dict["module_status_counts"]["vista_kept_baseline"] = int(
+                                effectiveness_dict["module_status_counts"].get("vista_kept_baseline", 0)
                             ) + 1
                         task_effective_logs.append(
                             {
@@ -1149,17 +1087,17 @@ def main() -> None:
                                 "decision_num": int(decision_num),
                                 "sentence": sentence,
                                 "is_final": False,
-                                "mile": mile_info,
+                                "vista": vista_info,
                                 "effectiveness": effectiveness,
                             }
                         )
                         _tqdm_print(
-                            f"[mile-refine1][module] scene={scene_name} ep={episode_id} task={idx} dec={decision_num} "
-                            f"final=False called={mile_info['mile_called']} source={mile_info['target_source']} "
-                            f"correction_applied={mile_info['correction_applied']} "
-                            f"viewpoint_applied={mile_info['viewpoint_correction_applied']} "
-                            f"followability_ok={mile_info.get('followability_selected_precheck', {}).get('precheck_ok', None)} "
-                            f"rejected_reason={mile_info.get('rejected_reason', None)} "
+                            f"[vista-refine1][module] scene={scene_name} ep={episode_id} task={idx} dec={decision_num} "
+                            f"final=False called={vista_info['vista_called']} source={vista_info['target_source']} "
+                            f"correction_applied={vista_info['correction_applied']} "
+                            f"viewpoint_applied={vista_info['viewpoint_correction_applied']} "
+                            f"efficiency_score={vista_info.get('visibility', {}).get('best_efficiency_score', None)} "
+                            f"rejected_reason={vista_info.get('rejected_reason', None)} "
                             f"case_metric={effectiveness['case_metric']} case={case} "
                             f"baseline_gt_viewpoint_in_1m={effectiveness['baseline_gt_viewpoint_in_1m']} "
                             f"corrected_gt_viewpoint_in_1m={effectiveness['corrected_gt_viewpoint_in_1m']} "
@@ -1172,42 +1110,35 @@ def main() -> None:
 
                     if bool(is_final):
                         baseline_final_target = baseline_target.copy()
-                        if is_object_decision and mile_level_enabled:
+                        if is_object_decision and vista_level_enabled:
                             try:
-                                corrected_target, mile_info = correct_final_decision_with_mile(
+                                corrected_target, vista_info = correct_final_decision_with_vista(
                                     rep=pq3d.representation_manager,
                                     decision_aux=aux,
                                     baseline_target_xyz=baseline_target,
-                                    output_dir=dec_dir / "mile",
+                                    output_dir=dec_dir / "vista",
                                     path_finder=pf,
                                     agent_position_xyz=agent.get_state().position,
                                     cfg=cfg,
                                 )
-                                corrected_target, mile_info = _apply_followability_filter(
-                                    mile_info=mile_info,
-                                    baseline_target=baseline_target,
-                                    pf=pf,
-                                    agent=agent,
-                                    cfg=cfg,
-                                )
-                            except MileRejectedError as exc:
-                                mile_info = {
-                                    "mile_called": True,
-                                    "target_source": "mile_rejected",
+                            except VistaRejectedError as exc:
+                                vista_info = {
+                                    "vista_called": True,
+                                    "target_source": "vista_rejected",
                                     "correction_applied": False,
                                     "viewpoint_correction_applied": False,
                                     "error_type": type(exc).__name__,
                                     "error_message": str(exc),
                                 }
-                                final_mile_info = mile_info
+                                final_vista_info = vista_info
                                 corrected_target = baseline_target.copy()
                                 effectiveness_dict.setdefault("module_status_counts", {})
-                                effectiveness_dict["module_status_counts"]["mile_rejected"] = int(
-                                    effectiveness_dict["module_status_counts"].get("mile_rejected", 0)
+                                effectiveness_dict["module_status_counts"]["vista_rejected"] = int(
+                                    effectiveness_dict["module_status_counts"].get("vista_rejected", 0)
                                 ) + 1
-                                _write_json(dec_dir / "mile" / "mile_rejected.json", mile_info)
+                                _write_json(dec_dir / "vista" / "vista_rejected.json", vista_info)
                                 _write_json(
-                                    dec_dir / "mile_step_summary.json",
+                                    dec_dir / "vista_step_summary.json",
                                     {
                                         "task_id": int(idx),
                                         "task_level": task_type,
@@ -1220,47 +1151,47 @@ def main() -> None:
                                         "frontier_filter_info": frontier_filter_info,
                                         "register_info": register_info,
                                         "follow_info": None,
-                                        "mile": mile_info,
+                                        "vista": vista_info,
                                         "effectiveness": None,
                                     },
                                 )
                                 _tqdm_print(
-                                    f"[mile-refine1][module-rejected] scene={scene_name} ep={episode_id} task={idx} "
+                                    f"[vista-refine1][module-rejected] scene={scene_name} ep={episode_id} task={idx} "
                                     f"dec={decision_num} explicit_noop=True use_baseline_target=True "
                                     f"error={type(exc).__name__}: {exc}"
                                 )
                             except Exception as exc:
-                                mile_info = {
-                                    "mile_called": True,
-                                    "target_source": "mile_error",
+                                vista_info = {
+                                    "vista_called": True,
+                                    "target_source": "vista_error",
                                     "correction_applied": False,
                                     "viewpoint_correction_applied": False,
                                     "error_type": type(exc).__name__,
                                     "error_message": str(exc),
                                 }
                                 effectiveness_dict.setdefault("module_status_counts", {})
-                                effectiveness_dict["module_status_counts"]["mile_error"] = int(
-                                    effectiveness_dict["module_status_counts"].get("mile_error", 0)
+                                effectiveness_dict["module_status_counts"]["vista_error"] = int(
+                                    effectiveness_dict["module_status_counts"].get("vista_error", 0)
                                 ) + 1
-                                _write_json(dec_dir / "mile" / "mile_error.json", mile_info)
+                                _write_json(dec_dir / "vista" / "vista_error.json", vista_info)
                                 _tqdm_print(
-                                    f"[mile-refine1][module-error] scene={scene_name} ep={episode_id} task={idx} "
+                                    f"[vista-refine1][module-error] scene={scene_name} ep={episode_id} task={idx} "
                                     f"dec={decision_num} error={type(exc).__name__}: {exc}"
                                 )
                                 raise
-                        elif is_object_decision and not mile_level_enabled:
-                            mile_info = {
-                                "mile_called": True,
+                        elif is_object_decision and not vista_level_enabled:
+                            vista_info = {
+                                "vista_called": True,
                                 "target_source": "task_level_disabled_explicit_keep_baseline",
                                 "correction_applied": False,
                                 "viewpoint_correction_applied": False,
                                 "rejected_reason": f"task_level_not_enabled:{task_type}",
-                                "mile_apply_task_levels": sorted(mile_apply_task_levels),
+                                "vista_apply_task_levels": sorted(vista_apply_task_levels),
                             }
                             corrected_target = baseline_target.copy()
                         else:
-                            mile_info = {
-                                "mile_called": False,
+                            vista_info = {
+                                "vista_called": False,
                                 "target_source": "non_object_decision_explicit_keep_baseline",
                                 "correction_applied": False,
                                 "viewpoint_correction_applied": False,
@@ -1282,22 +1213,22 @@ def main() -> None:
                             view_points=view_points,
                             threshold_m=float(args.effectiveness_threshold_m),
                         )
-                        mile_info["effectiveness"] = effectiveness
-                        _write_json(dec_dir / "mile" / "mile_decision.json", mile_info)
+                        vista_info["effectiveness"] = effectiveness
+                        _write_json(dec_dir / "vista" / "vista_decision.json", vista_info)
                         case = str(effectiveness["case"])
                         effectiveness_dict.setdefault("case_counts", {"00": 0, "01": 0, "10": 0, "11": 0})
                         effectiveness_dict["case_counts"][case] = int(effectiveness_dict["case_counts"].get(case, 0)) + 1
                         effectiveness_dict.setdefault("module_status_counts", {})
-                        if bool(mile_info.get("correction_applied", False)):
-                            effectiveness_dict["module_status_counts"]["mile_applied"] = int(
-                                effectiveness_dict["module_status_counts"].get("mile_applied", 0)
+                        if bool(vista_info.get("correction_applied", False)):
+                            effectiveness_dict["module_status_counts"]["vista_applied"] = int(
+                                effectiveness_dict["module_status_counts"].get("vista_applied", 0)
                             ) + 1
                         else:
-                            effectiveness_dict["module_status_counts"]["mile_kept_baseline"] = int(
-                                effectiveness_dict["module_status_counts"].get("mile_kept_baseline", 0)
+                            effectiveness_dict["module_status_counts"]["vista_kept_baseline"] = int(
+                                effectiveness_dict["module_status_counts"].get("vista_kept_baseline", 0)
                             ) + 1
                         corrected_final_target = corrected_target.copy()
-                        final_mile_info = mile_info
+                        final_vista_info = vista_info
                         final_effectiveness = effectiveness
                         task_effective_logs.append(
                             {
@@ -1307,17 +1238,17 @@ def main() -> None:
                                 "task_level": task_type,
                                 "decision_num": int(decision_num),
                                 "sentence": sentence,
-                                "mile": mile_info,
+                                "vista": vista_info,
                                 "effectiveness": effectiveness,
                             }
                         )
                         _tqdm_print(
-                            f"[mile-refine1][module] scene={scene_name} ep={episode_id} task={idx} dec={decision_num} "
-                            f"called={mile_info['mile_called']} source={mile_info['target_source']} "
-                            f"correction_applied={mile_info['correction_applied']} "
-                            f"viewpoint_applied={mile_info['viewpoint_correction_applied']} "
-                            f"followability_ok={mile_info.get('followability_selected_precheck', {}).get('precheck_ok', None)} "
-                            f"rejected_reason={mile_info.get('rejected_reason', None)} "
+                            f"[vista-refine1][module] scene={scene_name} ep={episode_id} task={idx} dec={decision_num} "
+                            f"called={vista_info['vista_called']} source={vista_info['target_source']} "
+                            f"correction_applied={vista_info['correction_applied']} "
+                            f"viewpoint_applied={vista_info['viewpoint_correction_applied']} "
+                            f"efficiency_score={vista_info.get('visibility', {}).get('best_efficiency_score', None)} "
+                            f"rejected_reason={vista_info.get('rejected_reason', None)} "
                             f"case_metric={effectiveness['case_metric']} case={case} "
                             f"baseline_gt_viewpoint_in_1m={effectiveness['baseline_gt_viewpoint_in_1m']} "
                             f"corrected_gt_viewpoint_in_1m={effectiveness['corrected_gt_viewpoint_in_1m']} "
@@ -1327,26 +1258,35 @@ def main() -> None:
                             f"baseline_obj_l2={effectiveness['baseline_nearest_goal_dist_m']:.3f} "
                             f"corrected_obj_l2={effectiveness['corrected_nearest_goal_dist_m']:.3f}"
                         )
-                        if bool(args.mile_enable_navigation_target_repair):
-                            used_target, nav_adjust_info = _select_followable_navigation_target(
+                        if bool(args.vista_enable_planner_filter):
+                            used_target, nav_adjust_info = _select_planner_safe_target(
                                 pf=pf,
                                 agent=agent,
                                 raw_target=corrected_target,
+                                repair_radii_m=planner_repair_radii,
+                                candidates_per_radius=int(args.vista_planner_candidates_per_radius),
                             )
                         else:
                             used_target = corrected_target.copy()
                             nav_adjust_info = {
                                 "called": False,
+                                "component": "planner_filter",
                                 "adjustment_applied": False,
                                 "selected_role": "repair_disabled",
                                 "selected_target": used_target.tolist(),
-                                "rejected_reason": "mile_enable_navigation_target_repair_false",
+                                "prevented_follower_error": False,
+                                "unresolved_follower_error_risk": False,
+                                "rejected_reason": "vista_enable_planner_filter_false",
                             }
+                        _record_planner_filter_status(effectiveness_dict, nav_adjust_info)
+                        final_planner_filter_info = nav_adjust_info
                         if bool(nav_adjust_info.get("adjustment_applied", False)) or not bool(nav_adjust_info.get("original_precheck_ok", True)):
                             _tqdm_print(
-                                f"[mile-refine1][nav-adjust] scene={scene_name} ep={episode_id} task={idx} "
+                                f"[vista-refine1][planner-filter] scene={scene_name} ep={episode_id} task={idx} "
                                 f"dec={decision_num} final=True applied={nav_adjust_info.get('adjustment_applied')} "
                                 f"selected_role={nav_adjust_info.get('selected_role')} "
+                                f"prevented_follower_error={nav_adjust_info.get('prevented_follower_error')} "
+                                f"unresolved_risk={nav_adjust_info.get('unresolved_follower_error_risk')} "
                                 f"selected_l2={nav_adjust_info.get('selected_l2_to_original_m')} "
                                 f"followable_candidates={nav_adjust_info.get('followable_candidate_count', 0)} "
                                 f"reason={nav_adjust_info.get('rejected_reason')}"
@@ -1392,14 +1332,14 @@ def main() -> None:
                                 },
                             )
                             _tqdm_print(
-                                f"[mile-refine1][follow-error] scene={scene_name} ep={episode_id} task={idx} "
+                                f"[vista-refine1][follow-error] scene={scene_name} ep={episode_id} task={idx} "
                                 f"dec={decision_num} final=True error={follow_info.get('error_type')} "
                                 f"path_found={follow_info.get('shortest_path_found')} "
                                 f"geo={follow_info.get('shortest_path_geodesic_distance')}"
                             )
                         final_follow_info = follow_info
                         _write_json(
-                            dec_dir / "mile_step_summary.json",
+                            dec_dir / "vista_step_summary.json",
                             {
                                 "task_id": int(idx),
                                 "task_level": task_type,
@@ -1411,35 +1351,44 @@ def main() -> None:
                                 "pq3d_last_decision_aux": aux,
                                 "frontier_filter_info": frontier_filter_info,
                                 "register_info": register_info,
-                                "navigation_target_adjustment": nav_adjust_info,
+                                "planner_filter": nav_adjust_info,
                                 "follow_info": follow_info,
-                                "mile": mile_info,
+                                "vista": vista_info,
                                 "effectiveness": effectiveness,
                             },
                         )
                         decision_num += 1
                         break
 
-                    if bool(args.mile_enable_navigation_target_repair):
-                        used_target, nav_adjust_info = _select_followable_navigation_target(
+                    if bool(args.vista_enable_planner_filter):
+                        used_target, nav_adjust_info = _select_planner_safe_target(
                             pf=pf,
                             agent=agent,
                             raw_target=corrected_target,
+                            repair_radii_m=planner_repair_radii,
+                            candidates_per_radius=int(args.vista_planner_candidates_per_radius),
                         )
                     else:
                         used_target = corrected_target.copy()
                         nav_adjust_info = {
                             "called": False,
+                            "component": "planner_filter",
                             "adjustment_applied": False,
                             "selected_role": "repair_disabled",
                             "selected_target": used_target.tolist(),
-                            "rejected_reason": "mile_enable_navigation_target_repair_false",
+                            "prevented_follower_error": False,
+                            "unresolved_follower_error_risk": False,
+                            "rejected_reason": "vista_enable_planner_filter_false",
                         }
+                    _record_planner_filter_status(effectiveness_dict, nav_adjust_info)
+                    final_planner_filter_info = nav_adjust_info
                     if bool(nav_adjust_info.get("adjustment_applied", False)) or not bool(nav_adjust_info.get("original_precheck_ok", True)):
                         _tqdm_print(
-                            f"[mile-refine1][nav-adjust] scene={scene_name} ep={episode_id} task={idx} "
+                            f"[vista-refine1][planner-filter] scene={scene_name} ep={episode_id} task={idx} "
                             f"dec={decision_num} final=False applied={nav_adjust_info.get('adjustment_applied')} "
                             f"selected_role={nav_adjust_info.get('selected_role')} "
+                            f"prevented_follower_error={nav_adjust_info.get('prevented_follower_error')} "
+                            f"unresolved_risk={nav_adjust_info.get('unresolved_follower_error_risk')} "
                             f"selected_l2={nav_adjust_info.get('selected_l2_to_original_m')} "
                             f"followable_candidates={nav_adjust_info.get('followable_candidate_count', 0)} "
                             f"reason={nav_adjust_info.get('rejected_reason')}"
@@ -1496,7 +1445,7 @@ def main() -> None:
                             },
                         )
                         _write_json(
-                            dec_dir / "mile_step_summary.json",
+                            dec_dir / "vista_step_summary.json",
                             {
                                 "task_id": int(idx),
                                 "task_level": task_type,
@@ -1510,14 +1459,14 @@ def main() -> None:
                                 "pq3d_last_decision_aux": aux,
                                 "frontier_filter_info": frontier_filter_info,
                                 "register_info": register_info,
-                                "navigation_target_adjustment": nav_adjust_info,
+                                "planner_filter": nav_adjust_info,
                                 "follow_info": follow_info,
-                                "mile": mile_info,
+                                "vista": vista_info,
                                 "effectiveness": effectiveness,
                             },
                         )
                         _tqdm_print(
-                            f"[mile-refine1][follow-error] scene={scene_name} ep={episode_id} task={idx} "
+                            f"[vista-refine1][follow-error] scene={scene_name} ep={episode_id} task={idx} "
                             f"dec={decision_num} final=False error={follow_info.get('error_type')} "
                             f"path_found={follow_info.get('shortest_path_found')} "
                             f"geo={follow_info.get('shortest_path_geodesic_distance')}"
@@ -1525,7 +1474,7 @@ def main() -> None:
                         decision_num += 1
                         break
                     _write_json(
-                        dec_dir / "mile_step_summary.json",
+                        dec_dir / "vista_step_summary.json",
                         {
                             "task_id": int(idx),
                             "task_level": task_type,
@@ -1539,9 +1488,9 @@ def main() -> None:
                             "pq3d_last_decision_aux": aux,
                             "frontier_filter_info": frontier_filter_info,
                             "register_info": register_info,
-                            "navigation_target_adjustment": nav_adjust_info,
+                            "planner_filter": nav_adjust_info,
                             "follow_info": follow_info,
-                            "mile": mile_info,
+                            "vista": vista_info,
                             "effectiveness": effectiveness,
                         },
                     )
@@ -1578,14 +1527,14 @@ def main() -> None:
                     if corrected_final_target is not None
                     else float("inf")
                 )
-                correction_applied = bool(final_mile_info.get("correction_applied", False))
-                mile_helpful = None
+                correction_applied = bool(final_vista_info.get("correction_applied", False))
+                vista_helpful = None
                 if (
                     correction_applied
                     and np.isfinite(baseline_target_to_gt_viewpoint_geo)
                     and np.isfinite(corrected_target_to_gt_viewpoint_geo)
                 ):
-                    mile_helpful = bool(corrected_target_to_gt_viewpoint_geo < baseline_target_to_gt_viewpoint_geo - 1e-6)
+                    vista_helpful = bool(corrected_target_to_gt_viewpoint_geo < baseline_target_to_gt_viewpoint_geo - 1e-6)
 
                 row = {
                     "scene_name": scene_name,
@@ -1606,6 +1555,9 @@ def main() -> None:
                     "start_goal_geo": float(start_goal_geo),
                     "end_goal_geo": float(end_goal_geo),
                     "episode_cum_distance": float(episode_cum_distance),
+                    "module_name": "vista",
+                    "module_hook_called": bool(final_vista_info.get("vista_called", False)),
+                    "module_hook_applied": bool(final_vista_info.get("correction_applied", False)),
                     "eval_only_goal_positions": [g.tolist() for g in goal_positions],
                     "eval_only_gt_viewpoint_count": int(len(view_points)),
                     "baseline_target_position": None if baseline_final_target is None else baseline_final_target.tolist(),
@@ -1614,13 +1566,19 @@ def main() -> None:
                     "corrected_target_to_goal_l2": float(corrected_target_to_goal_l2),
                     "baseline_target_to_gt_viewpoint_geo": float(baseline_target_to_gt_viewpoint_geo),
                     "corrected_target_to_gt_viewpoint_geo": float(corrected_target_to_gt_viewpoint_geo),
-                    "mile_called": bool(final_mile_info.get("mile_called", False)),
-                    "mile_target_source": final_mile_info.get("target_source"),
-                    "mile_correction_applied": bool(final_mile_info.get("correction_applied", False)),
-                    "mile_viewpoint_applied": bool(final_mile_info.get("viewpoint_correction_applied", False)),
-                    "mile_selected_slot_index": final_mile_info.get("selected_slot_index"),
-                    "mile_case": None if final_effectiveness is None else final_effectiveness.get("case"),
-                    "mile_helpful": mile_helpful,
+                    "vista_called": bool(final_vista_info.get("vista_called", False)),
+                    "vista_target_source": final_vista_info.get("target_source"),
+                    "vista_correction_applied": bool(final_vista_info.get("correction_applied", False)),
+                    "vista_viewpoint_applied": bool(final_vista_info.get("viewpoint_correction_applied", False)),
+                    "vista_selected_slot_index": final_vista_info.get("selected_slot_index"),
+                    "vista_case": None if final_effectiveness is None else final_effectiveness.get("case"),
+                    "vista_helpful": vista_helpful,
+                    "planner_filter_called": bool((final_planner_filter_info or {}).get("called", False)),
+                    "planner_filter_adjustment_applied": bool((final_planner_filter_info or {}).get("adjustment_applied", False)),
+                    "planner_filter_original_precheck_ok": (final_planner_filter_info or {}).get("original_precheck_ok"),
+                    "planner_filter_prevented_follower_error": bool((final_planner_filter_info or {}).get("prevented_follower_error", False)),
+                    "planner_filter_unresolved_follower_error_risk": bool((final_planner_filter_info or {}).get("unresolved_follower_error_risk", False)),
+                    "final_planner_filter_info": final_planner_filter_info,
                     "final_follow_info": final_follow_info,
                 }
                 result_dict.setdefault("sequence", []).append(row)
@@ -1633,29 +1591,40 @@ def main() -> None:
                         "navigation_type": navigation_type,
                         "sentence": sentence,
                         "effectiveness": final_effectiveness,
-                        "mile": final_mile_info,
+                        "vista": final_vista_info,
+                        "final_planner_filter": final_planner_filter_info,
                         "task_effective_logs": task_effective_logs,
                     }
                 )
                 _write_json(out_task / "summary.json", row)
                 _tqdm_print(
-                    f"[mile-refine1][task-summary] scene={scene_name} ep={episode_id} task={idx} level={task_type} "
+                    f"[vista-refine1][task-summary] scene={scene_name} ep={episode_id} task={idx} level={task_type} "
                     f"SR={sr:.1f} SPL={spl:.4f} steps={total_steps} decisions={decision_num} "
-                    f"end_reason={task_end_reason} case={row['mile_case']} helpful={mile_helpful}"
+                    f"end_reason={task_end_reason} case={row['vista_case']} helpful={vista_helpful}"
                 )
                 _write_json(output_path, result_dict)
                 _write_json(effectiveness_path, effectiveness_dict)
+                _write_vista_live_metrics(
+                    result_dict,
+                    output_log_dir=output_log_dir,
+                    start_ratio=float(args.start_ratio),
+                    end_ratio=float(args.end_ratio),
+                    scene_name=scene_name,
+                    episode_id=int(episode_id),
+                    task_id=int(idx),
+                    task_level=task_type,
+                )
 
             sim.close()
             _write_json(output_path, result_dict)
             _write_json(effectiveness_path, effectiveness_dict)
             _sequence_compute_metric_results(result_dict)
-            _tqdm_print(f"[mile-refine1][case-counts] {effectiveness_dict.get('case_counts', {})}")
-            _tqdm_print(f"[mile-refine1][module-status-counts] {effectiveness_dict.get('module_status_counts', {})}")
+            _tqdm_print(f"[vista-refine1][case-counts] {effectiveness_dict.get('case_counts', {})}")
+            _tqdm_print(f"[vista-refine1][module-status-counts] {effectiveness_dict.get('module_status_counts', {})}")
 
     _sequence_compute_metric_results(result_dict)
-    _tqdm_print(f"[mile-refine1][case-counts] {effectiveness_dict.get('case_counts', {})}")
-    _tqdm_print(f"[mile-refine1][module-status-counts] {effectiveness_dict.get('module_status_counts', {})}")
+    _tqdm_print(f"[vista-refine1][case-counts] {effectiveness_dict.get('case_counts', {})}")
+    _tqdm_print(f"[vista-refine1][module-status-counts] {effectiveness_dict.get('module_status_counts', {})}")
 
 
 if __name__ == "__main__":

@@ -7,11 +7,12 @@ from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
 
 import numpy as np
+import habitat_sim
 from scipy.spatial import cKDTree
 
 
 @dataclass(frozen=True)
-class MileConfig:
+class VistaConfig:
     decision_radius_m: float = 0.75
     candidate_radii_m: Tuple[float, ...] = (0.5, 0.75)
     candidate_view_count: int = 20
@@ -25,18 +26,19 @@ class MileConfig:
     occlusion_radius_m: float = 0.05
     min_visibility_score: float = 0.0
     visibility_tie_epsilon: float = 0.02
+    path_efficiency_exponent: float = 0.15
     rng_seed: int = 17
 
 
-class MileDecisionError(RuntimeError):
+class VistaDecisionError(RuntimeError):
     pass
 
 
-class MileInputError(MileDecisionError):
+class VistaInputError(VistaDecisionError):
     pass
 
 
-class MileRejectedError(MileDecisionError):
+class VistaRejectedError(VistaDecisionError):
     pass
 
 
@@ -73,7 +75,7 @@ def _object_points_habitat(*, rep: Any, slot_index: int) -> Tuple[np.ndarray, np
         raise RuntimeError(f"slot_index={slot} out of object_mask range={object_mask.shape[1]}")
     mask = object_mask[:, slot].astype(bool)
     if int(mask.sum()) == 0:
-        raise MileRejectedError(f"zero_object_points slot_index={slot}")
+        raise VistaRejectedError(f"zero_object_points slot_index={slot}")
     obj = _model_xyz_to_habitat_xyz(point_cloud[mask, :3])
     blockers = _model_xyz_to_habitat_xyz(point_cloud[~mask, :3])
     scene_all = _model_xyz_to_habitat_xyz(point_cloud[:, :3])
@@ -93,7 +95,7 @@ def _generate_view_candidates(
     center_xyz: np.ndarray,
     agent_xyz: np.ndarray,
     path_finder: Any,
-    cfg: MileConfig,
+    cfg: VistaConfig,
 ) -> Tuple[List[Tuple[int, np.ndarray]], List[Dict[str, Any]]]:
     center = _as_np3(center_xyz, name="object_center")
     agent = _as_np3(agent_xyz, name="agent_xyz")
@@ -197,7 +199,7 @@ def _visibility_scores(
     target_points: np.ndarray,
     scene_points: np.ndarray,
     agent_position_xyz: Sequence[float],
-    cfg: MileConfig,
+    cfg: VistaConfig,
     rng: np.random.RandomState,
 ) -> List[Dict[str, Any]]:
     target = _sample_rows(target_points, int(cfg.target_sample_count), rng)
@@ -273,19 +275,80 @@ def _visibility_scores(
     return out
 
 
+def _shortest_path_distance(path_finder: Any, start: np.ndarray, end: np.ndarray) -> float:
+    path = habitat_sim.ShortestPath()
+    path.requested_start = np.asarray(start, dtype=float).reshape(3)
+    path.requested_end = np.asarray(end, dtype=float).reshape(3)
+    return float(path.geodesic_distance) if path_finder.find_path(path) else float("inf")
+
+
+def _add_soft_path_efficiency_scores(
+    *,
+    visibility_records: List[Dict[str, Any]],
+    path_finder: Any,
+    agent_position_xyz: Sequence[float],
+    baseline_target_xyz: Optional[Sequence[float]],
+    cfg: VistaConfig,
+) -> List[Dict[str, Any]]:
+    agent = _as_np3(agent_position_xyz, name="agent_position_xyz")
+    baseline_geo = float("inf")
+    if baseline_target_xyz is not None:
+        agent_island = int(path_finder.get_island(agent))
+        baseline_raw = _as_np3(baseline_target_xyz, name="baseline_target_xyz")
+        baseline_nav = np.asarray(path_finder.snap_point(baseline_raw, island_index=agent_island), dtype=float).reshape(3)
+        if np.all(np.isfinite(baseline_nav)):
+            baseline_geo = _shortest_path_distance(path_finder, agent, baseline_nav)
+
+    candidate_geos: List[float] = []
+    for rec in visibility_records:
+        vp = rec.get("viewpoint_xyz")
+        if vp is None:
+            geo = float("inf")
+        else:
+            geo = _shortest_path_distance(path_finder, agent, _as_np3(vp, name="viewpoint_xyz"))
+        rec["path_geodesic_distance_m"] = float(geo)
+        candidate_geos.append(float(geo))
+
+    finite_geos = [x for x in candidate_geos if np.isfinite(x) and x > 1e-6]
+    reference_geo = baseline_geo if np.isfinite(baseline_geo) and baseline_geo > 1e-6 else (min(finite_geos) if finite_geos else float("inf"))
+    exponent = max(0.0, float(cfg.path_efficiency_exponent))
+
+    for rec in visibility_records:
+        candidate_geo = float(rec.get("path_geodesic_distance_m", float("inf")))
+        visibility = max(0.0, float(rec.get("visibility_score", 0.0)))
+        if np.isfinite(reference_geo) and np.isfinite(candidate_geo) and candidate_geo > 1e-6:
+            ratio = float(reference_geo / candidate_geo)
+            ratio_clipped = float(min(max(ratio, 0.0), 2.0))
+        else:
+            ratio = 0.0
+            ratio_clipped = 0.0
+        efficiency_score = visibility * float(ratio_clipped ** exponent) if exponent > 0.0 else visibility
+        rec.update(
+            {
+                "path_efficiency_reference_geo_m": float(reference_geo),
+                "baseline_path_geodesic_distance_m": float(baseline_geo),
+                "path_efficiency_ratio": float(ratio),
+                "path_efficiency_ratio_clipped": float(ratio_clipped),
+                "path_efficiency_exponent": float(exponent),
+                "vista_efficiency_score": float(efficiency_score),
+            }
+        )
+    return visibility_records
+
+
 def visibility_based_viewpoint_decision(
     *,
     rep: Any,
     selected_slot_index: int,
     path_finder: Any,
     agent_position_xyz: Sequence[float],
-    cfg: MileConfig,
+    cfg: VistaConfig,
     baseline_target_xyz: Optional[Sequence[float]] = None,
 ) -> Dict[str, Any]:
     rng = np.random.RandomState(int(cfg.rng_seed) + int(selected_slot_index))
     try:
         object_points, blocker_points, scene_points = _object_points_habitat(rep=rep, slot_index=int(selected_slot_index))
-    except MileRejectedError as exc:
+    except VistaRejectedError as exc:
         return {
             "called": True,
             "selected_slot_index": int(selected_slot_index),
@@ -377,9 +440,23 @@ def visibility_based_viewpoint_decision(
             rec["baseline_raw_target_xyz"] = _as_np3(baseline_target_xyz, name="baseline_target_xyz").tolist() if baseline_target_xyz is not None else None
         else:
             rec["is_baseline_candidate"] = False
-    candidate_scores = np.asarray([float(x["visibility_score"]) for x in visibility_records], dtype=float)
-    best_local = int(np.argmax(candidate_scores))
-    best = visibility_records[best_local]
+    visibility_records = _add_soft_path_efficiency_scores(
+        visibility_records=visibility_records,
+        path_finder=path_finder,
+        agent_position_xyz=agent_position_xyz,
+        baseline_target_xyz=baseline_target_xyz,
+        cfg=cfg,
+    )
+    ranked_records = sorted(
+        visibility_records,
+        key=lambda x: (
+            -float(x.get("vista_efficiency_score", 0.0)),
+            -float(x.get("visibility_score", 0.0)),
+            float(x.get("path_geodesic_distance_m", float("inf"))),
+            int(x.get("accepted_rank", x.get("candidate_index", 0))),
+        ),
+    )
+    best = ranked_records[0]
     score = float(best["visibility_score"])
     min_score = max(0.0, float(cfg.min_visibility_score))
     rejected_reason: Optional[str] = None if score > min_score else "no_positive_visibility_score"
@@ -390,9 +467,13 @@ def visibility_based_viewpoint_decision(
             "rejected_reason": rejected_reason,
             "best_viewpoint_xyz": best["viewpoint_xyz"] if applied else None,
             "best_visibility_score": float(score),
+            "best_efficiency_score": float(best.get("vista_efficiency_score", 0.0)),
+            "best_path_geodesic_distance_m": float(best.get("path_geodesic_distance_m", float("inf"))),
+            "best_path_efficiency_ratio": float(best.get("path_efficiency_ratio", 0.0)),
             "best_candidate_index": int(best.get("candidate_index", -1)),
             "best_candidate_agent_l2_distance_m": float(best.get("agent_l2_distance_m", float("inf"))),
-            "selection_policy": "msgnav_first_max_visibility",
+            "selection_policy": "vista_visibility_soft_path_efficiency",
+            "path_efficiency_exponent": float(cfg.path_efficiency_exponent),
             "visibility_records": visibility_records,
             "min_visibility_score": float(cfg.min_visibility_score),
             "visibility_tie_epsilon": float(cfg.visibility_tie_epsilon),
@@ -401,7 +482,7 @@ def visibility_based_viewpoint_decision(
     return info
 
 
-def correct_final_decision_with_mile(
+def correct_final_decision_with_vista(
     *,
     rep: Any,
     decision_aux: Mapping[str, Any],
@@ -409,13 +490,13 @@ def correct_final_decision_with_mile(
     output_dir: Path,
     path_finder: Any,
     agent_position_xyz: Sequence[float],
-    cfg: MileConfig,
+    cfg: VistaConfig,
 ) -> Tuple[np.ndarray, Dict[str, Any]]:
     missing_keys = [k for k in ("is_object_decision", "real_object_decision_idx") if k not in decision_aux]
     if missing_keys:
-        raise MileInputError(f"decision_aux missing required key(s): {missing_keys}")
+        raise VistaInputError(f"decision_aux missing required key(s): {missing_keys}")
     if not bool(decision_aux["is_object_decision"]):
-        raise MileInputError("mile was called for a non-object final decision")
+        raise VistaInputError("vista was called for a non-object final decision")
     output_dir.mkdir(parents=True, exist_ok=True)
     baseline_memory_index = int(decision_aux["real_object_decision_idx"])
     baseline_target = _as_np3(baseline_target_xyz, name="baseline_target_xyz")
@@ -428,33 +509,70 @@ def correct_final_decision_with_mile(
         cfg=cfg,
         baseline_target_xyz=baseline_target,
     )
-    target_source = "baseline_vvd_viewpoint"
-    if not bool(visibility["viewpoint_applied"]):
+    target_source = "vista_soft_target"
+    if not bool(cfg.enable_vvd_replacement):
         failure_info = {
-            "mile_called": True,
-            "module_scope": "lastmile_vvd_only",
-            "decision_policy": "MSGNav-style visibility_based_viewpoint_decision on baseline final object slot",
+            "ok": True,
+            "module": "vista",
+            "applied": False,
+            "reason": "vista_target_adjustment_disabled",
+            "target_before": baseline_target.tolist(),
+            "target_after": baseline_target.tolist(),
+            "vista_called": True,
+            "module_scope": "vista_visibility_informed_soft_target_adjustment",
+            "decision_policy": "visibility-informed soft target adjustment disabled; diagnostic only",
             "uses_language_or_vision_model": False,
             "baseline_memory_index": int(baseline_memory_index),
             "baseline_target_xyz": baseline_target.tolist(),
             "selected_slot_index": int(baseline_memory_index),
             "visibility": visibility,
-            "target_source": "vvd_no_visible_candidate_explicit_keep_baseline",
+            "target_source": "vista_diagnostic_explicit_keep_baseline",
+            "viewpoint_correction_applied": False,
+            "correction_applied": False,
+            "corrected_target_xyz": baseline_target.tolist(),
+            "rejected_reason": "vista_enable_vvd_replacement_false",
+        }
+        with open(output_dir / "vista_decision.json", "w", encoding="utf-8") as f:
+            json.dump(failure_info, f, ensure_ascii=False, indent=2)
+        return baseline_target.copy(), failure_info
+    if not bool(visibility["viewpoint_applied"]):
+        failure_info = {
+            "ok": True,
+            "module": "vista",
+            "applied": False,
+            "reason": str(visibility.get("rejected_reason")),
+            "target_before": baseline_target.tolist(),
+            "target_after": baseline_target.tolist(),
+            "vista_called": True,
+            "module_scope": "vista_visibility_informed_soft_target_adjustment",
+            "decision_policy": "visibility-informed soft target adjustment on baseline final object slot",
+            "uses_language_or_vision_model": False,
+            "baseline_memory_index": int(baseline_memory_index),
+            "baseline_target_xyz": baseline_target.tolist(),
+            "selected_slot_index": int(baseline_memory_index),
+            "visibility": visibility,
+            "target_source": "vista_no_visible_candidate_explicit_keep_baseline",
             "viewpoint_correction_applied": False,
             "correction_applied": False,
             "corrected_target_xyz": baseline_target.tolist(),
             "rejected_reason": visibility.get("rejected_reason"),
         }
-        with open(output_dir / "mile_decision.json", "w", encoding="utf-8") as f:
+        with open(output_dir / "vista_decision.json", "w", encoding="utf-8") as f:
             json.dump(failure_info, f, ensure_ascii=False, indent=2)
         return baseline_target.copy(), failure_info
     corrected_target = _as_np3(visibility["best_viewpoint_xyz"], name="best_viewpoint_xyz")
 
     correction_applied = bool(np.linalg.norm(corrected_target - baseline_target) > 1e-6)
     info = {
-        "mile_called": True,
-        "module_scope": "lastmile_vvd_only",
-        "decision_policy": "MSGNav-style visibility_based_viewpoint_decision on baseline final object slot",
+        "ok": True,
+        "module": "vista",
+        "applied": bool(correction_applied),
+        "reason": "selected_visibility_soft_path_target" if correction_applied else "selected_baseline_equivalent_target",
+        "target_before": baseline_target.tolist(),
+        "target_after": corrected_target.tolist(),
+        "vista_called": True,
+        "module_scope": "vista_visibility_informed_soft_target_adjustment",
+        "decision_policy": "visibility-informed soft target adjustment on baseline final object slot",
         "uses_language_or_vision_model": False,
         "baseline_memory_index": int(baseline_memory_index),
         "baseline_target_xyz": baseline_target.tolist(),
@@ -465,16 +583,16 @@ def correct_final_decision_with_mile(
         "correction_applied": bool(correction_applied),
         "corrected_target_xyz": corrected_target.tolist(),
     }
-    with open(output_dir / "mile_decision.json", "w", encoding="utf-8") as f:
+    with open(output_dir / "vista_decision.json", "w", encoding="utf-8") as f:
         json.dump(info, f, ensure_ascii=False, indent=2)
     return corrected_target, info
 
 
 __all__ = [
-    "MileConfig",
-    "MileDecisionError",
-    "MileInputError",
-    "MileRejectedError",
-    "correct_final_decision_with_mile",
+    "VistaConfig",
+    "VistaDecisionError",
+    "VistaInputError",
+    "VistaRejectedError",
+    "correct_final_decision_with_vista",
     "visibility_based_viewpoint_decision",
 ]
