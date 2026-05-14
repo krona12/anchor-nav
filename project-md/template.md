@@ -1,6 +1,6 @@
 # RefHM3D 模块开发与脚本模板约束
 
-更新时间：2026-05-12
+更新时间：2026-05-13
 
 ## 目标
 
@@ -336,6 +336,39 @@ fi
 
 如果有 effectiveness JSON，也要同样处理。
 
+### tmux 长跑启动约束
+
+正式长跑需要开 tmux 时，默认不要使用 shell 输出重定向。
+
+原因：
+
+- 用户需要 `tmux attach` 后直接看到实时导航日志。
+- 如果用 `> xxx.log 2>&1`，tmux pane 会变成黑屏，难以及时检查进度、错误和 live metrics。
+- 批量 Python 脚本本身已经写 stdout/stderr tee log、live metrics log、process/decision JSON、summary JSON；shell 层不需要再把整个 tmux 输出吞掉。
+
+推荐写法：
+
+```bash
+tmux new-session -d -s <session_name> \
+  "cd /home/chenlin/krona/anchor-nav && CUDA_VISIBLE_DEVICES=<gpu_id> bash scripts/run_<module>_all_<slice>.sh detailed <tag>"
+```
+
+禁止写法：
+
+```bash
+tmux new-session -d -s <session_name> \
+  "cd /home/chenlin/krona/anchor-nav && CUDA_VISIBLE_DEVICES=<gpu_id> bash scripts/run_<module>_all_<slice>.sh detailed <tag> > output_logs/.../xxx_tmux.log 2>&1"
+```
+
+如果确实需要额外保存 shell 层完整输出，应优先使用不遮挡 tmux pane 的方式，例如：
+
+```bash
+tmux new-session -d -s <session_name> \
+  "cd /home/chenlin/krona/anchor-nav && CUDA_VISIBLE_DEVICES=<gpu_id> bash scripts/run_<module>_all_<slice>.sh detailed <tag> | tee -a output_logs/.../xxx_tmux.log"
+```
+
+但默认仍以“tmux pane 可直接看实时日志”为准。
+
 ## Prompt 约束：让 Codex 写新模块
 
 推荐 prompt：
@@ -403,6 +436,7 @@ fi
 - 保存脚本 snapshot 和 run_command.sh。
 - 删除空 output/effectiveness JSON。
 - 完成后 chmod +x，并运行 bash -n。
+- 若需要开 tmux 长跑，tmux 命令不要使用 `> xxx.log 2>&1` 输出重定向；必须保证 attach 后 pane 内能直接看到实时日志。
 ```
 
 ## Prompt 约束：让 Codex 改已有模块
@@ -496,6 +530,7 @@ bash scripts/run_<module>_instance_0.05_0.1.sh detailed smoke
 - 不要把 VLM API key 写死进代码或 run_args。
 - 不要删除旧字段来“清理”JSON；新增字段可以，破坏字段不可以。
 - 不要让异常静默 fallback，必须记录原因。
+- 不要用 `tmux ... "command > log 2>&1"` 启动正式长跑；这会让用户 attach 后看到黑屏。
 
 ## 推荐命名
 
