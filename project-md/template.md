@@ -1,6 +1,6 @@
 # RefHM3D 模块开发与脚本模板约束
 
-更新时间：2026-05-13
+更新时间：2026-05-14
 
 ## 目标
 
@@ -13,6 +13,7 @@
 3. 批量实验先用 `hm3d-online/refhm3d-nav-sequence-analyze-template-xxx-refine1.py` 的结构。
 4. launcher 对齐 `scripts/baseline-all-0.05-0.1.sh` 和 `scripts/run_vfv_instance_0.05_0.1.sh`：固定 run tag、输出目录、run args、脚本快照、run command。
 5. 所有实验必须可 resume、可追溯、可聚合 metrics。
+6. 开 tmux 长跑时必须显式指定当前使用的 CUDA，例如 `CUDA_VISIBLE_DEVICES=2`，并在启动输出与 `run_args.txt` 中记录。
 
 ## 参考文件
 
@@ -51,6 +52,7 @@ launcher 必须负责：
 
 - conda 环境激活。
 - `PYTHONPATH` / Habitat / YOLO 静默环境变量。
+- CUDA 选择必须明确打印并写入 `run_args.txt`；不要让长跑依赖用户猜测当前 GPU。
 - `RUN_TAG` / `OUT_DIR` 创建。
 - 写 `run_args.txt`。
 - 保存当前脚本快照。
@@ -310,6 +312,7 @@ slice_range
 slice_step
 num_shards_total
 schedule
+cuda_visible_devices
 seed
 模块专属参数
 ```
@@ -338,6 +341,16 @@ fi
 
 ### tmux 长跑启动约束
 
+正式长跑开 tmux 时，必须显式指定 CUDA。
+
+硬性要求：
+
+- tmux 命令里必须出现 `CUDA_VISIBLE_DEVICES=<gpu_id>`，例如第三张卡写 `CUDA_VISIBLE_DEVICES=2`。
+- tmux session 名建议带上 cuda 信息，例如 `xxx-cuda2`。
+- launcher 启动后必须在 pane 里打印 `CUDA_VISIBLE_DEVICES: <gpu_id>`。
+- `run_args.txt` 必须写 `cuda_visible_devices=<gpu_id>`。
+- 不要只依赖脚本里的默认值（如 `${CUDA_VISIBLE_DEVICES:-0}`）来开长跑；除非用户明确要求把 CUDA 写死进脚本，否则 tmux 启动命令也要显式传入。
+
 正式长跑需要开 tmux 时，默认不要使用 shell 输出重定向。
 
 原因：
@@ -353,11 +366,37 @@ tmux new-session -d -s <session_name> \
   "cd /home/chenlin/krona/anchor-nav && CUDA_VISIBLE_DEVICES=<gpu_id> bash scripts/run_<module>_all_<slice>.sh detailed <tag>"
 ```
 
+实际示例：
+
+```bash
+tmux new-session -d -s mqsc-r1-all-0_0-0_2-cuda2 \
+  "cd /home/chenlin/krona/anchor-nav && CUDA_VISIBLE_DEVICES=2 bash scripts/run_mqsc_r1_all_0.0_0.2.sh detailed"
+```
+
+启动后必须立刻确认：
+
+```bash
+tmux capture-pane -pt <session_name> -S -80
+```
+
+确认输出里有：
+
+```text
+CUDA_VISIBLE_DEVICES: <gpu_id>
+```
+
 禁止写法：
 
 ```bash
 tmux new-session -d -s <session_name> \
   "cd /home/chenlin/krona/anchor-nav && CUDA_VISIBLE_DEVICES=<gpu_id> bash scripts/run_<module>_all_<slice>.sh detailed <tag> > output_logs/.../xxx_tmux.log 2>&1"
+```
+
+同样禁止没有 CUDA 的写法：
+
+```bash
+tmux new-session -d -s <session_name> \
+  "cd /home/chenlin/krona/anchor-nav && bash scripts/run_<module>_all_<slice>.sh detailed <tag>"
 ```
 
 如果确实需要额外保存 shell 层完整输出，应优先使用不遮挡 tmux pane 的方式，例如：
@@ -432,11 +471,12 @@ tmux new-session -d -s <session_name> \
 - all 输出到 output_logs/anchor/<module_name>_all_0.05_0.1/${RUN_TAG}。
 - instance 传 --task_levels instance。
 - all 传 --task_levels object,room,region,instance。
-- run_args.txt 必须记录 module、python、task_levels、slice_range、seed 和模块参数。
+- launcher 必须 echo 当前 `CUDA_VISIBLE_DEVICES`，并在 `run_args.txt` 写 `cuda_visible_devices=${CUDA_VISIBLE_DEVICES}`。
+- run_args.txt 必须记录 module、python、task_levels、slice_range、cuda_visible_devices、seed 和模块参数。
 - 保存脚本 snapshot 和 run_command.sh。
 - 删除空 output/effectiveness JSON。
 - 完成后 chmod +x，并运行 bash -n。
-- 若需要开 tmux 长跑，tmux 命令不要使用 `> xxx.log 2>&1` 输出重定向；必须保证 attach 后 pane 内能直接看到实时日志。
+- 若需要开 tmux 长跑，tmux 命令必须显式包含 `CUDA_VISIBLE_DEVICES=<gpu_id>`；不要使用 `> xxx.log 2>&1` 输出重定向；必须保证 attach 后 pane 内能直接看到实时日志和 CUDA 信息。
 ```
 
 ## Prompt 约束：让 Codex 改已有模块
@@ -508,7 +548,7 @@ bash -n scripts/run_<module>_all_0.05_0.1.sh
 正式长跑前建议只做小范围 smoke：
 
 ```bash
-bash scripts/run_<module>_instance_0.05_0.1.sh detailed smoke
+CUDA_VISIBLE_DEVICES=<gpu_id> bash scripts/run_<module>_instance_0.05_0.1.sh detailed smoke
 ```
 
 如果 smoke 过程中发现：
@@ -531,6 +571,7 @@ bash scripts/run_<module>_instance_0.05_0.1.sh detailed smoke
 - 不要删除旧字段来“清理”JSON；新增字段可以，破坏字段不可以。
 - 不要让异常静默 fallback，必须记录原因。
 - 不要用 `tmux ... "command > log 2>&1"` 启动正式长跑；这会让用户 attach 后看到黑屏。
+- 不要用没有 `CUDA_VISIBLE_DEVICES=<gpu_id>` 的 tmux 命令启动正式长跑。
 
 ## 推荐命名
 
