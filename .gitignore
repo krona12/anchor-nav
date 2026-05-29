@@ -2,10 +2,11 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+local_nvidia_580_126_09/
 # logs
 output_process/
 output_logs/
+visual-output/
 # C extensions
 *.so
 *.pyc

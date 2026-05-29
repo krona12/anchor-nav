@@ -13,7 +13,13 @@ unset _SAVED_ARGV
 RUN_CMD="$(printf '%q ' "$0" "$@")"
 RUN_CMD="${RUN_CMD% }"
 
-export CUDA_VISIBLE_DEVICES=0
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
+cd "${PROJECT_ROOT}"
+
+source "${PROJECT_ROOT}/scripts/use-local-nvidia-580.126.09.sh"
+
+export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0}"
 export PYTHONPATH=/home/chenlin/krona/MTU3D:./:./hm3d-online:./hm3d-online/FastSAM:${PYTHONPATH:-}
 export MAGNUM_LOG=quiet
 export HABITAT_SIM_LOG=quiet
@@ -21,11 +27,19 @@ export YOLO_VERBOSE=False
 NAVIGATION_DATA_PATH="/home/chenlin/krona/anchor-nav/LangMap_Annotations"
 
 # Usage:
-#   bash scripts/baseline-all-0-0.2.sh [detailed|concise] [optional_tag]
-DESC_MODE="${1:-detailed}"
-USER_TAG="${2:-}"
-if [ "${DESC_MODE}" != "detailed" ] && [ "${DESC_MODE}" != "concise" ]; then
-  echo "Invalid first arg: ${DESC_MODE}. Must be 'detailed' or 'concise'."
+#   bash scripts/concise/00_02/baseline-concise-all-0-0.2.sh [optional_tag]
+DESC_MODE="concise"
+USER_TAG="${1:-}"
+
+NVIDIA_SMI_BIN="${NVIDIA_SMI_BIN:-nvidia-smi}"
+if ! NVIDIA_SMI_OUTPUT="$("${NVIDIA_SMI_BIN}" 2>&1)"; then
+  echo "nvidia-smi failed before starting Habitat-Sim:"
+  echo "${NVIDIA_SMI_OUTPUT}"
+  if [ -r /proc/driver/nvidia/version ]; then
+    echo "Loaded kernel module:"
+    cat /proc/driver/nvidia/version
+  fi
+  echo "Habitat-Sim EGL rendering requires matching NVIDIA kernel/user-space driver libraries."
   exit 1
 fi
 
@@ -38,7 +52,7 @@ fi
 OUT_DIR="output_logs/baseline_all_0_0.2/${RUN_TAG}"
 mkdir -p "${OUT_DIR}"
 
-echo ">>> Baseline all-task run tag: ${RUN_TAG}"
+echo ">>> Baseline concise all-task run tag: ${RUN_TAG}"
 echo ">>> Output dir: ${OUT_DIR}"
 echo ">>> CUDA_VISIBLE_DEVICES: ${CUDA_VISIBLE_DEVICES}"
 
@@ -55,9 +69,11 @@ echo ">>> CUDA_VISIBLE_DEVICES: ${CUDA_VISIBLE_DEVICES}"
   echo "num_shards_total=1"
   echo "schedule=single_shard_single_pipeline"
   echo "cuda_visible_devices=${CUDA_VISIBLE_DEVICES}"
+  echo "local_nvidia_root=${LOCAL_NVIDIA_ROOT:-}"
+  echo "egl_vendor_library_filenames=${__EGL_VENDOR_LIBRARY_FILENAMES:-}"
 } > "${OUT_DIR}/run_args.txt"
 
-cp "$0" "${OUT_DIR}/baseline-all-0-0.2.sh.snapshot"
+cp "$0" "${OUT_DIR}/baseline-concise-all-0-0.2.sh.snapshot"
 {
   echo "#!/usr/bin/env bash"
   printf '%s\n' "${RUN_CMD}"

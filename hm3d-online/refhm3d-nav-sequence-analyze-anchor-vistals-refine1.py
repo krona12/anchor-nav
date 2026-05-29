@@ -1015,6 +1015,7 @@ def main() -> None:
                         frontiers,
                         sentence,
                         decision_num,
+                        task_level=task_type,
                     )
                     register_info = _object_slot_info(pq3d.representation_manager, prev_object_count)
                     baseline_target = np.asarray(target, dtype=float).reshape(3)

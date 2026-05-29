@@ -16,17 +16,58 @@ import cv2
 from data_utils import PQ3DModel
 import random
 import sys
+import gc
+
+try:
+    import torch
+except Exception:
+    torch = None
 
 # hyperparameter
-data_set_path = "/mnt/fillipo/zhuziyu/embodied_bench_data/our-set/ovon_full_set.json"
-navigation_data_path = "/mnt/fillipo/zhuziyu/embodied_bench_data/ovon/"
-hm3d_data_base_path = "/mnt/fillipo/ML/zhuofan/data/scene_datasets/hm3d/val"
-pq3d_stage1_path = "/mnt/fillipo/zhuziyu/embodied_saved_data/saved_models/embodied-pq3d-final/stage1-pretrain-all"
-pq3d_stage2_path = "/mnt/fillipo/zhuziyu/embodied_saved_data/saved_models/embodied-pq3d-final-stage2/stage2-fine-tune-ovon"
-output_path = "./output_dirs/ovon-full-finetune-num-1.json"
+data_set_path = os.environ.get("OVON_DATA_SET_PATH", "/disks/amax_robot_dataset/embodied/embodied_bench_data/our-set/ovon_full_set.json")
+navigation_data_path = os.environ.get("OVON_NAVIGATION_DATA_PATH", "/disks/amax_robot_dataset/embodied/embodied_bench_data/ovon/")
+hm3d_data_base_path = os.environ.get("OVON_HM3D_DATA_BASE_PATH", "/home/chenlin/krona/MTU3D/datascene")
+pq3d_stage1_path = os.environ.get("OVON_PQ3D_STAGE1_PATH", "/home/chenlin/krona/MTU3D/checkpoint/stage1-pretrain-all")
+pq3d_stage2_path = os.environ.get("OVON_PQ3D_STAGE2_PATH", "/home/chenlin/krona/MTU3D/checkpoint/stage2-fine-tune-ovon")
+output_path = os.environ.get("OVON_OUTPUT_PATH", "./output_dirs/ovon-test.json")
 enable_visualization = False
 decision_num_min = 3
 visible_radius = 3
+start_ratio = float(os.environ.get("OVON_START_RATIO", "0.0"))
+end_ratio = float(os.environ.get("OVON_END_RATIO", "1.0"))
+fail_fast = os.environ.get("OVON_FAIL_FAST", "1").lower() not in {"0", "false", "no"}
+
+output_dir = os.path.dirname(output_path)
+if output_dir:
+    os.makedirs(output_dir, exist_ok=True)
+
+
+def is_cuda_oom(error):
+    msg = str(error).lower()
+    return (
+        "out of memory" in msg
+        or "cudaerrormemoryallocation" in msg
+        or "cublas_status_alloc_failed" in msg
+    )
+
+
+def release_cuda_cache():
+    gc.collect()
+    if torch is None:
+        return
+    try:
+        torch.cuda.empty_cache()
+        torch.cuda.ipc_collect()
+    except Exception:
+        pass
+
+
+def close_simulator(sim):
+    try:
+        sim.close()
+    except Exception as close_error:
+        print(f"Warning: failed to close Habitat simulator: {close_error}")
+    release_cuda_cache()
 
 # load navigation data
 navigation_data_dict = {'val_seen': {}, 'val_seen_synonyms': {}, 'val_unseen': {}}
@@ -51,6 +92,10 @@ for split in split_list:
 
 # load data set
 data_set = json.load(open(data_set_path, "r"))
+for split in split_list:
+    start = int(start_ratio * len(data_set[split]))
+    end = int(end_ratio * len(data_set[split]))
+    data_set[split] = data_set[split][start:end]
             
 # record result
 if os.path.exists(output_path):
@@ -70,7 +115,22 @@ for split in split_list:
         # load cur episode
         scene_id = cur_data['scan_id']
         clean_scene_id = scene_id.split("-")[-1]
-        scene_path = os.path.join(hm3d_data_base_path, scene_id, f"{clean_scene_id}.basis.glb")
+        scene_dir = os.path.join(hm3d_data_base_path, scene_id)
+        scene_path_candidates = [
+            os.path.join(scene_dir, f"{clean_scene_id}.basis.glb"),
+            os.path.join(scene_dir, f"{clean_scene_id}.glb"),
+        ]
+        scene_path = None
+        for candidate in scene_path_candidates:
+            if os.path.exists(candidate):
+                scene_path = candidate
+                break
+        if scene_path is None:
+            print(
+                f"Skip episode because scene file does not exist. "
+                f"Checked: {scene_path_candidates}"
+            )
+            continue
         episode_index = cur_data['episode_index']
         object_category = cur_data['object_category']
         cur_episode = navigation_data_dict[split][scene_id]['episodes'][episode_index]
@@ -159,7 +219,10 @@ for split in split_list:
                 target_position, is_final_decision = pq3d_model.decision(color_list, depth_list, agent_state_list, frontier_waypoints, object_catetory, decision_num)
             except Exception as e:
                 print(f"Error in decision making, episode_id: {cur_episode['episode_id']}, scene_id: {scene_id}, {e}")
-                sys.exit(1)
+                release_cuda_cache()
+                if fail_fast or is_cuda_oom(e):
+                    close_simulator(sim)
+                    raise
                 break
             decision_num += 1
             # add frontier to visited frontier
@@ -252,6 +315,9 @@ for split in split_list:
         print(f"SR: {sr}, SPL: {spl}, Agent start position: {start_position}, Agent position: {agent_state.position}, Goal positions: {[g['position'] for g in goals]}, Object category: {object_catetory}, Decision number: {decision_num}")
         with open(output_path, 'w') as f:
             json.dump(result_dict, f)
+        close_simulator(sim)
+        del abstract_sim, sim, agent, path_finder
+        release_cuda_cache()
 
 # Calculate and print average SPL and SR for each split
 for split in split_list:

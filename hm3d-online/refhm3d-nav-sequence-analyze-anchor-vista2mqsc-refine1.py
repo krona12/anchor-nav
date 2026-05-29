@@ -1085,7 +1085,8 @@ def main() -> None:
 
                         t_pq = time.perf_counter()
                         target_position, is_final = pq3d_model.decision(
-                            color_list, depth_list, agent_state_list, frontier_waypoints, sentence, decision_num
+                            color_list, depth_list, agent_state_list, frontier_waypoints, sentence, decision_num,
+                            task_level=task_type,
                         )
                         pq_ms = (time.perf_counter() - t_pq) * 1000.0
                         if not bool(args.quiet_nav_steps):

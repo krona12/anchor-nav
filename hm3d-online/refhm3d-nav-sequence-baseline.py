@@ -476,6 +476,7 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                         frontier_waypoints,
                         sentence,
                         decision_num,
+                        task_level=task_type,
                     )
                 except Exception as e:
                     error_info = {

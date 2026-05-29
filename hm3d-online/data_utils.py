@@ -342,7 +342,7 @@ class PQ3DModel:
         self.last_decision_aux = {}
         self.last_stage2_decision = {}
         
-    def decision(self, color_list, depth_list, agent_state_list, frontier_waypoints, sentence, decision_num, image_feat=None, analysis_output_dir=None):
+    def decision(self, color_list, depth_list, agent_state_list, frontier_waypoints, sentence, decision_num, image_feat=None, analysis_output_dir=None, task_level: str = ""):
         torch.cuda.empty_cache()
         gc.collect()  
         torch.cuda.ipc_collect()
@@ -364,8 +364,9 @@ class PQ3DModel:
             img_feats_list.append(img_feats)
         img_feats = torch.cat(img_feats_list, dim=0)
         torch.cuda.empty_cache()
-        # get sam result
-        everything_result = self.mask_generator(color_list, device='cuda', retina_masks=True, imgsz=640, conf=0.1, iou=0.9,)
+        # get sam result – pass task_level so SamFastSAM can select the right profile;
+        # the legacy FastSAM path ignores the extra keyword harmlessly.
+        everything_result = self.mask_generator(color_list, device='cuda', retina_masks=True, imgsz=640, conf=0.1, iou=0.9, task_level=task_level)
         # process to esam format, points, superpoints, img_feat
         points_list = []
         super_points_list = []
@@ -378,7 +379,7 @@ class PQ3DModel:
             try:
                 masks = format_result(everything_result[idx])
             except:
-                everything_result = self.mask_generator(color, device='cuda', retina_masks=True, imgsz=640, conf=0.1, iou=0.7,)
+                everything_result = self.mask_generator(color, device='cuda', retina_masks=True, imgsz=640, conf=0.1, iou=0.7, task_level=task_level)
                 masks = format_result(everything_result[0])
             masks = sorted(masks, key=(lambda x: x['area']), reverse=True)
             group_ids = np.full((color.shape[0], color.shape[1]), -1, dtype=int)

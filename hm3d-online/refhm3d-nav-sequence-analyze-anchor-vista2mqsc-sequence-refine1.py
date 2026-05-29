@@ -1,7 +1,7 @@
-"""RefHM3D MQSC-R1 refine1 batch evaluation.
+"""RefHM3D Vista2MQSC refine1 batch evaluation.
 
 This batch script keeps the template refine1 scaffold and plugs in the
-Multi-Query Spatial Consensus module only at final PQ3D object decisions:
+combined MQSC-R1 + VISTA-LS policy only at final PQ3D object decisions:
 
 - scene slicing via ``--start_ratio`` / ``--end_ratio``
 - episode resume via the output JSON
@@ -23,7 +23,7 @@ import random
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 import habitat_sim
 import numpy as np
@@ -56,10 +56,13 @@ from frontier_utils import (
     reveal_fog_of_war,
 )
 from anchor_nav.mqsc_r1 import MqscR1Config, run_mqsc_r1_refine
+from anchor_nav.vista_ls import VistaLsConfig, VistaLsRejectedError, correct_final_decision_with_vistals
 
 
 TASK_LEVEL_ORDER = ("object", "room", "region", "instance")
 MQSC_R1_CFG = MqscR1Config()
+VISTALS_CFG = VistaLsConfig()
+VISTA2MQSC_VISTALS_APPLY_TASK_LEVELS = set(TASK_LEVEL_ORDER)
 
 
 class _TeeStream:
@@ -80,16 +83,16 @@ class _TeeStream:
 def _setup_run_logging(log_dir: str) -> None:
     os.makedirs(log_dir, exist_ok=True)
     ts = datetime.datetime.now().strftime("%Y%m%d-%H%M%S-%f")
-    log_path = os.path.join(log_dir, f"refhm3d-nav-sequence-analyze-mqsc-r1-refine1-{ts}-pid{os.getpid()}.log")
+    log_path = os.path.join(log_dir, f"refhm3d-nav-sequence-analyze-vista2mqsc-sequence-refine1-{ts}-pid{os.getpid()}.log")
     log_fp = open(log_path, "w", encoding="utf-8", buffering=1)
     old_out, old_err = sys.stdout, sys.stderr
     sys.stdout = _TeeStream(old_out, log_fp)
     sys.stderr = _TeeStream(old_err, log_fp)
-    print(f"[MQSCR1Refine1] logging enabled -> {os.path.abspath(log_path)}")
+    print(f"[Vista2MQSCRefine1] logging enabled -> {os.path.abspath(log_path)}")
 
     def _cleanup() -> None:
         try:
-            print(f"[MQSCR1Refine1] run finished, log saved -> {os.path.abspath(log_path)}")
+            print(f"[Vista2MQSCRefine1] run finished, log saved -> {os.path.abspath(log_path)}")
         finally:
             sys.stdout, sys.stderr = old_out, old_err
             log_fp.close()
@@ -132,7 +135,7 @@ def _set_seed(seed: int) -> None:
         torch.cuda.manual_seed_all(int(seed))
     except Exception:
         pass
-    _tqdm_print(f"[MQSCR1Refine1] seed={int(seed)}")
+    _tqdm_print(f"[Vista2MQSCRefine1] seed={int(seed)}")
 
 
 def resolve_scene_path(hm3d_root: str, scene_name: str) -> str:
@@ -190,7 +193,9 @@ def _iter_metric_rows(result_dict: Dict[str, Any]) -> List[Dict[str, Any]]:
         source = [x for x in rows if isinstance(x, dict)]
     else:
         source = []
-        for value in result_dict.values():
+        for key, value in result_dict.items():
+            if key in {"sequence_episodes", "sequence_episode_metrics"}:
+                continue
             if not isinstance(value, list):
                 continue
             for row in value:
@@ -206,6 +211,23 @@ def _iter_metric_rows(result_dict: Dict[str, Any]) -> List[Dict[str, Any]]:
             row.get("task_id"),
             row.get("task_level"),
         )
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(row)
+    return out
+
+
+def _iter_sequence_episode_rows(result_dict: Dict[str, Any]) -> List[Dict[str, Any]]:
+    rows = result_dict.get("sequence_episodes", [])
+    if not isinstance(rows, list):
+        return []
+    out: List[Dict[str, Any]] = []
+    seen = set()
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        key = (row.get("scene_name"), row.get("navigation_type"), row.get("episode_id"))
         if key in seen:
             continue
         seen.add(key)
@@ -240,26 +262,65 @@ def metric_snapshot(result_dict: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
+def sequence_episode_snapshot(result_dict: Dict[str, Any]) -> Dict[str, Any]:
+    rows = _iter_sequence_episode_rows(result_dict)
+    if not rows:
+        return {
+            "episode_count": 0,
+            "success_at_1": 0.0,
+            "success_at_2": 0.0,
+            "success_at_3": 0.0,
+            "success_at_4": 0.0,
+            "success_at_5": 0.0,
+            "spl_at_4": 0.0,
+            "spl_at_5": 0.0,
+            "avg_task_sr": 0.0,
+            "avg_task_spl": 0.0,
+        }
+    out: Dict[str, Any] = {"episode_count": int(len(rows))}
+    for k in range(1, 6):
+        out[f"success_at_{k}"] = float(np.mean([float(r.get(f"success_at_{k}", 0.0)) for r in rows]))
+        out[f"spl_at_{k}"] = float(np.mean([float(r.get(f"spl_at_{k}", 0.0)) for r in rows]))
+    out["avg_task_sr"] = float(np.mean([float(r.get("avg_task_sr", 0.0)) for r in rows]))
+    out["avg_task_spl"] = float(np.mean([float(r.get("avg_task_spl", 0.0)) for r in rows]))
+    return out
+
+
 def sequence_compute_metric_results(result_dict: Dict[str, Any]) -> None:
     snap = metric_snapshot(result_dict)
+    seq_snap = sequence_episode_snapshot(result_dict)
     _tqdm_print(
         f"[Metrics] sequence count={snap['count']}, avg_sr={snap['sr']:.6f}, "
         f"avg_spl={snap['spl']:.6f}, avg_task_time_sec={snap['avg_task_time_sec']:.3f}, "
         f"by_level={json.dumps(snap['by_level'], ensure_ascii=False, sort_keys=True)}"
     )
+    if int(seq_snap["episode_count"]) > 0:
+        _tqdm_print(
+            f"[SequenceMetrics] episodes={seq_snap['episode_count']} "
+            f"SeqSR@4={seq_snap['success_at_4']:.6f} SeqSR@5={seq_snap['success_at_5']:.6f} "
+            f"spl@4={seq_snap['spl_at_4']:.6f} spl@5={seq_snap['spl_at_5']:.6f} "
+            f"avg_task_sr={seq_snap['avg_task_sr']:.6f} avg_task_spl={seq_snap['avg_task_spl']:.6f}"
+        )
 
 
 def append_live_metrics(metrics_log_path: Path, result_dict: Dict[str, Any], *, latest: Dict[str, Any]) -> None:
     snap = metric_snapshot(result_dict)
+    seq_snap = sequence_episode_snapshot(result_dict)
     payload = {
         "timestamp": datetime.datetime.now().isoformat(timespec="seconds"),
         "latest": latest,
         "metrics": snap,
+        "sequence_metrics": seq_snap,
     }
     line = (
-        f"[MQSC_R1_LIVE_METRICS] count={snap['count']} sr={snap['sr']:.6f} spl={snap['spl']:.6f} "
+        f"[VISTA2MQSC_LIVE_METRICS] count={snap['count']} sr={snap['sr']:.6f} spl={snap['spl']:.6f} "
         f"by_level={json.dumps(snap['by_level'], ensure_ascii=False, sort_keys=True)}"
     )
+    if int(seq_snap["episode_count"]) > 0:
+        line += (
+            f" seq_episodes={seq_snap['episode_count']} "
+            f"SeqSR@4={seq_snap['success_at_4']:.6f} SeqSR@5={seq_snap['success_at_5']:.6f}"
+        )
     _tqdm_print(line)
     with open(metrics_log_path, "a", encoding="utf-8") as f:
         f.write(line + "\n")
@@ -557,6 +618,188 @@ def mqsc_r1_refine_hook(
     return np.asarray(new_target, dtype=float).reshape(3), module_info
 
 
+def _parse_float_list(text: str, *, arg_name: str) -> Tuple[float, ...]:
+    values = tuple(float(x.strip()) for x in str(text).split(",") if x.strip())
+    if len(values) == 0 or any(x <= 0.0 for x in values):
+        raise RuntimeError(f"{arg_name} must contain positive comma-separated floats, got {text!r}")
+    return values
+
+
+def _valid_object_index(value: Any) -> Optional[int]:
+    try:
+        idx = int(value)
+    except Exception:
+        return None
+    return idx if idx >= 0 else None
+
+
+def vista2mqsc_refine_hook(
+    *,
+    sentence: str,
+    task_type: str,
+    scene_name: str,
+    episode_id: int,
+    task_id: int,
+    decision_num: int,
+    is_final: bool,
+    pq3d_model: Any,
+    target_position: np.ndarray,
+    decision_aux: Dict[str, Any],
+    output_dir: Path,
+    path_finder: Any,
+    agent_position_xyz: np.ndarray,
+) -> Tuple[np.ndarray, Dict[str, Any]]:
+    """Run MQSC-R1 semantic consensus, then VISTA-LS viewpoint correction."""
+    baseline_target = np.asarray(target_position, dtype=float).reshape(3).copy()
+    info: Dict[str, Any] = {
+        "ok": True,
+        "module": "vista2mqsc",
+        "called": bool(is_final),
+        "applied": False,
+        "reason": "non_final_decision" if not bool(is_final) else "final_decision_no_module_applied",
+        "target_before": baseline_target.tolist(),
+        "target_after": baseline_target.tolist(),
+        "baseline_target_before_mqsc": baseline_target.tolist(),
+        "policy": "MQSC-R1 object-only spatial consensus followed by VISTA-LS level-set viewpoint correction",
+        "task_level": task_type,
+        "mqsc_r1_called": False,
+        "mqsc_r1_applied": False,
+        "vistals_called": False,
+        "vistals_applied": False,
+        "vistals_level_enabled": bool(task_type in VISTA2MQSC_VISTALS_APPLY_TASK_LEVELS),
+    }
+    if not bool(is_final):
+        return baseline_target, info
+
+    hook_t0 = time.perf_counter()
+    mqsc_t0 = time.perf_counter()
+    mqsc_target, mqsc_info = mqsc_r1_refine_hook(
+        sentence=sentence,
+        task_type=task_type,
+        scene_name=scene_name,
+        episode_id=int(episode_id),
+        task_id=int(task_id),
+        decision_num=int(decision_num),
+        is_final=True,
+        pq3d_model=pq3d_model,
+        target_position=baseline_target,
+        output_dir=output_dir,
+    )
+    mqsc_info["called"] = True
+    mqsc_info["elapsed_ms"] = float((time.perf_counter() - mqsc_t0) * 1000.0)
+
+    baseline_idx = _valid_object_index(
+        mqsc_info.get("baseline_object_index", decision_aux.get("real_object_decision_idx"))
+    )
+    selected_idx = _valid_object_index(mqsc_info.get("selected_object_index"))
+    mqsc_applied = bool(mqsc_info.get("applied", False))
+    vistals_slot_idx = selected_idx if mqsc_applied and selected_idx is not None else baseline_idx
+    vistals_level_enabled = bool(task_type in VISTA2MQSC_VISTALS_APPLY_TASK_LEVELS)
+    is_object_decision = bool(decision_aux.get("is_object_decision", False))
+
+    corrected_target = np.asarray(mqsc_target, dtype=float).reshape(3).copy()
+    vistals_info: Dict[str, Any] = {
+        "vistals_called": False,
+        "correction_applied": False,
+        "viewpoint_correction_applied": False,
+        "target_source": "vistals_not_called",
+        "reason": "vistals_not_called",
+    }
+    if vistals_level_enabled and is_object_decision and vistals_slot_idx is not None:
+        vistals_aux = dict(decision_aux)
+        vistals_aux["is_object_decision"] = True
+        vistals_aux["real_object_decision_idx"] = int(vistals_slot_idx)
+        vistals_baseline_target_source = "mqsc_r1_target" if mqsc_applied else "pq3d_baseline_target"
+        vistals_t0 = time.perf_counter()
+        try:
+            _tqdm_print(
+                f"[vista2mqsc-refine1][vistals-start] scene={scene_name} ep={episode_id} task={task_id} "
+                f"dec={decision_num} slot={vistals_slot_idx} mqsc_applied={mqsc_applied}"
+            )
+            corrected_target, vistals_info = correct_final_decision_with_vistals(
+                rep=pq3d_model.representation_manager,
+                decision_aux=vistals_aux,
+                baseline_target_xyz=corrected_target,
+                output_dir=output_dir / "vista2mqsc" / f"dec_{int(decision_num):03d}_vistals",
+                path_finder=path_finder,
+                agent_position_xyz=agent_position_xyz,
+                cfg=VISTALS_CFG,
+            )
+            vistals_info["elapsed_ms"] = float((time.perf_counter() - vistals_t0) * 1000.0)
+            vistals_info["vistals_input_slot_source"] = "mqsc_r1_selected_object" if mqsc_applied else "pq3d_baseline_object"
+            vistals_info["vistals_input_slot_index"] = int(vistals_slot_idx)
+            vistals_info["vistals_baseline_target_source"] = vistals_baseline_target_source
+        except VistaLsRejectedError as exc:
+            vistals_info = {
+                "vistals_called": True,
+                "target_source": "vistals_rejected",
+                "correction_applied": False,
+                "viewpoint_correction_applied": False,
+                "error_type": type(exc).__name__,
+                "error_message": str(exc),
+                "elapsed_ms": float((time.perf_counter() - vistals_t0) * 1000.0),
+                "vistals_input_slot_index": int(vistals_slot_idx),
+                "vistals_baseline_target_source": vistals_baseline_target_source,
+            }
+            corrected_target = np.asarray(mqsc_target, dtype=float).reshape(3).copy()
+            _write_json(output_dir / "vista2mqsc" / f"dec_{int(decision_num):03d}_vistals_rejected.json", vistals_info)
+        except Exception as exc:
+            vistals_info = {
+                "vistals_called": True,
+                "target_source": "vistals_error",
+                "correction_applied": False,
+                "viewpoint_correction_applied": False,
+                "error_type": type(exc).__name__,
+                "error_message": str(exc),
+                "elapsed_ms": float((time.perf_counter() - vistals_t0) * 1000.0),
+                "vistals_input_slot_index": int(vistals_slot_idx),
+                "vistals_baseline_target_source": vistals_baseline_target_source,
+            }
+            corrected_target = np.asarray(mqsc_target, dtype=float).reshape(3).copy()
+            _write_json(output_dir / "vista2mqsc" / f"dec_{int(decision_num):03d}_vistals_error.json", vistals_info)
+    else:
+        if not vistals_level_enabled:
+            vistals_info["reason"] = "task_level_not_enabled_for_vistals"
+        elif not is_object_decision:
+            vistals_info["reason"] = "pq3d_decision_aux_not_object"
+        else:
+            vistals_info["reason"] = "no_valid_object_slot_for_vistals"
+
+    vistals_applied = bool(vistals_info.get("correction_applied", False))
+    applied = bool(mqsc_applied or vistals_applied)
+    if mqsc_applied and vistals_applied:
+        reason = "mqsc_r1_semantic_target_then_vistals_viewpoint"
+    elif mqsc_applied:
+        reason = "mqsc_r1_semantic_target_only"
+    elif vistals_applied:
+        reason = "vistals_viewpoint_only"
+    else:
+        reason = "baseline_target_kept"
+
+    info.update(
+        {
+            "applied": bool(applied),
+            "reason": reason,
+            "target_after": np.asarray(corrected_target, dtype=float).reshape(3).tolist(),
+            "target_after_mqsc_r1": np.asarray(mqsc_target, dtype=float).reshape(3).tolist(),
+            "vistals_baseline_target_source": "mqsc_r1_target" if mqsc_applied else "pq3d_baseline_target",
+            "elapsed_ms": float((time.perf_counter() - hook_t0) * 1000.0),
+            "mqsc_r1_called": True,
+            "mqsc_r1_applied": bool(mqsc_applied),
+            "mqsc_r1_selected_object_index": selected_idx,
+            "mqsc_r1_baseline_object_index": baseline_idx,
+            "vistals_called": bool(vistals_info.get("vistals_called", False)),
+            "vistals_applied": bool(vistals_applied),
+            "vistals_level_enabled": bool(vistals_level_enabled),
+            "vistals_input_slot_index": vistals_slot_idx,
+            "vistals_input_slot_source": "mqsc_r1_selected_object" if mqsc_applied else "pq3d_baseline_object",
+            "mqsc_r1": mqsc_info,
+            "vistals": vistals_info,
+        }
+    )
+    return np.asarray(corrected_target, dtype=float).reshape(3), info
+
+
 def _existing_episode_keys(result_dict: Dict[str, Any]) -> set:
     return {
         "_".join([str(r.get("scene_name")), str(r.get("navigation_type")), str(r.get("episode_id"))])
@@ -570,11 +813,73 @@ def _append_result_row(result_dict: Dict[str, Any], navigation_type: str, row: D
         result_dict.setdefault(navigation_type, []).append(row)
 
 
+def _build_sequence_episode_row(
+    *,
+    scene_name: str,
+    episode_id: int,
+    navigation_type: str,
+    task_sequence: Sequence[Any],
+    task_rows: Sequence[Dict[str, Any]],
+    episode_wall_time_sec: float,
+) -> Dict[str, Any]:
+    ordered = sorted([dict(r) for r in task_rows], key=lambda x: int(x.get("task_id", 0)))
+    expected_count = int(len(task_sequence))
+    sr_flags = [1.0 if float(r.get("sr", 0.0)) >= 1.0 else 0.0 for r in ordered]
+    spl_values = [float(r.get("spl", 0.0)) for r in ordered]
+    sequence_complete = bool(len(ordered) == expected_count)
+    success_count = int(sum(sr_flags))
+    success_at: Dict[str, float] = {}
+    spl_at: Dict[str, float] = {}
+    for k in range(1, 6):
+        ok = float(sequence_complete and success_count >= k)
+        success_at[f"success_at_{k}"] = ok
+        spl_at[f"spl_at_{k}"] = float(np.mean(spl_values)) if ok > 0.0 and spl_values else 0.0
+    prefix_success_at_4 = float(len(sr_flags) >= 4 and all(v >= 1.0 for v in sr_flags[:4]))
+    any_contiguous_4 = 0.0
+    if len(sr_flags) >= 4:
+        any_contiguous_4 = float(any(all(v >= 1.0 for v in sr_flags[i : i + 4]) for i in range(0, len(sr_flags) - 3)))
+    return {
+        "scene_name": scene_name,
+        "episode_id": int(episode_id),
+        "navigation_type": navigation_type,
+        "expected_task_count": expected_count,
+        "completed_task_count": int(len(ordered)),
+        "sequence_complete": sequence_complete,
+        "sequence_metric_definition": "LangMap SeqSR@k = 1[success_count >= k] over the 5 tasks in an episode",
+        "task_sequence": [[str(x[0]), int(x[1])] for x in task_sequence],
+        "task_sr": sr_flags,
+        "task_spl": spl_values,
+        "task_success_count": success_count,
+        "task_levels": [str(r.get("task_level", "")) for r in ordered],
+        "task_end_reasons": [str(r.get("end_reason", "")) for r in ordered],
+        "avg_task_sr": float(np.mean(sr_flags)) if sr_flags else 0.0,
+        "avg_task_spl": float(np.mean(spl_values)) if spl_values else 0.0,
+        "total_task_time_sec": float(sum(float(r.get("task_time_sec", 0.0)) for r in ordered)),
+        "episode_wall_time_sec": float(episode_wall_time_sec),
+        "total_steps": int(sum(int(r.get("steps_total", 0)) for r in ordered)),
+        "prefix_success_at_4": prefix_success_at_4,
+        "any_contiguous_4_success": any_contiguous_4,
+        **success_at,
+        **spl_at,
+    }
+
+
+def _append_sequence_episode_row(result_dict: Dict[str, Any], row: Dict[str, Any]) -> None:
+    rows = result_dict.setdefault("sequence_episodes", [])
+    key = (row.get("scene_name"), row.get("navigation_type"), row.get("episode_id"))
+    rows[:] = [
+        r
+        for r in rows
+        if (r.get("scene_name"), r.get("navigation_type"), r.get("episode_id")) != key
+    ]
+    rows.append(row)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
-            "Run RefHM3D MQSC-R1 refine1 batch evaluation. "
-            "This keeps the VFV-refine1 batch scaffold but removes VFV module logic."
+            "Run RefHM3D Vista2MQSC refine1 batch evaluation. "
+            "Final PQ3D object decisions are first refined by MQSC-R1, then adjusted by VISTA-LS."
         )
     )
     parser.add_argument("--start_ratio", type=float, default=0.0)
@@ -584,12 +889,12 @@ def main() -> None:
     parser.add_argument("--hm3d_data_base_path", type=str, default=str(PROJECT_ROOT / "datascene"))
     parser.add_argument("--pq3d_stage1_path", type=str, default=str(PROJECT_ROOT / "checkpoint/stage1-pretrain-all"))
     parser.add_argument("--pq3d_stage2_path", type=str, default=str(PROJECT_ROOT / "checkpoint/stage2-fine-tune-goat"))
-    parser.add_argument("--output_log_dir", type=str, default=str(PROJECT_ROOT / "output_logs/anchor/mqsc-r1"))
+    parser.add_argument("--output_log_dir", type=str, default=str(PROJECT_ROOT / "output_logs/anchor/vista2mqsc"))
     parser.add_argument(
         "--task_levels",
         type=str,
-        default="instance",
-        help="Comma-separated task levels. Default keeps vfv-refine1 behavior: instance only.",
+        default="object,room,region,instance",
+        help="Comma-separated task levels.",
     )
     parser.add_argument("--max_steps", type=int, default=400)
     parser.add_argument("--decision_num_min", type=int, default=3)
@@ -620,9 +925,34 @@ def main() -> None:
     parser.add_argument("--mqsc_r1_disable_no_proxy", action="store_true")
     parser.add_argument("--mqsc_r1_disable_heuristic_decompose", action="store_true")
     parser.add_argument("--mqsc_r1_disable_debug_json", action="store_true")
+    parser.add_argument("--vistals_candidate_radii_m", type=str, default="0.5,0.75")
+    parser.add_argument("--vistals_candidate_view_count", type=int, default=20)
+    parser.add_argument("--vistals_enable_vvd_replacement", action="store_true")
+    parser.add_argument("--vistals_disable_visible_baseline_guard", action="store_true")
+    parser.add_argument("--vistals_camera_height_m", type=float, default=1.50)
+    parser.add_argument("--vistals_max_snap_distance_m", type=float, default=0.60)
+    parser.add_argument("--vistals_target_sample_count", type=int, default=300)
+    parser.add_argument("--vistals_scene_sample_count", type=int, default=0)
+    parser.add_argument("--vistals_max_ray_sample_count", type=int, default=300)
+    parser.add_argument("--vistals_occlusion_radius_m", type=float, default=0.05)
+    parser.add_argument("--vistals_min_visibility_score", type=float, default=0.02)
+    parser.add_argument("--vistals_visibility_tie_epsilon", type=float, default=0.0)
+    parser.add_argument("--vistals_path_efficiency_exponent", type=float, default=0.15)
+    parser.add_argument("--vistals_r_min_m", type=float, default=0.30)
+    parser.add_argument("--vistals_r_max_m", type=float, default=1.30)
+    parser.add_argument("--vistals_radial_step_m", type=float, default=0.10)
+    parser.add_argument("--vistals_angle_step_deg", type=float, default=10.0)
+    parser.add_argument("--vistals_shell_min_m", type=float, default=0.35)
+    parser.add_argument("--vistals_shell_max_m", type=float, default=1.20)
+    parser.add_argument("--vistals_relaxed_shell_min_m", type=float, default=0.30)
+    parser.add_argument("--vistals_relaxed_shell_max_m", type=float, default=1.35)
+    parser.add_argument("--vistals_min_clearance_m", type=float, default=0.10)
+    parser.add_argument("--vistals_min_component_size", type=int, default=3)
+    parser.add_argument("--vistals_size_tie_ratio", type=float, default=0.85)
+    parser.add_argument("--vistals_apply_task_levels", type=str, default="object,room,region,instance")
     args = parser.parse_args()
 
-    global MQSC_R1_CFG
+    global MQSC_R1_CFG, VISTALS_CFG, VISTA2MQSC_VISTALS_APPLY_TASK_LEVELS
     MQSC_R1_CFG = MqscR1Config(
         top_k=int(args.mqsc_r1_top_k),
         temperature=float(args.mqsc_r1_temperature),
@@ -639,6 +969,37 @@ def main() -> None:
         allow_heuristic_decompose=not bool(args.mqsc_r1_disable_heuristic_decompose),
         write_debug_json=not bool(args.mqsc_r1_disable_debug_json),
     )
+    VISTALS_CFG = VistaLsConfig(
+        candidate_radii_m=_parse_float_list(args.vistals_candidate_radii_m, arg_name="--vistals_candidate_radii_m"),
+        candidate_view_count=int(args.vistals_candidate_view_count),
+        enable_vvd_replacement=bool(args.vistals_enable_vvd_replacement),
+        prefer_visible_baseline=not bool(args.vistals_disable_visible_baseline_guard),
+        camera_height_m=float(args.vistals_camera_height_m),
+        max_snap_distance_m=float(args.vistals_max_snap_distance_m),
+        target_sample_count=int(args.vistals_target_sample_count),
+        scene_sample_count=int(args.vistals_scene_sample_count),
+        max_ray_sample_count=int(args.vistals_max_ray_sample_count),
+        occlusion_radius_m=float(args.vistals_occlusion_radius_m),
+        min_visibility_score=float(args.vistals_min_visibility_score),
+        visibility_tie_epsilon=float(args.vistals_visibility_tie_epsilon),
+        path_efficiency_exponent=float(args.vistals_path_efficiency_exponent),
+        r_min_m=float(args.vistals_r_min_m),
+        r_max_m=float(args.vistals_r_max_m),
+        radial_step_m=float(args.vistals_radial_step_m),
+        angle_step_deg=float(args.vistals_angle_step_deg),
+        shell_min_m=float(args.vistals_shell_min_m),
+        shell_max_m=float(args.vistals_shell_max_m),
+        relaxed_shell_min_m=float(args.vistals_relaxed_shell_min_m),
+        relaxed_shell_max_m=float(args.vistals_relaxed_shell_max_m),
+        min_clearance_m=float(args.vistals_min_clearance_m),
+        min_component_size=int(args.vistals_min_component_size),
+        size_tie_ratio=float(args.vistals_size_tie_ratio),
+    )
+    VISTA2MQSC_VISTALS_APPLY_TASK_LEVELS = {
+        x.strip() for x in str(args.vistals_apply_task_levels).split(",") if x.strip()
+    }
+    if not VISTA2MQSC_VISTALS_APPLY_TASK_LEVELS:
+        raise RuntimeError("--vistals_apply_task_levels resolved to empty set")
 
     output_log_dir = os.path.expanduser(args.output_log_dir)
     os.makedirs(output_log_dir, exist_ok=True)
@@ -647,14 +1008,17 @@ def main() -> None:
 
     enabled_task_levels = {x.strip() for x in str(args.task_levels).split(",") if x.strip()}
     if not enabled_task_levels:
-        enabled_task_levels = {"instance"}
+        enabled_task_levels = set(TASK_LEVEL_ORDER)
     _tqdm_print(
-        f"[MQSCR1Refine1] cfg start_ratio={args.start_ratio} end_ratio={args.end_ratio} "
+        f"[Vista2MQSCRefine1] cfg start_ratio={args.start_ratio} end_ratio={args.end_ratio} "
         f"levels={sorted(enabled_task_levels)} max_steps={args.max_steps} "
         f"decision_num_min={args.decision_num_min} success_distance={args.success_distance} "
         f"quiet_nav_steps={bool(args.quiet_nav_steps)} output_log_dir={output_log_dir} "
         f"mqsc_r1_top_k={MQSC_R1_CFG.top_k} mqsc_r1_eps={MQSC_R1_CFG.cluster_eps} "
-        f"mqsc_r1_vlm={MQSC_R1_CFG.use_vlm} mqsc_r1_vlm_model={MQSC_R1_CFG.vlm_model}"
+        f"mqsc_r1_vlm={MQSC_R1_CFG.use_vlm} mqsc_r1_vlm_model={MQSC_R1_CFG.vlm_model} "
+        f"vistals_enable_vvd_replacement={VISTALS_CFG.enable_vvd_replacement} "
+        f"vistals_apply_task_levels={sorted(VISTA2MQSC_VISTALS_APPLY_TASK_LEVELS)} "
+        f"vistals_radial_step={VISTALS_CFG.radial_step_m} vistals_angle_step={VISTALS_CFG.angle_step_deg}"
     )
     _write_json(Path(output_log_dir) / "run_args.json", vars(args))
 
@@ -663,19 +1027,19 @@ def main() -> None:
     if not scene_data_paths:
         raise FileNotFoundError(f"No *.json.gz found under navigation_data_path={navigation_data_root}")
     scene_data_paths = scene_data_paths[int(args.start_ratio * len(scene_data_paths)): int(args.end_ratio * len(scene_data_paths))]
-    _tqdm_print(f"[MQSCR1Refine1] selected_scenes={len(scene_data_paths)}")
+    _tqdm_print(f"[Vista2MQSCRefine1] selected_scenes={len(scene_data_paths)}")
 
-    out_name = f"refhm3d_seq_mqsc_r1_refine1_{args.start_ratio}_{args.end_ratio}.json"
-    eff_name = f"refhm3d_seq_mqsc_r1_refine1_effectiveness_{args.start_ratio}_{args.end_ratio}.json"
+    out_name = f"refhm3d_seq_vista2mqsc_refine1_{args.start_ratio}_{args.end_ratio}.json"
+    eff_name = f"refhm3d_seq_vista2mqsc_refine1_effectiveness_{args.start_ratio}_{args.end_ratio}.json"
     if args.concise_description:
-        out_name = f"refhm3d_seq_mqsc_r1_refine1_concisedesc_{args.start_ratio}_{args.end_ratio}.json"
-        eff_name = f"refhm3d_seq_mqsc_r1_refine1_effectiveness_concisedesc_{args.start_ratio}_{args.end_ratio}.json"
+        out_name = f"refhm3d_seq_vista2mqsc_refine1_concisedesc_{args.start_ratio}_{args.end_ratio}.json"
+        eff_name = f"refhm3d_seq_vista2mqsc_refine1_effectiveness_concisedesc_{args.start_ratio}_{args.end_ratio}.json"
     output_path = Path(output_log_dir) / out_name
     effectiveness_path = Path(output_log_dir) / eff_name
-    metrics_log_path = Path(output_log_dir) / f"mqsc_r1_live_metrics_{args.start_ratio}_{args.end_ratio}.log"
-    _tqdm_print(f"[MQSCR1Refine1] output_json={output_path}")
-    _tqdm_print(f"[MQSCR1Refine1] effectiveness_json={effectiveness_path}")
-    _tqdm_print(f"[MQSCR1Refine1] live_metrics_log={metrics_log_path}")
+    metrics_log_path = Path(output_log_dir) / f"vista2mqsc_live_metrics_{args.start_ratio}_{args.end_ratio}.log"
+    _tqdm_print(f"[Vista2MQSCRefine1] output_json={output_path}")
+    _tqdm_print(f"[Vista2MQSCRefine1] effectiveness_json={effectiveness_path}")
+    _tqdm_print(f"[Vista2MQSCRefine1] live_metrics_log={metrics_log_path}")
 
     if output_path.exists():
         with open(output_path, "r", encoding="utf-8") as f:
@@ -743,6 +1107,8 @@ def main() -> None:
             visibility_dist_in_pixels = convert_meters_to_pixel(3.0, 512, sim)
             out_episode_dir = Path(output_log_dir) / "process" / f"scene={scene_name}" / f"episode={episode_id}"
             out_episode_dir.mkdir(parents=True, exist_ok=True)
+            episode_t0 = time.perf_counter()
+            episode_task_rows: List[Dict[str, Any]] = []
 
             try:
                 for idx, cur_task_ref in enumerate(cur_episode["task_sequence"]):
@@ -765,13 +1131,13 @@ def main() -> None:
                         concise_description=bool(args.concise_description),
                     )
                     _tqdm_print(
-                        f"[mqsc-r1-refine1][task-start] scene={scene_name} ep={episode_id} "
+                        f"[vista2mqsc-refine1][task-start] scene={scene_name} ep={episode_id} "
                         f"task={idx} level={task_type} decision_start={decision_num}"
                     )
-                    _tqdm_print(f"[mqsc-r1-refine1][task-desc] {sentence}")
+                    _tqdm_print(f"[vista2mqsc-refine1][task-desc] {sentence}")
                     _tqdm_print(
-                        f"[mqsc-r1-refine1][nav] task={idx} entering navigation loop; "
-                        f"each step = 12 turns + frontier + PQ3D. MQSC-R1 runs only on final object decisions."
+                        f"[vista2mqsc-refine1][nav] task={idx} entering navigation loop; "
+                        f"each step = 12 turns + frontier + PQ3D. Vista2MQSC runs only on final object decisions."
                     )
 
                     total_steps = 0
@@ -841,13 +1207,12 @@ def main() -> None:
 
                         t_pq = time.perf_counter()
                         target_position, is_final = pq3d_model.decision(
-                            color_list, depth_list, agent_state_list, frontier_waypoints, sentence, decision_num,
-                            task_level=task_type,
+                            color_list, depth_list, agent_state_list, frontier_waypoints, sentence, decision_num
                         )
                         pq_ms = (time.perf_counter() - t_pq) * 1000.0
                         if not bool(args.quiet_nav_steps):
                             _tqdm_print(
-                                f"[mqsc-r1-refine1][step] task={idx} dec={decision_num} "
+                                f"[vista2mqsc-refine1][step] task={idx} dec={decision_num} "
                                 f"scan_ms={scan_ms:.0f} frontier_ms={frontier_ms:.0f} pq3d_ms={pq_ms:.0f} "
                                 f"frames={len(color_list)} frontiers={len(frontier_waypoints)} final={bool(is_final)}"
                             )
@@ -855,7 +1220,7 @@ def main() -> None:
                             decision_num % int(args.decision_log_interval) == 0
                         ):
                             _tqdm_print(
-                                f"[mqsc-r1-refine1][decision] task={idx} dec={decision_num} "
+                                f"[vista2mqsc-refine1][decision] task={idx} dec={decision_num} "
                                 f"target={np.asarray(target_position, dtype=float).reshape(-1)[:3].tolist()} "
                                 f"final={bool(is_final)}"
                             )
@@ -864,7 +1229,7 @@ def main() -> None:
                         aux = getattr(pq3d_model, "last_decision_aux", {}) or {}
                         module_info: Dict[str, Any] = {
                             "ok": True,
-                            "module": "mqsc-r1",
+                            "module": "vista2mqsc",
                             "called": False,
                             "applied": False,
                             "reason": "non_final_decision",
@@ -875,8 +1240,7 @@ def main() -> None:
                             baseline_final_target_pos = used_target.copy()
                             task_pq3d_object_gap = float(aux.get("object_top1_top2_logit_gap", 0.0))
                             hook_called += 1
-                            hook_t0 = time.perf_counter()
-                            used_target, module_info = mqsc_r1_refine_hook(
+                            used_target, module_info = vista2mqsc_refine_hook(
                                 sentence=sentence,
                                 task_type=task_type,
                                 scene_name=scene_name,
@@ -886,11 +1250,12 @@ def main() -> None:
                                 is_final=bool(is_final),
                                 pq3d_model=pq3d_model,
                                 target_position=used_target,
+                                decision_aux=aux,
                                 output_dir=task_dir,
+                                path_finder=path_finder,
+                                agent_position_xyz=np.asarray(agent.get_state().position, dtype=float).reshape(3),
                             )
-                            module_info["called"] = True
-                            module_info["elapsed_ms"] = float((time.perf_counter() - hook_t0) * 1000.0)
-                            _write_json(task_dir / "mqsc-r1" / f"dec_{decision_num:03d}_mqsc_r1.json", module_info)
+                            _write_json(task_dir / "vista2mqsc" / f"dec_{decision_num:03d}_vista2mqsc.json", module_info)
                             if bool(module_info.get("applied", False)):
                                 hook_applied += 1
                             final_selected_target_pos = used_target.copy()
@@ -905,8 +1270,9 @@ def main() -> None:
                                 }
                             )
                             _tqdm_print(
-                                f"[mqsc-r1-refine1][final] task={idx} dec={decision_num} "
-                                f"hook_called={hook_called} hook_applied={hook_applied}"
+                                f"[vista2mqsc-refine1][final] task={idx} dec={decision_num} "
+                                f"hook_called={hook_called} hook_applied={hook_applied} "
+                                f"reason={module_info.get('reason')}"
                             )
                         else:
                             visited_frontier_set.add(tuple(np.round(used_target, 1)))
@@ -931,7 +1297,7 @@ def main() -> None:
                         )
 
                         _write_json(
-                            task_dir / f"dec_{decision_num:03d}_mqsc_r1.json",
+                            task_dir / f"dec_{decision_num:03d}_vista2mqsc.json",
                             {
                                 "task_id": int(idx),
                                 "decision_num": int(decision_num),
@@ -949,7 +1315,7 @@ def main() -> None:
                             if not bool(is_final):
                                 visited_frontier_set.add(tuple(np.round(used_target, 1)))
                                 _tqdm_print(
-                                    f"[mqsc-r1-refine1][frontier-follow-retry] task={idx} dec={decision_num - 1} "
+                                    f"[vista2mqsc-refine1][frontier-follow-retry] task={idx} dec={decision_num - 1} "
                                     f"error={follow_log.get('error_type')} candidates={follow_log.get('candidate_attempt_count')}"
                                 )
                                 continue
@@ -999,6 +1365,7 @@ def main() -> None:
                         if hook_applied > 0 and np.isfinite(baseline_target_to_goal_l2) and np.isfinite(selected_target_to_goal_l2):
                             module_helpful = bool(selected_target_to_goal_l2 < baseline_target_to_goal_l2 - 1e-6)
 
+                    final_module_info = hook_logs[-1].get("module_info", {}) if hook_logs else {}
                     row = {
                         "scene_name": scene_name,
                         "episode_id": int(episode_id),
@@ -1018,10 +1385,17 @@ def main() -> None:
                         "start_goal_geo": float(start_end_geo_distance),
                         "end_goal_geo": float(agent_end_geo_distance),
                         "episode_cum_distance": float(episode_cum_distance),
-                        "module_name": "mqsc-r1",
+                        "module_name": "vista2mqsc",
                         "module_hook_called": int(hook_called),
                         "module_hook_applied": int(hook_applied),
                         "module_helpful": module_helpful,
+                        "module_reason": final_module_info.get("reason"),
+                        "mqsc_r1_called": bool(final_module_info.get("mqsc_r1_called", False)),
+                        "mqsc_r1_applied": bool(final_module_info.get("mqsc_r1_applied", False)),
+                        "vistals_called": bool(final_module_info.get("vistals_called", False)),
+                        "vistals_applied": bool(final_module_info.get("vistals_applied", False)),
+                        "vistals_input_slot_index": final_module_info.get("vistals_input_slot_index"),
+                        "vistals_input_slot_source": final_module_info.get("vistals_input_slot_source"),
                         "goal_positions": [gp.tolist() for gp in goal_positions],
                         "baseline_target_position": None
                         if baseline_final_target_pos is None
@@ -1036,16 +1410,22 @@ def main() -> None:
                         "pq3d_object_top1_top2_logit_gap": task_pq3d_object_gap,
                     }
                     _append_result_row(result_dict, navigation_type, row)
+                    episode_task_rows.append(row)
                     effectiveness_record = {
                         "scene_name": scene_name,
                         "episode_id": int(episode_id),
                         "task_id": int(idx),
                         "task_level": task_type,
                         "navigation_type": navigation_type,
-                        "module_name": "mqsc-r1",
+                        "module_name": "vista2mqsc",
                         "module_hook_called": int(hook_called),
                         "module_hook_applied": int(hook_applied),
                         "module_helpful": module_helpful,
+                        "module_reason": final_module_info.get("reason"),
+                        "mqsc_r1_called": bool(final_module_info.get("mqsc_r1_called", False)),
+                        "mqsc_r1_applied": bool(final_module_info.get("mqsc_r1_applied", False)),
+                        "vistals_called": bool(final_module_info.get("vistals_called", False)),
+                        "vistals_applied": bool(final_module_info.get("vistals_applied", False)),
                         "baseline_target_to_goal_l2": float(baseline_target_to_goal_l2),
                         "selected_target_to_goal_l2": float(selected_target_to_goal_l2),
                         "baseline_target_to_goal_l2_valid": bool(np.isfinite(baseline_target_to_goal_l2)),
@@ -1057,10 +1437,11 @@ def main() -> None:
                     _write_json(task_dir / "effectiveness.json", effectiveness_record)
 
                     _tqdm_print(
-                        f"[mqsc-r1-refine1] scene={scene_name} ep={episode_id} task={idx} "
+                        f"[vista2mqsc-refine1] scene={scene_name} ep={episode_id} task={idx} "
                         f"SR={sr:.1f} SPL={spl:.4f} time={task_time:.3f}s steps={total_steps} "
                         f"task_decisions={decision_num - task_decision_start} "
-                        f"hook_called={hook_called} hook_applied={hook_applied} helpful={module_helpful}"
+                        f"hook_called={hook_called} hook_applied={hook_applied} helpful={module_helpful} "
+                        f"reason={final_module_info.get('reason')}"
                     )
                     append_live_metrics(
                         metrics_log_path,
@@ -1077,11 +1458,33 @@ def main() -> None:
             finally:
                 sim.close()
 
+            sequence_episode_row = _build_sequence_episode_row(
+                scene_name=scene_name,
+                episode_id=int(episode_id),
+                navigation_type=navigation_type,
+                task_sequence=cur_episode["task_sequence"],
+                task_rows=episode_task_rows,
+                episode_wall_time_sec=float(time.perf_counter() - episode_t0),
+            )
+            _append_sequence_episode_row(result_dict, sequence_episode_row)
+            result_dict["sequence_episode_metrics"] = sequence_episode_snapshot(result_dict)
+            _write_json(out_episode_dir / "sequence_summary.json", sequence_episode_row)
+            _tqdm_print(
+                f"[Vista2MQSCSequence] scene={scene_name} ep={episode_id} "
+                f"success_count={sequence_episode_row['task_success_count']}/"
+                f"{sequence_episode_row['expected_task_count']} "
+                f"SeqSR@4={sequence_episode_row['success_at_4']:.1f} "
+                f"SeqSR@5={sequence_episode_row['success_at_5']:.1f} "
+                f"avg_task_sr={sequence_episode_row['avg_task_sr']:.3f} "
+                f"avg_task_spl={sequence_episode_row['avg_task_spl']:.3f}"
+            )
             existing_episodes.add(episode_key)
+            result_dict["sequence_episode_metrics"] = sequence_episode_snapshot(result_dict)
             _write_json(output_path, result_dict)
             _write_json(effectiveness_path, effectiveness_dict)
             sequence_compute_metric_results(result_dict)
 
+    result_dict["sequence_episode_metrics"] = sequence_episode_snapshot(result_dict)
     _write_json(output_path, result_dict)
     _write_json(effectiveness_path, effectiveness_dict)
     sequence_compute_metric_results(result_dict)
