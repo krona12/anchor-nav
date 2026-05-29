@@ -175,3 +175,11 @@ hm3d-online/FastSAM/
 
 # Accidental shell redirect artifact
 /ls
+local_nvidia_580_126_09/
+output_logs/
+output_process/
+visual-output/
+local_nvidia_580_126_09/
+output_logs/
+output_process/
+visual-output/
