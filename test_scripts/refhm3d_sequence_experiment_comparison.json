@@ -1,0 +1,558 @@
+{
+  "experiments": [
+    {
+      "by_level": {
+        "instance": {
+          "avg_task_time_sec": 221.73585696144033,
+          "spl": 0.1386383264730329,
+          "sr": 0.25561097256857856,
+          "successes": 205,
+          "tasks": 802
+        },
+        "object": {
+          "avg_task_time_sec": 55.46455940231459,
+          "spl": 0.3322596150936158,
+          "sr": 0.5529131985731273,
+          "successes": 465,
+          "tasks": 841
+        },
+        "region": {
+          "avg_task_time_sec": 178.83407417935177,
+          "spl": 0.23390587763213877,
+          "sr": 0.36538461538461536,
+          "successes": 380,
+          "tasks": 1040
+        },
+        "room": {
+          "avg_task_time_sec": 106.13807867505591,
+          "spl": 0.2722217119375892,
+          "sr": 0.4394765539803708,
+          "successes": 403,
+          "tasks": 917
+        }
+      },
+      "duplicates": 0,
+      "expected_tasks": 3600,
+      "metric": {
+        "avg_task_time_sec": 141.05386306443717,
+        "spl": 0.24541880464147134,
+        "sr": 0.4036111111111111,
+        "successes": 1453,
+        "tasks": 3600
+      },
+      "name": "Baseline",
+      "sequence": {
+        "at4": 0.12222222222222222,
+        "at4_count": 88,
+        "at5": 0.015277777777777777,
+        "at5_count": 11,
+        "avg_successes_per_episode": 2.0180555555555557,
+        "complete_episodes": 720,
+        "episode_groups": 720,
+        "partial_episodes": 0
+      },
+      "shards": [
+        {
+          "duplicates": 0,
+          "expected_tasks": 700,
+          "json_exists": true,
+          "json_path": "output_logs/baseline_all_0_0.2/20260513-112352-detailed/refhm3d_seq_0.0_0.2.json",
+          "log": {
+            "exists": true,
+            "fatal_markers": [],
+            "max_live_rows": 700,
+            "max_metrics_sequence_count": 700,
+            "run_finished": true
+          },
+          "log_exists": true,
+          "log_path": "output_logs/baseline_all_0_0.2/20260513-112352-detailed/refhm3d-nav-sequence-baseline-20260513-112413-119890-pid1086119.log",
+          "metric": {
+            "avg_task_time_sec": 174.04359107944848,
+            "spl": 0.25303890652248007,
+            "sr": 0.42,
+            "successes": 294,
+            "tasks": 700
+          },
+          "sequence": {
+            "at4": 0.1,
+            "at4_count": 14,
+            "at5": 0.007142857142857143,
+            "at5_count": 1,
+            "avg_successes_per_episode": 2.1,
+            "complete_episodes": 140,
+            "episode_groups": 140,
+            "partial_episodes": 0
+          },
+          "split": "0.0-0.2",
+          "tasks": 700,
+          "unique_tasks": 700
+        },
+        {
+          "duplicates": 0,
+          "expected_tasks": 2900,
+          "json_exists": true,
+          "json_path": "output_logs/baseline_all_0.2_1.0/20260513-101905-detailed/refhm3d_seq_0.2_1.0.json",
+          "log": {
+            "exists": true,
+            "fatal_markers": [],
+            "max_live_rows": 2900,
+            "max_metrics_sequence_count": 2900,
+            "run_finished": true
+          },
+          "log_exists": true,
+          "log_path": "output_logs/baseline_all_0.2_1.0/20260513-101905-detailed/refhm3d-nav-sequence-baseline-20260513-101924-534262-pid862786.log",
+          "metric": {
+            "avg_task_time_sec": 133.0908252677103,
+            "spl": 0.24357946970467617,
+            "sr": 0.3996551724137931,
+            "successes": 1159,
+            "tasks": 2900
+          },
+          "sequence": {
+            "at4": 0.12758620689655173,
+            "at4_count": 74,
+            "at5": 0.017241379310344827,
+            "at5_count": 10,
+            "avg_successes_per_episode": 1.9982758620689656,
+            "complete_episodes": 580,
+            "episode_groups": 580,
+            "partial_episodes": 0
+          },
+          "split": "0.2-1.0",
+          "tasks": 2900,
+          "unique_tasks": 2900
+        }
+      ],
+      "status": "complete",
+      "tasks": 3600,
+      "unique_tasks": 3600
+    },
+    {
+      "by_level": {
+        "instance": {
+          "avg_task_time_sec": 303.78818068365996,
+          "spl": 0.15898199272168595,
+          "sr": 0.2903225806451613,
+          "successes": 153,
+          "tasks": 527
+        },
+        "object": {
+          "avg_task_time_sec": 110.16577213329708,
+          "spl": 0.3523995839737299,
+          "sr": 0.5675675675675675,
+          "successes": 315,
+          "tasks": 555
+        },
+        "region": {
+          "avg_task_time_sec": 221.93503677034684,
+          "spl": 0.2556716377142777,
+          "sr": 0.39290780141843973,
+          "successes": 277,
+          "tasks": 705
+        },
+        "room": {
+          "avg_task_time_sec": 165.2525588994866,
+          "spl": 0.289939824109815,
+          "sr": 0.44838212634822805,
+          "successes": 291,
+          "tasks": 649
+        }
+      },
+      "duplicates": 0,
+      "expected_tasks": 3600,
+      "metric": {
+        "avg_task_time_sec": 199.07696486171182,
+        "spl": 0.2659214818167423,
+        "sr": 0.42528735632183906,
+        "successes": 1036,
+        "tasks": 2436
+      },
+      "name": "+ VISTA-LS",
+      "sequence": {
+        "at4": 0.14989733059548255,
+        "at4_count": 73,
+        "at5": 0.01642710472279261,
+        "at5_count": 8,
+        "avg_successes_per_episode": 2.127310061601643,
+        "complete_episodes": 487,
+        "episode_groups": 488,
+        "partial_episodes": 1
+      },
+      "shards": [
+        {
+          "duplicates": 0,
+          "expected_tasks": 700,
+          "json_exists": true,
+          "json_path": "output_logs/anchor/vistals_all_0_0.2/20260513-112500-detailed-fast-grid-v2-cuda2/refhm3d_seq_vistals_refine1_0.0_0.2.json",
+          "log": {
+            "exists": true,
+            "fatal_markers": [],
+            "max_live_rows": 700,
+            "max_metrics_sequence_count": 700,
+            "run_finished": true
+          },
+          "log_exists": true,
+          "log_path": "output_logs/anchor/vistals_all_0_0.2/20260513-112500-detailed-fast-grid-v2-cuda2/refhm3d-nav-sequence-analyze-anchor-vistals-refine1-20260513-112519-263530-pid1088698.log",
+          "metric": {
+            "avg_task_time_sec": 232.88661968279098,
+            "spl": 0.2812972751685611,
+            "sr": 0.4342857142857143,
+            "successes": 304,
+            "tasks": 700
+          },
+          "sequence": {
+            "at4": 0.17857142857142858,
+            "at4_count": 25,
+            "at5": 0.02857142857142857,
+            "at5_count": 4,
+            "avg_successes_per_episode": 2.1714285714285713,
+            "complete_episodes": 140,
+            "episode_groups": 140,
+            "partial_episodes": 0
+          },
+          "split": "0.0-0.2",
+          "tasks": 700,
+          "unique_tasks": 700
+        },
+        {
+          "duplicates": 0,
+          "expected_tasks": 2900,
+          "json_exists": true,
+          "json_path": "output_logs/anchor/vistals_all_0.2_1.0/20260513-102052-detailed/refhm3d_seq_vistals_refine1_0.2_1.0.json",
+          "log": {
+            "exists": true,
+            "fatal_markers": [
+              "117653:Traceback",
+              "117662:OutOfMemoryError"
+            ],
+            "max_live_rows": 1736,
+            "max_metrics_sequence_count": 1735,
+            "run_finished": true
+          },
+          "log_exists": true,
+          "log_path": "output_logs/anchor/vistals_all_0.2_1.0/20260513-102052-detailed/refhm3d-nav-sequence-analyze-anchor-vistals-refine1-20260513-102111-463001-pid868899.log",
+          "metric": {
+            "avg_task_time_sec": 185.44403953063153,
+            "spl": 0.2597215651426218,
+            "sr": 0.4216589861751152,
+            "successes": 732,
+            "tasks": 1736
+          },
+          "sequence": {
+            "at4": 0.138328530259366,
+            "at4_count": 48,
+            "at5": 0.011527377521613832,
+            "at5_count": 4,
+            "avg_successes_per_episode": 2.1095100864553316,
+            "complete_episodes": 347,
+            "episode_groups": 348,
+            "partial_episodes": 1
+          },
+          "split": "0.2-1.0",
+          "tasks": 1736,
+          "unique_tasks": 1736
+        }
+      ],
+      "status": "partial_error",
+      "tasks": 2436,
+      "unique_tasks": 2436
+    },
+    {
+      "by_level": {
+        "instance": {
+          "avg_task_time_sec": 207.48790774429844,
+          "spl": 0.1507620952559447,
+          "sr": 0.2655860349127182,
+          "successes": 213,
+          "tasks": 802
+        },
+        "object": {
+          "avg_task_time_sec": 49.878507772044195,
+          "spl": 0.32088643244608583,
+          "sr": 0.5362663495838288,
+          "successes": 451,
+          "tasks": 841
+        },
+        "region": {
+          "avg_task_time_sec": 179.28266738825656,
+          "spl": 0.2760926759850581,
+          "sr": 0.4346153846153846,
+          "successes": 452,
+          "tasks": 1040
+        },
+        "room": {
+          "avg_task_time_sec": 86.25258039484245,
+          "spl": 0.2741805237263692,
+          "sr": 0.44929116684841874,
+          "successes": 412,
+          "tasks": 917
+        }
+      },
+      "duplicates": 0,
+      "expected_tasks": 3600,
+      "metric": {
+        "avg_task_time_sec": 131.63908815363163,
+        "spl": 0.25814905926776854,
+        "sr": 0.42444444444444446,
+        "successes": 1528,
+        "tasks": 3600
+      },
+      "name": "MQSC-R1",
+      "sequence": {
+        "at4": 0.14027777777777778,
+        "at4_count": 101,
+        "at5": 0.013888888888888888,
+        "at5_count": 10,
+        "avg_successes_per_episode": 2.1222222222222222,
+        "complete_episodes": 720,
+        "episode_groups": 720,
+        "partial_episodes": 0
+      },
+      "shards": [
+        {
+          "duplicates": 0,
+          "expected_tasks": 700,
+          "json_exists": true,
+          "json_path": "output_logs/anchor/mqsc_r1_all_0.0_0.2/20260514-144750-detailed/refhm3d_seq_mqsc_r1_refine1_0.0_0.2.json",
+          "log": {
+            "exists": true,
+            "fatal_markers": [],
+            "max_live_rows": 700,
+            "max_metrics_sequence_count": 700,
+            "run_finished": true
+          },
+          "log_exists": true,
+          "log_path": "output_logs/anchor/mqsc_r1_all_0.0_0.2/20260514-144750-detailed/refhm3d-nav-sequence-analyze-mqsc-r1-refine1-20260514-144811-731948-pid1525210.log",
+          "metric": {
+            "avg_task_time_sec": 162.8545575162848,
+            "spl": 0.2741510911272469,
+            "sr": 0.44571428571428573,
+            "successes": 312,
+            "tasks": 700
+          },
+          "sequence": {
+            "at4": 0.14285714285714285,
+            "at4_count": 20,
+            "at5": 0.014285714285714285,
+            "at5_count": 2,
+            "avg_successes_per_episode": 2.2285714285714286,
+            "complete_episodes": 140,
+            "episode_groups": 140,
+            "partial_episodes": 0
+          },
+          "split": "0.0-0.2",
+          "tasks": 700,
+          "unique_tasks": 700
+        },
+        {
+          "duplicates": 0,
+          "expected_tasks": 2900,
+          "json_exists": true,
+          "json_path": "output_logs/anchor/mqsc_r1_all_0.2_1.0/20260516-113201-detailed-tmux-cuda3-20260516-113158/refhm3d_seq_mqsc_r1_refine1_0.2_1.0.json",
+          "log": {
+            "exists": true,
+            "fatal_markers": [],
+            "max_live_rows": 2900,
+            "max_metrics_sequence_count": 2900,
+            "run_finished": true
+          },
+          "log_exists": true,
+          "log_path": "output_logs/anchor/mqsc_r1_all_0.2_1.0/20260516-113201-detailed-tmux-cuda3-20260516-113158/refhm3d-nav-sequence-analyze-mqsc-r1-refine1-20260516-113222-410036-pid56740.log",
+          "metric": {
+            "avg_task_time_sec": 124.10431968678431,
+            "spl": 0.25428649985341173,
+            "sr": 0.4193103448275862,
+            "successes": 1216,
+            "tasks": 2900
+          },
+          "sequence": {
+            "at4": 0.1396551724137931,
+            "at4_count": 81,
+            "at5": 0.013793103448275862,
+            "at5_count": 8,
+            "avg_successes_per_episode": 2.0965517241379312,
+            "complete_episodes": 580,
+            "episode_groups": 580,
+            "partial_episodes": 0
+          },
+          "split": "0.2-1.0",
+          "tasks": 2900,
+          "unique_tasks": 2900
+        }
+      ],
+      "status": "complete",
+      "tasks": 3600,
+      "unique_tasks": 3600
+    },
+    {
+      "by_level": {
+        "instance": {
+          "avg_task_time_sec": 325.3944725443277,
+          "spl": 0.15275425007702226,
+          "sr": 0.26433915211970077,
+          "successes": 212,
+          "tasks": 802
+        },
+        "object": {
+          "avg_task_time_sec": 107.98060290332037,
+          "spl": 0.32858166595383065,
+          "sr": 0.5196195005945303,
+          "successes": 437,
+          "tasks": 841
+        },
+        "region": {
+          "avg_task_time_sec": 248.05205148093475,
+          "spl": 0.2823392978278512,
+          "sr": 0.4355769230769231,
+          "successes": 453,
+          "tasks": 1040
+        },
+        "room": {
+          "avg_task_time_sec": 172.47903184608163,
+          "spl": 0.29918049222638576,
+          "sr": 0.4623773173391494,
+          "successes": 424,
+          "tasks": 917
+        }
+      },
+      "duplicates": 0,
+      "expected_tasks": 3600,
+      "metric": {
+        "avg_task_time_sec": 213.30984993479782,
+        "spl": 0.26856318631708453,
+        "sr": 0.42388888888888887,
+        "successes": 1526,
+        "tasks": 3600
+      },
+      "name": "Vista2MQSC",
+      "sequence": {
+        "at4": 0.1388888888888889,
+        "at4_count": 100,
+        "at5": 0.018055555555555554,
+        "at5_count": 13,
+        "avg_successes_per_episode": 2.1194444444444445,
+        "complete_episodes": 720,
+        "episode_groups": 720,
+        "partial_episodes": 0
+      },
+      "shards": [
+        {
+          "duplicates": 0,
+          "expected_tasks": 700,
+          "json_exists": true,
+          "json_path": "output_logs/anchor/vista2mqsc_all_0.0_0.2/20260514-150640-detailed-tmux-gpu0-20260514-150638/refhm3d_seq_vista2mqsc_refine1_0.0_0.2.json",
+          "log": {
+            "exists": true,
+            "fatal_markers": [],
+            "max_live_rows": 700,
+            "max_metrics_sequence_count": 700,
+            "run_finished": true
+          },
+          "log_exists": true,
+          "log_path": "output_logs/anchor/vista2mqsc_all_0.0_0.2/20260514-150640-detailed-tmux-gpu0-20260514-150638/refhm3d-nav-sequence-analyze-vista2mqsc-refine1-20260514-150659-226187-pid1684292.log",
+          "metric": {
+            "avg_task_time_sec": 208.9238263450084,
+            "spl": 0.286361357711073,
+            "sr": 0.44571428571428573,
+            "successes": 312,
+            "tasks": 700
+          },
+          "sequence": {
+            "at4": 0.11428571428571428,
+            "at4_count": 16,
+            "at5": 0.014285714285714285,
+            "at5_count": 2,
+            "avg_successes_per_episode": 2.2285714285714286,
+            "complete_episodes": 140,
+            "episode_groups": 140,
+            "partial_episodes": 0
+          },
+          "split": "0.0-0.2",
+          "tasks": 700,
+          "unique_tasks": 700
+        },
+        {
+          "duplicates": 0,
+          "expected_tasks": 2900,
+          "json_exists": true,
+          "json_path": "output_logs/anchor/vista2mqsc_all_0.2_1.0/20260516-113201-detailed-tmux-cuda3-20260516-113158/refhm3d_seq_vista2mqsc_refine1_0.2_1.0.json",
+          "log": {
+            "exists": true,
+            "fatal_markers": [],
+            "max_live_rows": 2900,
+            "max_metrics_sequence_count": 2900,
+            "run_finished": true
+          },
+          "log_exists": true,
+          "log_path": "output_logs/anchor/vista2mqsc_all_0.2_1.0/20260516-113201-detailed-tmux-cuda3-20260516-113158/refhm3d-nav-sequence-analyze-vista2mqsc-refine1-20260516-113222-409168-pid56747.log",
+          "metric": {
+            "avg_task_time_sec": 214.36854528405735,
+            "spl": 0.26426707598060456,
+            "sr": 0.4186206896551724,
+            "successes": 1214,
+            "tasks": 2900
+          },
+          "sequence": {
+            "at4": 0.14482758620689656,
+            "at4_count": 84,
+            "at5": 0.01896551724137931,
+            "at5_count": 11,
+            "avg_successes_per_episode": 2.093103448275862,
+            "complete_episodes": 580,
+            "episode_groups": 580,
+            "partial_episodes": 0
+          },
+          "split": "0.2-1.0",
+          "tasks": 2900,
+          "unique_tasks": 2900
+        }
+      ],
+      "status": "complete",
+      "tasks": 3600,
+      "unique_tasks": 3600
+    }
+  ],
+  "partial_overlap_vs_baseline": [
+    {
+      "baseline_metric": {
+        "avg_task_time_sec": 158.9533089185057,
+        "spl": 0.2422348903598423,
+        "sr": 0.4027093596059113,
+        "successes": 981,
+        "tasks": 2436
+      },
+      "baseline_sequence": {
+        "at4": 0.11909650924024641,
+        "at4_count": 58,
+        "at5": 0.012320328542094456,
+        "at5_count": 6,
+        "avg_successes_per_episode": 2.0123203285420943,
+        "complete_episodes": 487,
+        "episode_groups": 487,
+        "partial_episodes": 0
+      },
+      "complete_episode_overlap_count": 487,
+      "experiment_metric": {
+        "avg_task_time_sec": 199.07696486171182,
+        "spl": 0.2659214818167423,
+        "sr": 0.42528735632183906,
+        "successes": 1036,
+        "tasks": 2436
+      },
+      "experiment_sequence": {
+        "at4": 0.14989733059548255,
+        "at4_count": 73,
+        "at5": 0.01642710472279261,
+        "at5_count": 8,
+        "avg_successes_per_episode": 2.127310061601643,
+        "complete_episodes": 487,
+        "episode_groups": 487,
+        "partial_episodes": 0
+      },
+      "name": "+ VISTA-LS",
+      "task_overlap_count": 2436
+    }
+  ],
+  "root": "/home/chenlin/krona/anchor-nav",
+  "tasks_per_episode": 5
+}

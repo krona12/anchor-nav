@@ -1,0 +1,33 @@
+{
+  "scene_name": "00844-q5QZSEeHe5g",
+  "episode_id": 122,
+  "navigation_type": "instance",
+  "task_id": 0,
+  "task_level": "instance",
+  "sentence": "brown armchair with a white crochet blanket and red pillow near a brown leather couch with red-and-blue throw blanket",
+  "steps": 0,
+  "decisions": 0,
+  "episode_cum_distance": 0.0,
+  "start_position": [
+    2.413949966430664,
+    0.0038799999747425318,
+    -6.740059852600098
+  ],
+  "end_position": [
+    2.413949966430664,
+    0.0038799999747425318,
+    -6.740059852600098
+  ],
+  "goal_positions": [
+    [
+      -0.24933,
+      0.43334,
+      2.92395
+    ]
+  ],
+  "outputs": {
+    "trajectory_final": "trajectory/trajectory_final.png",
+    "decisions_dir": "decisions",
+    "manual_snapshots_dir": "manual_snapshots"
+  }
+}
