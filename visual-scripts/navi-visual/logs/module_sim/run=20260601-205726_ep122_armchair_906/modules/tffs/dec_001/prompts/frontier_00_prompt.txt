@@ -1,0 +1,10 @@
+You evaluate one current robot panorama view for test-time frontier reranking.
+The image is already observed at the current step. It is not a rendered future view.
+Navigation task: brown armchair with a white crochet blanket and red pillow near a brown leather couch with red-and-blue throw blanket
+Frontier/view metadata: frontier_index=0, frontier_xyz=[0.5735353231430054, 0.04603844881057739, -6.347439289093018], relative_bearing_rad=0.0000, current_panorama_view_index=5
+
+Judge whether this direction is promising for continuing exploration toward the task.
+Do not require the target object to already be visible. Use room type, relevant furniture, landmarks, anchor objects, traversable direction, and clearly irrelevant or low-quality cues.
+
+Return strict JSON only with this exact schema:
+{"target_context": number between 0 and 1, "anchor_context": number between 0 and 1, "room_context": number between 0 and 1, "negative": number between 0 and 1, "confidence": number between 0 and 1, "reason": "one short sentence"}

@@ -1,0 +1,160 @@
+{
+  "scene_name": "00844-q5QZSEeHe5g",
+  "episode_id": 122,
+  "navigation_type": "instance",
+  "task_id": 0,
+  "task_level": "instance",
+  "sentence": "brown armchair with a white crochet blanket and red pillow near a brown leather couch with red-and-blue throw blanket",
+  "decision_num": 1,
+  "is_final": false,
+  "step_count_after_scan": 49,
+  "pq3d_ms": 17793.603179976344,
+  "context_frame_count": 6,
+  "scan_frame_count": 12,
+  "agent_position": [
+    3.3426690101623535,
+    0.0038771629333496094,
+    -4.780389308929443
+  ],
+  "agent_rotation_xyzw": [
+    0.0,
+    0.8492276668548584,
+    0.0,
+    -0.5280269384384155
+  ],
+  "target_before_refine": [
+    4.809921741485596,
+    0.0038771629333496094,
+    -3.71085524559021
+  ],
+  "target_used": [
+    4.809921741485596,
+    0.0038771629333496094,
+    -3.71085524559021
+  ],
+  "selected_frontier_idx": 1,
+  "frontiers": [
+    {
+      "index": 0,
+      "position": [
+        0.5735353231430054,
+        0.04603844881057739,
+        -6.347439289093018
+      ],
+      "is_selected": false,
+      "visited_key": [
+        6,
+        0,
+        -63
+      ]
+    },
+    {
+      "index": 1,
+      "position": [
+        4.809921741485596,
+        0.0038771629333496094,
+        -3.71085524559021
+      ],
+      "is_selected": true,
+      "visited_key": [
+        48,
+        0,
+        -37
+      ]
+    },
+    {
+      "index": 2,
+      "position": [
+        4.56050443649292,
+        0.0038771629333496094,
+        -4.123177528381348
+      ],
+      "is_selected": false,
+      "visited_key": [
+        46,
+        0,
+        -41
+      ]
+    }
+  ],
+  "frontier_facing_views": [
+    {
+      "rank": 0,
+      "frontier_index": 1,
+      "is_selected": true,
+      "position": [
+        4.809921741485596,
+        0.0038771629333496094,
+        -3.71085524559021
+      ],
+      "image": "frontier_facing_rgb/selected_frontier_01_facing_rgb.png"
+    },
+    {
+      "rank": 1,
+      "frontier_index": 0,
+      "is_selected": false,
+      "position": [
+        0.5735353231430054,
+        0.04603844881057739,
+        -6.347439289093018
+      ],
+      "image": "frontier_facing_rgb/frontier_00_facing_rgb.png"
+    },
+    {
+      "rank": 2,
+      "frontier_index": 2,
+      "is_selected": false,
+      "position": [
+        4.56050443649292,
+        0.0038771629333496094,
+        -4.123177528381348
+      ],
+      "image": "frontier_facing_rgb/frontier_02_facing_rgb.png"
+    }
+  ],
+  "visited_frontier_count": 2,
+  "goal_positions": [
+    [
+      -0.24933,
+      0.43334,
+      2.92395
+    ]
+  ],
+  "goal_object_ids": [
+    "armchair_906"
+  ],
+  "pq3d_aux": {
+    "goto_frontier_probability": 0.9999653100967407,
+    "is_object_decision": false,
+    "real_object_decision_idx": 33,
+    "n_real_objects": 66,
+    "object_top1_top2_logit_gap": 2.5680246353149414
+  },
+  "module_info": {
+    "module": "vista2mqsc",
+    "called": false,
+    "applied": false,
+    "reason": "disabled_or_non_final",
+    "target_before": [
+      4.809921741485596,
+      0.0038771629333496094,
+      -3.71085524559021
+    ],
+    "target_after": [
+      4.809921741485596,
+      0.0038771629333496094,
+      -3.71085524559021
+    ]
+  },
+  "outputs": {
+    "decision_dir": "decisions/dec_001",
+    "panorama_dir": "panorama_12_frames",
+    "topdown_fog": "topdown_fog.png",
+    "topdown_full": "topdown_full.png",
+    "frontiers_on_topdown": "frontiers_on_topdown.png",
+    "explored_map": "explored_map.png",
+    "unexplored_map": "unexplored_map.png",
+    "explored_unexplored_map": "explored_unexplored_map.png",
+    "decision_target_facing_rgb": "decision_target_facing_rgb.png"
+  }
+}

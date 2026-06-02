@@ -2,7 +2,11 @@
 
 This script is intentionally a hybrid:
 
-1. Live keyboard teleop, using Habitat-Sim RGB/depth windows.
+1. Live keyboard teleop. In headless mode (the default for this project) the
+   keys are read directly from the terminal (stdin), so no GUI window is
+   needed -- this works over SSH. The live camera RGB view and the live
+   TopDownMap are continuously written to fixed image files (see --live_dir)
+   so they can be watched in any auto-refreshing image viewer.
 2. A manual "decision round" key that preserves the original navigation
    scaffold: 12-view scan, frontier extraction, PQ3D decision, optional
    Vista2MQSC final-decision refinement, and structured logs.
@@ -12,13 +16,18 @@ This script is intentionally a hybrid:
 Default logs go to:
   visual-scripts/navi-visual/logs
 
+Live view images (overwritten in place, headless mode):
+  <live_dir>/rgb.png        current camera RGB view (with status overlay)
+  <live_dir>/topdown.png    current TopDownMap
+
 Typical run:
   python visual-scripts/navi-visual/code/interactive_vista2mqsc_teleop.py \
       --scene_name 00844-q5QZSEeHe5g \
       --episode_id 122 \
-      --navigation_type instance
+      --navigation_type instance \
+      --headless
 
-Keys:
+Keys (type the letter in the terminal, no Enter needed):
   w/e      move forward 0.25m / 1.0m
   a/d      turn left / right
   s        turn around
@@ -38,6 +47,7 @@ import importlib.util
 import json
 import math
 import os
+import select
 import sys
 import time
 from collections import deque
@@ -123,6 +133,16 @@ def _state_copy(state: Any) -> habitat_sim.AgentState:
     copied = habitat_sim.AgentState()
     copied.position = np.asarray(state.position, dtype=float).reshape(3)
     copied.rotation = state.rotation
+    # Preserve per-sensor poses: PQ3D's decision() reads
+    # agent_state.sensor_states['color_sensor'] to build the point cloud, so a
+    # snapshot that drops sensor_states silently breaks the model. agent.get_state()
+    # returns fresh pose objects each call, so a shallow dict copy is a safe snapshot.
+    try:
+        sensor_states = getattr(state, "sensor_states", None)
+        if sensor_states:
+            copied.sensor_states = dict(sensor_states)
+    except Exception:
+        pass
     return copied
 
 
@@ -355,6 +375,22 @@ class InteractiveNavigator:
         self.out_dir = out_dir
         self.path_finder = sim.pathfinder
 
+        live_dir = getattr(args, "live_dir", "") or str(out_dir / "live")
+        self.live_dir = Path(os.path.expanduser(live_dir))
+        self.live_dir.mkdir(parents=True, exist_ok=True)
+
+        # Place the agent at the episode start BEFORE building the top-down map:
+        # get_topdown_map_from_sim slices the navmesh at the *current* agent
+        # height, and the agent spawns on a default (often different) floor. If
+        # the map is built first, the start ends up on a non-navigable cell,
+        # which makes map_coors_to_pixel land on an obstacle and reveal_fog_of_war
+        # reveal nothing (fog stays empty). The original pipeline sets the start
+        # first for exactly this reason.
+        state = habitat_sim.AgentState()
+        state.position = list(ctx.start_position)
+        state.rotation = ctx.start_rotation
+        self.agent.set_state(state)
+
         self.top_down_map = maps.get_topdown_map_from_sim(
             sim,
             map_resolution=int(args.map_resolution),
@@ -363,11 +399,6 @@ class InteractiveNavigator:
         self.fog = np.zeros_like(self.top_down_map)
         self.area_thres_px = convert_meters_to_pixel(float(args.frontier_area_m2), int(args.map_resolution), sim)
         self.vis_dist_px = convert_meters_to_pixel(float(args.visible_radius), int(args.map_resolution), sim)
-
-        state = habitat_sim.AgentState()
-        state.position = list(ctx.start_position)
-        state.rotation = ctx.start_rotation
-        self.agent.set_state(state)
 
         self.step_count = 0
         self.decision_num = 0
@@ -504,11 +535,7 @@ class InteractiveNavigator:
         VIS_NAV._draw_agent_arrow(rgb, agent_rc, float(get_polar_angle(state)), VIS_NAV.CLR_AGENT, size=11)
         return rgb
 
-    def display(self, obs: Optional[Dict[str, Any]] = None, status: str = "") -> None:
-        if bool(self.args.headless):
-            return
-        if obs is None:
-            obs = self.sim.get_sensor_observations()
+    def _compose_frames(self, obs: Dict[str, Any], status: str = "") -> Tuple[np.ndarray, np.ndarray]:
         rgb_bgr = cv2.cvtColor(np.asarray(obs["color_sensor"][:, :, :3], dtype=np.uint8), cv2.COLOR_RGB2BGR)
         top_bgr = cv2.cvtColor(self.render_topdown(), cv2.COLOR_RGB2BGR)
 
@@ -522,9 +549,29 @@ class InteractiveNavigator:
             cv2.putText(rgb_bgr, line, (10, y), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 0, 0), 3, cv2.LINE_AA)
             cv2.putText(rgb_bgr, line, (10, y), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (255, 255, 255), 1, cv2.LINE_AA)
             y += 24
+        return rgb_bgr, top_bgr
 
-        cv2.imshow("Habitat Teleop RGB", rgb_bgr)
-        cv2.imshow("Navi Visual Topdown", top_bgr)
+    def _atomic_imwrite(self, path: Path, img: np.ndarray) -> None:
+        # Write to a temp file then rename so a watching viewer never reads a
+        # half-written frame. Keep the original extension on the temp file so
+        # cv2.imwrite can infer the encoder.
+        tmp = path.with_suffix(".tmp" + path.suffix)
+        cv2.imwrite(str(tmp), img)
+        os.replace(str(tmp), str(path))
+
+    def _write_live_frames(self, rgb_bgr: np.ndarray, top_bgr: np.ndarray) -> None:
+        self._atomic_imwrite(self.live_dir / "rgb.png", rgb_bgr)
+        self._atomic_imwrite(self.live_dir / "topdown.png", top_bgr)
+
+    def display(self, obs: Optional[Dict[str, Any]] = None, status: str = "") -> None:
+        if obs is None:
+            obs = self.sim.get_sensor_observations()
+        rgb_bgr, top_bgr = self._compose_frames(obs, status)
+        if bool(self.args.headless):
+            self._write_live_frames(rgb_bgr, top_bgr)
+        else:
+            cv2.imshow("Habitat Teleop RGB", rgb_bgr)
+            cv2.imshow("Navi Visual Topdown", top_bgr)
 
     def step_action(self, action: str, repeat: int = 1, status_prefix: str = "teleop") -> None:
         for _ in range(int(repeat)):
@@ -997,6 +1044,94 @@ def _norm_key(key: int) -> str:
     return ""
 
 
+class StdinKeyReader:
+    """Read single keypresses from the terminal without requiring Enter.
+
+    Used in headless mode so teleop works over SSH with no GUI window. Falls
+    back to a disabled state if stdin is not an interactive terminal.
+    """
+
+    def __init__(self) -> None:
+        self.enabled = False
+        self._fd = None
+        self._old = None
+        try:
+            import termios  # noqa: F401
+            import tty
+
+            self._termios = termios
+            self._fd = sys.stdin.fileno()
+            if not os.isatty(self._fd):
+                return
+            self._old = termios.tcgetattr(self._fd)
+            tty.setcbreak(self._fd)  # cbreak keeps Ctrl-C working
+            self.enabled = True
+        except Exception:
+            self.enabled = False
+
+    def get_key(self, timeout: float) -> str:
+        if not self.enabled:
+            return ""
+        try:
+            ready, _, _ = select.select([self._fd], [], [], max(0.0, float(timeout)))
+            if not ready:
+                return ""
+            ch = os.read(self._fd, 1).decode("utf-8", "ignore")
+        except Exception:
+            return ""
+        if ch == "\x1b":
+            # Could be a bare ESC (quit) or the start of an arrow/escape
+            # sequence -- drain and ignore the latter.
+            extra, _, _ = select.select([self._fd], [], [], 0.0)
+            if extra:
+                try:
+                    os.read(self._fd, 8)
+                except Exception:
+                    pass
+                return ""
+            return "q"
+        if ch in ("\r", "\n"):
+            return ""
+        ch = ch.lower()
+        return ch if ch.isprintable() else ""
+
+    def restore(self) -> None:
+        if self._old is not None and self._fd is not None:
+            try:
+                self._termios.tcsetattr(self._fd, self._termios.TCSADRAIN, self._old)
+            except Exception:
+                pass
+
+
+def dispatch_key(nav: "InteractiveNavigator", key: str) -> bool:
+    """Handle one teleop key. Returns False when the user asked to quit."""
+    if key == "q":
+        return False
+    if key == "h":
+        print_controls()
+    elif key == "w":
+        nav.step_action("move_forward", 1)
+    elif key == "e":
+        nav.step_action("move_forward", 4)
+    elif key == "a":
+        nav.step_action("turn_left", 1)
+    elif key == "d":
+        nav.step_action("turn_right", 1)
+    elif key == "s":
+        nav.step_action("turn_left", 6, status_prefix="turn-around")
+    elif key == "o":
+        nav.step_action("look_up", 1)
+    elif key == "p":
+        nav.step_action("look_down", 1)
+    elif key == "r":
+        nav.run_decision_round()
+    elif key == "f":
+        nav.follow_latest_target()
+    elif key == "k":
+        nav.save_manual_snapshot()
+    return True
+
+
 def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser(description="Interactive teleop with RefHM3D frontier/PQ3D/Vista2MQSC decision logging.")
     ap.add_argument("--scene_name", default="00844-q5QZSEeHe5g")
@@ -1027,6 +1162,12 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--scan_wait_ms", type=int, default=35)
     ap.add_argument("--follow_wait_ms", type=int, default=20)
     ap.add_argument("--headless", action="store_true")
+    ap.add_argument(
+        "--live_dir",
+        default="",
+        help="Fixed directory for live rgb.png / topdown.png views (headless mode). "
+        "Defaults to <logs_dir>/.../live inside the run output dir.",
+    )
 
     ap.add_argument("--disable_pq3d", action="store_true", help="Use nearest-frontier fallback instead of loading PQ3D.")
     ap.set_defaults(enable_vista2mqsc_refine=True)
@@ -1067,47 +1208,43 @@ def main() -> None:
     sim, agent = build_interactive_simulator(args, scene_path)
     nav = InteractiveNavigator(args, ctx, sim, agent, scene_path, out_dir)
 
-    try:
-        while True:
-            obs = sim.get_sensor_observations()
-            nav.display(obs)
-            key = _norm_key(cv2.waitKeyEx(max(1, int(args.wait_ms))) if not bool(args.headless) else -1)
+    key_reader: Optional[StdinKeyReader] = None
+    if bool(args.headless):
+        print(f"[nav-visual] live rgb view : {nav.live_dir / 'rgb.png'}", flush=True)
+        print(f"[nav-visual] live topdown   : {nav.live_dir / 'topdown.png'}", flush=True)
+        key_reader = StdinKeyReader()
+        if not key_reader.enabled:
+            print(
+                "[nav-visual] stdin is not an interactive terminal; cannot read keys. "
+                "Saving one snapshot and exiting.",
+                flush=True,
+            )
 
+    try:
+        # Prime the live view / GUI window before waiting for the first key.
+        nav.display()
+        while True:
             if bool(args.headless):
-                print("[nav-visual] Headless mode initialized. Run with GUI for keyboard control.", flush=True)
-                nav.save_manual_snapshot()
-                break
+                if key_reader is None or not key_reader.enabled:
+                    nav.save_manual_snapshot()
+                    break
+                key = key_reader.get_key(max(0.001, int(args.wait_ms) / 1000.0))
+            else:
+                obs = sim.get_sensor_observations()
+                nav.display(obs)
+                key = _norm_key(cv2.waitKeyEx(max(1, int(args.wait_ms))))
+
             if not key:
                 continue
-            if key == "q":
+            if not dispatch_key(nav, key):
                 break
-            if key == "h":
-                print_controls()
-            elif key == "w":
-                nav.step_action("move_forward", 1)
-            elif key == "e":
-                nav.step_action("move_forward", 4)
-            elif key == "a":
-                nav.step_action("turn_left", 1)
-            elif key == "d":
-                nav.step_action("turn_right", 1)
-            elif key == "s":
-                nav.step_action("turn_left", 6, status_prefix="turn-around")
-            elif key == "o":
-                nav.step_action("look_up", 1)
-            elif key == "p":
-                nav.step_action("look_down", 1)
-            elif key == "r":
-                nav.run_decision_round()
-            elif key == "f":
-                nav.follow_latest_target()
-            elif key == "k":
-                nav.save_manual_snapshot()
     finally:
         try:
             nav.finalize()
         finally:
             sim.close()
+            if key_reader is not None:
+                key_reader.restore()
             if not bool(args.headless):
                 cv2.destroyAllWindows()
 

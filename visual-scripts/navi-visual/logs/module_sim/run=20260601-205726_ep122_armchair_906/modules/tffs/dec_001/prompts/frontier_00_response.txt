@@ -1,0 +1,3 @@
+```json
+{"target_context": 0.8, "anchor_context": 0.7, "room_context": 0.9, "negative": 0.1, "confidence": 0.85, "reason": "The brown armchair and leather couch are relevant visible furniture in the room."}
+```

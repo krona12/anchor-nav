@@ -1,0 +1,99 @@
+{
+  "module": "tffs",
+  "prompt_version": "tffs_task_facing_visual_hypothesis_v1",
+  "task_text": "brown armchair with a white crochet blanket and red pillow near a brown leather couch with red-and-blue throw blanket",
+  "fusion": {
+    "alpha_logit": 0.65,
+    "beta_hypothesis": 0.35,
+    "min_score_margin": 0.05,
+    "min_confidence": 0.45
+  },
+  "frontier_count": 2,
+  "baseline_frontier_index": 0,
+  "rerank_frontier_index": 0,
+  "selected_frontier_index": 0,
+  "score_margin": 0.0,
+  "tffs_applied": false,
+  "agent_position": [
+    2.413949966430664,
+    0.0038771629333496094,
+    -6.740059852600098
+  ],
+  "frontiers": [
+    {
+      "frontier_index": 0,
+      "frontier_xyz": [
+        0.5735353231430054,
+        0.04603844881057739,
+        -6.347439289093018
+      ],
+      "dist_to_goal_m": 9.307833619588394,
+      "frontier_logit": -9.307833619588394,
+      "normalized_logit": 1.0,
+      "assigned_view_index": 10,
+      "assigned_view_image": "/home/chenlin/krona/anchor-nav/visual-scripts/navi-visual/logs/module_sim/run=20260601-205726_ep122_armchair_906/modules/tffs/dec_000/panorama/view_10.png",
+      "is_baseline": true,
+      "scored_by_vlm": true,
+      "vlm": {
+        "tag": "tffs_frontier_00",
+        "vlm_client_file": "/home/chenlin/krona/anchor-nav/hm3d-online/anchor_nav/vlm/client.py",
+        "model": "gpt-4o-mini",
+        "prompt": "You evaluate one current robot panorama view for test-time frontier reranking.\nThe image is already observed at the current step. It is not a rendered future view.\nNavigation task: brown armchair with a white crochet blanket and red pillow near a brown leather couch with red-and-blue throw blanket\nFrontier/view metadata: frontier_index=0, frontier_xyz=[0.5735353231430054, 0.04603844881057739, -6.347439289093018], relative_bearing_rad=0.0000, current_panorama_view_index=10\n\nJudge whether this direction is promising for continuing exploration toward the task.\nDo not require the target object to already be visible. Use room type, relevant furniture, landmarks, anchor objects, traversable direction, and clearly irrelevant or low-quality cues.\n\nReturn strict JSON only with this exact schema:\n{\"target_context\": number between 0 and 1, \"anchor_context\": number between 0 and 1, \"room_context\": number between 0 and 1, \"negative\": number between 0 and 1, \"confidence\": number between 0 and 1, \"reason\": \"one short sentence\"}",
+        "image_path": "/home/chenlin/krona/anchor-nav/visual-scripts/navi-visual/logs/module_sim/run=20260601-205726_ep122_armchair_906/modules/tffs/dec_000/panorama/view_10.png",
+        "raw_response": "```json\n{\"target_context\":0.7,\"anchor_context\":0.6,\"room_context\":0.8,\"negative\":0.2,\"confidence\":0.75,\"reason\":\"The space appears to have relevant furniture, indicating a promising navigation direction.\"}\n```",
+        "source": "anchor_nav_vlm_real",
+        "ok": true,
+        "error": ""
+      },
+      "parsed_scores": {
+        "target_context": 0.7,
+        "anchor_context": 0.6,
+        "room_context": 0.8,
+        "negative": 0.2,
+        "confidence": 0.75,
+        "reason": "The space appears to have relevant furniture, indicating a promising navigation direction."
+      },
+      "hypothesis_score": 0.5499999999999998,
+      "vlm_confidence": 0.75,
+      "fused_score": 0.8424999999999999
+    },
+    {
+      "frontier_index": 1,
+      "frontier_xyz": [
+        2.9186971187591553,
+        0.0038771629333496094,
+        -6.116049289703369
+      ],
+      "dist_to_goal_m": 9.579038729592382,
+      "frontier_logit": -9.579038729592382,
+      "normalized_logit": 0.0,
+      "assigned_view_index": 2,
+      "assigned_view_image": "/home/chenlin/krona/anchor-nav/visual-scripts/navi-visual/logs/module_sim/run=20260601-205726_ep122_armchair_906/modules/tffs/dec_000/panorama/view_02.png",
+      "is_baseline": false,
+      "scored_by_vlm": true,
+      "vlm": {
+        "tag": "tffs_frontier_01",
+        "vlm_client_file": "/home/chenlin/krona/anchor-nav/hm3d-online/anchor_nav/vlm/client.py",
+        "model": "gpt-4o-mini",
+        "prompt": "You evaluate one current robot panorama view for test-time frontier reranking.\nThe image is already observed at the current step. It is not a rendered future view.\nNavigation task: brown armchair with a white crochet blanket and red pillow near a brown leather couch with red-and-blue throw blanket\nFrontier/view metadata: frontier_index=1, frontier_xyz=[2.9186971187591553, 0.0038771629333496094, -6.116049289703369], relative_bearing_rad=0.0000, current_panorama_view_index=2\n\nJudge whether this direction is promising for continuing exploration toward the task.\nDo not require the target object to already be visible. Use room type, relevant furniture, landmarks, anchor objects, traversable direction, and clearly irrelevant or low-quality cues.\n\nReturn strict JSON only with this exact schema:\n{\"target_context\": number between 0 and 1, \"anchor_context\": number between 0 and 1, \"room_context\": number between 0 and 1, \"negative\": number between 0 and 1, \"confidence\": number between 0 and 1, \"reason\": \"one short sentence\"}",
+        "image_path": "/home/chenlin/krona/anchor-nav/visual-scripts/navi-visual/logs/module_sim/run=20260601-205726_ep122_armchair_906/modules/tffs/dec_000/panorama/view_02.png",
+        "raw_response": "```json\n{\"target_context\": 0.5, \"anchor_context\": 0.7, \"room_context\": 0.8, \"negative\": 0.2, \"confidence\": 0.65, \"reason\": \"The direction potentially leads towards relevant furniture observed in the room.\"}\n```",
+        "source": "anchor_nav_vlm_real",
+        "ok": true,
+        "error": ""
+      },
+      "parsed_scores": {
+        "target_context": 0.5,
+        "anchor_context": 0.7,
+        "room_context": 0.8,
+        "negative": 0.2,
+        "confidence": 0.65,
+        "reason": "The direction potentially leads towards relevant furniture observed in the room."
+      },
+      "hypothesis_score": 0.49499999999999994,
+      "vlm_confidence": 0.65,
+      "fused_score": 0.17324999999999996
+    }
+  ],
+  "vlm_call_count": 2
+}

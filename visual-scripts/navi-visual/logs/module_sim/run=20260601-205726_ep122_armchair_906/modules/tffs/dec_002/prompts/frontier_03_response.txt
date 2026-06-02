@@ -1,0 +1,3 @@
+```json
+{"target_context": 0.6, "anchor_context": 0.8, "room_context": 0.7, "negative": 0.2, "confidence": 0.75, "reason": "The view seems to lead towards an area with relevant furniture nearby, increasing exploration potential."}
+```

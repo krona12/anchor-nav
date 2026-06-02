@@ -83,12 +83,6 @@ LOG_ROOT="${LOG_ROOT:-${REPO_ROOT}/visual-scripts/navi-visual/logs}"
 OUT_DIR="${LOG_ROOT}/direct/${RUN_TAG}"
 PYTHON_BIN="${PYTHON_BIN:-python3}"
 
-# Headless keyboard teleop: no GUI window, control via terminal keypresses.
-# The live camera RGB view and the live TopDownMap are written to fixed files
-# under LIVE_DIR so they can be watched in any auto-refreshing image viewer.
-HEADLESS="${HEADLESS:-1}"
-LIVE_DIR="${LIVE_DIR:-${LOG_ROOT}/live}"
-
 ENABLE_VISTA2MQSC_REFINE="${ENABLE_VISTA2MQSC_REFINE:-1}"
 USE_VISTA2MQSC_FOLLOWER="${USE_VISTA2MQSC_FOLLOWER:-1}"
 DISABLE_PQ3D="${DISABLE_PQ3D:-0}"
@@ -100,8 +94,6 @@ mkdir -p "${OUT_DIR}"
 
 echo ">>> Navi visual direct run tag: ${RUN_TAG}"
 echo ">>> Output dir: ${OUT_DIR}"
-echo ">>> Headless: ${HEADLESS} (keyboard teleop via terminal, no GUI window)"
-echo ">>> Live view: ${LIVE_DIR}/rgb.png  ${LIVE_DIR}/topdown.png"
 echo ">>> Scene: ${SCENE_NAME}"
 echo ">>> Navigation: ${NAVIGATION_TYPE} episode=${EPISODE_ID} task=${TASK_ID} instance=${INSTANCE_ID}"
 echo ">>> CUDA_VISIBLE_DEVICES: ${CUDA_VISIBLE_DEVICES}"
@@ -126,8 +118,6 @@ echo ">>> Python: ${PYTHON_BIN} ($(command -v "${PYTHON_BIN}"))"
   echo "pq3d_stage2_path=${PQ3D_STAGE2_PATH}"
   echo "log_root=${LOG_ROOT}"
   echo "output_dir=${OUT_DIR}"
-  echo "headless=${HEADLESS}"
-  echo "live_dir=${LIVE_DIR}"
   echo "enable_vista2mqsc_refine=${ENABLE_VISTA2MQSC_REFINE}"
   echo "use_vista2mqsc_follower=${USE_VISTA2MQSC_FOLLOWER}"
   echo "disable_pq3d=${DISABLE_PQ3D}"
@@ -159,14 +149,9 @@ PY_ARGS=(
   --pq3d_stage1_path "${PQ3D_STAGE1_PATH}"
   --pq3d_stage2_path "${PQ3D_STAGE2_PATH}"
   --logs_dir "${OUT_DIR}"
-  --live_dir "${LIVE_DIR}"
   --max_frontier_facing "${MAX_FRONTIER_FACING}"
   --max_saved_follow_frames "${MAX_SAVED_FOLLOW_FRAMES}"
 )
-
-if [ "${HEADLESS}" = "1" ]; then
-  PY_ARGS+=(--headless)
-fi
 
 if [ "${DESC_MODE}" = "concise" ]; then
   PY_ARGS+=(--concise_description)

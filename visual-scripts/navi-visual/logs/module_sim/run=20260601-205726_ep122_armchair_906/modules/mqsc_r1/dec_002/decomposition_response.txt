@@ -1,0 +1,1 @@
+{"target_desc":"brown armchair","target_aliases":["armchair","chair"],"anchor_primary":["brown leather couch"],"anchor_support":["white crochet blanket","red pillow","red-and-blue throw blanket"],"room_context":[],"relations":[]}
