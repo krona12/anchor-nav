@@ -31,6 +31,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 import cv2
+import magnum as mn
 import numpy as np
 
 CODE_DIR = Path(__file__).resolve().parent
@@ -158,6 +159,57 @@ def _save_raw_and_legend(img_markers: np.ndarray, base_path: Path, title: str,
     leg = img_markers.copy()
     _draw_legend(leg, title, entries)
     cv2.imwrite(str(base_path.with_name(base_path.name + "_legend.png")), leg)
+
+
+def render_topdown_cam(nav: Any, sim: Any, base_paths: List[Path], log: List[str],
+                       candidates: Tuple[float, ...] = (2.5, 2.3, 2.1, 1.9, 1.7, 1.5)) -> Optional[Dict[str, Any]]:
+    """Render a colored top-down RGBD camera view (robot-centric, looks straight
+    down). Adaptively picks the HIGHEST slice height that is not cut by the
+    ceiling (when the camera sits at/above the ceiling the median depth collapses
+    to a small value). Furniture lowers the median legitimately, so the accept
+    threshold (0.6*H) only rejects true ceiling occlusion. Saves, per output dir:
+      <base>_rgb_raw.png   (plain colored top-down, for relabeling)
+      <base>_rgb_legend.png(+ robot position/heading marker + legend)
+      <base>_depth.png     (colorized depth top-down)
+    """
+    sensors = sim.get_agent(0)._sensors
+    if "topdown_rgb" not in sensors or "topdown_depth" not in sensors:
+        return None
+    chosen: Optional[float] = None
+    med = 0.0
+    obs = None
+    for H in candidates:
+        sensors["topdown_rgb"].node.translation = mn.Vector3(0.0, float(H), 0.0)
+        sensors["topdown_depth"].node.translation = mn.Vector3(0.0, float(H), 0.0)
+        obs = sim.get_sensor_observations()
+        d = np.asarray(obs["topdown_depth"], dtype=np.float32)
+        v = d[d > 0]
+        med = float(np.median(v)) if v.size else 0.0
+        if med >= 0.6 * float(H):  # not cut by the ceiling (furniture may still lower it)
+            chosen = float(H)
+            break
+    if chosen is None:
+        chosen = float(candidates[-1])  # lowest slice already rendered
+    rgb_bgr = cv2.cvtColor(np.asarray(obs["topdown_rgb"][:, :, :3], dtype=np.uint8), cv2.COLOR_RGB2BGR)
+    depth = np.asarray(obs["topdown_depth"], dtype=np.float32)
+    dep_vis = cv2.cvtColor(_VIS._depth_to_rgb(depth), cv2.COLOR_RGB2BGR)
+    slice_ok = bool(med >= 0.5 * chosen)  # only flags true ceiling occlusion
+    for bp in base_paths:
+        bp.parent.mkdir(parents=True, exist_ok=True)
+        cv2.imwrite(str(bp.with_name(bp.name + "_rgb_raw.png")), rgb_bgr)
+        ann = rgb_bgr.copy()
+        h, w = ann.shape[:2]
+        c = (w // 2, h // 2)
+        cv2.circle(ann, c, 7, (255, 0, 0), -1)
+        cv2.circle(ann, c, 7, (255, 255, 255), 1)
+        cv2.arrowedLine(ann, c, (c[0], c[1] - 46), (255, 0, 0), 3, tipLength=0.35)
+        _draw_legend(ann, f"Top-down RGBD cam (slice H={chosen:.1f}m)", [
+            ((255, 0, 0), "robot position (center) + front (arrow up)"),
+        ])
+        cv2.imwrite(str(bp.with_name(bp.name + "_rgb_legend.png")), ann)
+        cv2.imwrite(str(bp.with_name(bp.name + "_depth.png")), dep_vis)
+    log.append(f"[topdown_cam] slice_H={chosen:.1f} median_depth={med:.2f} slice_ok={slice_ok} -> {len(base_paths)} dir(s)")
+    return {"slice_height_m": chosen, "median_depth_m": med, "slice_ok": slice_ok}
 
 
 def _base_topdown_bgr(nav: Any) -> np.ndarray:
@@ -506,6 +558,8 @@ def simulate_vista_ls(*, nav, sim, goal, agent_state, out_dir: Path, log) -> Dic
     pf = sim.pathfinder
     agent_xyz = np.asarray(agent_state.position, dtype=float).reshape(3)
     center = np.asarray(goal, dtype=float).reshape(3)
+    # Colored top-down RGBD camera view at the final stop.
+    render_topdown_cam(nav, sim, [out_dir / "topdown_cam"], log)
     try:
         agent_island = int(pf.get_island(agent_xyz))
     except Exception:
@@ -767,6 +821,7 @@ def main() -> None:
     sys.argv = ["teleop", "--scene_name", cli.scene_name, "--episode_id", str(cli.episode_id),
                 "--navigation_type", cli.navigation_type, "--instance_id", cli.instance_id,
                 "--task_id", str(cli.task_id), "--headless", "--disable_pq3d",
+                "--enable_topdown_cam", "--topdown_cam_height", "2.0",
                 "--logs_dir", str(out_dir), "--live_dir", str(cli.live_dir)]
     args = _M.parse_args()
     ctx = _M.load_task_context(args)
@@ -794,6 +849,9 @@ def main() -> None:
         views = scan_and_capture(nav, sim, pano_dir)
         frontiers = nav.detect_frontiers()
         agent_state = agent.get_state()
+        # Colored top-down RGBD camera view for this decision (one per module).
+        render_topdown_cam(nav, sim, [mod_dir / "tffs" / dtag / "topdown_cam",
+                                      mod_dir / "mqsc_r1" / dtag / "topdown_cam"], log)
         if len(frontiers) >= 2:
             simulate_tffs(nav=nav, sim=sim, ctx=ctx, goal=goal, dec_dir=mod_dir / "tffs" / dtag,
                           frontiers=frontiers, views=views, agent_state=agent_state, log=log)

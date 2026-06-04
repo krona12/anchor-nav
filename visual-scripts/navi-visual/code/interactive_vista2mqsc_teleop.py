@@ -319,6 +319,26 @@ def build_interactive_simulator(args: argparse.Namespace, scene_path: str) -> Tu
         _camera_spec("color_sensor", habitat_sim.SensorType.COLOR, agent_settings["rgb_sensor"]),
         _camera_spec("depth_sensor", habitat_sim.SensorType.DEPTH, agent_settings["depth_sensor"]),
     ]
+    # Optional robot-centric top-down RGBD camera: a downward-looking sensor a
+    # fixed height above the agent, so we get a *colored* bird's-eye of the real
+    # scene around the robot (the navmesh top-down map has no color). Height must
+    # stay below the room ceiling so the slice shows the floor/furniture, not the
+    # ceiling; tune via --topdown_cam_height.
+    if bool(getattr(args, "enable_topdown_cam", False)):
+        td_h = float(getattr(args, "topdown_cam_height", 2.0))
+        td_fov = float(getattr(args, "topdown_cam_hfov", 90.0))
+        td_res = int(getattr(args, "topdown_cam_res", 512))
+        for uuid, stype in (("topdown_rgb", habitat_sim.SensorType.COLOR),
+                            ("topdown_depth", habitat_sim.SensorType.DEPTH)):
+            spec = habitat_sim.CameraSensorSpec()
+            spec.uuid = uuid
+            spec.sensor_type = stype
+            spec.resolution = [td_res, td_res]
+            spec.position = [0.0, td_h, 0.0]
+            spec.orientation = [-math.pi / 2.0, 0.0, 0.0]  # pitch -90deg -> look straight down
+            spec.hfov = td_fov
+            spec.sensor_subtype = habitat_sim.SensorSubType.PINHOLE
+            agent_cfg.sensor_specifications.append(spec)
 
     sim = habitat_sim.Simulator(habitat_sim.Configuration(sim_cfg, [agent_cfg]))
     nav_cfg = habitat_sim.NavMeshSettings()
@@ -1162,6 +1182,12 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--scan_wait_ms", type=int, default=35)
     ap.add_argument("--follow_wait_ms", type=int, default=20)
     ap.add_argument("--headless", action="store_true")
+    ap.add_argument("--enable_topdown_cam", action="store_true",
+                    help="Add a downward RGBD camera above the agent for a colored top-down scene view.")
+    ap.add_argument("--topdown_cam_height", type=float, default=2.0,
+                    help="Height (m) of the top-down camera above the agent; must stay below the ceiling slice.")
+    ap.add_argument("--topdown_cam_hfov", type=float, default=90.0)
+    ap.add_argument("--topdown_cam_res", type=int, default=512)
     ap.add_argument(
         "--live_dir",
         default="",

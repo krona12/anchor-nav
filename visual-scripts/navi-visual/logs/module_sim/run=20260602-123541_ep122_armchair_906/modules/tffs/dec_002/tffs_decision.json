@@ -1,0 +1,184 @@
+{
+  "module": "tffs",
+  "prompt_version": "tffs_task_facing_visual_hypothesis_v1",
+  "task_text": "brown armchair with a white crochet blanket and red pillow near a brown leather couch with red-and-blue throw blanket",
+  "fusion": {
+    "alpha_logit": 0.65,
+    "beta_hypothesis": 0.35,
+    "min_score_margin": 0.05,
+    "min_confidence": 0.45
+  },
+  "frontier_count": 6,
+  "baseline_frontier_index": 2,
+  "rerank_frontier_index": 2,
+  "selected_frontier_index": 2,
+  "score_margin": 0.0,
+  "tffs_applied": false,
+  "agent_position": [
+    2.451014995574951,
+    0.0038771629333496094,
+    -1.6910432577133179
+  ],
+  "frontiers": [
+    {
+      "frontier_index": 0,
+      "frontier_xyz": [
+        0.5735353231430054,
+        0.04603844881057739,
+        -6.347439289093018
+      ],
+      "dist_to_goal_m": 9.307833619588394,
+      "frontier_logit": -9.307833619588394,
+      "normalized_logit": 0.07223506460272941,
+      "assigned_view_index": 9,
+      "assigned_view_image": "/home/chenlin/krona/anchor-nav/visual-scripts/navi-visual/logs/module_sim/run=20260602-123541_ep122_armchair_906/modules/tffs/dec_002/panorama/view_09.png",
+      "is_baseline": false,
+      "scored_by_vlm": false,
+      "fused_score": 0.07223506460272941
+    },
+    {
+      "frontier_index": 1,
+      "frontier_xyz": [
+        0.8847931623458862,
+        0.02353828400373459,
+        -1.964636206626892
+      ],
+      "dist_to_goal_m": 5.018417125647502,
+      "frontier_logit": -5.018417125647502,
+      "normalized_logit": 0.8962630101810863,
+      "assigned_view_index": 11,
+      "assigned_view_image": "/home/chenlin/krona/anchor-nav/visual-scripts/navi-visual/logs/module_sim/run=20260602-123541_ep122_armchair_906/modules/tffs/dec_002/panorama/view_11.png",
+      "is_baseline": false,
+      "scored_by_vlm": true,
+      "vlm": {
+        "tag": "tffs_frontier_01",
+        "vlm_client_file": "/home/chenlin/krona/anchor-nav/hm3d-online/anchor_nav/vlm/client.py",
+        "model": "gpt-4o-mini",
+        "prompt": "You evaluate one current robot panorama view for test-time frontier reranking.\nThe image is already observed at the current step. It is not a rendered future view.\nNavigation task: brown armchair with a white crochet blanket and red pillow near a brown leather couch with red-and-blue throw blanket\nFrontier/view metadata: frontier_index=1, frontier_xyz=[0.8847931623458862, 0.02353828400373459, -1.964636206626892], relative_bearing_rad=0.0000, current_panorama_view_index=11\n\nJudge whether this direction is promising for continuing exploration toward the task.\nDo not require the target object to already be visible. Use room type, relevant furniture, landmarks, anchor objects, traversable direction, and clearly irrelevant or low-quality cues.\n\nReturn strict JSON only with this exact schema:\n{\"target_context\": number between 0 and 1, \"anchor_context\": number between 0 and 1, \"room_context\": number between 0 and 1, \"negative\": number between 0 and 1, \"confidence\": number between 0 and 1, \"reason\": \"one short sentence\"}",
+        "image_path": "/home/chenlin/krona/anchor-nav/visual-scripts/navi-visual/logs/module_sim/run=20260602-123541_ep122_armchair_906/modules/tffs/dec_002/panorama/view_11.png",
+        "raw_response": "```json\n{\"target_context\":0.4,\"anchor_context\":0.6,\"room_context\":0.7,\"negative\":0.2,\"confidence\":0.5,\"reason\":\"The current view includes relevant room features and a traversable path, but specific furniture is not visible.\"}\n```",
+        "source": "anchor_nav_vlm_real",
+        "ok": true,
+        "error": ""
+      },
+      "parsed_scores": {
+        "target_context": 0.4,
+        "anchor_context": 0.6,
+        "room_context": 0.7,
+        "negative": 0.2,
+        "confidence": 0.5,
+        "reason": "The current view includes relevant room features and a traversable path, but specific furniture is not visible."
+      },
+      "hypothesis_score": 0.405,
+      "vlm_confidence": 0.5,
+      "fused_score": 0.7243209566177062
+    },
+    {
+      "frontier_index": 2,
+      "frontier_xyz": [
+        1.1245694160461426,
+        0.052420347929000854,
+        -1.3385214805603027
+      ],
+      "dist_to_goal_m": 4.478421901518645,
+      "frontier_logit": -4.478421901518645,
+      "normalized_logit": 1.0,
+      "assigned_view_index": 11,
+      "assigned_view_image": "/home/chenlin/krona/anchor-nav/visual-scripts/navi-visual/logs/module_sim/run=20260602-123541_ep122_armchair_906/modules/tffs/dec_002/panorama/view_11.png",
+      "is_baseline": true,
+      "scored_by_vlm": true,
+      "vlm": {
+        "tag": "tffs_frontier_02",
+        "vlm_client_file": "/home/chenlin/krona/anchor-nav/hm3d-online/anchor_nav/vlm/client.py",
+        "model": "gpt-4o-mini",
+        "prompt": "You evaluate one current robot panorama view for test-time frontier reranking.\nThe image is already observed at the current step. It is not a rendered future view.\nNavigation task: brown armchair with a white crochet blanket and red pillow near a brown leather couch with red-and-blue throw blanket\nFrontier/view metadata: frontier_index=2, frontier_xyz=[1.1245694160461426, 0.052420347929000854, -1.3385214805603027], relative_bearing_rad=0.0000, current_panorama_view_index=11\n\nJudge whether this direction is promising for continuing exploration toward the task.\nDo not require the target object to already be visible. Use room type, relevant furniture, landmarks, anchor objects, traversable direction, and clearly irrelevant or low-quality cues.\n\nReturn strict JSON only with this exact schema:\n{\"target_context\": number between 0 and 1, \"anchor_context\": number between 0 and 1, \"room_context\": number between 0 and 1, \"negative\": number between 0 and 1, \"confidence\": number between 0 and 1, \"reason\": \"one short sentence\"}",
+        "image_path": "/home/chenlin/krona/anchor-nav/visual-scripts/navi-visual/logs/module_sim/run=20260602-123541_ep122_armchair_906/modules/tffs/dec_002/panorama/view_11.png",
+        "raw_response": "```json\n{\"target_context\": 0.4, \"anchor_context\": 0.5, \"room_context\": 0.6, \"negative\": 0.2, \"confidence\": 0.5, \"reason\": \"The direction leads towards a room that may contain relevant furniture.\"}\n```",
+        "source": "anchor_nav_vlm_real",
+        "ok": true,
+        "error": ""
+      },
+      "parsed_scores": {
+        "target_context": 0.4,
+        "anchor_context": 0.5,
+        "room_context": 0.6,
+        "negative": 0.2,
+        "confidence": 0.5,
+        "reason": "The direction leads towards a room that may contain relevant furniture."
+      },
+      "hypothesis_score": 0.35500000000000004,
+      "vlm_confidence": 0.5,
+      "fused_score": 0.77425
+    },
+    {
+      "frontier_index": 3,
+      "frontier_xyz": [
+        5.296492099761963,
+        0.05387711524963379,
+        0.19418835639953613
+      ],
+      "dist_to_goal_m": 6.181241088412625,
+      "frontier_logit": -6.181241088412625,
+      "normalized_logit": 0.6728761130448083,
+      "assigned_view_index": 4,
+      "assigned_view_image": "/home/chenlin/krona/anchor-nav/visual-scripts/navi-visual/logs/module_sim/run=20260602-123541_ep122_armchair_906/modules/tffs/dec_002/panorama/view_04.png",
+      "is_baseline": false,
+      "scored_by_vlm": true,
+      "vlm": {
+        "tag": "tffs_frontier_03",
+        "vlm_client_file": "/home/chenlin/krona/anchor-nav/hm3d-online/anchor_nav/vlm/client.py",
+        "model": "gpt-4o-mini",
+        "prompt": "You evaluate one current robot panorama view for test-time frontier reranking.\nThe image is already observed at the current step. It is not a rendered future view.\nNavigation task: brown armchair with a white crochet blanket and red pillow near a brown leather couch with red-and-blue throw blanket\nFrontier/view metadata: frontier_index=3, frontier_xyz=[5.296492099761963, 0.05387711524963379, 0.19418835639953613], relative_bearing_rad=0.0000, current_panorama_view_index=4\n\nJudge whether this direction is promising for continuing exploration toward the task.\nDo not require the target object to already be visible. Use room type, relevant furniture, landmarks, anchor objects, traversable direction, and clearly irrelevant or low-quality cues.\n\nReturn strict JSON only with this exact schema:\n{\"target_context\": number between 0 and 1, \"anchor_context\": number between 0 and 1, \"room_context\": number between 0 and 1, \"negative\": number between 0 and 1, \"confidence\": number between 0 and 1, \"reason\": \"one short sentence\"}",
+        "image_path": "/home/chenlin/krona/anchor-nav/visual-scripts/navi-visual/logs/module_sim/run=20260602-123541_ep122_armchair_906/modules/tffs/dec_002/panorama/view_04.png",
+        "raw_response": "```json\n{\"target_context\":0.7,\"anchor_context\":0.6,\"room_context\":0.8,\"negative\":0.2,\"confidence\":0.75,\"reason\":\"The direction appears promising as the room contains relevant furniture and potential pathways.\"}\n```",
+        "source": "anchor_nav_vlm_real",
+        "ok": true,
+        "error": ""
+      },
+      "parsed_scores": {
+        "target_context": 0.7,
+        "anchor_context": 0.6,
+        "room_context": 0.8,
+        "negative": 0.2,
+        "confidence": 0.75,
+        "reason": "The direction appears promising as the room contains relevant furniture and potential pathways."
+      },
+      "hypothesis_score": 0.5499999999999998,
+      "vlm_confidence": 0.75,
+      "fused_score": 0.6298694734791254
+    },
+    {
+      "frontier_index": 4,
+      "frontier_xyz": [
+        5.672898769378662,
+        0.0038771629333496094,
+        -2.359360694885254
+      ],
+      "dist_to_goal_m": 7.936382393480369,
+      "frontier_logit": -7.936382393480369,
+      "normalized_logit": 0.3357007685993176,
+      "assigned_view_index": 5,
+      "assigned_view_image": "/home/chenlin/krona/anchor-nav/visual-scripts/navi-visual/logs/module_sim/run=20260602-123541_ep122_armchair_906/modules/tffs/dec_002/panorama/view_05.png",
+      "is_baseline": false,
+      "scored_by_vlm": false,
+      "fused_score": 0.3357007685993176
+    },
+    {
+      "frontier_index": 5,
+      "frontier_xyz": [
+        6.193355083465576,
+        0.0038771629333496094,
+        -4.305760860443115
+      ],
+      "dist_to_goal_m": 9.683847903097144,
+      "frontier_logit": -9.683847903097144,
+      "normalized_logit": 0.0,
+      "assigned_view_index": 6,
+      "assigned_view_image": "/home/chenlin/krona/anchor-nav/visual-scripts/navi-visual/logs/module_sim/run=20260602-123541_ep122_armchair_906/modules/tffs/dec_002/panorama/view_06.png",
+      "is_baseline": false,
+      "scored_by_vlm": false,
+      "fused_score": 0.0
+    }
+  ],
+  "vlm_call_count": 3
+}

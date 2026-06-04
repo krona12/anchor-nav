@@ -1,0 +1,3 @@
+```json
+{"target_context": 0.7, "anchor_context": 0.5, "room_context": 0.6, "negative": 0.2, "confidence": 0.6, "reason": "The direction aligns with potential visibility of the brown armchair and couch."}
+```

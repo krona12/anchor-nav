@@ -1,0 +1,503 @@
+{
+  "timestamp": "2026-06-02T13:02:51",
+  "task": {
+    "scene_name": "00844-q5QZSEeHe5g",
+    "scene_path": "datascene/00844-q5QZSEeHe5g/q5QZSEeHe5g.glb",
+    "annotation_path": "LangMap_Annotations/00844-q5QZSEeHe5g.json.gz",
+    "navigation_type": "instance",
+    "episode_id": 122,
+    "instance_id": "armchair_906",
+    "target_object_ids": [
+      "armchair_906"
+    ],
+    "object_category": "armchair",
+    "description": "brown armchair with a white crochet blanket and red pillow near a brown leather couch with red-and-blue throw blanket"
+  },
+  "logic": {
+    "intent": "move to the target object's navigable point, back off several grid steps, face the object, and save micro-adjusted photos",
+    "back_steps": 4,
+    "step_size_m": 0.25,
+    "back_distance_m": 1.0,
+    "angle_micro_adjustments_deg": [
+      0,
+      15,
+      -15
+    ],
+    "suggested_look_down_steps": 2,
+    "max_look_down_steps": 1,
+    "look_down_steps": 1
+  },
+  "plan": {
+    "start_position": [
+      2.41395,
+      0.00388,
+      -6.74006
+    ],
+    "start_snap_position": [
+      2.413949966430664,
+      0.2851908802986145,
+      -6.740059852600098
+    ],
+    "target_center": [
+      -0.24933,
+      0.43334,
+      2.92395
+    ],
+    "target_snap_position": [
+      -0.3183974325656891,
+      0.15387701988220215,
+      3.3728907108306885
+    ],
+    "island_index": 0,
+    "back_steps": 4,
+    "step_size_m": 0.25,
+    "back_distance_m": 1.0,
+    "selected": {
+      "source": "annotation_viewpoint",
+      "view_index": 0,
+      "iou": 0.11505,
+      "radius": null,
+      "raw_view_position": [
+        -0.44869,
+        0.05388,
+        2.23962
+      ],
+      "desired_backoff_position": [
+        -0.43261541609483245,
+        0.15387701988220215,
+        2.379434998562378
+      ],
+      "snapped_position": [
+        -0.4326154291629791,
+        0.15387701988220215,
+        2.3794350624084473
+      ],
+      "snap_error_m": 6.516975544833732e-08,
+      "distance_to_target_center_m": 0.5745346515257282,
+      "distance_to_target_snap_m": 0.9999999380643753,
+      "score": 1.4004999217719365
+    },
+    "final_position": [
+      -0.4326154291629791,
+      0.15387701988220215,
+      2.3794350624084473
+    ],
+    "depression_deg": 60.8598979984243,
+    "suggested_look_down_steps": 2,
+    "best_annotation_pose": {
+      "position": [
+        -0.4486899971961975,
+        0.15387701988220215,
+        2.2396199703216553
+      ],
+      "rotation": [
+        0.0,
+        -0.98997,
+        0.0,
+        0.14127
+      ],
+      "iou": 0.11505
+    },
+    "candidate_count": 43,
+    "top_candidates": [
+      {
+        "source": "annotation_viewpoint",
+        "view_index": 0,
+        "iou": 0.11505,
+        "radius": null,
+        "raw_view_position": [
+          -0.44869,
+          0.05388,
+          2.23962
+        ],
+        "desired_backoff_position": [
+          -0.43261541609483245,
+          0.15387701988220215,
+          2.379434998562378
+        ],
+        "snapped_position": [
+          -0.4326154291629791,
+          0.15387701988220215,
+          2.3794350624084473
+        ],
+        "snap_error_m": 6.516975544833732e-08,
+        "distance_to_target_center_m": 0.5745346515257282,
+        "distance_to_target_snap_m": 0.9999999380643753,
+        "score": 1.4004999217719365
+      },
+      {
+        "source": "annotation_viewpoint",
+        "view_index": 1,
+        "iou": 0.11383,
+        "radius": null,
+        "raw_view_position": [
+          -0.20354,
+          0.05388,
+          2.23962
+        ],
+        "desired_backoff_position": [
+          -0.21756359355405774,
+          0.15387701988220215,
+          2.377987430652069
+        ],
+        "snapped_position": [
+          -0.21756359934806824,
+          0.15387701988220215,
+          2.3779873847961426
+        ],
+        "snap_error_m": 4.622052101603381e-08,
+        "distance_to_target_center_m": 0.5468859857507911,
+        "distance_to_target_snap_m": 1.0000000450379793,
+        "score": 1.3882999434068906
+      },
+      {
+        "source": "annotation_viewpoint",
+        "view_index": 2,
+        "iou": 0.11293,
+        "radius": null,
+        "raw_view_position": [
+          0.04646,
+          0.05388,
+          2.23962
+        ],
+        "desired_backoff_position": [
+          -0.011937719240983247,
+          0.15387701988220215,
+          2.421007081331295
+        ],
+        "snapped_position": [
+          -0.011937718838453293,
+          0.15387701988220215,
+          2.4210071563720703
+        ],
+        "snap_error_m": 7.504185497905126e-08,
+        "distance_to_target_center_m": 0.556153395307114,
+        "distance_to_target_snap_m": 0.9999999286932737,
+        "score": 1.3792999099328098
+      },
+      {
+        "source": "annotation_viewpoint",
+        "view_index": 3,
+        "iou": 0.11171,
+        "radius": null,
+        "raw_view_position": [
+          -0.20354,
+          0.05388,
+          1.98962
+        ],
+        "desired_backoff_position": [
+          -0.2356489697410144,
+          0.15387701988220215,
+          2.3763202457354433
+        ],
+        "snapped_position": [
+          -0.235648974776268,
+          0.15387701988220215,
+          2.3763203620910645
+        ],
+        "snap_error_m": 1.1646451970140377e-07,
+        "distance_to_target_center_m": 0.54780050270828,
+        "distance_to_target_snap_m": 0.999999883626765,
+        "score": 1.367099854510635
+      },
+      {
+        "source": "annotation_viewpoint",
+        "view_index": 4,
+        "iou": 0.10669,
+        "radius": null,
+        "raw_view_position": [
+          0.04646,
+          0.05388,
+          1.98962
+        ],
+        "desired_backoff_position": [
+          -0.06335579766358046,
+          0.15387701988220215,
+          2.4059606386608032
+        ],
+        "snapped_position": [
+          -0.06335579603910446,
+          0.15387701988220215,
+          2.4059605598449707
+        ],
+        "snap_error_m": 7.883257181654343e-08,
+        "distance_to_target_center_m": 0.5503630298730189,
+        "distance_to_target_snap_m": 1.0000000766237078,
+        "score": 1.3168999036681492
+      },
+      {
+        "source": "annotation_viewpoint",
+        "view_index": 5,
+        "iou": 0.10626,
+        "radius": null,
+        "raw_view_position": [
+          0.29646,
+          0.05388,
+          2.23962
+        ],
+        "desired_backoff_position": [
+          0.15848674181615346,
+          0.15387701988220215,
+          2.4939245657351288
+        ],
+        "snapped_position": [
+          0.16197630763053894,
+          0.15387701988220215,
+          2.4904351234436035
+        ],
+        "snap_error_m": 0.0049349039584183204,
+        "distance_to_target_center_m": 0.597585162878376,
+        "distance_to_target_snap_m": 1.0047322001313574,
+        "score": 1.306634073879038
+      },
+      {
+        "source": "annotation_viewpoint",
+        "view_index": 6,
+        "iou": 0.1033,
+        "radius": null,
+        "raw_view_position": [
+          0.54646,
+          0.05388,
+          2.73962
+        ],
+        "desired_backoff_position": [
+          0.48843358433836337,
+          0.15387701988220215,
+          2.7821084242296323
+        ],
+        "snapped_position": [
+          0.4884335696697235,
+          0.15387701988220215,
+          2.7821083068847656
+        ],
+        "snap_error_m": 1.1825813603746009e-07,
+        "distance_to_target_center_m": 0.7512750166467733,
+        "distance_to_target_snap_m": 1.0000000574901604,
+        "score": 1.2829999129453056
+      },
+      {
+        "source": "annotation_viewpoint",
+        "view_index": 7,
+        "iou": 0.10298,
+        "radius": null,
+        "raw_view_position": [
+          -0.44869,
+          0.05388,
+          1.98962
+        ],
+        "desired_backoff_position": [
+          -0.41217401714123214,
+          0.15387701988220215,
+          2.3772974443883395
+        ],
+        "snapped_position": [
+          -0.4121740162372589,
+          0.15387701988220215,
+          2.3772974014282227
+        ],
+        "snap_error_m": 4.296962651496215e-08,
+        "distance_to_target_center_m": 0.5703921783734043,
+        "distance_to_target_snap_m": 1.0000000426860316,
+        "score": 1.279799946571562
+      },
+      {
+        "source": "annotation_viewpoint",
+        "view_index": 8,
+        "iou": 0.09999,
+        "radius": null,
+        "raw_view_position": [
+          0.54646,
+          0.05388,
+          2.48962
+        ],
+        "desired_backoff_position": [
+          0.3812224846819622,
+          0.15387701988220215,
+          2.6583755105792246
+        ],
+        "snapped_position": [
+          0.3812224864959717,
+          0.15387701988220215,
+          2.6583755016326904
+        ],
+        "snap_error_m": 9.128587201539728e-09,
+        "distance_to_target_center_m": 0.6841975244103861,
+        "distance_to_target_snap_m": 1.0000000076615518,
+        "score": 1.2498999900563015
+      },
+      {
+        "source": "annotation_viewpoint",
+        "view_index": 9,
+        "iou": 0.09151,
+        "radius": null,
+        "raw_view_position": [
+          -0.20354,
+          0.05388,
+          1.73962
+        ],
+        "desired_backoff_position": [
+          -0.248247106213335,
+          0.15387701988220215,
+          2.375354279559801
+        ],
+        "snapped_position": [
+          -0.24824710190296173,
+          0.15387701988220215,
+          2.375354290008545
+        ],
+        "snap_error_m": 1.1302900995814471e-08,
+        "distance_to_target_center_m": 0.5485967787813899,
+        "distance_to_target_snap_m": 0.9999999898793713,
+        "score": 1.165099987053646
+      }
+    ]
+  },
+  "saved_photos": [
+    {
+      "name": "00_annotation_best_view",
+      "rgb_path": "visual-scripts/object-fetch/run=20260602-130238_ep122_armchair_906/photos/00_annotation_best_view_rgb.png",
+      "depth_path": "visual-scripts/object-fetch/run=20260602-130238_ep122_armchair_906/photos/00_annotation_best_view_depth.png",
+      "pose": {
+        "position": [
+          -0.4486899971961975,
+          0.15387701988220215,
+          2.2396199703216553
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.9899700284004211,
+          0.0,
+          0.1412699967622757
+        ],
+        "yaw_offset_deg": 0.0,
+        "look_down_steps": 0
+      }
+    },
+    {
+      "name": "01_backoff_facing_target",
+      "rgb_path": "visual-scripts/object-fetch/run=20260602-130238_ep122_armchair_906/photos/01_backoff_facing_target_rgb.png",
+      "depth_path": "visual-scripts/object-fetch/run=20260602-130238_ep122_armchair_906/photos/01_backoff_facing_target_depth.png",
+      "pose": {
+        "position": [
+          -0.4326154291629791,
+          0.15387701988220215,
+          2.3794350624084473
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.986850917339325,
+          0.0,
+          0.16163304448127747
+        ],
+        "yaw_offset_deg": 0.0,
+        "look_down_steps": 0
+      }
+    },
+    {
+      "name": "02_backoff_facing_target_soft_tilt",
+      "rgb_path": "visual-scripts/object-fetch/run=20260602-130238_ep122_armchair_906/photos/02_backoff_facing_target_soft_tilt_rgb.png",
+      "depth_path": "visual-scripts/object-fetch/run=20260602-130238_ep122_armchair_906/photos/02_backoff_facing_target_soft_tilt_depth.png",
+      "pose": {
+        "position": [
+          -0.4326154291629791,
+          0.15387701988220215,
+          2.3794350624084473
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.986850917339325,
+          0.0,
+          0.16163304448127747
+        ],
+        "yaw_offset_deg": 0.0,
+        "look_down_steps": 1
+      }
+    },
+    {
+      "name": "03_backoff_yaw_left_15",
+      "rgb_path": "visual-scripts/object-fetch/run=20260602-130238_ep122_armchair_906/photos/03_backoff_yaw_left_15_rgb.png",
+      "depth_path": "visual-scripts/object-fetch/run=20260602-130238_ep122_armchair_906/photos/03_backoff_yaw_left_15_depth.png",
+      "pose": {
+        "position": [
+          -0.4326154291629791,
+          0.15387701988220215,
+          2.3794350624084473
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.9573109149932861,
+          0.0,
+          0.28906014561653137
+        ],
+        "yaw_offset_deg": 15.0,
+        "look_down_steps": 0
+      }
+    },
+    {
+      "name": "04_backoff_yaw_right_15",
+      "rgb_path": "visual-scripts/object-fetch/run=20260602-130238_ep122_armchair_906/photos/04_backoff_yaw_right_15_rgb.png",
+      "depth_path": "visual-scripts/object-fetch/run=20260602-130238_ep122_armchair_906/photos/04_backoff_yaw_right_15_depth.png",
+      "pose": {
+        "position": [
+          -0.4326154291629791,
+          0.15387701988220215,
+          2.3794350624084473
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.9995056390762329,
+          0.0,
+          0.031440362334251404
+        ],
+        "yaw_offset_deg": -15.0,
+        "look_down_steps": 0
+      }
+    },
+    {
+      "name": "05_backoff_yaw_left_15_soft_tilt",
+      "rgb_path": "visual-scripts/object-fetch/run=20260602-130238_ep122_armchair_906/photos/05_backoff_yaw_left_15_soft_tilt_rgb.png",
+      "depth_path": "visual-scripts/object-fetch/run=20260602-130238_ep122_armchair_906/photos/05_backoff_yaw_left_15_soft_tilt_depth.png",
+      "pose": {
+        "position": [
+          -0.4326154291629791,
+          0.15387701988220215,
+          2.3794350624084473
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.9573109149932861,
+          0.0,
+          0.28906014561653137
+        ],
+        "yaw_offset_deg": 15.0,
+        "look_down_steps": 1
+      }
+    },
+    {
+      "name": "06_backoff_yaw_right_15_soft_tilt",
+      "rgb_path": "visual-scripts/object-fetch/run=20260602-130238_ep122_armchair_906/photos/06_backoff_yaw_right_15_soft_tilt_rgb.png",
+      "depth_path": "visual-scripts/object-fetch/run=20260602-130238_ep122_armchair_906/photos/06_backoff_yaw_right_15_soft_tilt_depth.png",
+      "pose": {
+        "position": [
+          -0.4326154291629791,
+          0.15387701988220215,
+          2.3794350624084473
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.9995056390762329,
+          0.0,
+          0.031440362334251404
+        ],
+        "yaw_offset_deg": -15.0,
+        "look_down_steps": 1
+      }
+    }
+  ],
+  "outputs": {
+    "photos_dir": "visual-scripts/object-fetch/run=20260602-130238_ep122_armchair_906/photos",
+    "contact_sheet": "visual-scripts/object-fetch/run=20260602-130238_ep122_armchair_906/photos/object_fetch_contact_sheet.png",
+    "topdown": "visual-scripts/object-fetch/run=20260602-130238_ep122_armchair_906/maps/object_fetch_topdown.png",
+    "summary": "visual-scripts/object-fetch/run=20260602-130238_ep122_armchair_906/object_fetch_summary.json"
+  }
+}
