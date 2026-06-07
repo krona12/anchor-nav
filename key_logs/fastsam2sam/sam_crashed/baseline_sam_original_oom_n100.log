@@ -1,0 +1,1167 @@
+Elapsed 0:00:00 [Baseline] logging enabled -> /home/chenlin/krona/anchor-nav/output_logs/baseline_sam_all_0_0.2/20260522-114640-detailed-cuda3-580126/refhm3d-nav-sequence-baseline-20260522-114657-139073-pid4080703.log
+Elapsed 0:00:00 [baseline] reproducibility_seed=1234
+Elapsed 0:00:00 [baseline] 输出 JSON 每条记录含 task_level（object|room|region|instance），与 vlmcore refine 及 test_scripts/aggregate_shard_results.py --by-level 一致
+Elapsed 0:00:00 [baseline] enabled_task_levels=['instance', 'object', 'region', 'room']
+Elapsed 0:00:00 NUMBER OF BLACK IDS: 0
+Elapsed 0:00:00 [baseline] live metrics log -> /home/chenlin/krona/anchor-nav/output_logs/baseline_sam_all_0_0.2/20260522-114640-detailed-cuda3-580126/baseline_live_metrics_0.0_0.2.log
+Elapsed 0:00:00 
+
+Total selected number of scenes 7: ['00800-TEEsavR23oF.json.gz', '00802-wcojb4TFT35.json.gz', '00803-k1cupFYWXJ6.json.gz', '00808-y9hTuugGdiq.json.gz', '00810-CrMo8WxCyVb.json.gz', '00813-svBbv1Pavdk.json.gz', '00814-p53SfW6mjZe.json.gz']
+
+
+[sam-baseline] model_type=vit_h checkpoint=/home/chenlin/krona/anchor-nav/hm3d-online/SAM/sam_vit_h_4b8939.pth device=cuda points_per_side=32 points_per_batch=64 pred_iou_thresh=0.88 stability_score_thresh=0.95 max_masks=0
+/home/chenlin/krona/anchor-nav/hm3d-online/data_utils.py:314: UserWarning: 
+The version_base parameter is not specified.
+Please specify a compatability version level, or None.
+Will assume defaults for version 1.1
+  hydra.initialize(config_path=config_path)
+Using PCDMask3DSegLevelEncoder module from Registry vision
+Using ObjectEncoder module from Registry vision
+Using QueryMaskEncoder module from Registry grounding
+Using MaskHeadSegLevelWithBox module from Registry heads
+Using OpenVocabHead module from Registry heads
+/home/chenlin/krona/anchor-nav/hm3d-online/data_utils.py:326: UserWarning: 
+The version_base parameter is not specified.
+Please specify a compatability version level, or None.
+Will assume defaults for version 1.1
+  hydra.initialize(config_path=config_path)
+Using CLIPLanguageEncoder module from Registry language
+Using ObjectEncoder module from Registry vision
+Using ObjectEncoder module from Registry vision
+Using ObjectEncoder module from Registry vision
+Using QueryMaskEncoder module from Registry grounding
+Using GroundHead module from Registry heads
+Using ClsHead module from Registry heads
+Using DecisionHead module from Registry heads
+*** Scene ***:   0%|          | 0/7 [00:00<?, ?it/s]Elapsed 0:00:24 
+
+
+
+
+*************************** Processing 00800-TEEsavR23oF.json.gz, Total Episode 20 ***************************
+
+=== Episode ===: 0it [00:00, ?it/s][AElapsed 0:00:30 
+
+Begin to process [00800-TEEsavR23oF_sequence_0_0] type: [instance], Question: [tall brown wood wardrobe in bedroom with plain white sheets and light teal pillows on bed near Mickey Mouse plush toy]
+
+Elapsed 0:00:30 Current start position is [     -4.039      3.1134    -0.06032]
+Elapsed 0:20:53 ===Episode_id 0 task_id 0 task_level=instance===
+SR: False, SPL: 0.0, Object category: wardrobe, goal type: sequence===
+
+Elapsed 0:20:53 [baseline] task_level=instance scene=00800-TEEsavR23oF episode=0 task=0 sec=1222.721
+Elapsed 0:20:53 [BASELINE_LIVE_METRICS] rows=1 avg_sr=0.000000 avg_spl=0.000000 follower_error_count=0 levels=[object:n=0,sr=0.000000,spl=0.000000; room:n=0,sr=0.000000,spl=0.000000; region:n=0,sr=0.000000,spl=0.000000; instance:n=1,sr=0.000000,spl=0.000000] latest_scene=00800-TEEsavR23oF latest_episode=0 latest_task=0 latest_level=instance by_level={"instance": {"avg_spl": 0.0, "avg_sr": 0.0, "count": 1}, "object": {"avg_spl": 0.0, "avg_sr": 0.0, "count": 0}, "region": {"avg_spl": 0.0, "avg_sr": 0.0, "count": 0}, "room": {"avg_spl": 0.0, "avg_sr": 0.0, "count": 0}}
+Elapsed 0:20:53 
+
+Begin to process [00800-TEEsavR23oF_sequence_0_1] type: [region], Question: [blanket in the office that has computer desk with printer and black PC tower, black office chair below colorful painting, rack with books and wicker basket, brown leather couch with diamond-patterned blanket by railing]
+
+Elapsed 0:20:53 Current start position is [    -1.0559      3.1178      -7.575]
+Elapsed 0:22:21 ===Episode_id 0 task_id 1 task_level=region===
+SR: False, SPL: 0.0, Object category: blanket, goal type: sequence===
+
+Elapsed 0:22:21 [baseline] task_level=region scene=00800-TEEsavR23oF episode=0 task=1 sec=88.041
+Elapsed 0:22:21 [BASELINE_LIVE_METRICS] rows=2 avg_sr=0.000000 avg_spl=0.000000 follower_error_count=0 levels=[object:n=0,sr=0.000000,spl=0.000000; room:n=0,sr=0.000000,spl=0.000000; region:n=1,sr=0.000000,spl=0.000000; instance:n=1,sr=0.000000,spl=0.000000] latest_scene=00800-TEEsavR23oF latest_episode=0 latest_task=1 latest_level=region by_level={"instance": {"avg_spl": 0.0, "avg_sr": 0.0, "count": 1}, "object": {"avg_spl": 0.0, "avg_sr": 0.0, "count": 0}, "region": {"avg_spl": 0.0, "avg_sr": 0.0, "count": 1}, "room": {"avg_spl": 0.0, "avg_sr": 0.0, "count": 0}}
+Elapsed 0:22:21 
+
+Begin to process [00800-TEEsavR23oF_sequence_0_2] type: [region], Question: [nightstand in the bedroom that has bed with plain white sheets and light teal pillows, tall wooden headboard, Mickey Mouse plush on dark wood nightstand, matching wardrobe and beige armchair, TV on wood cabinet]
+
+Elapsed 0:22:21 Current start position is [   -0.31402      3.1408     -6.3729]
+Elapsed 0:23:38 ===Episode_id 0 task_id 2 task_level=region===
+SR: False, SPL: 0.0, Object category: nightstand, goal type: sequence===
+
+Elapsed 0:23:38 [baseline] task_level=region scene=00800-TEEsavR23oF episode=0 task=2 sec=77.058
+Elapsed 0:23:38 [BASELINE_LIVE_METRICS] rows=3 avg_sr=0.000000 avg_spl=0.000000 follower_error_count=0 levels=[object:n=0,sr=0.000000,spl=0.000000; room:n=0,sr=0.000000,spl=0.000000; region:n=2,sr=0.000000,spl=0.000000; instance:n=1,sr=0.000000,spl=0.000000] latest_scene=00800-TEEsavR23oF latest_episode=0 latest_task=2 latest_level=region by_level={"instance": {"avg_spl": 0.0, "avg_sr": 0.0, "count": 1}, "object": {"avg_spl": 0.0, "avg_sr": 0.0, "count": 0}, "region": {"avg_spl": 0.0, "avg_sr": 0.0, "count": 2}, "room": {"avg_spl": 0.0, "avg_sr": 0.0, "count": 0}}
+Elapsed 0:23:38 
+
+Begin to process [00800-TEEsavR23oF_sequence_0_3] type: [room], Question: [side table in the office]
+
+Elapsed 0:23:38 Current start position is [   -0.22495      3.1134      -5.651]
+Elapsed 0:25:12 ===Episode_id 0 task_id 3 task_level=room===
+SR: False, SPL: 0.0, Object category: side table, goal type: sequence===
+
+Elapsed 0:25:12 [baseline] task_level=room scene=00800-TEEsavR23oF episode=0 task=3 sec=93.623
+Elapsed 0:25:12 [BASELINE_LIVE_METRICS] rows=4 avg_sr=0.000000 avg_spl=0.000000 follower_error_count=0 levels=[object:n=0,sr=0.000000,spl=0.000000; room:n=1,sr=0.000000,spl=0.000000; region:n=2,sr=0.000000,spl=0.000000; instance:n=1,sr=0.000000,spl=0.000000] latest_scene=00800-TEEsavR23oF latest_episode=0 latest_task=3 latest_level=room by_level={"instance": {"avg_spl": 0.0, "avg_sr": 0.0, "count": 1}, "object": {"avg_spl": 0.0, "avg_sr": 0.0, "count": 0}, "region": {"avg_spl": 0.0, "avg_sr": 0.0, "count": 2}, "room": {"avg_spl": 0.0, "avg_sr": 0.0, "count": 1}}
+Elapsed 0:25:12 
+
+Begin to process [00800-TEEsavR23oF_sequence_0_4] type: [region], Question: [bathroom cabinet in the bathroom that has toilet beside black toilet brush, dark wood single-sink vanity by dark blue bath mat, hanging beige towel, blue shower curtain with seashell, starfish, and coral motifs]
+
+Elapsed 0:25:12 Current start position is [    -4.7345      3.1134   -0.074016]
+Elapsed 0:27:08 ===Episode_id 0 task_id 4 task_level=region===
+SR: True, SPL: 0.8729957307214076, Object category: bathroom cabinet, goal type: sequence===
+
+Elapsed 0:27:08 [baseline] task_level=region scene=00800-TEEsavR23oF episode=0 task=4 sec=116.444
+Elapsed 0:27:08 [BASELINE_LIVE_METRICS] rows=5 avg_sr=0.200000 avg_spl=0.174599 follower_error_count=0 levels=[object:n=0,sr=0.000000,spl=0.000000; room:n=1,sr=0.000000,spl=0.000000; region:n=3,sr=0.333333,spl=0.290999; instance:n=1,sr=0.000000,spl=0.000000] latest_scene=00800-TEEsavR23oF latest_episode=0 latest_task=4 latest_level=region by_level={"instance": {"avg_spl": 0.0, "avg_sr": 0.0, "count": 1}, "object": {"avg_spl": 0.0, "avg_sr": 0.0, "count": 0}, "region": {"avg_spl": 0.2909985769071359, "avg_sr": 0.3333333333333333, "count": 3}, "room": {"avg_spl": 0.0, "avg_sr": 0.0, "count": 1}}
+Elapsed 0:27:08 [Metrics] sequence count: 5, invalid_count: 0, follower_error_count: 0, avg_sr: 0.200000, avg_spl: 0.174599
+
+=== Episode ===: 1it [26:44, 1604.22s/it][AElapsed 0:27:15 
+
+Begin to process [00800-TEEsavR23oF_sequence_1_0] type: [instance], Question: [wood dresser below TV in bedroom with bed with plain white sheets and light teal pillows near Mickey Mouse plush toy]
+
+Elapsed 0:27:15 Current start position is [    -5.7018      3.1134    -0.97872]
+Elapsed 0:39:39 ===Episode_id 1 task_id 0 task_level=instance===
+SR: True, SPL: 0.44870563539128777, Object category: wardrobe, goal type: sequence===
+
+Elapsed 0:39:39 [baseline] task_level=instance scene=00800-TEEsavR23oF episode=1 task=0 sec=743.812
+Elapsed 0:39:39 [BASELINE_LIVE_METRICS] rows=6 avg_sr=0.333333 avg_spl=0.220284 follower_error_count=0 levels=[object:n=0,sr=0.000000,spl=0.000000; room:n=1,sr=0.000000,spl=0.000000; region:n=3,sr=0.333333,spl=0.290999; instance:n=2,sr=0.500000,spl=0.224353] latest_scene=00800-TEEsavR23oF latest_episode=1 latest_task=0 latest_level=instance by_level={"instance": {"avg_spl": 0.22435281769564389, "avg_sr": 0.5, "count": 2}, "object": {"avg_spl": 0.0, "avg_sr": 0.0, "count": 0}, "region": {"avg_spl": 0.2909985769071359, "avg_sr": 0.3333333333333333, "count": 3}, "room": {"avg_spl": 0.0, "avg_sr": 0.0, "count": 1}}
+Elapsed 0:39:39 
+
+Begin to process [00800-TEEsavR23oF_sequence_1_1] type: [room], Question: [picture in the hall]
+
+Elapsed 0:39:39 Current start position is [   -0.17886      3.1134     -5.6406]
+Elapsed 0:41:12 ===Episode_id 1 task_id 1 task_level=room===
+SR: True, SPL: 0.8557832554651227, Object category: picture, goal type: sequence===
+
+Elapsed 0:41:12 [baseline] task_level=room scene=00800-TEEsavR23oF episode=1 task=1 sec=93.783
+Elapsed 0:41:12 [BASELINE_LIVE_METRICS] rows=7 avg_sr=0.428571 avg_spl=0.311069 follower_error_count=0 levels=[object:n=0,sr=0.000000,spl=0.000000; room:n=2,sr=0.500000,spl=0.427892; region:n=3,sr=0.333333,spl=0.290999; instance:n=2,sr=0.500000,spl=0.224353] latest_scene=00800-TEEsavR23oF latest_episode=1 latest_task=1 latest_level=room by_level={"instance": {"avg_spl": 0.22435281769564389, "avg_sr": 0.5, "count": 2}, "object": {"avg_spl": 0.0, "avg_sr": 0.0, "count": 0}, "region": {"avg_spl": 0.2909985769071359, "avg_sr": 0.3333333333333333, "count": 3}, "room": {"avg_spl": 0.42789162773256134, "avg_sr": 0.5, "count": 2}}
+Elapsed 0:41:12 
+
+Begin to process [00800-TEEsavR23oF_sequence_1_2] type: [room], Question: [pc tower in the office]
+
+Elapsed 0:41:12 Current start position is [    -7.8402      3.1134     -4.5998]
+Elapsed 0:43:11 ===Episode_id 1 task_id 2 task_level=room===
+SR: False, SPL: 0.0, Object category: pc tower, goal type: sequence===
+
+Elapsed 0:43:11 [baseline] task_level=room scene=00800-TEEsavR23oF episode=1 task=2 sec=118.802
+Elapsed 0:43:11 [BASELINE_LIVE_METRICS] rows=8 avg_sr=0.375000 avg_spl=0.272186 follower_error_count=0 levels=[object:n=0,sr=0.000000,spl=0.000000; room:n=3,sr=0.333333,spl=0.285261; region:n=3,sr=0.333333,spl=0.290999; instance:n=2,sr=0.500000,spl=0.224353] latest_scene=00800-TEEsavR23oF latest_episode=1 latest_task=2 latest_level=room by_level={"instance": {"avg_spl": 0.22435281769564389, "avg_sr": 0.5, "count": 2}, "object": {"avg_spl": 0.0, "avg_sr": 0.0, "count": 0}, "region": {"avg_spl": 0.2909985769071359, "avg_sr": 0.3333333333333333, "count": 3}, "room": {"avg_spl": 0.2852610851550409, "avg_sr": 0.3333333333333333, "count": 3}}
+Elapsed 0:43:11 
+
+Begin to process [00800-TEEsavR23oF_sequence_1_3] type: [region], Question: [bed in the bedroom that has bed with plain white sheets and light teal pillows, tall wooden headboard, Mickey Mouse plush on dark wood nightstand, matching wardrobe and beige armchair, TV on wood cabinet]
+
+Elapsed 0:43:11 Current start position is [    -3.7389      3.1533     -4.9693]
+Elapsed 0:46:53 ===Episode_id 1 task_id 3 task_level=region===
+SR: False, SPL: 0.0, Object category: bed, goal type: sequence===
+
+Elapsed 0:46:53 [baseline] task_level=region scene=00800-TEEsavR23oF episode=1 task=3 sec=221.505
+Elapsed 0:46:53 [BASELINE_LIVE_METRICS] rows=9 avg_sr=0.333333 avg_spl=0.241943 follower_error_count=0 levels=[object:n=0,sr=0.000000,spl=0.000000; room:n=3,sr=0.333333,spl=0.285261; region:n=4,sr=0.250000,spl=0.218249; instance:n=2,sr=0.500000,spl=0.224353] latest_scene=00800-TEEsavR23oF latest_episode=1 latest_task=3 latest_level=region by_level={"instance": {"avg_spl": 0.22435281769564389, "avg_sr": 0.5, "count": 2}, "object": {"avg_spl": 0.0, "avg_sr": 0.0, "count": 0}, "region": {"avg_spl": 0.2182489326803519, "avg_sr": 0.25, "count": 4}, "room": {"avg_spl": 0.2852610851550409, "avg_sr": 0.3333333333333333, "count": 3}}
+Elapsed 0:46:53 
+
+Begin to process [00800-TEEsavR23oF_sequence_1_4] type: [object], Question: [shower curtain]
+
+Elapsed 0:46:53 Current start position is [    -1.0518      3.1158     -7.6198]
+Elapsed 0:49:13 ===Episode_id 1 task_id 4 task_level=object===
+SR: True, SPL: 0.8187929631700381, Object category: shower curtain, goal type: sequence===
+
+Elapsed 0:49:13 [baseline] task_level=object scene=00800-TEEsavR23oF episode=1 task=4 sec=140.649
+Elapsed 0:49:13 [BASELINE_LIVE_METRICS] rows=10 avg_sr=0.400000 avg_spl=0.299628 follower_error_count=0 levels=[object:n=1,sr=1.000000,spl=0.818793; room:n=3,sr=0.333333,spl=0.285261; region:n=4,sr=0.250000,spl=0.218249; instance:n=2,sr=0.500000,spl=0.224353] latest_scene=00800-TEEsavR23oF latest_episode=1 latest_task=4 latest_level=object by_level={"instance": {"avg_spl": 0.22435281769564389, "avg_sr": 0.5, "count": 2}, "object": {"avg_spl": 0.8187929631700381, "avg_sr": 1.0, "count": 1}, "region": {"avg_spl": 0.2182489326803519, "avg_sr": 0.25, "count": 4}, "room": {"avg_spl": 0.2852610851550409, "avg_sr": 0.3333333333333333, "count": 3}}
+Elapsed 0:49:13 [Metrics] sequence count: 10, invalid_count: 0, follower_error_count: 0, avg_sr: 0.400000, avg_spl: 0.299628
+
+=== Episode ===: 2it [48:49, 1439.99s/it][AElapsed 0:49:19 
+
+Begin to process [00800-TEEsavR23oF_sequence_2_0] type: [instance], Question: [white bed with mint pillows and wood headboard in bedroom with Mickey Mouse plush on dark wood nightstand and TV on wood cabinet]
+
+Elapsed 0:49:19 Current start position is [    -5.1674      3.1134     -1.1771]
+Elapsed 1:03:01 ===Episode_id 2 task_id 0 task_level=instance===
+SR: False, SPL: 0.0, Object category: bed, goal type: sequence===
+
+Elapsed 1:03:01 [baseline] task_level=instance scene=00800-TEEsavR23oF episode=2 task=0 sec=822.299
+Elapsed 1:03:01 [BASELINE_LIVE_METRICS] rows=11 avg_sr=0.363636 avg_spl=0.272389 follower_error_count=0 levels=[object:n=1,sr=1.000000,spl=0.818793; room:n=3,sr=0.333333,spl=0.285261; region:n=4,sr=0.250000,spl=0.218249; instance:n=3,sr=0.333333,spl=0.149569] latest_scene=00800-TEEsavR23oF latest_episode=2 latest_task=0 latest_level=instance by_level={"instance": {"avg_spl": 0.14956854513042925, "avg_sr": 0.3333333333333333, "count": 3}, "object": {"avg_spl": 0.8187929631700381, "avg_sr": 1.0, "count": 1}, "region": {"avg_spl": 0.2182489326803519, "avg_sr": 0.25, "count": 4}, "room": {"avg_spl": 0.2852610851550409, "avg_sr": 0.3333333333333333, "count": 3}}
+Elapsed 1:03:01 
+
+Begin to process [00800-TEEsavR23oF_sequence_2_1] type: [room], Question: [wardrobe in the office]
+
+Elapsed 1:03:01 Current start position is [    -1.0642      3.1158     -7.6066]
+Elapsed 1:04:36 ===Episode_id 2 task_id 1 task_level=room===
+SR: False, SPL: 0.0, Object category: wardrobe, goal type: sequence===
+
+Elapsed 1:04:36 [baseline] task_level=room scene=00800-TEEsavR23oF episode=2 task=1 sec=94.760
+Elapsed 1:04:36 [BASELINE_LIVE_METRICS] rows=12 avg_sr=0.333333 avg_spl=0.249690 follower_error_count=0 levels=[object:n=1,sr=1.000000,spl=0.818793; room:n=4,sr=0.250000,spl=0.213946; region:n=4,sr=0.250000,spl=0.218249; instance:n=3,sr=0.333333,spl=0.149569] latest_scene=00800-TEEsavR23oF latest_episode=2 latest_task=1 latest_level=room by_level={"instance": {"avg_spl": 0.14956854513042925, "avg_sr": 0.3333333333333333, "count": 3}, "object": {"avg_spl": 0.8187929631700381, "avg_sr": 1.0, "count": 1}, "region": {"avg_spl": 0.2182489326803519, "avg_sr": 0.25, "count": 4}, "room": {"avg_spl": 0.21394581386628067, "avg_sr": 0.25, "count": 4}}
+Elapsed 1:04:36 
+
+Begin to process [00800-TEEsavR23oF_sequence_2_2] type: [object], Question: [shower curtain]
+
+Elapsed 1:04:36 Current start position is [     -3.454      3.1134     -1.8659]
+Elapsed 1:06:27 ===Episode_id 2 task_id 2 task_level=object===
+SR: True, SPL: 0.8476801065263797, Object category: shower curtain, goal type: sequence===
+
+Elapsed 1:06:27 [baseline] task_level=object scene=00800-TEEsavR23oF episode=2 task=2 sec=110.694
+Elapsed 1:06:27 [BASELINE_LIVE_METRICS] rows=13 avg_sr=0.384615 avg_spl=0.295689 follower_error_count=0 levels=[object:n=2,sr=1.000000,spl=0.833237; room:n=4,sr=0.250000,spl=0.213946; region:n=4,sr=0.250000,spl=0.218249; instance:n=3,sr=0.333333,spl=0.149569] latest_scene=00800-TEEsavR23oF latest_episode=2 latest_task=2 latest_level=object by_level={"instance": {"avg_spl": 0.14956854513042925, "avg_sr": 0.3333333333333333, "count": 3}, "object": {"avg_spl": 0.8332365348482089, "avg_sr": 1.0, "count": 2}, "region": {"avg_spl": 0.2182489326803519, "avg_sr": 0.25, "count": 4}, "room": {"avg_spl": 0.21394581386628067, "avg_sr": 0.25, "count": 4}}
+Elapsed 1:06:27 
+
+Begin to process [00800-TEEsavR23oF_sequence_2_3] type: [room], Question: [side table in the office]
+
+Elapsed 1:06:27 Current start position is [    -6.0261      3.1134     -7.8177]
+Elapsed 1:07:45 ===Episode_id 2 task_id 3 task_level=room===
+SR: True, SPL: 0.5567057063333696, Object category: side table, goal type: sequence===
+
+Elapsed 1:07:45 [baseline] task_level=room scene=00800-TEEsavR23oF episode=2 task=3 sec=77.933
+Elapsed 1:07:45 [BASELINE_LIVE_METRICS] rows=14 avg_sr=0.428571 avg_spl=0.314333 follower_error_count=0 levels=[object:n=2,sr=1.000000,spl=0.833237; room:n=5,sr=0.400000,spl=0.282498; region:n=4,sr=0.250000,spl=0.218249; instance:n=3,sr=0.333333,spl=0.149569] latest_scene=00800-TEEsavR23oF latest_episode=2 latest_task=3 latest_level=room by_level={"instance": {"avg_spl": 0.14956854513042925, "avg_sr": 0.3333333333333333, "count": 3}, "object": {"avg_spl": 0.8332365348482089, "avg_sr": 1.0, "count": 2}, "region": {"avg_spl": 0.2182489326803519, "avg_sr": 0.25, "count": 4}, "room": {"avg_spl": 0.2824977923596984, "avg_sr": 0.4, "count": 5}}
+Elapsed 1:07:45 
+
+Begin to process [00800-TEEsavR23oF_sequence_2_4] type: [room], Question: [cross trainer in the office]
+
+Elapsed 1:07:45 Current start position is [    -5.9288      3.1134     0.07712]
+Elapsed 1:10:22 ===Episode_id 2 task_id 4 task_level=room===
+SR: True, SPL: 0.5049607647051263, Object category: cross trainer, goal type: sequence===
+
+Elapsed 1:10:22 [baseline] task_level=room scene=00800-TEEsavR23oF episode=2 task=4 sec=156.706
+Elapsed 1:10:22 [BASELINE_LIVE_METRICS] rows=15 avg_sr=0.466667 avg_spl=0.327042 follower_error_count=0 levels=[object:n=2,sr=1.000000,spl=0.833237; room:n=6,sr=0.500000,spl=0.319575; region:n=4,sr=0.250000,spl=0.218249; instance:n=3,sr=0.333333,spl=0.149569] latest_scene=00800-TEEsavR23oF latest_episode=2 latest_task=4 latest_level=room by_level={"instance": {"avg_spl": 0.14956854513042925, "avg_sr": 0.3333333333333333, "count": 3}, "object": {"avg_spl": 0.8332365348482089, "avg_sr": 1.0, "count": 2}, "region": {"avg_spl": 0.2182489326803519, "avg_sr": 0.25, "count": 4}, "room": {"avg_spl": 0.31957495441726974, "avg_sr": 0.5, "count": 6}}
+Elapsed 1:10:22 [Metrics] sequence count: 15, invalid_count: 0, follower_error_count: 0, avg_sr: 0.466667, avg_spl: 0.327042
+
+=== Episode ===: 3it [1:09:57, 1361.59s/it][AElapsed 1:10:27 
+
+Begin to process [00800-TEEsavR23oF_sequence_3_0] type: [instance], Question: [micky mouse plush toy in bedroom with bed having plain white sheets and light teal pillows and beige armchair]
+
+Elapsed 1:10:27 Current start position is [     -5.834      3.1134     -2.6407]
+Elapsed 1:33:24 ===Episode_id 3 task_id 0 task_level=instance===
+SR: True, SPL: 0.21292191119997164, Object category: plush toy, goal type: sequence===
+
+Elapsed 1:33:24 [baseline] task_level=instance scene=00800-TEEsavR23oF episode=3 task=0 sec=1376.948
+Elapsed 1:33:24 [BASELINE_LIVE_METRICS] rows=16 avg_sr=0.500000 avg_spl=0.319909 follower_error_count=0 levels=[object:n=2,sr=1.000000,spl=0.833237; room:n=6,sr=0.500000,spl=0.319575; region:n=4,sr=0.250000,spl=0.218249; instance:n=4,sr=0.500000,spl=0.165407] latest_scene=00800-TEEsavR23oF latest_episode=3 latest_task=0 latest_level=instance by_level={"instance": {"avg_spl": 0.16540688664781486, "avg_sr": 0.5, "count": 4}, "object": {"avg_spl": 0.8332365348482089, "avg_sr": 1.0, "count": 2}, "region": {"avg_spl": 0.2182489326803519, "avg_sr": 0.25, "count": 4}, "room": {"avg_spl": 0.31957495441726974, "avg_sr": 0.5, "count": 6}}
+Elapsed 1:33:24 
+
+Begin to process [00800-TEEsavR23oF_sequence_3_1] type: [region], Question: [blanket in the office that has computer desk with printer and black PC tower, black office chair below colorful painting, rack with books and wicker basket, brown leather couch with diamond-patterned blanket by railing]
+
+Elapsed 1:33:24 Current start position is [    -1.9399      3.1592     -8.5191]
+Elapsed 1:35:09 ===Episode_id 3 task_id 1 task_level=region===
+SR: False, SPL: 0.0, Object category: blanket, goal type: sequence===
+
+Elapsed 1:35:09 [baseline] task_level=region scene=00800-TEEsavR23oF episode=3 task=1 sec=105.237
+Elapsed 1:35:09 [BASELINE_LIVE_METRICS] rows=17 avg_sr=0.470588 avg_spl=0.301091 follower_error_count=0 levels=[object:n=2,sr=1.000000,spl=0.833237; room:n=6,sr=0.500000,spl=0.319575; region:n=5,sr=0.200000,spl=0.174599; instance:n=4,sr=0.500000,spl=0.165407] latest_scene=00800-TEEsavR23oF latest_episode=3 latest_task=1 latest_level=region by_level={"instance": {"avg_spl": 0.16540688664781486, "avg_sr": 0.5, "count": 4}, "object": {"avg_spl": 0.8332365348482089, "avg_sr": 1.0, "count": 2}, "region": {"avg_spl": 0.17459914614428151, "avg_sr": 0.2, "count": 5}, "room": {"avg_spl": 0.31957495441726974, "avg_sr": 0.5, "count": 6}}
+Elapsed 1:35:09 
+
+Begin to process [00800-TEEsavR23oF_sequence_3_2] type: [object], Question: [shower curtain]
+
+Elapsed 1:35:09 Current start position is [    -3.6756      3.1134      -1.268]
+Elapsed 1:36:39 ===Episode_id 3 task_id 2 task_level=object===
+SR: True, SPL: 0.8718919918110812, Object category: shower curtain, goal type: sequence===
+
+Elapsed 1:36:39 [baseline] task_level=object scene=00800-TEEsavR23oF episode=3 task=2 sec=90.015
+Elapsed 1:36:39 [BASELINE_LIVE_METRICS] rows=18 avg_sr=0.500000 avg_spl=0.332802 follower_error_count=0 levels=[object:n=3,sr=1.000000,spl=0.846122; room:n=6,sr=0.500000,spl=0.319575; region:n=5,sr=0.200000,spl=0.174599; instance:n=4,sr=0.500000,spl=0.165407] latest_scene=00800-TEEsavR23oF latest_episode=3 latest_task=2 latest_level=object by_level={"instance": {"avg_spl": 0.16540688664781486, "avg_sr": 0.5, "count": 4}, "object": {"avg_spl": 0.8461216871691665, "avg_sr": 1.0, "count": 3}, "region": {"avg_spl": 0.17459914614428151, "avg_sr": 0.2, "count": 5}, "room": {"avg_spl": 0.31957495441726974, "avg_sr": 0.5, "count": 6}}
+Elapsed 1:36:39 
+
+Begin to process [00800-TEEsavR23oF_sequence_3_3] type: [object], Question: [tv]
+
+Elapsed 1:36:39 Current start position is [    -5.9772      3.1134      -7.736]
+Elapsed 1:38:05 ===Episode_id 3 task_id 3 task_level=object===
+SR: True, SPL: 0.7651961586876797, Object category: tv, goal type: sequence===
+
+Elapsed 1:38:05 [baseline] task_level=object scene=00800-TEEsavR23oF episode=3 task=3 sec=86.003
+Elapsed 1:38:05 [BASELINE_LIVE_METRICS] rows=19 avg_sr=0.526316 avg_spl=0.355560 follower_error_count=0 levels=[object:n=4,sr=1.000000,spl=0.825890; room:n=6,sr=0.500000,spl=0.319575; region:n=5,sr=0.200000,spl=0.174599; instance:n=4,sr=0.500000,spl=0.165407] latest_scene=00800-TEEsavR23oF latest_episode=3 latest_task=3 latest_level=object by_level={"instance": {"avg_spl": 0.16540688664781486, "avg_sr": 0.5, "count": 4}, "object": {"avg_spl": 0.8258903050487947, "avg_sr": 1.0, "count": 4}, "region": {"avg_spl": 0.17459914614428151, "avg_sr": 0.2, "count": 5}, "room": {"avg_spl": 0.31957495441726974, "avg_sr": 0.5, "count": 6}}
+Elapsed 1:38:05 
+
+Begin to process [00800-TEEsavR23oF_sequence_3_4] type: [object], Question: [photo]
+
+Elapsed 1:38:05 Current start position is [   -0.18187      3.1134     -5.6016]
+Elapsed 1:39:16 ===Episode_id 3 task_id 4 task_level=object===
+SR: False, SPL: 0.0, Object category: photo, goal type: sequence===
+
+Elapsed 1:39:16 [baseline] task_level=object scene=00800-TEEsavR23oF episode=3 task=4 sec=71.049
+Elapsed 1:39:16 [BASELINE_LIVE_METRICS] rows=20 avg_sr=0.500000 avg_spl=0.337782 follower_error_count=0 levels=[object:n=5,sr=0.800000,spl=0.660712; room:n=6,sr=0.500000,spl=0.319575; region:n=5,sr=0.200000,spl=0.174599; instance:n=4,sr=0.500000,spl=0.165407] latest_scene=00800-TEEsavR23oF latest_episode=3 latest_task=4 latest_level=object by_level={"instance": {"avg_spl": 0.16540688664781486, "avg_sr": 0.5, "count": 4}, "object": {"avg_spl": 0.6607122440390357, "avg_sr": 0.8, "count": 5}, "region": {"avg_spl": 0.17459914614428151, "avg_sr": 0.2, "count": 5}, "room": {"avg_spl": 0.31957495441726974, "avg_sr": 0.5, "count": 6}}
+Elapsed 1:39:16 [Metrics] sequence count: 20, invalid_count: 0, follower_error_count: 0, avg_sr: 0.500000, avg_spl: 0.337782
+
+=== Episode ===: 4it [1:38:51, 1508.79s/it][AElapsed 1:39:22 
+
+Begin to process [00800-TEEsavR23oF_sequence_4_0] type: [instance], Question: [beige bear plush toy beside Mickey Mouse plush toy on nightstand in bedroom with bed having plain white sheets and light teal pillows]
+
+Elapsed 1:39:22 Current start position is [    -5.1054      3.1134     -1.5611]
+Elapsed 1:51:44 ===Episode_id 4 task_id 0 task_level=instance===
+SR: False, SPL: 0.0, Object category: plush toy, goal type: sequence===
+
+Elapsed 1:51:44 [baseline] task_level=instance scene=00800-TEEsavR23oF episode=4 task=0 sec=742.131
+Elapsed 1:51:44 [BASELINE_LIVE_METRICS] rows=21 avg_sr=0.476190 avg_spl=0.321697 follower_error_count=0 levels=[object:n=5,sr=0.800000,spl=0.660712; room:n=6,sr=0.500000,spl=0.319575; region:n=5,sr=0.200000,spl=0.174599; instance:n=5,sr=0.400000,spl=0.132326] latest_scene=00800-TEEsavR23oF latest_episode=4 latest_task=0 latest_level=instance by_level={"instance": {"avg_spl": 0.13232550931825188, "avg_sr": 0.4, "count": 5}, "object": {"avg_spl": 0.6607122440390357, "avg_sr": 0.8, "count": 5}, "region": {"avg_spl": 0.17459914614428151, "avg_sr": 0.2, "count": 5}, "room": {"avg_spl": 0.31957495441726974, "avg_sr": 0.5, "count": 6}}
+Elapsed 1:51:44 
+
+Begin to process [00800-TEEsavR23oF_sequence_4_1] type: [room], Question: [table in the office]
+
+Elapsed 1:51:44 Current start position is [    -4.2696      3.1134     -2.5778]
+Elapsed 1:53:25 ===Episode_id 4 task_id 1 task_level=room===
+SR: True, SPL: 0.6254160170115065, Object category: table, goal type: sequence===
+
+Elapsed 1:53:25 [baseline] task_level=room scene=00800-TEEsavR23oF episode=4 task=1 sec=100.441
+Elapsed 1:53:25 [BASELINE_LIVE_METRICS] rows=22 avg_sr=0.500000 avg_spl=0.335502 follower_error_count=0 levels=[object:n=5,sr=0.800000,spl=0.660712; room:n=7,sr=0.571429,spl=0.363267; region:n=5,sr=0.200000,spl=0.174599; instance:n=5,sr=0.400000,spl=0.132326] latest_scene=00800-TEEsavR23oF latest_episode=4 latest_task=1 latest_level=room by_level={"instance": {"avg_spl": 0.13232550931825188, "avg_sr": 0.4, "count": 5}, "object": {"avg_spl": 0.6607122440390357, "avg_sr": 0.8, "count": 5}, "region": {"avg_spl": 0.17459914614428151, "avg_sr": 0.2, "count": 5}, "room": {"avg_spl": 0.363266534787875, "avg_sr": 0.5714285714285714, "count": 7}}
+Elapsed 1:53:25 
+
+Begin to process [00800-TEEsavR23oF_sequence_4_2] type: [region], Question: [wardrobe in the bedroom that has bed with plain white sheets and light teal pillows, tall wooden headboard, Mickey Mouse plush on dark wood nightstand, matching wardrobe and beige armchair, TV on wood cabinet]
+
+Elapsed 1:53:25 Current start position is [    -5.9102      3.1134     -2.7898]
+Elapsed 2:00:00 ===Episode_id 4 task_id 2 task_level=region===
+SR: False, SPL: 0.0, Object category: wardrobe, goal type: sequence===
+
+Elapsed 2:00:00 [baseline] task_level=region scene=00800-TEEsavR23oF episode=4 task=2 sec=395.480
+Elapsed 2:00:00 [BASELINE_LIVE_METRICS] rows=23 avg_sr=0.478261 avg_spl=0.320915 follower_error_count=0 levels=[object:n=5,sr=0.800000,spl=0.660712; room:n=7,sr=0.571429,spl=0.363267; region:n=6,sr=0.166667,spl=0.145499; instance:n=5,sr=0.400000,spl=0.132326] latest_scene=00800-TEEsavR23oF latest_episode=4 latest_task=2 latest_level=region by_level={"instance": {"avg_spl": 0.13232550931825188, "avg_sr": 0.4, "count": 5}, "object": {"avg_spl": 0.6607122440390357, "avg_sr": 0.8, "count": 5}, "region": {"avg_spl": 0.14549928845356794, "avg_sr": 0.16666666666666666, "count": 6}, "room": {"avg_spl": 0.363266534787875, "avg_sr": 0.5714285714285714, "count": 7}}
+Elapsed 2:00:00 
+
+Begin to process [00800-TEEsavR23oF_sequence_4_3] type: [region], Question: [cabinet in the bathroom that has toilet beside black toilet brush, dark wood single-sink vanity by dark blue bath mat, hanging beige towel, blue shower curtain with seashell, starfish, and coral motifs]
+
+Elapsed 2:00:00 Current start position is [    -1.1455      3.1145     -7.5513]
+Elapsed 2:01:21 ===Episode_id 4 task_id 3 task_level=region===
+SR: True, SPL: 0.8415766024728917, Object category: cabinet, goal type: sequence===
+
+Elapsed 2:01:21 [baseline] task_level=region scene=00800-TEEsavR23oF episode=4 task=3 sec=80.748
+Elapsed 2:01:21 [BASELINE_LIVE_METRICS] rows=24 avg_sr=0.500000 avg_spl=0.342609 follower_error_count=0 levels=[object:n=5,sr=0.800000,spl=0.660712; room:n=7,sr=0.571429,spl=0.363267; region:n=7,sr=0.285714,spl=0.244939; instance:n=5,sr=0.400000,spl=0.132326] latest_scene=00800-TEEsavR23oF latest_episode=4 latest_task=3 latest_level=region by_level={"instance": {"avg_spl": 0.13232550931825188, "avg_sr": 0.4, "count": 5}, "object": {"avg_spl": 0.6607122440390357, "avg_sr": 0.8, "count": 5}, "region": {"avg_spl": 0.24493890474204275, "avg_sr": 0.2857142857142857, "count": 7}, "room": {"avg_spl": 0.363266534787875, "avg_sr": 0.5714285714285714, "count": 7}}
+Elapsed 2:01:21 
+
+Begin to process [00800-TEEsavR23oF_sequence_4_4] type: [region], Question: [tv in the bedroom that has bed with plain white sheets and light teal pillows, tall wooden headboard, Mickey Mouse plush on dark wood nightstand, matching wardrobe and beige armchair, TV on wood cabinet]
+
+Elapsed 2:01:21 Current start position is [    -4.1198      3.1503     -7.7757]
+Elapsed 2:02:27 ===Episode_id 4 task_id 4 task_level=region===
+SR: True, SPL: 0.7230783640662668, Object category: tv, goal type: sequence===
+
+Elapsed 2:02:27 [baseline] task_level=region scene=00800-TEEsavR23oF episode=4 task=4 sec=66.344
+Elapsed 2:02:27 [BASELINE_LIVE_METRICS] rows=25 avg_sr=0.520000 avg_spl=0.357828 follower_error_count=0 levels=[object:n=5,sr=0.800000,spl=0.660712; room:n=7,sr=0.571429,spl=0.363267; region:n=8,sr=0.375000,spl=0.304706; instance:n=5,sr=0.400000,spl=0.132326] latest_scene=00800-TEEsavR23oF latest_episode=4 latest_task=4 latest_level=region by_level={"instance": {"avg_spl": 0.13232550931825188, "avg_sr": 0.4, "count": 5}, "object": {"avg_spl": 0.6607122440390357, "avg_sr": 0.8, "count": 5}, "region": {"avg_spl": 0.3047063371575708, "avg_sr": 0.375, "count": 8}, "room": {"avg_spl": 0.363266534787875, "avg_sr": 0.5714285714285714, "count": 7}}
+Elapsed 2:02:27 [Metrics] sequence count: 25, invalid_count: 0, follower_error_count: 0, avg_sr: 0.520000, avg_spl: 0.357828
+
+=== Episode ===: 5it [2:02:03, 1466.37s/it][AElapsed 2:02:33 
+
+Begin to process [00800-TEEsavR23oF_sequence_5_0] type: [instance], Question: [beige bath towel on rack in bathroom with toilet, dark wood single-sink vanity, blue shower curtain with seashell, starfish, and coral motifs]
+
+Elapsed 2:02:33 Current start position is [    -4.5575      3.1134    -0.97152]
+Elapsed 2:03:47 geodesic_distance: 2.883424997329712
+Elapsed 2:03:47 [baseline][follow-error] scene=00800-TEEsavR23oF episode_id=5 task_id=0 task_level=instance final=False error=GreedyFollowerError path_found=True
+Elapsed 2:03:47 ===Episode_id 5 task_id 0 task_level=instance===
+SR: 0, SPL: 0, Object category: towel, goal type: sequence===
+
+Elapsed 2:03:47 [baseline] task_level=instance scene=00800-TEEsavR23oF episode=5 task=0 sec=74.021
+Elapsed 2:03:47 [BASELINE_LIVE_METRICS] rows=26 avg_sr=0.500000 avg_spl=0.344066 follower_error_count=1 levels=[object:n=5,sr=0.800000,spl=0.660712; room:n=7,sr=0.571429,spl=0.363267; region:n=8,sr=0.375000,spl=0.304706; instance:n=6,sr=0.333333,spl=0.110271] latest_scene=00800-TEEsavR23oF latest_episode=5 latest_task=0 latest_level=instance by_level={"instance": {"avg_spl": 0.1102712577652099, "avg_sr": 0.3333333333333333, "count": 6}, "object": {"avg_spl": 0.6607122440390357, "avg_sr": 0.8, "count": 5}, "region": {"avg_spl": 0.3047063371575708, "avg_sr": 0.375, "count": 8}, "room": {"avg_spl": 0.363266534787875, "avg_sr": 0.5714285714285714, "count": 7}}
+Elapsed 2:03:47 
+
+Begin to process [00800-TEEsavR23oF_sequence_5_1] type: [room], Question: [picture in the living room]
+
+Elapsed 2:03:47 Current start position is [    -4.5575      3.1134    -0.97152]
+Elapsed 2:05:01 ===Episode_id 5 task_id 1 task_level=room===
+SR: False, SPL: 0.0, Object category: picture, goal type: sequence===
+
+Elapsed 2:05:01 [baseline] task_level=room scene=00800-TEEsavR23oF episode=5 task=1 sec=73.824
+Elapsed 2:05:01 [BASELINE_LIVE_METRICS] rows=27 avg_sr=0.481481 avg_spl=0.331322 follower_error_count=1 levels=[object:n=5,sr=0.800000,spl=0.660712; room:n=8,sr=0.500000,spl=0.317858; region:n=8,sr=0.375000,spl=0.304706; instance:n=6,sr=0.333333,spl=0.110271] latest_scene=00800-TEEsavR23oF latest_episode=5 latest_task=1 latest_level=room by_level={"instance": {"avg_spl": 0.1102712577652099, "avg_sr": 0.3333333333333333, "count": 6}, "object": {"avg_spl": 0.6607122440390357, "avg_sr": 0.8, "count": 5}, "region": {"avg_spl": 0.3047063371575708, "avg_sr": 0.375, "count": 8}, "room": {"avg_spl": 0.3178582179393906, "avg_sr": 0.5, "count": 8}}
+Elapsed 2:05:01 
+
+Begin to process [00800-TEEsavR23oF_sequence_5_2] type: [region], Question: [wardrobe in the bedroom that has bed with plain white sheets and light teal pillows, tall wooden headboard, Mickey Mouse plush on dark wood nightstand, matching wardrobe and beige armchair, TV on wood cabinet]
+
+Elapsed 2:05:01 Current start position is [    -5.8479      3.1134   -0.072122]
+Elapsed 2:06:20 ===Episode_id 5 task_id 2 task_level=region===
+SR: False, SPL: 0.0, Object category: wardrobe, goal type: sequence===
+
+Elapsed 2:06:20 [baseline] task_level=region scene=00800-TEEsavR23oF episode=5 task=2 sec=79.219
+Elapsed 2:06:20 [BASELINE_LIVE_METRICS] rows=28 avg_sr=0.464286 avg_spl=0.319489 follower_error_count=1 levels=[object:n=5,sr=0.800000,spl=0.660712; room:n=8,sr=0.500000,spl=0.317858; region:n=9,sr=0.333333,spl=0.270850; instance:n=6,sr=0.333333,spl=0.110271] latest_scene=00800-TEEsavR23oF latest_episode=5 latest_task=2 latest_level=region by_level={"instance": {"avg_spl": 0.1102712577652099, "avg_sr": 0.3333333333333333, "count": 6}, "object": {"avg_spl": 0.6607122440390357, "avg_sr": 0.8, "count": 5}, "region": {"avg_spl": 0.27085007747339623, "avg_sr": 0.3333333333333333, "count": 9}, "room": {"avg_spl": 0.3178582179393906, "avg_sr": 0.5, "count": 8}}
+Elapsed 2:06:20 
+
+Begin to process [00800-TEEsavR23oF_sequence_5_3] type: [room], Question: [side table in the office]
+
+Elapsed 2:06:20 Current start position is [    -3.4716      3.1134     -1.8482]
+Elapsed 2:07:30 ===Episode_id 5 task_id 3 task_level=room===
+SR: True, SPL: 0.39406908638594157, Object category: side table, goal type: sequence===
+
+Elapsed 2:07:30 [baseline] task_level=room scene=00800-TEEsavR23oF episode=5 task=3 sec=69.574
+Elapsed 2:07:30 [BASELINE_LIVE_METRICS] rows=29 avg_sr=0.482759 avg_spl=0.322061 follower_error_count=1 levels=[object:n=5,sr=0.800000,spl=0.660712; room:n=9,sr=0.555556,spl=0.326326; region:n=9,sr=0.333333,spl=0.270850; instance:n=6,sr=0.333333,spl=0.110271] latest_scene=00800-TEEsavR23oF latest_episode=5 latest_task=3 latest_level=room by_level={"instance": {"avg_spl": 0.1102712577652099, "avg_sr": 0.3333333333333333, "count": 6}, "object": {"avg_spl": 0.6607122440390357, "avg_sr": 0.8, "count": 5}, "region": {"avg_spl": 0.27085007747339623, "avg_sr": 0.3333333333333333, "count": 9}, "room": {"avg_spl": 0.3263260922112296, "avg_sr": 0.5555555555555556, "count": 9}}
+Elapsed 2:07:30 
+
+Begin to process [00800-TEEsavR23oF_sequence_5_4] type: [room], Question: [shower curtain in the bathroom]
+
+Elapsed 2:07:30 Current start position is [    -5.8992      3.1134    0.050335]
+Elapsed 2:08:53 ===Episode_id 5 task_id 4 task_level=room===
+SR: False, SPL: 0.0, Object category: shower curtain, goal type: sequence===
+
+Elapsed 2:08:53 [baseline] task_level=room scene=00800-TEEsavR23oF episode=5 task=4 sec=83.644
+Elapsed 2:08:53 [BASELINE_LIVE_METRICS] rows=30 avg_sr=0.466667 avg_spl=0.311326 follower_error_count=1 levels=[object:n=5,sr=0.800000,spl=0.660712; room:n=10,sr=0.500000,spl=0.293693; region:n=9,sr=0.333333,spl=0.270850; instance:n=6,sr=0.333333,spl=0.110271] latest_scene=00800-TEEsavR23oF latest_episode=5 latest_task=4 latest_level=room by_level={"instance": {"avg_spl": 0.1102712577652099, "avg_sr": 0.3333333333333333, "count": 6}, "object": {"avg_spl": 0.6607122440390357, "avg_sr": 0.8, "count": 5}, "region": {"avg_spl": 0.27085007747339623, "avg_sr": 0.3333333333333333, "count": 9}, "room": {"avg_spl": 0.29369348299010667, "avg_sr": 0.5, "count": 10}}
+Elapsed 2:08:53 [Metrics] sequence count: 30, invalid_count: 0, follower_error_count: 1, avg_sr: 0.466667, avg_spl: 0.311326
+
+=== Episode ===: 6it [2:08:29, 1099.10s/it][AElapsed 2:08:59 
+
+Begin to process [00800-TEEsavR23oF_sequence_6_0] type: [instance], Question: [blue seashell-patterned shower curtain in bathroom with dark wood single-sink vanity]
+
+Elapsed 2:08:59 Current start position is [    -4.0158      3.1134     -2.3666]
+Elapsed 2:19:13 ===Episode_id 6 task_id 0 task_level=instance===
+SR: False, SPL: 0.0, Object category: shower curtain, goal type: sequence===
+
+Elapsed 2:19:13 [baseline] task_level=instance scene=00800-TEEsavR23oF episode=6 task=0 sec=614.145
+Elapsed 2:19:13 [BASELINE_LIVE_METRICS] rows=31 avg_sr=0.451613 avg_spl=0.301283 follower_error_count=1 levels=[object:n=5,sr=0.800000,spl=0.660712; room:n=10,sr=0.500000,spl=0.293693; region:n=9,sr=0.333333,spl=0.270850; instance:n=7,sr=0.285714,spl=0.094518] latest_scene=00800-TEEsavR23oF latest_episode=6 latest_task=0 latest_level=instance by_level={"instance": {"avg_spl": 0.09451822094160849, "avg_sr": 0.2857142857142857, "count": 7}, "object": {"avg_spl": 0.6607122440390357, "avg_sr": 0.8, "count": 5}, "region": {"avg_spl": 0.27085007747339623, "avg_sr": 0.3333333333333333, "count": 9}, "room": {"avg_spl": 0.29369348299010667, "avg_sr": 0.5, "count": 10}}
+Elapsed 2:19:13 
+
+Begin to process [00800-TEEsavR23oF_sequence_6_1] type: [object], Question: [couch]
+
+Elapsed 2:19:13 Current start position is [    -4.0322      3.1511     -7.9184]
+Elapsed 2:20:16 ===Episode_id 6 task_id 1 task_level=object===
+SR: True, SPL: 0.5207876209335301, Object category: couch, goal type: sequence===
+
+Elapsed 2:20:16 [baseline] task_level=object scene=00800-TEEsavR23oF episode=6 task=1 sec=62.598
+Elapsed 2:20:16 [BASELINE_LIVE_METRICS] rows=32 avg_sr=0.468750 avg_spl=0.308143 follower_error_count=1 levels=[object:n=6,sr=0.833333,spl=0.637391; room:n=10,sr=0.500000,spl=0.293693; region:n=9,sr=0.333333,spl=0.270850; instance:n=7,sr=0.285714,spl=0.094518] latest_scene=00800-TEEsavR23oF latest_episode=6 latest_task=1 latest_level=object by_level={"instance": {"avg_spl": 0.09451822094160849, "avg_sr": 0.2857142857142857, "count": 7}, "object": {"avg_spl": 0.6373914735214515, "avg_sr": 0.8333333333333334, "count": 6}, "region": {"avg_spl": 0.27085007747339623, "avg_sr": 0.3333333333333333, "count": 9}, "room": {"avg_spl": 0.29369348299010667, "avg_sr": 0.5, "count": 10}}
+Elapsed 2:20:16 
+
+Begin to process [00800-TEEsavR23oF_sequence_6_2] type: [region], Question: [plush toy in the bedroom that has bed with plain white sheets and light teal pillows, tall wooden headboard, Mickey Mouse plush on dark wood nightstand, matching wardrobe and beige armchair, TV on wood cabinet]
+
+Elapsed 2:20:16 Current start position is [    -4.7029      3.1134     -2.6103]
+Elapsed 2:27:11 ===Episode_id 6 task_id 2 task_level=region===
+SR: True, SPL: 0.8037086828905277, Object category: plush toy, goal type: sequence===
+
+Elapsed 2:27:11 [baseline] task_level=region scene=00800-TEEsavR23oF episode=6 task=2 sec=414.958
+Elapsed 2:27:11 [BASELINE_LIVE_METRICS] rows=33 avg_sr=0.484848 avg_spl=0.323160 follower_error_count=1 levels=[object:n=6,sr=0.833333,spl=0.637391; room:n=10,sr=0.500000,spl=0.293693; region:n=10,sr=0.400000,spl=0.324136; instance:n=7,sr=0.285714,spl=0.094518] latest_scene=00800-TEEsavR23oF latest_episode=6 latest_task=2 latest_level=region by_level={"instance": {"avg_spl": 0.09451822094160849, "avg_sr": 0.2857142857142857, "count": 7}, "object": {"avg_spl": 0.6373914735214515, "avg_sr": 0.8333333333333334, "count": 6}, "region": {"avg_spl": 0.32413593801510937, "avg_sr": 0.4, "count": 10}, "room": {"avg_spl": 0.29369348299010667, "avg_sr": 0.5, "count": 10}}
+Elapsed 2:27:11 
+
+Begin to process [00800-TEEsavR23oF_sequence_6_3] type: [region], Question: [computer desk in the office that has computer desk with printer and black PC tower, black office chair below colorful painting, rack with books and wicker basket, brown leather couch with diamond-patterned blanket by railing]
+
+Elapsed 2:27:11 Current start position is [    -1.9795      3.1558     -8.4886]
+Elapsed 2:28:12 ===Episode_id 6 task_id 3 task_level=region===
+SR: False, SPL: 0.0, Object category: computer desk, goal type: sequence===
+
+Elapsed 2:28:12 [baseline] task_level=region scene=00800-TEEsavR23oF episode=6 task=3 sec=60.791
+Elapsed 2:28:12 [BASELINE_LIVE_METRICS] rows=34 avg_sr=0.470588 avg_spl=0.313655 follower_error_count=1 levels=[object:n=6,sr=0.833333,spl=0.637391; room:n=10,sr=0.500000,spl=0.293693; region:n=11,sr=0.363636,spl=0.294669; instance:n=7,sr=0.285714,spl=0.094518] latest_scene=00800-TEEsavR23oF latest_episode=6 latest_task=3 latest_level=region by_level={"instance": {"avg_spl": 0.09451822094160849, "avg_sr": 0.2857142857142857, "count": 7}, "object": {"avg_spl": 0.6373914735214515, "avg_sr": 0.8333333333333334, "count": 6}, "region": {"avg_spl": 0.29466903455919036, "avg_sr": 0.36363636363636365, "count": 11}, "room": {"avg_spl": 0.29369348299010667, "avg_sr": 0.5, "count": 10}}
+Elapsed 2:28:12 
+
+Begin to process [00800-TEEsavR23oF_sequence_6_4] type: [region], Question: [bathroom cabinet in the bathroom that has toilet beside black toilet brush, dark wood single-sink vanity by dark blue bath mat, hanging beige towel, blue shower curtain with seashell, starfish, and coral motifs]
+
+Elapsed 2:28:12 Current start position is [    -5.8545      3.1134     0.01711]
+Elapsed 2:29:43 ===Episode_id 6 task_id 4 task_level=region===
+SR: True, SPL: 0.8663800084394819, Object category: bathroom cabinet, goal type: sequence===
+
+Elapsed 2:29:43 [baseline] task_level=region scene=00800-TEEsavR23oF episode=6 task=4 sec=91.349
+Elapsed 2:29:43 [BASELINE_LIVE_METRICS] rows=35 avg_sr=0.485714 avg_spl=0.329447 follower_error_count=1 levels=[object:n=6,sr=0.833333,spl=0.637391; room:n=10,sr=0.500000,spl=0.293693; region:n=12,sr=0.416667,spl=0.342312; instance:n=7,sr=0.285714,spl=0.094518] latest_scene=00800-TEEsavR23oF latest_episode=6 latest_task=4 latest_level=region by_level={"instance": {"avg_spl": 0.09451822094160849, "avg_sr": 0.2857142857142857, "count": 7}, "object": {"avg_spl": 0.6373914735214515, "avg_sr": 0.8333333333333334, "count": 6}, "region": {"avg_spl": 0.34231161571588126, "avg_sr": 0.4166666666666667, "count": 12}, "room": {"avg_spl": 0.29369348299010667, "avg_sr": 0.5, "count": 10}}
+Elapsed 2:29:43 [Metrics] sequence count: 35, invalid_count: 0, follower_error_count: 1, avg_sr: 0.485714, avg_spl: 0.329447
+
+=== Episode ===: 7it [2:29:18, 1148.32s/it][AElapsed 2:29:49 
+
+Begin to process [00800-TEEsavR23oF_sequence_7_0] type: [instance], Question: [dark wood-framed blackboard leaning against white door below doorknob with yellow-and-blue toy]
+
+Elapsed 2:29:49 Current start position is [    -3.8193      3.1134     -1.6744]
+Elapsed 2:45:57 ===Episode_id 7 task_id 0 task_level=instance===
+SR: False, SPL: 0.0, Object category: board, goal type: sequence===
+
+Elapsed 2:45:57 [baseline] task_level=instance scene=00800-TEEsavR23oF episode=7 task=0 sec=967.892
+Elapsed 2:45:57 [BASELINE_LIVE_METRICS] rows=36 avg_sr=0.472222 avg_spl=0.320296 follower_error_count=1 levels=[object:n=6,sr=0.833333,spl=0.637391; room:n=10,sr=0.500000,spl=0.293693; region:n=12,sr=0.416667,spl=0.342312; instance:n=8,sr=0.250000,spl=0.082703] latest_scene=00800-TEEsavR23oF latest_episode=7 latest_task=0 latest_level=instance by_level={"instance": {"avg_spl": 0.08270344332390743, "avg_sr": 0.25, "count": 8}, "object": {"avg_spl": 0.6373914735214515, "avg_sr": 0.8333333333333334, "count": 6}, "region": {"avg_spl": 0.34231161571588126, "avg_sr": 0.4166666666666667, "count": 12}, "room": {"avg_spl": 0.29369348299010667, "avg_sr": 0.5, "count": 10}}
+Elapsed 2:45:57 
+
+Begin to process [00800-TEEsavR23oF_sequence_7_1] type: [region], Question: [wardrobe in the bedroom that has bed with plain white sheets and light teal pillows, tall wooden headboard, Mickey Mouse plush on dark wood nightstand, matching wardrobe and beige armchair, TV on wood cabinet]
+
+Elapsed 2:45:57 Current start position is [    -3.5308      3.1134     -1.8729]
+Elapsed 2:48:10 ===Episode_id 7 task_id 1 task_level=region===
+SR: True, SPL: 0.688666974153995, Object category: wardrobe, goal type: sequence===
+
+Elapsed 2:48:10 [baseline] task_level=region scene=00800-TEEsavR23oF episode=7 task=1 sec=133.584
+Elapsed 2:48:10 [BASELINE_LIVE_METRICS] rows=37 avg_sr=0.486486 avg_spl=0.330252 follower_error_count=1 levels=[object:n=6,sr=0.833333,spl=0.637391; room:n=10,sr=0.500000,spl=0.293693; region:n=13,sr=0.461538,spl=0.368954; instance:n=8,sr=0.250000,spl=0.082703] latest_scene=00800-TEEsavR23oF latest_episode=7 latest_task=1 latest_level=region by_level={"instance": {"avg_spl": 0.08270344332390743, "avg_sr": 0.25, "count": 8}, "object": {"avg_spl": 0.6373914735214515, "avg_sr": 0.8333333333333334, "count": 6}, "region": {"avg_spl": 0.3689543355957362, "avg_sr": 0.46153846153846156, "count": 13}, "room": {"avg_spl": 0.29369348299010667, "avg_sr": 0.5, "count": 10}}
+Elapsed 2:48:10 
+
+Begin to process [00800-TEEsavR23oF_sequence_7_2] type: [region], Question: [blanket in the office that has computer desk with printer and black PC tower, black office chair below colorful painting, rack with books and wicker basket, brown leather couch with diamond-patterned blanket by railing]
+
+Elapsed 2:48:10 Current start position is [    -2.3047      3.1519     -7.3887]
+Elapsed 2:49:35 ===Episode_id 7 task_id 2 task_level=region===
+SR: True, SPL: 0.6882590779246469, Object category: blanket, goal type: sequence===
+
+Elapsed 2:49:35 [baseline] task_level=region scene=00800-TEEsavR23oF episode=7 task=2 sec=85.050
+Elapsed 2:49:35 [BASELINE_LIVE_METRICS] rows=38 avg_sr=0.500000 avg_spl=0.339673 follower_error_count=1 levels=[object:n=6,sr=0.833333,spl=0.637391; room:n=10,sr=0.500000,spl=0.293693; region:n=14,sr=0.500000,spl=0.391762; instance:n=8,sr=0.250000,spl=0.082703] latest_scene=00800-TEEsavR23oF latest_episode=7 latest_task=2 latest_level=region by_level={"instance": {"avg_spl": 0.08270344332390743, "avg_sr": 0.25, "count": 8}, "object": {"avg_spl": 0.6373914735214515, "avg_sr": 0.8333333333333334, "count": 6}, "region": {"avg_spl": 0.3917618171906584, "avg_sr": 0.5, "count": 14}, "room": {"avg_spl": 0.29369348299010667, "avg_sr": 0.5, "count": 10}}
+Elapsed 2:49:35 
+
+Begin to process [00800-TEEsavR23oF_sequence_7_3] type: [room], Question: [bath towel in the bathroom]
+
+Elapsed 2:49:35 Current start position is [    -5.8376      3.1134   -0.032055]
+Elapsed 2:52:19 geodesic_distance: 8.719730377197266
+Elapsed 2:52:19 [baseline][follow-error] scene=00800-TEEsavR23oF episode_id=7 task_id=3 task_level=room final=True error=GreedyFollowerError path_found=True
+Elapsed 2:52:19 ===Episode_id 7 task_id 3 task_level=room===
+SR: 0, SPL: 0, Object category: bath towel, goal type: sequence===
+
+Elapsed 2:52:19 [baseline] task_level=room scene=00800-TEEsavR23oF episode=7 task=3 sec=163.594
+Elapsed 2:52:19 [BASELINE_LIVE_METRICS] rows=39 avg_sr=0.487179 avg_spl=0.330964 follower_error_count=2 levels=[object:n=6,sr=0.833333,spl=0.637391; room:n=11,sr=0.454545,spl=0.266994; region:n=14,sr=0.500000,spl=0.391762; instance:n=8,sr=0.250000,spl=0.082703] latest_scene=00800-TEEsavR23oF latest_episode=7 latest_task=3 latest_level=room by_level={"instance": {"avg_spl": 0.08270344332390743, "avg_sr": 0.25, "count": 8}, "object": {"avg_spl": 0.6373914735214515, "avg_sr": 0.8333333333333334, "count": 6}, "region": {"avg_spl": 0.3917618171906584, "avg_sr": 0.5, "count": 14}, "room": {"avg_spl": 0.2669940754455515, "avg_sr": 0.45454545454545453, "count": 11}}
+Elapsed 2:52:19 
+
+Begin to process [00800-TEEsavR23oF_sequence_7_4] type: [region], Question: [photo in the office that has computer desk with printer and black PC tower, black office chair below colorful painting, rack with books and wicker basket, brown leather couch with diamond-patterned blanket by railing]
+
+Elapsed 2:52:19 Current start position is [    -5.8376      3.1134   -0.032055]
+Elapsed 2:54:55 ===Episode_id 7 task_id 4 task_level=region===
+SR: False, SPL: 0.0, Object category: photo, goal type: sequence===
+
+Elapsed 2:54:55 [baseline] task_level=region scene=00800-TEEsavR23oF episode=7 task=4 sec=155.742
+Elapsed 2:54:55 [BASELINE_LIVE_METRICS] rows=40 avg_sr=0.475000 avg_spl=0.322689 follower_error_count=2 levels=[object:n=6,sr=0.833333,spl=0.637391; room:n=11,sr=0.454545,spl=0.266994; region:n=15,sr=0.466667,spl=0.365644; instance:n=8,sr=0.250000,spl=0.082703] latest_scene=00800-TEEsavR23oF latest_episode=7 latest_task=4 latest_level=region by_level={"instance": {"avg_spl": 0.08270344332390743, "avg_sr": 0.25, "count": 8}, "object": {"avg_spl": 0.6373914735214515, "avg_sr": 0.8333333333333334, "count": 6}, "region": {"avg_spl": 0.36564436271128115, "avg_sr": 0.4666666666666667, "count": 15}, "room": {"avg_spl": 0.2669940754455515, "avg_sr": 0.45454545454545453, "count": 11}}
+Elapsed 2:54:55 [Metrics] sequence count: 40, invalid_count: 0, follower_error_count: 2, avg_sr: 0.475000, avg_spl: 0.322689
+
+=== Episode ===: 8it [2:54:30, 1264.02s/it][AElapsed 2:55:00 
+
+Begin to process [00800-TEEsavR23oF_sequence_8_0] type: [instance], Question: [black cross trainer in office with computer desk beside brown leather couch]
+
+Elapsed 2:55:00 Current start position is [    -2.3795      3.1333     -7.8539]
+Elapsed 3:09:13 ===Episode_id 8 task_id 0 task_level=instance===
+SR: False, SPL: 0.0, Object category: bicycle, goal type: sequence===
+
+Elapsed 3:09:13 [baseline] task_level=instance scene=00800-TEEsavR23oF episode=8 task=0 sec=852.289
+Elapsed 3:09:13 [BASELINE_LIVE_METRICS] rows=41 avg_sr=0.463415 avg_spl=0.314819 follower_error_count=2 levels=[object:n=6,sr=0.833333,spl=0.637391; room:n=11,sr=0.454545,spl=0.266994; region:n=15,sr=0.466667,spl=0.365644; instance:n=9,sr=0.222222,spl=0.073514] latest_scene=00800-TEEsavR23oF latest_episode=8 latest_task=0 latest_level=instance by_level={"instance": {"avg_spl": 0.07351417184347327, "avg_sr": 0.2222222222222222, "count": 9}, "object": {"avg_spl": 0.6373914735214515, "avg_sr": 0.8333333333333334, "count": 6}, "region": {"avg_spl": 0.36564436271128115, "avg_sr": 0.4666666666666667, "count": 15}, "room": {"avg_spl": 0.2669940754455515, "avg_sr": 0.45454545454545453, "count": 11}}
+Elapsed 3:09:13 
+
+Begin to process [00800-TEEsavR23oF_sequence_8_1] type: [room], Question: [pc tower in the office]
+
+Elapsed 3:09:13 Current start position is [    -5.8641      3.1134   -0.046741]
+Elapsed 3:11:02 ===Episode_id 8 task_id 1 task_level=room===
+SR: False, SPL: 0.0, Object category: pc tower, goal type: sequence===
+
+Elapsed 3:11:02 [baseline] task_level=room scene=00800-TEEsavR23oF episode=8 task=1 sec=109.547
+Elapsed 3:11:02 [BASELINE_LIVE_METRICS] rows=42 avg_sr=0.452381 avg_spl=0.307323 follower_error_count=2 levels=[object:n=6,sr=0.833333,spl=0.637391; room:n=12,sr=0.416667,spl=0.244745; region:n=15,sr=0.466667,spl=0.365644; instance:n=9,sr=0.222222,spl=0.073514] latest_scene=00800-TEEsavR23oF latest_episode=8 latest_task=1 latest_level=room by_level={"instance": {"avg_spl": 0.07351417184347327, "avg_sr": 0.2222222222222222, "count": 9}, "object": {"avg_spl": 0.6373914735214515, "avg_sr": 0.8333333333333334, "count": 6}, "region": {"avg_spl": 0.36564436271128115, "avg_sr": 0.4666666666666667, "count": 15}, "room": {"avg_spl": 0.24474456915842221, "avg_sr": 0.4166666666666667, "count": 12}}
+Elapsed 3:11:02 
+
+Begin to process [00800-TEEsavR23oF_sequence_8_2] type: [region], Question: [bath towel in the bathroom that has toilet beside black toilet brush, dark wood single-sink vanity by dark blue bath mat, hanging beige towel, blue shower curtain with seashell, starfish, and coral motifs]
+
+Elapsed 3:11:02 Current start position is [    -4.0155      3.1466     -4.9626]
+Elapsed 3:19:26 ===Episode_id 8 task_id 2 task_level=region===
+SR: False, SPL: 0.0, Object category: bath towel, goal type: sequence===
+
+Elapsed 3:19:26 [baseline] task_level=region scene=00800-TEEsavR23oF episode=8 task=2 sec=504.016
+Elapsed 3:19:26 [BASELINE_LIVE_METRICS] rows=43 avg_sr=0.441860 avg_spl=0.300176 follower_error_count=2 levels=[object:n=6,sr=0.833333,spl=0.637391; room:n=12,sr=0.416667,spl=0.244745; region:n=16,sr=0.437500,spl=0.342792; instance:n=9,sr=0.222222,spl=0.073514] latest_scene=00800-TEEsavR23oF latest_episode=8 latest_task=2 latest_level=region by_level={"instance": {"avg_spl": 0.07351417184347327, "avg_sr": 0.2222222222222222, "count": 9}, "object": {"avg_spl": 0.6373914735214515, "avg_sr": 0.8333333333333334, "count": 6}, "region": {"avg_spl": 0.3427915900418261, "avg_sr": 0.4375, "count": 16}, "room": {"avg_spl": 0.24474456915842221, "avg_sr": 0.4166666666666667, "count": 12}}
+Elapsed 3:19:26 
+
+Begin to process [00800-TEEsavR23oF_sequence_8_3] type: [region], Question: [armchair in the bedroom that has bed with plain white sheets and light teal pillows, tall wooden headboard, Mickey Mouse plush on dark wood nightstand, matching wardrobe and beige armchair, TV on wood cabinet]
+
+Elapsed 3:19:26 Current start position is [    -2.3653      3.1202      -8.363]
+Elapsed 3:21:42 ===Episode_id 8 task_id 3 task_level=region===
+SR: True, SPL: 0.7917185021610113, Object category: armchair, goal type: sequence===
+
+Elapsed 3:21:42 [baseline] task_level=region scene=00800-TEEsavR23oF episode=8 task=3 sec=135.788
+Elapsed 3:21:42 [BASELINE_LIVE_METRICS] rows=44 avg_sr=0.454545 avg_spl=0.311348 follower_error_count=2 levels=[object:n=6,sr=0.833333,spl=0.637391; room:n=12,sr=0.416667,spl=0.244745; region:n=17,sr=0.470588,spl=0.369199; instance:n=9,sr=0.222222,spl=0.073514] latest_scene=00800-TEEsavR23oF latest_episode=8 latest_task=3 latest_level=region by_level={"instance": {"avg_spl": 0.07351417184347327, "avg_sr": 0.2222222222222222, "count": 9}, "object": {"avg_spl": 0.6373914735214515, "avg_sr": 0.8333333333333334, "count": 6}, "region": {"avg_spl": 0.36919905546060167, "avg_sr": 0.47058823529411764, "count": 17}, "room": {"avg_spl": 0.24474456915842221, "avg_sr": 0.4166666666666667, "count": 12}}
+Elapsed 3:21:42 
+
+Begin to process [00800-TEEsavR23oF_sequence_8_4] type: [room], Question: [photo in the office]
+
+Elapsed 3:21:42 Current start position is [   -0.11586      3.1134     -5.5526]
+Elapsed 3:24:39 ===Episode_id 8 task_id 4 task_level=room===
+SR: False, SPL: 0.0, Object category: photo, goal type: sequence===
+
+Elapsed 3:24:39 [baseline] task_level=room scene=00800-TEEsavR23oF episode=8 task=4 sec=176.448
+Elapsed 3:24:39 [BASELINE_LIVE_METRICS] rows=45 avg_sr=0.444444 avg_spl=0.304429 follower_error_count=2 levels=[object:n=6,sr=0.833333,spl=0.637391; room:n=13,sr=0.384615,spl=0.225918; region:n=17,sr=0.470588,spl=0.369199; instance:n=9,sr=0.222222,spl=0.073514] latest_scene=00800-TEEsavR23oF latest_episode=8 latest_task=4 latest_level=room by_level={"instance": {"avg_spl": 0.07351417184347327, "avg_sr": 0.2222222222222222, "count": 9}, "object": {"avg_spl": 0.6373914735214515, "avg_sr": 0.8333333333333334, "count": 6}, "region": {"avg_spl": 0.36919905546060167, "avg_sr": 0.47058823529411764, "count": 17}, "room": {"avg_spl": 0.22591806383854357, "avg_sr": 0.38461538461538464, "count": 13}}
+Elapsed 3:24:39 [Metrics] sequence count: 45, invalid_count: 0, follower_error_count: 2, avg_sr: 0.444444, avg_spl: 0.304429
+
+=== Episode ===: 9it [3:24:14, 1426.50s/it][AElapsed 3:24:45 
+
+Begin to process [00800-TEEsavR23oF_sequence_9_0] type: [instance], Question: [blue toy cart beside pink bin and brown leather couch in office with computer desk]
+
+Elapsed 3:24:45 Current start position is [    -2.1596      3.1397     -8.3785]
+Elapsed 3:38:57 ===Episode_id 9 task_id 0 task_level=instance===
+SR: False, SPL: 0.0, Object category: toy, goal type: sequence===
+
+Elapsed 3:38:57 [baseline] task_level=instance scene=00800-TEEsavR23oF episode=9 task=0 sec=852.496
+Elapsed 3:38:57 [BASELINE_LIVE_METRICS] rows=46 avg_sr=0.434783 avg_spl=0.297811 follower_error_count=2 levels=[object:n=6,sr=0.833333,spl=0.637391; room:n=13,sr=0.384615,spl=0.225918; region:n=17,sr=0.470588,spl=0.369199; instance:n=10,sr=0.200000,spl=0.066163] latest_scene=00800-TEEsavR23oF latest_episode=9 latest_task=0 latest_level=instance by_level={"instance": {"avg_spl": 0.06616275465912594, "avg_sr": 0.2, "count": 10}, "object": {"avg_spl": 0.6373914735214515, "avg_sr": 0.8333333333333334, "count": 6}, "region": {"avg_spl": 0.36919905546060167, "avg_sr": 0.47058823529411764, "count": 17}, "room": {"avg_spl": 0.22591806383854357, "avg_sr": 0.38461538461538464, "count": 13}}
+Elapsed 3:38:57 
+
+Begin to process [00800-TEEsavR23oF_sequence_9_1] type: [room], Question: [tv in the bedroom]
+
+Elapsed 3:38:57 Current start position is [     -5.787      3.1134   -0.054764]
+Elapsed 3:41:42 ===Episode_id 9 task_id 1 task_level=room===
+SR: True, SPL: 0.8296356411729559, Object category: tv, goal type: sequence===
+
+Elapsed 3:41:42 [baseline] task_level=room scene=00800-TEEsavR23oF episode=9 task=1 sec=165.178
+Elapsed 3:41:42 [BASELINE_LIVE_METRICS] rows=47 avg_sr=0.446809 avg_spl=0.309126 follower_error_count=2 levels=[object:n=6,sr=0.833333,spl=0.637391; room:n=14,sr=0.428571,spl=0.269041; region:n=17,sr=0.470588,spl=0.369199; instance:n=10,sr=0.200000,spl=0.066163] latest_scene=00800-TEEsavR23oF latest_episode=9 latest_task=1 latest_level=room by_level={"instance": {"avg_spl": 0.06616275465912594, "avg_sr": 0.2, "count": 10}, "object": {"avg_spl": 0.6373914735214515, "avg_sr": 0.8333333333333334, "count": 6}, "region": {"avg_spl": 0.36919905546060167, "avg_sr": 0.47058823529411764, "count": 17}, "room": {"avg_spl": 0.26904074793385874, "avg_sr": 0.42857142857142855, "count": 14}}
+Elapsed 3:41:42 
+
+Begin to process [00800-TEEsavR23oF_sequence_9_2] type: [region], Question: [picture in the office that has computer desk with printer and black PC tower, black office chair below colorful painting, rack with books and wicker basket, brown leather couch with diamond-patterned blanket by railing]
+
+Elapsed 3:41:42 Current start position is [   -0.21248      3.1134     -5.6027]
+Elapsed 3:44:30 ===Episode_id 9 task_id 2 task_level=region===
+SR: False, SPL: 0.0, Object category: picture, goal type: sequence===
+
+Elapsed 3:44:30 [baseline] task_level=region scene=00800-TEEsavR23oF episode=9 task=2 sec=167.241
+Elapsed 3:44:30 [BASELINE_LIVE_METRICS] rows=48 avg_sr=0.437500 avg_spl=0.302686 follower_error_count=2 levels=[object:n=6,sr=0.833333,spl=0.637391; room:n=14,sr=0.428571,spl=0.269041; region:n=18,sr=0.444444,spl=0.348688; instance:n=10,sr=0.200000,spl=0.066163] latest_scene=00800-TEEsavR23oF latest_episode=9 latest_task=2 latest_level=region by_level={"instance": {"avg_spl": 0.06616275465912594, "avg_sr": 0.2, "count": 10}, "object": {"avg_spl": 0.6373914735214515, "avg_sr": 0.8333333333333334, "count": 6}, "region": {"avg_spl": 0.34868799682390156, "avg_sr": 0.4444444444444444, "count": 18}, "room": {"avg_spl": 0.26904074793385874, "avg_sr": 0.42857142857142855, "count": 14}}
+Elapsed 3:44:30 
+
+Begin to process [00800-TEEsavR23oF_sequence_9_3] type: [region], Question: [nightstand in the bedroom that has bed with plain white sheets and light teal pillows, tall wooden headboard, Mickey Mouse plush on dark wood nightstand, matching wardrobe and beige armchair, TV on wood cabinet]
+
+Elapsed 3:44:30 Current start position is [    -7.7958      3.1134     -4.5305]
+Elapsed 3:47:05 ===Episode_id 9 task_id 3 task_level=region===
+SR: True, SPL: 0.862572259060116, Object category: nightstand, goal type: sequence===
+
+Elapsed 3:47:05 [baseline] task_level=region scene=00800-TEEsavR23oF episode=9 task=3 sec=154.890
+Elapsed 3:47:05 [BASELINE_LIVE_METRICS] rows=49 avg_sr=0.448980 avg_spl=0.314112 follower_error_count=2 levels=[object:n=6,sr=0.833333,spl=0.637391; room:n=14,sr=0.428571,spl=0.269041; region:n=19,sr=0.473684,spl=0.375735; instance:n=10,sr=0.200000,spl=0.066163] latest_scene=00800-TEEsavR23oF latest_episode=9 latest_task=3 latest_level=region by_level={"instance": {"avg_spl": 0.06616275465912594, "avg_sr": 0.2, "count": 10}, "object": {"avg_spl": 0.6373914735214515, "avg_sr": 0.8333333333333334, "count": 6}, "region": {"avg_spl": 0.37573453694159703, "avg_sr": 0.47368421052631576, "count": 19}, "room": {"avg_spl": 0.26904074793385874, "avg_sr": 0.42857142857142855, "count": 14}}
+Elapsed 3:47:05 
+
+Begin to process [00800-TEEsavR23oF_sequence_9_4] type: [object], Question: [computer desk]
+
+Elapsed 3:47:05 Current start position is [    -1.9414       3.163     -8.2976]
+Elapsed 3:49:54 ===Episode_id 9 task_id 4 task_level=object===
+SR: True, SPL: 0.8873926594247402, Object category: computer desk, goal type: sequence===
+
+Elapsed 3:49:54 [baseline] task_level=object scene=00800-TEEsavR23oF episode=9 task=4 sec=169.282
+Elapsed 3:49:54 [BASELINE_LIVE_METRICS] rows=50 avg_sr=0.460000 avg_spl=0.325578 follower_error_count=2 levels=[object:n=7,sr=0.857143,spl=0.673106; room:n=14,sr=0.428571,spl=0.269041; region:n=19,sr=0.473684,spl=0.375735; instance:n=10,sr=0.200000,spl=0.066163] latest_scene=00800-TEEsavR23oF latest_episode=9 latest_task=4 latest_level=object by_level={"instance": {"avg_spl": 0.06616275465912594, "avg_sr": 0.2, "count": 10}, "object": {"avg_spl": 0.6731059286504928, "avg_sr": 0.8571428571428571, "count": 7}, "region": {"avg_spl": 0.37573453694159703, "avg_sr": 0.47368421052631576, "count": 19}, "room": {"avg_spl": 0.26904074793385874, "avg_sr": 0.42857142857142855, "count": 14}}
+Elapsed 3:49:54 [Metrics] sequence count: 50, invalid_count: 0, follower_error_count: 2, avg_sr: 0.460000, avg_spl: 0.325578
+
+=== Episode ===: 10it [3:49:29, 1453.92s/it][AElapsed 3:49:59 
+
+Begin to process [00800-TEEsavR23oF_sequence_10_0] type: [instance], Question: [square wooden side table with plants to the right of computer desk in office with brown couch]
+
+Elapsed 3:49:59 Current start position is [    -1.3524      3.1142     -5.6864]
+Elapsed 4:12:45 ===Episode_id 10 task_id 0 task_level=instance===
+SR: False, SPL: 0.0, Object category: table, goal type: sequence===
+
+Elapsed 4:12:45 [baseline] task_level=instance scene=00800-TEEsavR23oF episode=10 task=0 sec=1365.429
+Elapsed 4:12:45 [BASELINE_LIVE_METRICS] rows=51 avg_sr=0.450980 avg_spl=0.319194 follower_error_count=2 levels=[object:n=7,sr=0.857143,spl=0.673106; room:n=14,sr=0.428571,spl=0.269041; region:n=19,sr=0.473684,spl=0.375735; instance:n=11,sr=0.181818,spl=0.060148] latest_scene=00800-TEEsavR23oF latest_episode=10 latest_task=0 latest_level=instance by_level={"instance": {"avg_spl": 0.06014795878102359, "avg_sr": 0.18181818181818182, "count": 11}, "object": {"avg_spl": 0.6731059286504928, "avg_sr": 0.8571428571428571, "count": 7}, "region": {"avg_spl": 0.37573453694159703, "avg_sr": 0.47368421052631576, "count": 19}, "room": {"avg_spl": 0.26904074793385874, "avg_sr": 0.42857142857142855, "count": 14}}
+Elapsed 4:12:45 
+
+Begin to process [00800-TEEsavR23oF_sequence_10_1] type: [object], Question: [bed]
+
+Elapsed 4:12:45 Current start position is [     -4.747      3.1134    -0.14082]
+Elapsed 4:16:44 ===Episode_id 10 task_id 1 task_level=object===
+SR: True, SPL: 0.8256545927723323, Object category: bed, goal type: sequence===
+
+Elapsed 4:16:44 [baseline] task_level=object scene=00800-TEEsavR23oF episode=10 task=1 sec=239.303
+Elapsed 4:16:44 [BASELINE_LIVE_METRICS] rows=52 avg_sr=0.461538 avg_spl=0.328934 follower_error_count=2 levels=[object:n=8,sr=0.875000,spl=0.692175; room:n=14,sr=0.428571,spl=0.269041; region:n=19,sr=0.473684,spl=0.375735; instance:n=11,sr=0.181818,spl=0.060148] latest_scene=00800-TEEsavR23oF latest_episode=10 latest_task=1 latest_level=object by_level={"instance": {"avg_spl": 0.06014795878102359, "avg_sr": 0.18181818181818182, "count": 11}, "object": {"avg_spl": 0.6921745116657227, "avg_sr": 0.875, "count": 8}, "region": {"avg_spl": 0.37573453694159703, "avg_sr": 0.47368421052631576, "count": 19}, "room": {"avg_spl": 0.26904074793385874, "avg_sr": 0.42857142857142855, "count": 14}}
+Elapsed 4:16:44 
+
+Begin to process [00800-TEEsavR23oF_sequence_10_2] type: [room], Question: [picture in the office]
+
+Elapsed 4:16:44 Current start position is [  -0.025551      3.1305     -6.3729]
+Elapsed 4:20:32 ===Episode_id 10 task_id 2 task_level=room===
+SR: True, SPL: 0.9512706508559967, Object category: picture, goal type: sequence===
+
+Elapsed 4:20:32 [baseline] task_level=room scene=00800-TEEsavR23oF episode=10 task=2 sec=227.646
+Elapsed 4:20:32 [BASELINE_LIVE_METRICS] rows=53 avg_sr=0.471698 avg_spl=0.340676 follower_error_count=2 levels=[object:n=8,sr=0.875000,spl=0.692175; room:n=15,sr=0.466667,spl=0.314523; region:n=19,sr=0.473684,spl=0.375735; instance:n=11,sr=0.181818,spl=0.060148] latest_scene=00800-TEEsavR23oF latest_episode=10 latest_task=2 latest_level=room by_level={"instance": {"avg_spl": 0.06014795878102359, "avg_sr": 0.18181818181818182, "count": 11}, "object": {"avg_spl": 0.6921745116657227, "avg_sr": 0.875, "count": 8}, "region": {"avg_spl": 0.37573453694159703, "avg_sr": 0.47368421052631576, "count": 19}, "room": {"avg_spl": 0.31452274146200127, "avg_sr": 0.4666666666666667, "count": 15}}
+Elapsed 4:20:32 
+
+Begin to process [00800-TEEsavR23oF_sequence_10_3] type: [region], Question: [cross trainer in the office that has computer desk with printer and black PC tower, black office chair below colorful painting, rack with books and wicker basket, brown leather couch with diamond-patterned blanket by railing]
+
+Elapsed 4:20:32 Current start position is [    -4.6835      3.1134   -0.078649]
+Elapsed 4:25:22 ===Episode_id 10 task_id 3 task_level=region===
+SR: False, SPL: 0.0, Object category: cross trainer, goal type: sequence===
+
+Elapsed 4:25:22 [baseline] task_level=region scene=00800-TEEsavR23oF episode=10 task=3 sec=289.970
+Elapsed 4:25:22 [BASELINE_LIVE_METRICS] rows=54 avg_sr=0.462963 avg_spl=0.334367 follower_error_count=2 levels=[object:n=8,sr=0.875000,spl=0.692175; room:n=15,sr=0.466667,spl=0.314523; region:n=20,sr=0.450000,spl=0.356948; instance:n=11,sr=0.181818,spl=0.060148] latest_scene=00800-TEEsavR23oF latest_episode=10 latest_task=3 latest_level=region by_level={"instance": {"avg_spl": 0.06014795878102359, "avg_sr": 0.18181818181818182, "count": 11}, "object": {"avg_spl": 0.6921745116657227, "avg_sr": 0.875, "count": 8}, "region": {"avg_spl": 0.3569478100945172, "avg_sr": 0.45, "count": 20}, "room": {"avg_spl": 0.31452274146200127, "avg_sr": 0.4666666666666667, "count": 15}}
+Elapsed 4:25:22 
+
+Begin to process [00800-TEEsavR23oF_sequence_10_4] type: [room], Question: [computer desk in the office]
+
+Elapsed 4:25:22 Current start position is [    -3.7612      3.1134    0.061977]
+Elapsed 4:29:30 ===Episode_id 10 task_id 4 task_level=room===
+SR: True, SPL: 0.1823476198860574, Object category: computer desk, goal type: sequence===
+
+Elapsed 4:29:30 [baseline] task_level=room scene=00800-TEEsavR23oF episode=10 task=4 sec=248.556
+Elapsed 4:29:30 [BASELINE_LIVE_METRICS] rows=55 avg_sr=0.472727 avg_spl=0.331603 follower_error_count=2 levels=[object:n=8,sr=0.875000,spl=0.692175; room:n=16,sr=0.500000,spl=0.306262; region:n=20,sr=0.450000,spl=0.356948; instance:n=11,sr=0.181818,spl=0.060148] latest_scene=00800-TEEsavR23oF latest_episode=10 latest_task=4 latest_level=room by_level={"instance": {"avg_spl": 0.06014795878102359, "avg_sr": 0.18181818181818182, "count": 11}, "object": {"avg_spl": 0.6921745116657227, "avg_sr": 0.875, "count": 8}, "region": {"avg_spl": 0.3569478100945172, "avg_sr": 0.45, "count": 20}, "room": {"avg_spl": 0.30626179636350476, "avg_sr": 0.5, "count": 16}}
+Elapsed 4:29:30 [Metrics] sequence count: 55, invalid_count: 0, follower_error_count: 2, avg_sr: 0.472727, avg_spl: 0.331603
+
+=== Episode ===: 11it [4:29:06, 1736.28s/it][AElapsed 4:29:37 
+
+Begin to process [00800-TEEsavR23oF_sequence_11_0] type: [instance], Question: [brown three-seater leather couch with diamond-patterned throw beside railing in office with computer desk beside couch]
+
+Elapsed 4:29:37 Current start position is [    -5.9948      3.1134     -7.6873]
+Elapsed 4:53:51 ===Episode_id 11 task_id 0 task_level=instance===
+SR: True, SPL: 0.37969577454933146, Object category: couch, goal type: sequence===
+
+Elapsed 4:53:51 [baseline] task_level=instance scene=00800-TEEsavR23oF episode=11 task=0 sec=1454.858
+Elapsed 4:53:51 [BASELINE_LIVE_METRICS] rows=56 avg_sr=0.482143 avg_spl=0.332462 follower_error_count=2 levels=[object:n=8,sr=0.875000,spl=0.692175; room:n=16,sr=0.500000,spl=0.306262; region:n=20,sr=0.450000,spl=0.356948; instance:n=12,sr=0.250000,spl=0.086777] latest_scene=00800-TEEsavR23oF latest_episode=11 latest_task=0 latest_level=instance by_level={"instance": {"avg_spl": 0.08677694342838256, "avg_sr": 0.25, "count": 12}, "object": {"avg_spl": 0.6921745116657227, "avg_sr": 0.875, "count": 8}, "region": {"avg_spl": 0.3569478100945172, "avg_sr": 0.45, "count": 20}, "room": {"avg_spl": 0.30626179636350476, "avg_sr": 0.5, "count": 16}}
+Elapsed 4:53:51 
+
+Begin to process [00800-TEEsavR23oF_sequence_11_1] type: [object], Question: [bed]
+
+Elapsed 4:53:51 Current start position is [    -5.7774      3.1134     -1.6368]
+Elapsed 4:57:52 ===Episode_id 11 task_id 1 task_level=object===
+SR: False, SPL: 0.0, Object category: bed, goal type: sequence===
+
+Elapsed 4:57:52 [baseline] task_level=object scene=00800-TEEsavR23oF episode=11 task=1 sec=240.189
+Elapsed 4:57:52 [BASELINE_LIVE_METRICS] rows=57 avg_sr=0.473684 avg_spl=0.326629 follower_error_count=2 levels=[object:n=9,sr=0.777778,spl=0.615266; room:n=16,sr=0.500000,spl=0.306262; region:n=20,sr=0.450000,spl=0.356948; instance:n=12,sr=0.250000,spl=0.086777] latest_scene=00800-TEEsavR23oF latest_episode=11 latest_task=1 latest_level=object by_level={"instance": {"avg_spl": 0.08677694342838256, "avg_sr": 0.25, "count": 12}, "object": {"avg_spl": 0.6152662325917535, "avg_sr": 0.7777777777777778, "count": 9}, "region": {"avg_spl": 0.3569478100945172, "avg_sr": 0.45, "count": 20}, "room": {"avg_spl": 0.30626179636350476, "avg_sr": 0.5, "count": 16}}
+Elapsed 4:57:52 
+
+Begin to process [00800-TEEsavR23oF_sequence_11_2] type: [region], Question: [side table in the office that has computer desk with printer and black PC tower, black office chair below colorful painting, rack with books and wicker basket, brown leather couch with diamond-patterned blanket by railing]
+
+Elapsed 4:57:52 Current start position is [    -1.0599      3.1198     -7.5315]
+Elapsed 5:06:04 ===Episode_id 11 task_id 2 task_level=region===
+SR: False, SPL: 0.0, Object category: side table, goal type: sequence===
+
+Elapsed 5:06:04 [baseline] task_level=region scene=00800-TEEsavR23oF episode=11 task=2 sec=492.429
+Elapsed 5:06:04 [BASELINE_LIVE_METRICS] rows=58 avg_sr=0.465517 avg_spl=0.320998 follower_error_count=2 levels=[object:n=9,sr=0.777778,spl=0.615266; room:n=16,sr=0.500000,spl=0.306262; region:n=21,sr=0.428571,spl=0.339950; instance:n=12,sr=0.250000,spl=0.086777] latest_scene=00800-TEEsavR23oF latest_episode=11 latest_task=2 latest_level=region by_level={"instance": {"avg_spl": 0.08677694342838256, "avg_sr": 0.25, "count": 12}, "object": {"avg_spl": 0.6152662325917535, "avg_sr": 0.7777777777777778, "count": 9}, "region": {"avg_spl": 0.3399502953281116, "avg_sr": 0.42857142857142855, "count": 21}, "room": {"avg_spl": 0.30626179636350476, "avg_sr": 0.5, "count": 16}}
+Elapsed 5:06:04 
+
+Begin to process [00800-TEEsavR23oF_sequence_11_3] type: [object], Question: [plush toy]
+
+Elapsed 5:06:04 Current start position is [     -4.747      3.1134   -0.077744]
+Elapsed 5:09:49 ===Episode_id 11 task_id 3 task_level=object===
+SR: False, SPL: 0.0, Object category: plush toy, goal type: sequence===
+
+Elapsed 5:09:49 [baseline] task_level=object scene=00800-TEEsavR23oF episode=11 task=3 sec=224.454
+Elapsed 5:09:49 [BASELINE_LIVE_METRICS] rows=59 avg_sr=0.457627 avg_spl=0.315557 follower_error_count=2 levels=[object:n=10,sr=0.700000,spl=0.553740; room:n=16,sr=0.500000,spl=0.306262; region:n=21,sr=0.428571,spl=0.339950; instance:n=12,sr=0.250000,spl=0.086777] latest_scene=00800-TEEsavR23oF latest_episode=11 latest_task=3 latest_level=object by_level={"instance": {"avg_spl": 0.08677694342838256, "avg_sr": 0.25, "count": 12}, "object": {"avg_spl": 0.5537396093325782, "avg_sr": 0.7, "count": 10}, "region": {"avg_spl": 0.3399502953281116, "avg_sr": 0.42857142857142855, "count": 21}, "room": {"avg_spl": 0.30626179636350476, "avg_sr": 0.5, "count": 16}}
+Elapsed 5:09:49 
+
+Begin to process [00800-TEEsavR23oF_sequence_11_4] type: [region], Question: [picture in the office that has computer desk with printer and black PC tower, black office chair below colorful painting, rack with books and wicker basket, brown leather couch with diamond-patterned blanket by railing]
+
+Elapsed 5:09:49 Current start position is [    -4.2928      3.1134     -2.4635]
+Elapsed 5:15:16 ===Episode_id 11 task_id 4 task_level=region===
+SR: False, SPL: 0.0, Object category: picture, goal type: sequence===
+
+Elapsed 5:15:16 [baseline] task_level=region scene=00800-TEEsavR23oF episode=11 task=4 sec=327.935
+Elapsed 5:15:16 [BASELINE_LIVE_METRICS] rows=60 avg_sr=0.450000 avg_spl=0.310298 follower_error_count=2 levels=[object:n=10,sr=0.700000,spl=0.553740; room:n=16,sr=0.500000,spl=0.306262; region:n=22,sr=0.409091,spl=0.324498; instance:n=12,sr=0.250000,spl=0.086777] latest_scene=00800-TEEsavR23oF latest_episode=11 latest_task=4 latest_level=region by_level={"instance": {"avg_spl": 0.08677694342838256, "avg_sr": 0.25, "count": 12}, "object": {"avg_spl": 0.5537396093325782, "avg_sr": 0.7, "count": 10}, "region": {"avg_spl": 0.3244980091768338, "avg_sr": 0.4090909090909091, "count": 22}, "room": {"avg_spl": 0.30626179636350476, "avg_sr": 0.5, "count": 16}}
+Elapsed 5:15:17 [Metrics] sequence count: 60, invalid_count: 0, follower_error_count: 2, avg_sr: 0.450000, avg_spl: 0.310298
+
+=== Episode ===: 12it [5:14:52, 2043.49s/it][AElapsed 5:15:23 
+
+Begin to process [00800-TEEsavR23oF_sequence_12_0] type: [instance], Question: [black-framed black-and-white striped picture on beige wall above staircase]
+
+Elapsed 5:15:23 Current start position is [    -1.7657      3.1634     -7.1749]
+Elapsed 5:43:50 geodesic_distance: 5.08151912689209
+Elapsed 5:43:50 [baseline][follow-error] scene=00800-TEEsavR23oF episode_id=12 task_id=0 task_level=instance final=True error=GreedyFollowerError path_found=True
+Elapsed 5:43:50 ===Episode_id 12 task_id 0 task_level=instance===
+SR: 0, SPL: 0, Object category: picture, goal type: sequence===
+
+Elapsed 5:43:50 [baseline] task_level=instance scene=00800-TEEsavR23oF episode=12 task=0 sec=1706.399
+Elapsed 5:43:50 [BASELINE_LIVE_METRICS] rows=61 avg_sr=0.442623 avg_spl=0.305211 follower_error_count=3 levels=[object:n=10,sr=0.700000,spl=0.553740; room:n=16,sr=0.500000,spl=0.306262; region:n=22,sr=0.409091,spl=0.324498; instance:n=13,sr=0.230769,spl=0.080102] latest_scene=00800-TEEsavR23oF latest_episode=12 latest_task=0 latest_level=instance by_level={"instance": {"avg_spl": 0.0801017939338916, "avg_sr": 0.23076923076923078, "count": 13}, "object": {"avg_spl": 0.5537396093325782, "avg_sr": 0.7, "count": 10}, "region": {"avg_spl": 0.3244980091768338, "avg_sr": 0.4090909090909091, "count": 22}, "room": {"avg_spl": 0.30626179636350476, "avg_sr": 0.5, "count": 16}}
+Elapsed 5:43:50 
+
+Begin to process [00800-TEEsavR23oF_sequence_12_1] type: [region], Question: [tv in the bedroom that has bed with plain white sheets and light teal pillows, tall wooden headboard, Mickey Mouse plush on dark wood nightstand, matching wardrobe and beige armchair, TV on wood cabinet]
+
+Elapsed 5:43:50 Current start position is [    -4.8111      3.1134    -0.60252]
+Elapsed 5:48:21 ===Episode_id 12 task_id 1 task_level=region===
+SR: True, SPL: 0.8223561743557818, Object category: tv, goal type: sequence===
+
+Elapsed 5:48:21 [baseline] task_level=region scene=00800-TEEsavR23oF episode=12 task=1 sec=270.885
+Elapsed 5:48:21 [BASELINE_LIVE_METRICS] rows=62 avg_sr=0.451613 avg_spl=0.313552 follower_error_count=3 levels=[object:n=10,sr=0.700000,spl=0.553740; room:n=16,sr=0.500000,spl=0.306262; region:n=23,sr=0.434783,spl=0.346144; instance:n=13,sr=0.230769,spl=0.080102] latest_scene=00800-TEEsavR23oF latest_episode=12 latest_task=1 latest_level=region by_level={"instance": {"avg_spl": 0.0801017939338916, "avg_sr": 0.23076923076923078, "count": 13}, "object": {"avg_spl": 0.5537396093325782, "avg_sr": 0.7, "count": 10}, "region": {"avg_spl": 0.3461440163585272, "avg_sr": 0.43478260869565216, "count": 23}, "room": {"avg_spl": 0.30626179636350476, "avg_sr": 0.5, "count": 16}}
+Elapsed 5:48:21 
+
+Begin to process [00800-TEEsavR23oF_sequence_12_2] type: [region], Question: [table in the office that has computer desk with printer and black PC tower, black office chair below colorful painting, rack with books and wicker basket, brown leather couch with diamond-patterned blanket by railing]
+
+Elapsed 5:48:21 Current start position is [    -0.1651      3.1134     -5.5742]
+Elapsed 5:51:54 ===Episode_id 12 task_id 2 task_level=region===
+SR: True, SPL: 0.5600487673164652, Object category: table, goal type: sequence===
+
+Elapsed 5:51:54 [baseline] task_level=region scene=00800-TEEsavR23oF episode=12 task=2 sec=213.439
+Elapsed 5:51:54 [BASELINE_LIVE_METRICS] rows=63 avg_sr=0.460317 avg_spl=0.317465 follower_error_count=3 levels=[object:n=10,sr=0.700000,spl=0.553740; room:n=16,sr=0.500000,spl=0.306262; region:n=24,sr=0.458333,spl=0.355057; instance:n=13,sr=0.230769,spl=0.080102] latest_scene=00800-TEEsavR23oF latest_episode=12 latest_task=2 latest_level=region by_level={"instance": {"avg_spl": 0.0801017939338916, "avg_sr": 0.23076923076923078, "count": 13}, "object": {"avg_spl": 0.5537396093325782, "avg_sr": 0.7, "count": 10}, "region": {"avg_spl": 0.35505671431510794, "avg_sr": 0.4583333333333333, "count": 24}, "room": {"avg_spl": 0.30626179636350476, "avg_sr": 0.5, "count": 16}}
+Elapsed 5:51:54 
+
+Begin to process [00800-TEEsavR23oF_sequence_12_3] type: [object], Question: [bed]
+
+Elapsed 5:51:54 Current start position is [    -3.7941      3.1134    0.021406]
+Elapsed 5:54:12 ===Episode_id 12 task_id 3 task_level=object===
+SR: False, SPL: 0.0, Object category: bed, goal type: sequence===
+
+Elapsed 5:54:12 [baseline] task_level=object scene=00800-TEEsavR23oF episode=12 task=3 sec=138.396
+Elapsed 5:54:12 [BASELINE_LIVE_METRICS] rows=64 avg_sr=0.453125 avg_spl=0.312504 follower_error_count=3 levels=[object:n=11,sr=0.636364,spl=0.503400; room:n=16,sr=0.500000,spl=0.306262; region:n=24,sr=0.458333,spl=0.355057; instance:n=13,sr=0.230769,spl=0.080102] latest_scene=00800-TEEsavR23oF latest_episode=12 latest_task=3 latest_level=object by_level={"instance": {"avg_spl": 0.0801017939338916, "avg_sr": 0.23076923076923078, "count": 13}, "object": {"avg_spl": 0.5033996448477983, "avg_sr": 0.6363636363636364, "count": 11}, "region": {"avg_spl": 0.35505671431510794, "avg_sr": 0.4583333333333333, "count": 24}, "room": {"avg_spl": 0.30626179636350476, "avg_sr": 0.5, "count": 16}}
+Elapsed 5:54:12 
+
+Begin to process [00800-TEEsavR23oF_sequence_12_4] type: [region], Question: [printer in the office that has computer desk with printer and black PC tower, black office chair below colorful painting, rack with books and wicker basket, brown leather couch with diamond-patterned blanket by railing]
+
+Elapsed 5:54:12 Current start position is [    -1.1191      3.1134     -7.6008]
+Elapsed 5:56:38 ===Episode_id 12 task_id 4 task_level=region===
+SR: True, SPL: 0.8687010374726731, Object category: printer, goal type: sequence===
+
+Elapsed 5:56:38 [baseline] task_level=region scene=00800-TEEsavR23oF episode=12 task=4 sec=145.149
+Elapsed 5:56:38 [BASELINE_LIVE_METRICS] rows=65 avg_sr=0.461538 avg_spl=0.321061 follower_error_count=3 levels=[object:n=11,sr=0.636364,spl=0.503400; room:n=16,sr=0.500000,spl=0.306262; region:n=25,sr=0.480000,spl=0.375602; instance:n=13,sr=0.230769,spl=0.080102] latest_scene=00800-TEEsavR23oF latest_episode=12 latest_task=4 latest_level=region by_level={"instance": {"avg_spl": 0.0801017939338916, "avg_sr": 0.23076923076923078, "count": 13}, "object": {"avg_spl": 0.5033996448477983, "avg_sr": 0.6363636363636364, "count": 11}, "region": {"avg_spl": 0.37560248724141054, "avg_sr": 0.48, "count": 25}, "room": {"avg_spl": 0.30626179636350476, "avg_sr": 0.5, "count": 16}}
+Elapsed 5:56:38 [Metrics] sequence count: 65, invalid_count: 0, follower_error_count: 3, avg_sr: 0.461538, avg_spl: 0.321061
+
+=== Episode ===: 13it [5:56:13, 2176.08s/it][AElapsed 5:56:46 
+
+Begin to process [00800-TEEsavR23oF_sequence_13_0] type: [instance], Question: [black wall-mounted tv above fireplace in tie: living room & hall with dark leather couch under staircase]
+
+Elapsed 5:56:46 Current start position is [    -1.3286     0.01338     -1.6738]
+Elapsed 6:15:55 ===Episode_id 13 task_id 0 task_level=instance===
+SR: False, SPL: 0.0, Object category: tv, goal type: sequence===
+
+Elapsed 6:15:55 [baseline] task_level=instance scene=00800-TEEsavR23oF episode=13 task=0 sec=1148.691
+Elapsed 6:15:55 [BASELINE_LIVE_METRICS] rows=66 avg_sr=0.454545 avg_spl=0.316197 follower_error_count=3 levels=[object:n=11,sr=0.636364,spl=0.503400; room:n=16,sr=0.500000,spl=0.306262; region:n=25,sr=0.480000,spl=0.375602; instance:n=14,sr=0.214286,spl=0.074380] latest_scene=00800-TEEsavR23oF latest_episode=13 latest_task=0 latest_level=instance by_level={"instance": {"avg_spl": 0.07438023722432792, "avg_sr": 0.21428571428571427, "count": 14}, "object": {"avg_spl": 0.5033996448477983, "avg_sr": 0.6363636363636364, "count": 11}, "region": {"avg_spl": 0.37560248724141054, "avg_sr": 0.48, "count": 25}, "room": {"avg_spl": 0.30626179636350476, "avg_sr": 0.5, "count": 16}}
+Elapsed 6:15:55 
+
+Begin to process [00800-TEEsavR23oF_sequence_13_1] type: [region], Question: [doormat in the hall that has brown-framed sailboats painting on wall, colorful floral door entry mat]
+
+Elapsed 6:15:55 Current start position is [     1.5031    0.013378     -5.4352]
+Elapsed 6:20:02 ===Episode_id 13 task_id 1 task_level=region===
+SR: False, SPL: 0.0, Object category: doormat, goal type: sequence===
+
+Elapsed 6:20:02 [baseline] task_level=region scene=00800-TEEsavR23oF episode=13 task=1 sec=246.551
+Elapsed 6:20:02 [BASELINE_LIVE_METRICS] rows=67 avg_sr=0.447761 avg_spl=0.311477 follower_error_count=3 levels=[object:n=11,sr=0.636364,spl=0.503400; room:n=16,sr=0.500000,spl=0.306262; region:n=26,sr=0.461538,spl=0.361156; instance:n=14,sr=0.214286,spl=0.074380] latest_scene=00800-TEEsavR23oF latest_episode=13 latest_task=1 latest_level=region by_level={"instance": {"avg_spl": 0.07438023722432792, "avg_sr": 0.21428571428571427, "count": 14}, "object": {"avg_spl": 0.5033996448477983, "avg_sr": 0.6363636363636364, "count": 11}, "region": {"avg_spl": 0.3611562377321255, "avg_sr": 0.46153846153846156, "count": 26}, "room": {"avg_spl": 0.30626179636350476, "avg_sr": 0.5, "count": 16}}
+Elapsed 6:20:02 
+
+Begin to process [00800-TEEsavR23oF_sequence_13_2] type: [room], Question: [laundry basket in the bedroom]
+
+Elapsed 6:20:02 Current start position is [    -2.9034    0.013378     -7.4361]
+Elapsed 6:22:48 ===Episode_id 13 task_id 2 task_level=room===
+SR: False, SPL: 0.0, Object category: laundry basket, goal type: sequence===
+
+Elapsed 6:22:48 [baseline] task_level=room scene=00800-TEEsavR23oF episode=13 task=2 sec=165.958
+Elapsed 6:22:48 [BASELINE_LIVE_METRICS] rows=68 avg_sr=0.441176 avg_spl=0.306897 follower_error_count=3 levels=[object:n=11,sr=0.636364,spl=0.503400; room:n=17,sr=0.470588,spl=0.288246; region:n=26,sr=0.461538,spl=0.361156; instance:n=14,sr=0.214286,spl=0.074380] latest_scene=00800-TEEsavR23oF latest_episode=13 latest_task=2 latest_level=room by_level={"instance": {"avg_spl": 0.07438023722432792, "avg_sr": 0.21428571428571427, "count": 14}, "object": {"avg_spl": 0.5033996448477983, "avg_sr": 0.6363636363636364, "count": 11}, "region": {"avg_spl": 0.3611562377321255, "avg_sr": 0.46153846153846156, "count": 26}, "room": {"avg_spl": 0.28824639657741624, "avg_sr": 0.47058823529411764, "count": 17}}
+Elapsed 6:22:48 
+
+Begin to process [00800-TEEsavR23oF_sequence_13_3] type: [region], Question: [bath sink in the bathroom that has pedestal sink beneath oval mirror and hand towel, toilet below colorful tropical harbor picture, wire rack with bottle of cleaner, wooden flooring]
+
+Elapsed 6:22:48 Current start position is [    -2.2037    0.013378     -6.5934]
+Elapsed 6:26:29 ===Episode_id 13 task_id 3 task_level=region===
+SR: False, SPL: 0.0, Object category: bath sink, goal type: sequence===
+
+Elapsed 6:26:29 [baseline] task_level=region scene=00800-TEEsavR23oF episode=13 task=3 sec=221.520
+Elapsed 6:26:29 [BASELINE_LIVE_METRICS] rows=69 avg_sr=0.434783 avg_spl=0.302449 follower_error_count=3 levels=[object:n=11,sr=0.636364,spl=0.503400; room:n=17,sr=0.470588,spl=0.288246; region:n=27,sr=0.444444,spl=0.347780; instance:n=14,sr=0.214286,spl=0.074380] latest_scene=00800-TEEsavR23oF latest_episode=13 latest_task=3 latest_level=region by_level={"instance": {"avg_spl": 0.07438023722432792, "avg_sr": 0.21428571428571427, "count": 14}, "object": {"avg_spl": 0.5033996448477983, "avg_sr": 0.6363636363636364, "count": 11}, "region": {"avg_spl": 0.34778008077908384, "avg_sr": 0.4444444444444444, "count": 27}, "room": {"avg_spl": 0.28824639657741624, "avg_sr": 0.47058823529411764, "count": 17}}
+Elapsed 6:26:29 
+
+Begin to process [00800-TEEsavR23oF_sequence_13_4] type: [object], Question: [sideboard]
+
+Elapsed 6:26:29 Current start position is [    -1.8917    0.013378     -7.2504]
+Elapsed 6:38:49 ===Episode_id 13 task_id 4 task_level=object===
+SR: False, SPL: 0.0, Object category: sideboard, goal type: sequence===
+
+Elapsed 6:38:49 [baseline] task_level=object scene=00800-TEEsavR23oF episode=13 task=4 sec=740.304
+Elapsed 6:38:49 [BASELINE_LIVE_METRICS] rows=70 avg_sr=0.428571 avg_spl=0.298128 follower_error_count=3 levels=[object:n=12,sr=0.583333,spl=0.461450; room:n=17,sr=0.470588,spl=0.288246; region:n=27,sr=0.444444,spl=0.347780; instance:n=14,sr=0.214286,spl=0.074380] latest_scene=00800-TEEsavR23oF latest_episode=13 latest_task=4 latest_level=object by_level={"instance": {"avg_spl": 0.07438023722432792, "avg_sr": 0.21428571428571427, "count": 14}, "object": {"avg_spl": 0.4614496744438152, "avg_sr": 0.5833333333333334, "count": 12}, "region": {"avg_spl": 0.34778008077908384, "avg_sr": 0.4444444444444444, "count": 27}, "room": {"avg_spl": 0.28824639657741624, "avg_sr": 0.47058823529411764, "count": 17}}
+Elapsed 6:38:49 [Metrics] sequence count: 70, invalid_count: 0, follower_error_count: 3, avg_sr: 0.428571, avg_spl: 0.298128
+
+=== Episode ===: 14it [6:38:25, 2283.51s/it][AElapsed 6:38:56 
+
+Begin to process [00800-TEEsavR23oF_sequence_14_0] type: [instance], Question: [white mantel fireplace below TV in living room with dark couch near staircase]
+
+Elapsed 6:38:56 Current start position is [    -1.2395     0.01338    -0.12146]
+Elapsed 7:28:39 ===Episode_id 14 task_id 0 task_level=instance===
+SR: False, SPL: 0.0, Object category: fireplace, goal type: sequence===
+
+Elapsed 7:28:39 [baseline] task_level=instance scene=00800-TEEsavR23oF episode=14 task=0 sec=2983.184
+Elapsed 7:28:39 [BASELINE_LIVE_METRICS] rows=71 avg_sr=0.422535 avg_spl=0.293929 follower_error_count=3 levels=[object:n=12,sr=0.583333,spl=0.461450; room:n=17,sr=0.470588,spl=0.288246; region:n=27,sr=0.444444,spl=0.347780; instance:n=15,sr=0.200000,spl=0.069422] latest_scene=00800-TEEsavR23oF latest_episode=14 latest_task=0 latest_level=instance by_level={"instance": {"avg_spl": 0.06942155474270605, "avg_sr": 0.2, "count": 15}, "object": {"avg_spl": 0.4614496744438152, "avg_sr": 0.5833333333333334, "count": 12}, "region": {"avg_spl": 0.34778008077908384, "avg_sr": 0.4444444444444444, "count": 27}, "room": {"avg_spl": 0.28824639657741624, "avg_sr": 0.47058823529411764, "count": 17}}
+Elapsed 7:28:39 
+
+Begin to process [00800-TEEsavR23oF_sequence_14_1] type: [object], Question: [cabinet]
+
+Elapsed 7:28:39 Current start position is [    -1.2958    0.013378      -6.983]
+Elapsed 7:35:38 ===Episode_id 14 task_id 1 task_level=object===
+SR: False, SPL: 0.0, Object category: cabinet, goal type: sequence===
+
+Elapsed 7:35:38 [baseline] task_level=object scene=00800-TEEsavR23oF episode=14 task=1 sec=418.635
+Elapsed 7:35:38 [BASELINE_LIVE_METRICS] rows=72 avg_sr=0.416667 avg_spl=0.289847 follower_error_count=3 levels=[object:n=13,sr=0.538462,spl=0.425954; room:n=17,sr=0.470588,spl=0.288246; region:n=27,sr=0.444444,spl=0.347780; instance:n=15,sr=0.200000,spl=0.069422] latest_scene=00800-TEEsavR23oF latest_episode=14 latest_task=1 latest_level=object by_level={"instance": {"avg_spl": 0.06942155474270605, "avg_sr": 0.2, "count": 15}, "object": {"avg_spl": 0.42595354564044474, "avg_sr": 0.5384615384615384, "count": 13}, "region": {"avg_spl": 0.34778008077908384, "avg_sr": 0.4444444444444444, "count": 27}, "room": {"avg_spl": 0.28824639657741624, "avg_sr": 0.47058823529411764, "count": 17}}
+Elapsed 7:35:38 
+
+Begin to process [00800-TEEsavR23oF_sequence_14_2] type: [room], Question: [armchair in the hall]
+
+Elapsed 7:35:38 Current start position is [    -2.2639    0.013378    -0.76122]
+Elapsed 7:40:36 ===Episode_id 14 task_id 2 task_level=room===
+SR: True, SPL: 0.7822105725012282, Object category: armchair, goal type: sequence===
+
+Elapsed 7:40:36 [baseline] task_level=room scene=00800-TEEsavR23oF episode=14 task=2 sec=298.120
+Elapsed 7:40:36 [BASELINE_LIVE_METRICS] rows=73 avg_sr=0.424658 avg_spl=0.296592 follower_error_count=3 levels=[object:n=13,sr=0.538462,spl=0.425954; room:n=18,sr=0.500000,spl=0.315689; region:n=27,sr=0.444444,spl=0.347780; instance:n=15,sr=0.200000,spl=0.069422] latest_scene=00800-TEEsavR23oF latest_episode=14 latest_task=2 latest_level=room by_level={"instance": {"avg_spl": 0.06942155474270605, "avg_sr": 0.2, "count": 15}, "object": {"avg_spl": 0.42595354564044474, "avg_sr": 0.5384615384615384, "count": 13}, "region": {"avg_spl": 0.34778008077908384, "avg_sr": 0.4444444444444444, "count": 27}, "room": {"avg_spl": 0.31568885079540576, "avg_sr": 0.5, "count": 18}}
+Elapsed 7:40:36 
+
+Begin to process [00800-TEEsavR23oF_sequence_14_3] type: [room], Question: [bath towel in the bathroom]
+
+Elapsed 7:40:36 Current start position is [    -8.2866    0.013378    -0.63427]
+Elapsed 7:48:36 ===Episode_id 14 task_id 3 task_level=room===
+SR: False, SPL: 0.0, Object category: bath towel, goal type: sequence===
+
+Elapsed 7:48:36 [baseline] task_level=room scene=00800-TEEsavR23oF episode=14 task=3 sec=480.732
+Elapsed 7:48:36 [BASELINE_LIVE_METRICS] rows=74 avg_sr=0.418919 avg_spl=0.292584 follower_error_count=3 levels=[object:n=13,sr=0.538462,spl=0.425954; room:n=19,sr=0.473684,spl=0.299074; region:n=27,sr=0.444444,spl=0.347780; instance:n=15,sr=0.200000,spl=0.069422] latest_scene=00800-TEEsavR23oF latest_episode=14 latest_task=3 latest_level=room by_level={"instance": {"avg_spl": 0.06942155474270605, "avg_sr": 0.2, "count": 15}, "object": {"avg_spl": 0.42595354564044474, "avg_sr": 0.5384615384615384, "count": 13}, "region": {"avg_spl": 0.34778008077908384, "avg_sr": 0.4444444444444444, "count": 27}, "room": {"avg_spl": 0.29907364812196335, "avg_sr": 0.47368421052631576, "count": 19}}
+Elapsed 7:48:36 
+
+Begin to process [00800-TEEsavR23oF_sequence_14_4] type: [region], Question: [floor mat in the tie: hall & living room that has dark leather couch between lamps under staircase, white-mantled fireplace with wall-mounted TV above between windows, leather armchair]
+
+Elapsed 7:48:36 Current start position is [     -1.701    0.013378     -5.3868]
+Elapsed 7:55:02 ===Episode_id 14 task_id 4 task_level=region===
+SR: False, SPL: 0.0, Object category: floor mat, goal type: sequence===
+
+Elapsed 7:55:02 [baseline] task_level=region scene=00800-TEEsavR23oF episode=14 task=4 sec=385.173
+Elapsed 7:55:02 [BASELINE_LIVE_METRICS] rows=75 avg_sr=0.413333 avg_spl=0.288682 follower_error_count=3 levels=[object:n=13,sr=0.538462,spl=0.425954; room:n=19,sr=0.473684,spl=0.299074; region:n=28,sr=0.428571,spl=0.335359; instance:n=15,sr=0.200000,spl=0.069422] latest_scene=00800-TEEsavR23oF latest_episode=14 latest_task=4 latest_level=region by_level={"instance": {"avg_spl": 0.06942155474270605, "avg_sr": 0.2, "count": 15}, "object": {"avg_spl": 0.42595354564044474, "avg_sr": 0.5384615384615384, "count": 13}, "region": {"avg_spl": 0.3353593636084023, "avg_sr": 0.42857142857142855, "count": 28}, "room": {"avg_spl": 0.29907364812196335, "avg_sr": 0.47368421052631576, "count": 19}}
+Elapsed 7:55:02 [Metrics] sequence count: 75, invalid_count: 0, follower_error_count: 3, avg_sr: 0.413333, avg_spl: 0.288682
+
+=== Episode ===: 15it [7:54:37, 2973.38s/it][AElapsed 7:55:07 
+
+Begin to process [00800-TEEsavR23oF_sequence_15_0] type: [instance], Question: [dark two-seater leather couch beside fireplace with white mantel below TV]
+
+Elapsed 7:55:07 Current start position is [    -4.4257     0.01338     -7.4543]
+Elapsed 8:50:18 ===Episode_id 15 task_id 0 task_level=instance===
+SR: False, SPL: 0.0, Object category: armchair, goal type: sequence===
+
+Elapsed 8:50:18 [baseline] task_level=instance scene=00800-TEEsavR23oF episode=15 task=0 sec=3310.930
+Elapsed 8:50:18 [BASELINE_LIVE_METRICS] rows=76 avg_sr=0.407895 avg_spl=0.284884 follower_error_count=3 levels=[object:n=13,sr=0.538462,spl=0.425954; room:n=19,sr=0.473684,spl=0.299074; region:n=28,sr=0.428571,spl=0.335359; instance:n=16,sr=0.187500,spl=0.065083] latest_scene=00800-TEEsavR23oF latest_episode=15 latest_task=0 latest_level=instance by_level={"instance": {"avg_spl": 0.06508270757128692, "avg_sr": 0.1875, "count": 16}, "object": {"avg_spl": 0.42595354564044474, "avg_sr": 0.5384615384615384, "count": 13}, "region": {"avg_spl": 0.3353593636084023, "avg_sr": 0.42857142857142855, "count": 28}, "room": {"avg_spl": 0.29907364812196335, "avg_sr": 0.47368421052631576, "count": 19}}
+Elapsed 8:50:18 
+
+Begin to process [00800-TEEsavR23oF_sequence_15_1] type: [region], Question: [pedestal sink in the bathroom that has pedestal sink beneath oval mirror and hand towel, toilet below colorful tropical harbor picture, wire rack with bottle of cleaner, wooden flooring]
+
+Elapsed 8:50:18 Current start position is [      1.547    0.013378     -5.4853]
+Elapsed 8:59:34 ===Episode_id 15 task_id 1 task_level=region===
+SR: False, SPL: 0.0, Object category: pedestal sink, goal type: sequence===
+
+Elapsed 8:59:34 [baseline] task_level=region scene=00800-TEEsavR23oF episode=15 task=1 sec=555.383
+Elapsed 8:59:34 [BASELINE_LIVE_METRICS] rows=77 avg_sr=0.402597 avg_spl=0.281184 follower_error_count=3 levels=[object:n=13,sr=0.538462,spl=0.425954; room:n=19,sr=0.473684,spl=0.299074; region:n=29,sr=0.413793,spl=0.323795; instance:n=16,sr=0.187500,spl=0.065083] latest_scene=00800-TEEsavR23oF latest_episode=15 latest_task=1 latest_level=region by_level={"instance": {"avg_spl": 0.06508270757128692, "avg_sr": 0.1875, "count": 16}, "object": {"avg_spl": 0.42595354564044474, "avg_sr": 0.5384615384615384, "count": 13}, "region": {"avg_spl": 0.32379524762190565, "avg_sr": 0.41379310344827586, "count": 29}, "room": {"avg_spl": 0.29907364812196335, "avg_sr": 0.47368421052631576, "count": 19}}
+Elapsed 8:59:34 
+
+Begin to process [00800-TEEsavR23oF_sequence_15_2] type: [room], Question: [tv in the hall]
+
+Elapsed 8:59:34 Current start position is [    -1.3073    0.013378     -6.5729]
+Elapsed 9:06:28 ===Episode_id 15 task_id 2 task_level=room===
+SR: False, SPL: 0.0, Object category: tv, goal type: sequence===
+
+Elapsed 9:06:28 [baseline] task_level=room scene=00800-TEEsavR23oF episode=15 task=2 sec=413.984
+Elapsed 9:06:28 [BASELINE_LIVE_METRICS] rows=78 avg_sr=0.397436 avg_spl=0.277579 follower_error_count=3 levels=[object:n=13,sr=0.538462,spl=0.425954; room:n=20,sr=0.450000,spl=0.284120; region:n=29,sr=0.413793,spl=0.323795; instance:n=16,sr=0.187500,spl=0.065083] latest_scene=00800-TEEsavR23oF latest_episode=15 latest_task=2 latest_level=room by_level={"instance": {"avg_spl": 0.06508270757128692, "avg_sr": 0.1875, "count": 16}, "object": {"avg_spl": 0.42595354564044474, "avg_sr": 0.5384615384615384, "count": 13}, "region": {"avg_spl": 0.32379524762190565, "avg_sr": 0.41379310344827586, "count": 29}, "room": {"avg_spl": 0.2841199657158652, "avg_sr": 0.45, "count": 20}}
+Elapsed 9:06:28 
+
+Begin to process [00800-TEEsavR23oF_sequence_15_3] type: [region], Question: [cabinet in the kitchen that has wood kitchen cabinets with granite countertop, stove above stainless oven with towel, silver dishwasher, microwave, coffee machine, stainless steel refrigerator, wall clock, wall-mounted US flag]
+
+Elapsed 9:06:28 Current start position is [     1.6332    0.013378     -5.4229]
+Elapsed 9:14:35 ===Episode_id 15 task_id 3 task_level=region===
+SR: True, SPL: 0.5884385550301543, Object category: cabinet, goal type: sequence===
+
+Elapsed 9:14:35 [baseline] task_level=region scene=00800-TEEsavR23oF episode=15 task=3 sec=487.356
+Elapsed 9:14:35 [BASELINE_LIVE_METRICS] rows=79 avg_sr=0.405063 avg_spl=0.281514 follower_error_count=3 levels=[object:n=13,sr=0.538462,spl=0.425954; room:n=20,sr=0.450000,spl=0.284120; region:n=30,sr=0.433333,spl=0.332617; instance:n=16,sr=0.187500,spl=0.065083] latest_scene=00800-TEEsavR23oF latest_episode=15 latest_task=3 latest_level=region by_level={"instance": {"avg_spl": 0.06508270757128692, "avg_sr": 0.1875, "count": 16}, "object": {"avg_spl": 0.42595354564044474, "avg_sr": 0.5384615384615384, "count": 13}, "region": {"avg_spl": 0.33261669120218057, "avg_sr": 0.43333333333333335, "count": 30}, "room": {"avg_spl": 0.2841199657158652, "avg_sr": 0.45, "count": 20}}
+Elapsed 9:14:35 
+
+Begin to process [00800-TEEsavR23oF_sequence_15_4] type: [region], Question: [bathroom cabinet in the bathroom that has dark wood double-sink bath vanity below rectangle mirror, built-in bathtub, grey bath mat, gray towel by white towel, connects to bedroom with striped bedding]
+
+Elapsed 9:14:35 Current start position is [    -6.0698    0.013378    -0.16381]
+Elapsed 9:22:10 ===Episode_id 15 task_id 4 task_level=region===
+SR: True, SPL: 0.6759977256755316, Object category: bathroom cabinet, goal type: sequence===
+
+Elapsed 9:22:10 [baseline] task_level=region scene=00800-TEEsavR23oF episode=15 task=4 sec=454.945
+Elapsed 9:22:10 [BASELINE_LIVE_METRICS] rows=80 avg_sr=0.412500 avg_spl=0.286445 follower_error_count=3 levels=[object:n=13,sr=0.538462,spl=0.425954; room:n=20,sr=0.450000,spl=0.284120; region:n=31,sr=0.451613,spl=0.343693; instance:n=16,sr=0.187500,spl=0.065083] latest_scene=00800-TEEsavR23oF latest_episode=15 latest_task=4 latest_level=region by_level={"instance": {"avg_spl": 0.06508270757128692, "avg_sr": 0.1875, "count": 16}, "object": {"avg_spl": 0.42595354564044474, "avg_sr": 0.5384615384615384, "count": 13}, "region": {"avg_spl": 0.34369349876583705, "avg_sr": 0.45161290322580644, "count": 31}, "room": {"avg_spl": 0.2841199657158652, "avg_sr": 0.45, "count": 20}}
+Elapsed 9:22:10 [Metrics] sequence count: 80, invalid_count: 0, follower_error_count: 3, avg_sr: 0.412500, avg_spl: 0.286445
+
+=== Episode ===: 16it [9:21:45, 3652.14s/it][AElapsed 9:22:17 
+
+Begin to process [00800-TEEsavR23oF_sequence_16_0] type: [instance], Question: [small wooden side table with remote between white fireplace and armchair in living room]
+
+Elapsed 9:22:17 Current start position is [   -0.28228     0.01338     0.31235]
+Elapsed 9:40:29 ===Episode_id 16 task_id 0 task_level=instance===
+SR: True, SPL: 0.7716119286817316, Object category: table, goal type: sequence===
+
+Elapsed 9:40:29 [baseline] task_level=instance scene=00800-TEEsavR23oF episode=16 task=0 sec=1091.605
+Elapsed 9:40:29 [BASELINE_LIVE_METRICS] rows=81 avg_sr=0.419753 avg_spl=0.292435 follower_error_count=3 levels=[object:n=13,sr=0.538462,spl=0.425954; room:n=20,sr=0.450000,spl=0.284120; region:n=31,sr=0.451613,spl=0.343693; instance:n=17,sr=0.235294,spl=0.106643] latest_scene=00800-TEEsavR23oF latest_episode=16 latest_task=0 latest_level=instance by_level={"instance": {"avg_spl": 0.10664324998954837, "avg_sr": 0.23529411764705882, "count": 17}, "object": {"avg_spl": 0.42595354564044474, "avg_sr": 0.5384615384615384, "count": 13}, "region": {"avg_spl": 0.34369349876583705, "avg_sr": 0.45161290322580644, "count": 31}, "room": {"avg_spl": 0.2841199657158652, "avg_sr": 0.45, "count": 20}}
+Elapsed 9:40:29 
+
+Begin to process [00800-TEEsavR23oF_sequence_16_1] type: [region], Question: [doormat in the hall that has brown-framed sailboats painting on wall, colorful floral door entry mat]
+
+Elapsed 9:40:29 Current start position is [     -9.147    0.013378     0.37494]
+Elapsed 10:11:49 ===Episode_id 16 task_id 1 task_level=region===
+SR: True, SPL: 0.45692926830976904, Object category: doormat, goal type: sequence===
+
+Elapsed 10:11:49 [baseline] task_level=region scene=00800-TEEsavR23oF episode=16 task=1 sec=1880.455
+Elapsed 10:11:49 [BASELINE_LIVE_METRICS] rows=82 avg_sr=0.426829 avg_spl=0.294441 follower_error_count=3 levels=[object:n=13,sr=0.538462,spl=0.425954; room:n=20,sr=0.450000,spl=0.284120; region:n=32,sr=0.468750,spl=0.347232; instance:n=17,sr=0.235294,spl=0.106643] latest_scene=00800-TEEsavR23oF latest_episode=16 latest_task=1 latest_level=region by_level={"instance": {"avg_spl": 0.10664324998954837, "avg_sr": 0.23529411764705882, "count": 17}, "object": {"avg_spl": 0.42595354564044474, "avg_sr": 0.5384615384615384, "count": 13}, "region": {"avg_spl": 0.3472321165640849, "avg_sr": 0.46875, "count": 32}, "room": {"avg_spl": 0.2841199657158652, "avg_sr": 0.45, "count": 20}}
+Elapsed 10:11:49 
+
+Begin to process [00800-TEEsavR23oF_sequence_16_2] type: [room], Question: [armchair in the living room]
+
+Elapsed 10:11:49 Current start position is [  -0.072739    0.013378    -0.11324]
+Elapsed 10:49:40 ===Episode_id 16 task_id 2 task_level=room===
+SR: True, SPL: 0.3126195507997667, Object category: armchair, goal type: sequence===
+
+Elapsed 10:49:40 [baseline] task_level=room scene=00800-TEEsavR23oF episode=16 task=2 sec=2271.083
+Elapsed 10:49:40 [BASELINE_LIVE_METRICS] rows=83 avg_sr=0.433735 avg_spl=0.294660 follower_error_count=3 levels=[object:n=13,sr=0.538462,spl=0.425954; room:n=21,sr=0.476190,spl=0.285477; region:n=32,sr=0.468750,spl=0.347232; instance:n=17,sr=0.235294,spl=0.106643] latest_scene=00800-TEEsavR23oF latest_episode=16 latest_task=2 latest_level=room by_level={"instance": {"avg_spl": 0.10664324998954837, "avg_sr": 0.23529411764705882, "count": 17}, "object": {"avg_spl": 0.42595354564044474, "avg_sr": 0.5384615384615384, "count": 13}, "region": {"avg_spl": 0.3472321165640849, "avg_sr": 0.46875, "count": 32}, "room": {"avg_spl": 0.2854770888150986, "avg_sr": 0.47619047619047616, "count": 21}}
+Elapsed 10:49:40 
+
+Begin to process [00800-TEEsavR23oF_sequence_16_3] type: [region], Question: [sideboard in the dining room that has rectangular wooden dining table with carved chairs, potted plant on side cabinet, large canal scene painting above]
+
+Elapsed 10:49:40 Current start position is [    -7.4495    0.013378    -0.51259]
+Elapsed 10:59:16 ===Episode_id 16 task_id 3 task_level=region===
+SR: False, SPL: 0.0, Object category: sideboard, goal type: sequence===
+
+Elapsed 10:59:16 [baseline] task_level=region scene=00800-TEEsavR23oF episode=16 task=3 sec=575.876
+Elapsed 10:59:16 [BASELINE_LIVE_METRICS] rows=84 avg_sr=0.428571 avg_spl=0.291152 follower_error_count=3 levels=[object:n=13,sr=0.538462,spl=0.425954; room:n=21,sr=0.476190,spl=0.285477; region:n=33,sr=0.454545,spl=0.336710; instance:n=17,sr=0.235294,spl=0.106643] latest_scene=00800-TEEsavR23oF latest_episode=16 latest_task=3 latest_level=region by_level={"instance": {"avg_spl": 0.10664324998954837, "avg_sr": 0.23529411764705882, "count": 17}, "object": {"avg_spl": 0.42595354564044474, "avg_sr": 0.5384615384615384, "count": 13}, "region": {"avg_spl": 0.3367099312136581, "avg_sr": 0.45454545454545453, "count": 33}, "room": {"avg_spl": 0.2854770888150986, "avg_sr": 0.47619047619047616, "count": 21}}
+Elapsed 10:59:16 
+
+Begin to process [00800-TEEsavR23oF_sequence_16_4] type: [region], Question: [case in the walk-in closet that has ironing board and tightly packed clothes hanging above storage boxes]
+
+Elapsed 10:59:16 Current start position is [    0.45343    0.013378     -3.6428]
+Elapsed 11:10:16 ===Episode_id 16 task_id 4 task_level=region===
+SR: True, SPL: 0.9151367228657569, Object category: case, goal type: sequence===
+
+Elapsed 11:10:16 [baseline] task_level=region scene=00800-TEEsavR23oF episode=16 task=4 sec=659.983
+Elapsed 11:10:16 [BASELINE_LIVE_METRICS] rows=85 avg_sr=0.435294 avg_spl=0.298493 follower_error_count=3 levels=[object:n=13,sr=0.538462,spl=0.425954; room:n=21,sr=0.476190,spl=0.285477; region:n=34,sr=0.470588,spl=0.353722; instance:n=17,sr=0.235294,spl=0.106643] latest_scene=00800-TEEsavR23oF latest_episode=16 latest_task=4 latest_level=region by_level={"instance": {"avg_spl": 0.10664324998954837, "avg_sr": 0.23529411764705882, "count": 17}, "object": {"avg_spl": 0.42595354564044474, "avg_sr": 0.5384615384615384, "count": 13}, "region": {"avg_spl": 0.35372248390930805, "avg_sr": 0.47058823529411764, "count": 34}, "room": {"avg_spl": 0.2854770888150986, "avg_sr": 0.47619047619047616, "count": 21}}
+Elapsed 11:10:16 [Metrics] sequence count: 85, invalid_count: 0, follower_error_count: 3, avg_sr: 0.435294, avg_spl: 0.298493
+
+=== Episode ===: 17it [11:09:52, 4504.39s/it][AElapsed 11:10:22 
+
+Begin to process [00800-TEEsavR23oF_sequence_17_0] type: [instance], Question: [dark floor mat beside fireplace in tie: living room & hall with dark leather couch near staircase]
+
+Elapsed 11:10:22 Current start position is [    -4.8219     0.05259     -7.7573]
+Elapsed 11:59:00 ===Episode_id 17 task_id 0 task_level=instance===
+SR: False, SPL: 0.0, Object category: floor mat, goal type: sequence===
+
+Elapsed 11:59:00 [baseline] task_level=instance scene=00800-TEEsavR23oF episode=17 task=0 sec=2917.679
+Elapsed 11:59:00 [BASELINE_LIVE_METRICS] rows=86 avg_sr=0.430233 avg_spl=0.295022 follower_error_count=3 levels=[object:n=13,sr=0.538462,spl=0.425954; room:n=21,sr=0.476190,spl=0.285477; region:n=34,sr=0.470588,spl=0.353722; instance:n=18,sr=0.222222,spl=0.100719] latest_scene=00800-TEEsavR23oF latest_episode=17 latest_task=0 latest_level=instance by_level={"instance": {"avg_spl": 0.10071862499012901, "avg_sr": 0.2222222222222222, "count": 18}, "object": {"avg_spl": 0.42595354564044474, "avg_sr": 0.5384615384615384, "count": 13}, "region": {"avg_spl": 0.35372248390930805, "avg_sr": 0.47058823529411764, "count": 34}, "room": {"avg_spl": 0.2854770888150986, "avg_sr": 0.47619047619047616, "count": 21}}
+Elapsed 11:59:00 
+
+Begin to process [00800-TEEsavR23oF_sequence_17_1] type: [room], Question: [kitchen cabinet in the kitchen]
+
+Elapsed 11:59:00 Current start position is [    -2.0546    0.013378     -6.6182]
+Elapsed 12:06:25 ===Episode_id 17 task_id 1 task_level=room===
+SR: True, SPL: 0.7443265598021848, Object category: kitchen cabinet, goal type: sequence===
+
+Elapsed 12:06:25 [baseline] task_level=room scene=00800-TEEsavR23oF episode=17 task=1 sec=445.243
+Elapsed 12:06:25 [BASELINE_LIVE_METRICS] rows=87 avg_sr=0.436782 avg_spl=0.300187 follower_error_count=3 levels=[object:n=13,sr=0.538462,spl=0.425954; room:n=22,sr=0.500000,spl=0.306334; region:n=34,sr=0.470588,spl=0.353722; instance:n=18,sr=0.222222,spl=0.100719] latest_scene=00800-TEEsavR23oF latest_episode=17 latest_task=1 latest_level=room by_level={"instance": {"avg_spl": 0.10071862499012901, "avg_sr": 0.2222222222222222, "count": 18}, "object": {"avg_spl": 0.42595354564044474, "avg_sr": 0.5384615384615384, "count": 13}, "region": {"avg_spl": 0.35372248390930805, "avg_sr": 0.47058823529411764, "count": 34}, "room": {"avg_spl": 0.30633388295087527, "avg_sr": 0.5, "count": 22}}
+Elapsed 12:06:25 
+
+Begin to process [00800-TEEsavR23oF_sequence_17_2] type: [region], Question: [fireplace in the tie: hall & living room that has dark leather couch between lamps under staircase, white-mantled fireplace with wall-mounted TV above between windows, leather armchair]
+
+Elapsed 12:06:25 Current start position is [    -3.6294    0.013378    -0.59864]
+Elapsed 12:14:53 ===Episode_id 17 task_id 2 task_level=region===
+SR: False, SPL: 0.0, Object category: fireplace, goal type: sequence===
+
+Elapsed 12:14:53 [baseline] task_level=region scene=00800-TEEsavR23oF episode=17 task=2 sec=507.397
+Elapsed 12:14:53 [BASELINE_LIVE_METRICS] rows=88 avg_sr=0.431818 avg_spl=0.296775 follower_error_count=3 levels=[object:n=13,sr=0.538462,spl=0.425954; room:n=22,sr=0.500000,spl=0.306334; region:n=35,sr=0.457143,spl=0.343616; instance:n=18,sr=0.222222,spl=0.100719] latest_scene=00800-TEEsavR23oF latest_episode=17 latest_task=2 latest_level=region by_level={"instance": {"avg_spl": 0.10071862499012901, "avg_sr": 0.2222222222222222, "count": 18}, "object": {"avg_spl": 0.42595354564044474, "avg_sr": 0.5384615384615384, "count": 13}, "region": {"avg_spl": 0.343616127226185, "avg_sr": 0.45714285714285713, "count": 35}, "room": {"avg_spl": 0.30633388295087527, "avg_sr": 0.5, "count": 22}}
+Elapsed 12:14:53 
+
+Begin to process [00800-TEEsavR23oF_sequence_17_3] type: [region], Question: [doormat in the hall that has brown-framed sailboats painting on wall, colorful floral door entry mat]
+
+Elapsed 12:14:53 Current start position is [     1.5845    0.013378     -5.4746]
+Elapsed 12:25:26 ===Episode_id 17 task_id 3 task_level=region===
+SR: False, SPL: 0.0, Object category: doormat, goal type: sequence===
+
+Elapsed 12:25:26 [baseline] task_level=region scene=00800-TEEsavR23oF episode=17 task=3 sec=633.307
+Elapsed 12:25:26 [BASELINE_LIVE_METRICS] rows=89 avg_sr=0.426966 avg_spl=0.293441 follower_error_count=3 levels=[object:n=13,sr=0.538462,spl=0.425954; room:n=22,sr=0.500000,spl=0.306334; region:n=36,sr=0.444444,spl=0.334071; instance:n=18,sr=0.222222,spl=0.100719] latest_scene=00800-TEEsavR23oF latest_episode=17 latest_task=3 latest_level=region by_level={"instance": {"avg_spl": 0.10071862499012901, "avg_sr": 0.2222222222222222, "count": 18}, "object": {"avg_spl": 0.42595354564044474, "avg_sr": 0.5384615384615384, "count": 13}, "region": {"avg_spl": 0.3340712348032354, "avg_sr": 0.4444444444444444, "count": 36}, "room": {"avg_spl": 0.30633388295087527, "avg_sr": 0.5, "count": 22}}
+Elapsed 12:25:26 
+
+Begin to process [00800-TEEsavR23oF_sequence_17_4] type: [region], Question: [wardrobe in the bedroom that has wood bed with gray-striped bedding, lamp on nightstand, TV atop dresser, laundry basket, dark cabinet below wall decoration between windows]
+
+Elapsed 12:25:26 Current start position is [    -2.1333    0.013378     -6.5917]
+Elapsed 12:35:10 ===Episode_id 17 task_id 4 task_level=region===
+SR: False, SPL: 0.0, Object category: wardrobe, goal type: sequence===
+
+Elapsed 12:35:10 [baseline] task_level=region scene=00800-TEEsavR23oF episode=17 task=4 sec=583.993
+Elapsed 12:35:10 [BASELINE_LIVE_METRICS] rows=90 avg_sr=0.422222 avg_spl=0.290180 follower_error_count=3 levels=[object:n=13,sr=0.538462,spl=0.425954; room:n=22,sr=0.500000,spl=0.306334; region:n=37,sr=0.432432,spl=0.325042; instance:n=18,sr=0.222222,spl=0.100719] latest_scene=00800-TEEsavR23oF latest_episode=17 latest_task=4 latest_level=region by_level={"instance": {"avg_spl": 0.10071862499012901, "avg_sr": 0.2222222222222222, "count": 18}, "object": {"avg_spl": 0.42595354564044474, "avg_sr": 0.5384615384615384, "count": 13}, "region": {"avg_spl": 0.32504228251125605, "avg_sr": 0.43243243243243246, "count": 37}, "room": {"avg_spl": 0.30633388295087527, "avg_sr": 0.5, "count": 22}}
+Elapsed 12:35:10 [Metrics] sequence count: 90, invalid_count: 0, follower_error_count: 3, avg_sr: 0.422222, avg_spl: 0.290180
+
+=== Episode ===: 18it [12:34:45, 4681.46s/it][AElapsed 12:35:16 
+
+Begin to process [00800-TEEsavR23oF_sequence_18_0] type: [instance], Question: [green leafy plant in flowerpot left of black three-seater couch under staircase]
+
+Elapsed 12:35:16 Current start position is [    -4.5729      0.0326     -7.7306]
+Elapsed 13:15:52 ===Episode_id 18 task_id 0 task_level=instance===
+SR: False, SPL: 0.0, Object category: plant, goal type: sequence===
+
+Elapsed 13:15:52 [baseline] task_level=instance scene=00800-TEEsavR23oF episode=18 task=0 sec=2436.362
+Elapsed 13:15:52 [BASELINE_LIVE_METRICS] rows=91 avg_sr=0.417582 avg_spl=0.286992 follower_error_count=3 levels=[object:n=13,sr=0.538462,spl=0.425954; room:n=22,sr=0.500000,spl=0.306334; region:n=37,sr=0.432432,spl=0.325042; instance:n=19,sr=0.210526,spl=0.095418] latest_scene=00800-TEEsavR23oF latest_episode=18 latest_task=0 latest_level=instance by_level={"instance": {"avg_spl": 0.09541764472749065, "avg_sr": 0.21052631578947367, "count": 19}, "object": {"avg_spl": 0.42595354564044474, "avg_sr": 0.5384615384615384, "count": 13}, "region": {"avg_spl": 0.32504228251125605, "avg_sr": 0.43243243243243246, "count": 37}, "room": {"avg_spl": 0.30633388295087527, "avg_sr": 0.5, "count": 22}}
+Elapsed 13:15:52 
+
+Begin to process [00800-TEEsavR23oF_sequence_18_1] type: [room], Question: [kitchen sink in the kitchen]
+
+Elapsed 13:15:52 Current start position is [    -8.8809    0.013378     -2.4744]
+Elapsed 13:23:12 ===Episode_id 18 task_id 1 task_level=room===
+SR: False, SPL: 0.0, Object category: kitchen sink, goal type: sequence===
+
+Elapsed 13:23:12 [baseline] task_level=room scene=00800-TEEsavR23oF episode=18 task=1 sec=440.041
+Elapsed 13:23:12 [BASELINE_LIVE_METRICS] rows=92 avg_sr=0.413043 avg_spl=0.283872 follower_error_count=3 levels=[object:n=13,sr=0.538462,spl=0.425954; room:n=23,sr=0.478261,spl=0.293015; region:n=37,sr=0.432432,spl=0.325042; instance:n=19,sr=0.210526,spl=0.095418] latest_scene=00800-TEEsavR23oF latest_episode=18 latest_task=1 latest_level=room by_level={"instance": {"avg_spl": 0.09541764472749065, "avg_sr": 0.21052631578947367, "count": 19}, "object": {"avg_spl": 0.42595354564044474, "avg_sr": 0.5384615384615384, "count": 13}, "region": {"avg_spl": 0.32504228251125605, "avg_sr": 0.43243243243243246, "count": 37}, "room": {"avg_spl": 0.29301501847475026, "avg_sr": 0.4782608695652174, "count": 23}}
+Elapsed 13:23:12 
+
+Begin to process [00800-TEEsavR23oF_sequence_18_2] type: [object], Question: [sink]
+
+Elapsed 13:23:12 Current start position is [    -1.2491    0.013378     -6.7186]
+Elapsed 13:31:00 ===Episode_id 18 task_id 2 task_level=object===
+SR: True, SPL: 1.0, Object category: sink, goal type: sequence===
+
+Elapsed 13:31:00 [baseline] task_level=object scene=00800-TEEsavR23oF episode=18 task=2 sec=468.253
+Elapsed 13:31:00 [BASELINE_LIVE_METRICS] rows=93 avg_sr=0.419355 avg_spl=0.291572 follower_error_count=3 levels=[object:n=14,sr=0.571429,spl=0.466957; room:n=23,sr=0.478261,spl=0.293015; region:n=37,sr=0.432432,spl=0.325042; instance:n=19,sr=0.210526,spl=0.095418] latest_scene=00800-TEEsavR23oF latest_episode=18 latest_task=2 latest_level=object by_level={"instance": {"avg_spl": 0.09541764472749065, "avg_sr": 0.21052631578947367, "count": 19}, "object": {"avg_spl": 0.46695686380898443, "avg_sr": 0.5714285714285714, "count": 14}, "region": {"avg_spl": 0.32504228251125605, "avg_sr": 0.43243243243243246, "count": 37}, "room": {"avg_spl": 0.29301501847475026, "avg_sr": 0.4782608695652174, "count": 23}}
+Elapsed 13:31:00 
+
+Begin to process [00800-TEEsavR23oF_sequence_18_3] type: [object], Question: [floor mat]
+
+Elapsed 13:31:00 Current start position is [    -1.2491    0.013378     -6.7186]
+Elapsed 13:40:04 ===Episode_id 18 task_id 3 task_level=object===
+SR: False, SPL: 0.0, Object category: floor mat, goal type: sequence===
+
+Elapsed 13:40:04 [baseline] task_level=object scene=00800-TEEsavR23oF episode=18 task=3 sec=544.137
+Elapsed 13:40:04 [BASELINE_LIVE_METRICS] rows=94 avg_sr=0.414894 avg_spl=0.288471 follower_error_count=3 levels=[object:n=15,sr=0.533333,spl=0.435826; room:n=23,sr=0.478261,spl=0.293015; region:n=37,sr=0.432432,spl=0.325042; instance:n=19,sr=0.210526,spl=0.095418] latest_scene=00800-TEEsavR23oF latest_episode=18 latest_task=3 latest_level=object by_level={"instance": {"avg_spl": 0.09541764472749065, "avg_sr": 0.21052631578947367, "count": 19}, "object": {"avg_spl": 0.4358264062217188, "avg_sr": 0.5333333333333333, "count": 15}, "region": {"avg_spl": 0.32504228251125605, "avg_sr": 0.43243243243243246, "count": 37}, "room": {"avg_spl": 0.29301501847475026, "avg_sr": 0.4782608695652174, "count": 23}}
+Elapsed 13:40:04 
+
+Begin to process [00800-TEEsavR23oF_sequence_18_4] type: [room], Question: [case in the walk-in closet]
+
+Elapsed 13:40:04 Current start position is [    -2.2223    0.013378     -6.6965]
+Elapsed 13:48:18 ===Episode_id 18 task_id 4 task_level=room===
+SR: True, SPL: 0.8509569994381057, Object category: case, goal type: sequence===
+
+Elapsed 13:48:18 [baseline] task_level=room scene=00800-TEEsavR23oF episode=18 task=4 sec=493.796
+Elapsed 13:48:18 [BASELINE_LIVE_METRICS] rows=95 avg_sr=0.421053 avg_spl=0.294392 follower_error_count=3 levels=[object:n=15,sr=0.533333,spl=0.435826; room:n=24,sr=0.500000,spl=0.316263; region:n=37,sr=0.432432,spl=0.325042; instance:n=19,sr=0.210526,spl=0.095418] latest_scene=00800-TEEsavR23oF latest_episode=18 latest_task=4 latest_level=room by_level={"instance": {"avg_spl": 0.09541764472749065, "avg_sr": 0.21052631578947367, "count": 19}, "object": {"avg_spl": 0.4358264062217188, "avg_sr": 0.5333333333333333, "count": 15}, "region": {"avg_spl": 0.32504228251125605, "avg_sr": 0.43243243243243246, "count": 37}, "room": {"avg_spl": 0.31626260101489007, "avg_sr": 0.5, "count": 24}}
+Elapsed 13:48:18 [Metrics] sequence count: 95, invalid_count: 0, follower_error_count: 3, avg_sr: 0.421053, avg_spl: 0.294392
+
+=== Episode ===: 19it [13:47:54, 4593.37s/it][AElapsed 13:48:25 
+
+Begin to process [00800-TEEsavR23oF_sequence_19_0] type: [instance], Question: [small dark wood side table with lamp and plant to the right of black three-seater couch under staircase in living room with fireplace]
+
+Elapsed 13:48:25 Current start position is [    -4.9911     0.04042     -6.2274]
+Elapsed 14:32:13 ===Episode_id 19 task_id 0 task_level=instance===
+SR: False, SPL: 0.0, Object category: table, goal type: sequence===
+
+Elapsed 14:32:13 [baseline] task_level=instance scene=00800-TEEsavR23oF episode=19 task=0 sec=2627.904
+Elapsed 14:32:13 [BASELINE_LIVE_METRICS] rows=96 avg_sr=0.416667 avg_spl=0.291325 follower_error_count=3 levels=[object:n=15,sr=0.533333,spl=0.435826; room:n=24,sr=0.500000,spl=0.316263; region:n=37,sr=0.432432,spl=0.325042; instance:n=20,sr=0.200000,spl=0.090647] latest_scene=00800-TEEsavR23oF latest_episode=19 latest_task=0 latest_level=instance by_level={"instance": {"avg_spl": 0.09064676249111611, "avg_sr": 0.2, "count": 20}, "object": {"avg_spl": 0.4358264062217188, "avg_sr": 0.5333333333333333, "count": 15}, "region": {"avg_spl": 0.32504228251125605, "avg_sr": 0.43243243243243246, "count": 37}, "room": {"avg_spl": 0.31626260101489007, "avg_sr": 0.5, "count": 24}}
+Elapsed 14:32:13 
+
+Begin to process [00800-TEEsavR23oF_sequence_19_1] type: [region], Question: [cabinet in the kitchen that has wood kitchen cabinets with granite countertop, stove above stainless oven with towel, silver dishwasher, microwave, coffee machine, stainless steel refrigerator, wall clock, wall-mounted US flag]
+
+Elapsed 14:32:13 Current start position is [     1.8617    0.013378     -5.4307]
+Elapsed 14:38:50 ===Episode_id 19 task_id 1 task_level=region===
+SR: False, SPL: 0.0, Object category: cabinet, goal type: sequence===
+
+Elapsed 14:38:50 [baseline] task_level=region scene=00800-TEEsavR23oF episode=19 task=1 sec=397.038
+Elapsed 14:38:50 [BASELINE_LIVE_METRICS] rows=97 avg_sr=0.412371 avg_spl=0.288322 follower_error_count=3 levels=[object:n=15,sr=0.533333,spl=0.435826; room:n=24,sr=0.500000,spl=0.316263; region:n=38,sr=0.421053,spl=0.316489; instance:n=20,sr=0.200000,spl=0.090647] latest_scene=00800-TEEsavR23oF latest_episode=19 latest_task=1 latest_level=region by_level={"instance": {"avg_spl": 0.09064676249111611, "avg_sr": 0.2, "count": 20}, "object": {"avg_spl": 0.4358264062217188, "avg_sr": 0.5333333333333333, "count": 15}, "region": {"avg_spl": 0.31648853823464407, "avg_sr": 0.42105263157894735, "count": 38}, "room": {"avg_spl": 0.31626260101489007, "avg_sr": 0.5, "count": 24}}
+Elapsed 14:38:50 
+
+Begin to process [00800-TEEsavR23oF_sequence_19_2] type: [region], Question: [sideboard in the dining room that has rectangular wooden dining table with carved chairs, potted plant on side cabinet, large canal scene painting above]
+
+Elapsed 14:38:50 Current start position is [    -2.2752    0.013378     -1.5939]
+Elapsed 14:45:04 ===Episode_id 19 task_id 2 task_level=region===
+SR: False, SPL: 0.0, Object category: sideboard, goal type: sequence===
+
+Elapsed 14:45:04 [baseline] task_level=region scene=00800-TEEsavR23oF episode=19 task=2 sec=373.727
+Elapsed 14:45:04 [BASELINE_LIVE_METRICS] rows=98 avg_sr=0.408163 avg_spl=0.285380 follower_error_count=3 levels=[object:n=15,sr=0.533333,spl=0.435826; room:n=24,sr=0.500000,spl=0.316263; region:n=39,sr=0.410256,spl=0.308373; instance:n=20,sr=0.200000,spl=0.090647] latest_scene=00800-TEEsavR23oF latest_episode=19 latest_task=2 latest_level=region by_level={"instance": {"avg_spl": 0.09064676249111611, "avg_sr": 0.2, "count": 20}, "object": {"avg_spl": 0.4358264062217188, "avg_sr": 0.5333333333333333, "count": 15}, "region": {"avg_spl": 0.30837344751067886, "avg_sr": 0.41025641025641024, "count": 39}, "room": {"avg_spl": 0.31626260101489007, "avg_sr": 0.5, "count": 24}}
+Elapsed 14:45:04 
+
+Begin to process [00800-TEEsavR23oF_sequence_19_3] type: [room], Question: [armchair in the living room]
+
+Elapsed 14:45:04 Current start position is [    0.13315    0.013378     -3.6229]
+Elapsed 14:48:10 ===Episode_id 19 task_id 3 task_level=room===
+SR: True, SPL: 0.671267686804034, Object category: armchair, goal type: sequence===
+
+Elapsed 14:48:10 [baseline] task_level=room scene=00800-TEEsavR23oF episode=19 task=3 sec=186.476
+Elapsed 14:48:10 [BASELINE_LIVE_METRICS] rows=99 avg_sr=0.414141 avg_spl=0.289277 follower_error_count=3 levels=[object:n=15,sr=0.533333,spl=0.435826; room:n=25,sr=0.520000,spl=0.330463; region:n=39,sr=0.410256,spl=0.308373; instance:n=20,sr=0.200000,spl=0.090647] latest_scene=00800-TEEsavR23oF latest_episode=19 latest_task=3 latest_level=room by_level={"instance": {"avg_spl": 0.09064676249111611, "avg_sr": 0.2, "count": 20}, "object": {"avg_spl": 0.4358264062217188, "avg_sr": 0.5333333333333333, "count": 15}, "region": {"avg_spl": 0.30837344751067886, "avg_sr": 0.41025641025641024, "count": 39}, "room": {"avg_spl": 0.3304628044464558, "avg_sr": 0.52, "count": 25}}
+Elapsed 14:48:10 
+
+Begin to process [00800-TEEsavR23oF_sequence_19_4] type: [room], Question: [sink in the kitchen]
+
+Elapsed 14:48:10 Current start position is [    -10.569    0.013378    -0.68425]
+Elapsed 14:54:10 ===Episode_id 19 task_id 4 task_level=room===
+SR: False, SPL: 0.0, Object category: sink, goal type: sequence===
+
+Elapsed 14:54:10 [baseline] task_level=room scene=00800-TEEsavR23oF episode=19 task=4 sec=359.930
+Elapsed 14:54:10 [BASELINE_LIVE_METRICS] rows=100 avg_sr=0.410000 avg_spl=0.286385 follower_error_count=3 levels=[object:n=15,sr=0.533333,spl=0.435826; room:n=26,sr=0.500000,spl=0.317753; region:n=39,sr=0.410256,spl=0.308373; instance:n=20,sr=0.200000,spl=0.090647] latest_scene=00800-TEEsavR23oF latest_episode=19 latest_task=4 latest_level=room by_level={"instance": {"avg_spl": 0.09064676249111611, "avg_sr": 0.2, "count": 20}, "object": {"avg_spl": 0.4358264062217188, "avg_sr": 0.5333333333333333, "count": 15}, "region": {"avg_spl": 0.30837344751067886, "avg_sr": 0.41025641025641024, "count": 39}, "room": {"avg_spl": 0.3177526965831306, "avg_sr": 0.5, "count": 26}}
+Elapsed 14:54:10 [Metrics] sequence count: 100, invalid_count: 0, follower_error_count: 3, avg_sr: 0.410000, avg_spl: 0.286385
+
+=== Episode ===: 20it [14:53:46, 4400.81s/it][A=== Episode ===: 20it [14:53:46, 2681.31s/it]
+Elapsed 14:54:10 [Metrics] sequence count: 100, invalid_count: 0, follower_error_count: 3, avg_sr: 0.410000, avg_spl: 0.286385
+*** Scene ***:  14%|#4        | 1/7 [14:53:46<89:22:36, 53626.16s/it]Elapsed 14:54:10 
+
+
+
+
+*************************** Processing 00802-wcojb4TFT35.json.gz, Total Episode 20 ***************************
+
+=== Episode ===: 0it [00:00, ?it/s][AElapsed 14:54:23 
+
+Begin to process [00802-wcojb4TFT35_sequence_0_0] type: [instance], Question: [bottom black-framed line drawing picture on gray wall between two others in bedroom with light gray bedding and red bookshelf]
+
+Elapsed 14:54:23 Current start position is [    -3.1095      2.6949     -11.032]
+Elapsed 15:00:05 [baseline][decision-error] scene=00802-wcojb4TFT35 episode_id=0 task_id=0 task_level=instance error=OutOfMemoryError: CUDA out of memory. Tried to allocate 1024.00 MiB. GPU 0 has a total capacty of 47.40 GiB of which 223.00 MiB is free. Process 56747 has 7.84 GiB memory in use. Process 94546 has 6.77 GiB memory in use. Including non-PyTorch memory, this process has 9.71 GiB memory in use. Process 664079 has 5.80 GiB memory in use. Process 664161 has 7.32 GiB memory in use. Process 2821153 has 9.63 GiB memory in use. Of the allocated memory 6.79 GiB is allocated by PyTorch, and 1.13 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+=== Episode ===: 0it [05:54, ?it/s]
+*** Scene ***:  14%|#4        | 1/7 [14:59:41<89:58:06, 53981.08s/it]
+Traceback (most recent call last):
+  File "/home/chenlin/krona/anchor-nav/hm3d-online/refhm3d-nav-sequence-baseline.py", line 472, in <module>
+    target_position, is_final_decision = pq3d_model.decision(
+  File "/home/chenlin/krona/anchor-nav/hm3d-online/data_utils.py", line 368, in decision
+    # the legacy FastSAM path ignores the extra keyword harmlessly.
+  File "/home/chenlin/krona/anchor-nav/hm3d-online/sam_fast_wrapper.py", line 95, in __call__
+    stability_score_thresh=0.78,
+  File "/home/chenlin/krona/anchor-nav/hm3d-online/sam_fast_wrapper.py", line 95, in <listcomp>
+    stability_score_thresh=0.78,
+  File "/home/chenlin/krona/anchor-nav/hm3d-online/sam_fast_wrapper.py", line 104, in _generate_one
+    "loose": LOOSE_LEVEL_PARAMS,
+  File "/home/chenlin/.conda/envs/mtu3d/lib/python3.8/site-packages/torch/utils/_contextlib.py", line 115, in decorate_context
+    return func(*args, **kwargs)
+  File "/home/chenlin/.conda/envs/mtu3d/lib/python3.8/site-packages/segment_anything/automatic_mask_generator.py", line 163, in generate
+    mask_data = self._generate_masks(image)
+  File "/home/chenlin/.conda/envs/mtu3d/lib/python3.8/site-packages/segment_anything/automatic_mask_generator.py", line 206, in _generate_masks
+    crop_data = self._process_crop(image, crop_box, layer_idx, orig_size)
+  File "/home/chenlin/.conda/envs/mtu3d/lib/python3.8/site-packages/segment_anything/automatic_mask_generator.py", line 236, in _process_crop
+    self.predictor.set_image(cropped_im)
+  File "/home/chenlin/.conda/envs/mtu3d/lib/python3.8/site-packages/segment_anything/predictor.py", line 60, in set_image
+    self.set_torch_image(input_image_torch, image.shape[:2])
+  File "/home/chenlin/.conda/envs/mtu3d/lib/python3.8/site-packages/torch/utils/_contextlib.py", line 115, in decorate_context
+    return func(*args, **kwargs)
+  File "/home/chenlin/.conda/envs/mtu3d/lib/python3.8/site-packages/segment_anything/predictor.py", line 89, in set_torch_image
+    self.features = self.model.image_encoder(input_image)
+  File "/home/chenlin/.conda/envs/mtu3d/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/chenlin/.conda/envs/mtu3d/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/chenlin/.conda/envs/mtu3d/lib/python3.8/site-packages/segment_anything/modeling/image_encoder.py", line 112, in forward
+    x = blk(x)
+  File "/home/chenlin/.conda/envs/mtu3d/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/chenlin/.conda/envs/mtu3d/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/chenlin/.conda/envs/mtu3d/lib/python3.8/site-packages/segment_anything/modeling/image_encoder.py", line 174, in forward
+    x = self.attn(x)
+  File "/home/chenlin/.conda/envs/mtu3d/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/chenlin/.conda/envs/mtu3d/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/chenlin/.conda/envs/mtu3d/lib/python3.8/site-packages/segment_anything/modeling/image_encoder.py", line 234, in forward
+    attn = add_decomposed_rel_pos(attn, q, self.rel_pos_h, self.rel_pos_w, (H, W), (H, W))
+  File "/home/chenlin/.conda/envs/mtu3d/lib/python3.8/site-packages/segment_anything/modeling/image_encoder.py", line 358, in add_decomposed_rel_pos
+    attn.view(B, q_h, q_w, k_h, k_w) + rel_h[:, :, :, :, None] + rel_w[:, :, :, None, :]
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 1024.00 MiB. GPU 0 has a total capacty of 47.40 GiB of which 223.00 MiB is free. Process 56747 has 7.84 GiB memory in use. Process 94546 has 6.77 GiB memory in use. Including non-PyTorch memory, this process has 9.71 GiB memory in use. Process 664079 has 5.80 GiB memory in use. Process 664161 has 7.32 GiB memory in use. Process 2821153 has 9.63 GiB memory in use. Of the allocated memory 6.79 GiB is allocated by PyTorch, and 1.13 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "hm3d-online/refhm3d-nav-sequence-baseline-sam.py", line 36, in <module>
+    runpy.run_path(str(BASELINE_SCRIPT), run_name="__main__")
+  File "/home/chenlin/.conda/envs/mtu3d/lib/python3.8/runpy.py", line 265, in run_path
+    return _run_module_code(code, init_globals, run_name,
+  File "/home/chenlin/.conda/envs/mtu3d/lib/python3.8/runpy.py", line 97, in _run_module_code
+    _run_code(code, mod_globals, init_globals,
+  File "/home/chenlin/.conda/envs/mtu3d/lib/python3.8/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/chenlin/krona/anchor-nav/hm3d-online/refhm3d-nav-sequence-baseline.py", line 498, in <module>
+    )
+RuntimeError: baseline decision failed for scene=00802-wcojb4TFT35 episode=0 task=0; wrote output_logs/baseline_sam_all_0_0.2/20260522-114640-detailed-cuda3-580126/baseline_decision_error.json
+Elapsed 15:00:05 [Baseline] run finished, log saved -> /home/chenlin/krona/anchor-nav/output_logs/baseline_sam_all_0_0.2/20260522-114640-detailed-cuda3-580126/refhm3d-nav-sequence-baseline-20260522-114657-139073-pid4080703.log
