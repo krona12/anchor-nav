@@ -385,6 +385,147 @@ def save_exploration_maps(dec_dir: Path, top_down_map: np.ndarray, fog: np.ndarr
     _save_rgb(dec_dir / "explored_unexplored_map.png", rgb)
 
 
+def _nearest_component_label(labels: np.ndarray, start_rc: Tuple[int, int]) -> int:
+    ys, xs = np.where(labels > 0)
+    if ys.size == 0:
+        return 0
+    sr, sc = int(start_rc[0]), int(start_rc[1])
+    j = int(np.argmin((ys - sr) ** 2 + (xs - sc) ** 2))
+    return int(labels[int(ys[j]), int(xs[j])])
+
+
+def _clean_topdown_floor_mask(
+    raw_view: np.ndarray,
+    *,
+    start_rc: Tuple[int, int],
+    mpp: float,
+    agent_radius_m: float,
+) -> Tuple[np.ndarray, Dict[str, Any]]:
+    """Remove raster slivers and keep the start-floor connected component."""
+    raw_mask = np.asarray(raw_view) > 0
+    raw_area = int(raw_mask.sum())
+    if raw_area <= 0:
+        return np.zeros_like(raw_view, dtype=np.uint8), {
+            "raw_area_px": 0,
+            "clean_area_px": 0,
+            "component_label": 0,
+            "morph_radius_px": 0,
+            "reason": "empty_raw",
+        }
+
+    # Top-down rasterization can leave one-pixel bridges that the agent cannot
+    # actually traverse. Opening by roughly the agent radius removes passages
+    # narrower than the physical body, then dilation restores normal room area.
+    erode_px = max(1, int(round(float(agent_radius_m) / max(float(mpp), 1e-6))))
+    best_mask: Optional[np.ndarray] = None
+    best_info: Dict[str, Any] = {}
+    for radius_px in (erode_px, max(1, erode_px // 2), 1, 0):
+        if radius_px > 0:
+            k = 2 * int(radius_px) + 1
+            kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k, k))
+            opened = cv2.morphologyEx(raw_mask.astype(np.uint8), cv2.MORPH_OPEN, kernel) > 0
+        else:
+            opened = raw_mask
+        n_labels, labels = cv2.connectedComponents(opened.astype(np.uint8), connectivity=8)
+        if n_labels <= 1:
+            continue
+        sr = max(0, min(int(start_rc[0]), labels.shape[0] - 1))
+        sc = max(0, min(int(start_rc[1]), labels.shape[1] - 1))
+        label = int(labels[sr, sc])
+        if label == 0:
+            label = _nearest_component_label(labels, (sr, sc))
+        comp = labels == int(label)
+        comp_area = int(comp.sum())
+        if comp_area <= 0:
+            continue
+        best_mask = comp
+        best_info = {
+            "raw_area_px": raw_area,
+            "clean_area_px": comp_area,
+            "component_label": int(label),
+            "connected_component_count": int(n_labels - 1),
+            "morph_radius_px": int(radius_px),
+            "morph_radius_m": float(radius_px) * float(mpp),
+            "reason": "start_component_after_width_filter",
+        }
+        # If the full-radius opening preserved a plausible amount, keep it.
+        if comp_area >= max(64, int(0.20 * raw_area)):
+            break
+
+    if best_mask is None:
+        return raw_mask.astype(np.uint8), {
+            "raw_area_px": raw_area,
+            "clean_area_px": raw_area,
+            "component_label": 0,
+            "morph_radius_px": 0,
+            "reason": "component_filter_failed_raw_fallback",
+        }
+    return best_mask.astype(np.uint8), best_info
+
+
+def build_floor_topdown_map(
+    sim: Any,
+    agent: Any,
+    map_resolution: int,
+) -> Tuple[np.ndarray, float, Dict[str, Any]]:
+    """Build the current-floor navmap for fog/frontier rendering.
+
+    Match habitat_teleop_cn_explained.py:get_topdown_map_visualize exactly in
+    the behavior that matters for visualization: slice the pathfinder at the
+    current agent/floor y and use that raw top-down view as the displayed map.
+    """
+    pf = sim.pathfinder
+    mpp = maps.calculate_meters_per_pixel(int(map_resolution), sim=sim)
+    agent_y = float(agent.get_state().position[1])
+    agent_radius_m = 0.17
+    try:
+        agent_radius_m = float(agent.agent_config.radius)
+    except Exception:
+        pass
+
+    raw = np.ascontiguousarray(pf.get_topdown_view(mpp, agent_y), dtype=np.uint8)
+    # Compute the start pixel from the ACTUAL view shape (it is non-square, e.g.
+    # 512x577). Using a square (map_resolution, map_resolution) placeholder here
+    # mis-scales the column by the x/z aspect ratio, anchoring the connected-
+    # component diagnostic on the wrong cell.
+    start_rc = _pos_to_pixel(np.asarray(agent.get_state().position, dtype=float), raw, sim)
+    raw_area = int((raw > 0).sum())
+    if raw_area <= 0:
+        fallback = np.ascontiguousarray(
+            maps.get_topdown_map_from_sim(sim, map_resolution=int(map_resolution), draw_border=False),
+            dtype=np.uint8,
+        )
+        return fallback, agent_y, {
+            "strategy": "fallback_standard_topdown",
+            "mpp": float(mpp),
+            "agent_y": float(agent_y),
+            "agent_radius_m": float(agent_radius_m),
+            "candidates": [],
+        }
+
+    clean, clean_info = _clean_topdown_floor_mask(
+        raw,
+        start_rc=start_rc,
+        mpp=float(mpp),
+        agent_radius_m=float(agent_radius_m),
+    )
+    info = {
+        "strategy": "reference_agent_current_height_raw_pathfinder_view",
+        "mpp": float(mpp),
+        "agent_y": float(agent_y),
+        "agent_radius_m": float(agent_radius_m),
+        "chosen_height_m": float(agent_y),
+        "chosen_delta_from_agent_y_m": 0.0,
+        "raw_area_px": raw_area,
+        "chosen_area_px": raw_area,
+        "raw_shape": list(raw.shape),
+        "start_rc": [int(start_rc[0]), int(start_rc[1])],
+        "diagnostic_start_component_filter_not_applied": _jsonable(clean_info),
+        "reference": "visual-scripts/habitat_teleop_cn_explained.py:get_topdown_map_visualize uses pathfinder.get_topdown_view(meters_per_pixel, state.position[1])",
+    }
+    return np.ascontiguousarray(raw, dtype=np.uint8), float(agent_y), info
+
+
 class InteractiveNavigator:
     def __init__(self, args: argparse.Namespace, ctx: TaskContext, sim: Any, agent: Any, scene_path: str, out_dir: Path) -> None:
         self.args = args
@@ -411,10 +552,8 @@ class InteractiveNavigator:
         state.rotation = ctx.start_rotation
         self.agent.set_state(state)
 
-        self.top_down_map = maps.get_topdown_map_from_sim(
-            sim,
-            map_resolution=int(args.map_resolution),
-            draw_border=False,
+        self.top_down_map, self.topdown_slice_height, self.topdown_map_info = build_floor_topdown_map(
+            sim, self.agent, int(args.map_resolution)
         )
         self.fog = np.zeros_like(self.top_down_map)
         self.area_thres_px = convert_meters_to_pixel(float(args.frontier_area_m2), int(args.map_resolution), sim)
@@ -453,6 +592,7 @@ class InteractiveNavigator:
                 "timestamp": _dt.datetime.now().isoformat(timespec="seconds"),
                 "scene_path": self.scene_path,
                 "args": vars(self.args),
+                "topdown_map": _jsonable(getattr(self, "topdown_map_info", {})),
                 "task": {
                     "scene_name": self.ctx.scene_name,
                     "episode_id": self.ctx.episode_id,

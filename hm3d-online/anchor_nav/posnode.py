@@ -328,7 +328,11 @@ def update_panorama_node(
                 "registry_nodes_total": int(len(registry.nodes)),
             }
 
-    sampled = _subsample_frames_evenly(color_list, max_frames=int(panorama_subsample_frames))
+    # Match the VFV angular unfolding convention: use this decision step's
+    # 12-view turn_left scan, then reverse it before stitching.
+    decision_frames = list(color_list[-12:]) if len(color_list) >= 12 else list(color_list)
+    decision_frames = list(reversed(decision_frames))
+    sampled = _subsample_frames_evenly(decision_frames, max_frames=int(panorama_subsample_frames))
     panorama = stitch_panorama(sampled)
     pano_path: Optional[str] = None
     if panorama_dir is not None:
@@ -368,6 +372,7 @@ def update_panorama_node(
         "ok": True,
         "node_index": int(len(registry.nodes) - 1),
         "step_index": int(step_index),
+        "panorama_frame_source": "last_12_reversed_vfv_order" if len(color_list) >= 12 else "all_available_reversed",
         "panorama_frames_used": int(len(sampled)),
         "move_dist": None if len(registry.nodes) <= 1 else float(np.linalg.norm(cur_pos - np.asarray(registry.nodes[-2].pos, dtype=float).reshape(3))),
         "min_move_dist_to_add": float(min_move_dist_to_add),
@@ -780,4 +785,3 @@ def build_query_fn_from_pq3d_stage2(pq3d_model: Any) -> QueryFn:
         return [(int(i), float(scores[i])) for i in idx]
 
     return _query_fn
-

@@ -1,19 +1,18 @@
-"""Module-process simulation for the three anchor_nav decision modules.
+"""Module-process visualization for the three anchor_nav decision modules.
 
-This is an *imitation* simulation: the goal is to produce faithful per-module
-PROCESS LOGS (prompts, VLM input/output, decisions, and visualizations), not to
-re-run the real navigation pipeline. The agent walks toward the episode target;
-at sampled decision points it runs a simulated pass of each module and dumps a
-self-contained log folder per module:
+This driver produces faithful per-module PROCESS LOGS (prompts, VLM input/output,
+decisions, and visualizations). TFFS is routed through the real
+hm3d-online/anchor_nav/tffs.py implementation; MQSC-R1 and VISTA-LS still use
+lightweight visual process reconstructions where full PQ3D state is unavailable.
+At sampled decision points it dumps a self-contained log folder per module:
 
-  modules/tffs/dec_XXX/      Task-Facing Frontier Selection  (frontier rerank, VLM per frontier view)
+  modules/tffs/dec_XXX/      Task-Facing Frontier Selection  (real frontier rerank, VLM per frontier view)
   modules/mqsc_r1/dec_XXX/   MQSC-R1 spatial consensus        (text decomposition VLM + footprint clustering)
   modules/vista_ls/final/    VISTA-LS viewpoint correction    (ring candidates: unreachable / too-close / bad-view / selected)
 
-All VLM calls are routed DIRECTLY through hm3d-online/anchor_nav/vlm/client.py
-(not through each module's own VLM wrapper). Every prompt and raw response is
-written to disk. Real calls are attempted; on failure a clearly-labelled
-simulated response is logged so the process log is always complete.
+Every prompt and raw response is written to disk. The route follows the TFFS
+selected frontier between decision rounds when available, so the trajectory log
+reflects the frontier selector.
 
 Every visualization carries a legend explaining its markers/colors.
 """
@@ -33,22 +32,26 @@ from typing import Any, Dict, List, Optional, Tuple
 import cv2
 import magnum as mn
 import numpy as np
+import quaternion
 
 CODE_DIR = Path(__file__).resolve().parent
 TELEOP_PATH = CODE_DIR / "interactive_vista2mqsc_teleop.py"
 # CODE_DIR is .../visual-scripts/navi-visual/code -> repo root is parents[2].
 PROJECT_ROOT = CODE_DIR.parents[2]
+HM3D_ONLINE = PROJECT_ROOT / "hm3d-online"
 ANCHOR_NAV = PROJECT_ROOT / "hm3d-online" / "anchor_nav"
 
 # Make `vlm` resolve to hm3d-online/anchor_nav/vlm (the client the user requires).
-if str(ANCHOR_NAV) not in sys.path:
-    sys.path.insert(0, str(ANCHOR_NAV))
+for _p in (HM3D_ONLINE, ANCHOR_NAV):
+    if str(_p) not in sys.path:
+        sys.path.insert(0, str(_p))
 
 import vlm.client as vlm_client  # noqa: E402  -> anchor_nav/vlm/client.py
 import tffs  # noqa: E402  (prompt builder + pure scoring helpers only)
 import mqsc_r1  # noqa: E402  (decomposition prompt + clustering primitives)
 import vista_ls  # noqa: E402  (VistaLsConfig)
 import habitat_sim.utils.common as hsu  # noqa: E402
+from pic.joint import _save_rgb_jpg, _subsample_frames_evenly, stitch_panorama  # noqa: E402
 from frontier_utils import get_polar_angle, map_coors_to_pixel  # noqa: E402
 
 
@@ -219,6 +222,411 @@ def _base_topdown_bgr(nav: Any) -> np.ndarray:
     return cv2.cvtColor(rgb.copy(), cv2.COLOR_RGB2BGR)
 
 
+def _global_topdown_bgr(nav: Any, *, fog: bool) -> np.ndarray:
+    fog_mask = nav.fog if fog else np.ones_like(nav.fog)
+    rgb = nav.VIS_NAV._base_rgb_floor(nav.top_down_map, fog_mask) if hasattr(nav, "VIS_NAV") else None
+    if rgb is None:
+        rgb = _VIS._base_rgb_floor(nav.top_down_map, fog_mask)
+    return cv2.cvtColor(rgb.copy(), cv2.COLOR_RGB2BGR)
+
+
+def _world_from_map_rc(nav: Any, sim: Any, rc: Tuple[int, int], y: float) -> np.ndarray:
+    rz, rx = _M.maps.from_grid(
+        int(rc[0]),
+        int(rc[1]),
+        (nav.top_down_map.shape[0], nav.top_down_map.shape[1]),
+        sim,
+    )
+    return np.asarray([float(rx), float(y), float(rz)], dtype=float)
+
+
+def _capture_topdown_rgb_tile(
+    *,
+    nav: Any,
+    sim: Any,
+    center_xyz: np.ndarray,
+    height_candidates: Tuple[float, ...] = (2.2, 2.0, 1.8, 1.6, 1.4),
+) -> Tuple[Optional[Dict[str, Any]], Dict[str, Any]]:
+    sensors = sim.get_agent(0)._sensors
+    if "topdown_rgb" not in sensors or "topdown_depth" not in sensors:
+        return None, {"ok": False, "reason": "topdown_rgbd_sensors_missing"}
+    old_state = _M._state_copy(nav.agent.get_state())
+    chosen = None
+    med = 0.0
+    obs = None
+    try:
+        st = _M.habitat_sim.AgentState()
+        st.position = np.asarray(center_xyz, dtype=float).reshape(3)
+        # Use a fixed world yaw for every tile. The downward sensor is attached
+        # to the agent, so keeping the live yaw would rotate each tile
+        # differently before we paste it into the global map.
+        st.rotation = quaternion.quaternion(1.0, 0.0, 0.0, 0.0)
+        nav.agent.set_state(st)
+        for H in height_candidates:
+            sensors["topdown_rgb"].node.translation = mn.Vector3(0.0, float(H), 0.0)
+            sensors["topdown_depth"].node.translation = mn.Vector3(0.0, float(H), 0.0)
+            obs = sim.get_sensor_observations()
+            d = np.asarray(obs["topdown_depth"], dtype=np.float32)
+            valid = d[d > 0]
+            med = float(np.median(valid)) if valid.size else 0.0
+            if med >= 0.45 * float(H):
+                chosen = float(H)
+                break
+        if obs is None:
+            return None, {"ok": False, "reason": "sensor_observation_failed"}
+        if chosen is None:
+            chosen = float(height_candidates[-1])
+        rgb_bgr = cv2.cvtColor(np.asarray(obs["topdown_rgb"][:, :, :3], dtype=np.uint8), cv2.COLOR_RGB2BGR)
+        depth = np.asarray(obs["topdown_depth"], dtype=np.float32)
+        sensor_state = nav.agent.get_state().sensor_states.get("topdown_rgb")
+        if sensor_state is None:
+            return None, {"ok": False, "reason": "topdown_rgb_sensor_state_missing"}
+        payload = {
+            "rgb_bgr": rgb_bgr,
+            "depth": depth,
+            "camera_position": np.asarray(sensor_state.position, dtype=float).reshape(3).copy(),
+            "camera_rotation_matrix": quaternion.as_rotation_matrix(sensor_state.rotation).astype(np.float32),
+            "hfov_deg": float(getattr(nav.args, "topdown_cam_hfov", 90.0)),
+        }
+        return payload, {
+            "ok": True,
+            "slice_height_m": float(chosen),
+            "median_depth_m": float(med),
+        }
+    finally:
+        nav.agent.set_state(old_state)
+
+
+def _project_rgbd_tile_to_map(
+    *,
+    tile: Dict[str, Any],
+    map_shape: Tuple[int, int],
+    sim: Any,
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    rgb = np.asarray(tile["rgb_bgr"], dtype=np.uint8)
+    depth = np.asarray(tile["depth"], dtype=np.float32)
+    h, w = depth.shape[:2]
+    if rgb.shape[:2] != (h, w):
+        return (
+            np.zeros((0,), dtype=np.int32),
+            np.zeros((0,), dtype=np.int32),
+            np.zeros((0, 3), dtype=np.uint8),
+            np.zeros((0,), dtype=np.float32),
+        )
+
+    hfov = float(tile.get("hfov_deg", 90.0))
+    fx = (float(w) / 2.0) / math.tan(math.radians(hfov) / 2.0)
+    fy = fx
+    cx = float(w) / 2.0
+    cy = float(h) / 2.0
+
+    valid = np.isfinite(depth) & (depth > 1e-4)
+    vv, uu = np.where(valid)
+    if uu.size == 0:
+        return (
+            np.zeros((0,), dtype=np.int32),
+            np.zeros((0,), dtype=np.int32),
+            np.zeros((0, 3), dtype=np.uint8),
+            np.zeros((0,), dtype=np.float32),
+        )
+
+    d = depth[vv, uu].astype(np.float32)
+    x_cam = ((uu.astype(np.float32) - cx) / fx) * d
+    y_cam = -((vv.astype(np.float32) - cy) / fy) * d
+    z_cam = -d
+    pts_cam = np.stack([x_cam, y_cam, z_cam], axis=0)
+    Rcw = np.asarray(tile["camera_rotation_matrix"], dtype=np.float32).reshape(3, 3)
+    C = np.asarray(tile["camera_position"], dtype=np.float32).reshape(3, 1)
+    pts_world = (Rcw @ pts_cam) + C
+
+    lower, upper = sim.pathfinder.get_bounds()
+    lower = np.asarray(lower, dtype=np.float32).reshape(3)
+    upper = np.asarray(upper, dtype=np.float32).reshape(3)
+    grid_r = abs(float(upper[2] - lower[2])) / float(map_shape[0])
+    grid_c = abs(float(upper[0] - lower[0])) / float(map_shape[1])
+    rr = ((pts_world[2] - lower[2]) / max(grid_r, 1e-9)).astype(np.int32)
+    cc = ((pts_world[0] - lower[0]) / max(grid_c, 1e-9)).astype(np.int32)
+    colors_all = rgb[vv, uu]
+    valid_color = np.max(colors_all, axis=1) > 8
+    inside = (rr >= 0) & (rr < int(map_shape[0])) & (cc >= 0) & (cc < int(map_shape[1])) & valid_color
+    if not np.any(inside):
+        return (
+            np.zeros((0,), dtype=np.int32),
+            np.zeros((0,), dtype=np.int32),
+            np.zeros((0, 3), dtype=np.uint8),
+            np.zeros((0,), dtype=np.float32),
+        )
+
+    rr = rr[inside]
+    cc = cc[inside]
+    colors = colors_all[inside]
+    du = uu[inside].astype(np.float32) - cx
+    dv = vv[inside].astype(np.float32) - cy
+    score = -(du * du + dv * dv)
+    return rr, cc, colors, score.astype(np.float32)
+
+
+def _fill_uncovered_by_dilation(mosaic: np.ndarray, filled: np.ndarray, max_iter: int = 96) -> Tuple[np.ndarray, np.ndarray]:
+    out = np.asarray(mosaic, dtype=np.uint8).copy()
+    known = (np.asarray(filled) > 0).astype(np.uint8)
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (7, 7))
+    for _ in range(int(max_iter)):
+        holes = known == 0
+        if not bool(np.any(holes)):
+            break
+        dilated_img = cv2.dilate(out, kernel)
+        dilated_known = cv2.dilate(known, kernel)
+        take = np.logical_and(holes, dilated_known > 0)
+        if not bool(np.any(take)):
+            break
+        out[take] = dilated_img[take]
+        known[take] = 1
+    return out, known
+
+
+def render_global_topdown_scene_rgb(nav: Any, sim: Any) -> Tuple[np.ndarray, Dict[str, Any]]:
+    """Build a full-map RGB bird's-eye mosaic from many local downward RGB views."""
+    cache = getattr(nav, "_global_topdown_scene_rgb_cache", None)
+    if isinstance(cache, dict) and cache.get("shape") == list(nav.top_down_map.shape[:2]):
+        return np.asarray(cache["image_bgr"], dtype=np.uint8).copy(), dict(cache.get("info", {}))
+
+    base = _global_topdown_bgr(nav, fog=False)
+    sensors = sim.get_agent(0)._sensors
+    if "topdown_rgb" not in sensors or "topdown_depth" not in sensors:
+        info = {"ok": False, "reason": "topdown_rgbd_sensors_missing", "source": "navmesh_color_fallback"}
+        return base, info
+
+    mpp = float(getattr(nav, "VIS_meters_per_px", 0.05))
+    fov = float(getattr(nav.args, "topdown_cam_hfov", 90.0))
+    tile_h = float(getattr(nav.args, "topdown_cam_height", 2.0))
+    coverage_m = 2.0 * tile_h * math.tan(math.radians(fov) / 2.0)
+    half_px = max(12, int(round((coverage_m * 0.5) / max(mpp, 1e-6))))
+    step_px = max(10, int(round(half_px * 0.65)))
+    max_tiles = 220
+
+    navigable = np.asarray(nav.top_down_map) > 0
+    ys, xs = np.where(navigable)
+    if ys.size == 0:
+        info = {"ok": False, "reason": "empty_topdown_map", "source": "navmesh_color_fallback"}
+        return base, info
+    r0, r1 = int(ys.min()), int(ys.max())
+    c0, c1 = int(xs.min()), int(xs.max())
+
+    def _grid_centers(lo: int, hi: int, step: int, limit: int) -> List[int]:
+        vals = list(range(int(lo), int(hi) + 1, int(step)))
+        if len(vals) == 0 or vals[-1] != int(hi):
+            vals.append(int(hi))
+        return sorted(set(max(0, min(int(v), int(limit) - 1)) for v in vals))
+
+    rows = _grid_centers(r0, r1, step_px, nav.top_down_map.shape[0])
+    cols = _grid_centers(c0, c1, step_px, nav.top_down_map.shape[1])
+    nav_coords = np.stack([ys.astype(np.int32), xs.astype(np.int32)], axis=1)
+    centers_set = set()
+    for r in rows:
+        for c in cols:
+            rr = max(0, min(int(r), navigable.shape[0] - 1))
+            cc = max(0, min(int(c), navigable.shape[1] - 1))
+            centers_set.add((rr, cc))
+            if navigable[rr, cc]:
+                continue
+            # Grid intersections often land on furniture/holes while nearby
+            # corridors are navigable. Snap the sampling center to the nearest
+            # navigable pixel so narrow but valid regions receive RGB coverage.
+            d2 = (nav_coords[:, 0] - rr) ** 2 + (nav_coords[:, 1] - cc) ** 2
+            j = int(np.argmin(d2))
+            if float(d2[j]) <= float(step_px * step_px):
+                centers_set.add((int(nav_coords[j, 0]), int(nav_coords[j, 1])))
+    centers = sorted(centers_set)
+    if len(centers) > max_tiles:
+        stride = int(math.ceil(math.sqrt(float(len(centers)) / float(max_tiles))))
+        centers = centers[::stride]
+
+    mosaic = np.zeros_like(base, dtype=np.uint8)
+    mosaic_score = np.full(base.shape[:2], -np.inf, dtype=np.float32)
+    fallback = np.zeros_like(base, dtype=np.uint8)
+    fallback_score = np.full(base.shape[:2], -np.inf, dtype=np.float32)
+    fallback_filled = np.zeros(nav.top_down_map.shape[:2], dtype=np.uint8)
+    filled = np.zeros(nav.top_down_map.shape[:2], dtype=np.uint8)
+    frame_filled = np.zeros(nav.top_down_map.shape[:2], dtype=np.uint8)
+    start_y = float(nav.agent.get_state().position[1])
+    tile_records: List[Dict[str, Any]] = []
+
+    for ti, rc in enumerate(centers):
+        raw_center = _world_from_map_rc(nav, sim, rc, start_y)
+        try:
+            center = np.asarray(sim.pathfinder.snap_point(raw_center), dtype=float).reshape(3)
+        except Exception:
+            center = raw_center
+        if not np.all(np.isfinite(center)):
+            tile_records.append({
+                "ok": False,
+                "reason": "nonfinite_snap_point",
+                "tile_index": int(ti),
+                "center_rc": [int(rc[0]), int(rc[1])],
+                "raw_center_xyz": raw_center.tolist(),
+            })
+            continue
+        tile, rec = _capture_topdown_rgb_tile(nav=nav, sim=sim, center_xyz=center)
+        rec.update({"tile_index": int(ti), "center_rc": [int(rc[0]), int(rc[1])], "center_xyz": center.tolist()})
+        try:
+            rt = _rc(center, nav, sim)
+            rec["roundtrip_rc"] = [int(rt[0]), int(rt[1])]
+            rec["roundtrip_error_px"] = float(math.hypot(float(rt[0] - rc[0]), float(rt[1] - rc[1])))
+        except Exception as exc:
+            rec["roundtrip_error"] = f"{type(exc).__name__}: {exc}"
+        tile_records.append(rec)
+        if tile is None:
+            continue
+        rgb_tile = np.asarray(tile["rgb_bgr"], dtype=np.uint8)
+        patch_size = 2 * half_px + 1
+        patch = cv2.resize(rgb_tile, (patch_size, patch_size), interpolation=cv2.INTER_AREA)
+        tr0 = max(0, int(rc[0]) - half_px)
+        tr1 = min(base.shape[0], int(rc[0]) + half_px + 1)
+        tc0 = max(0, int(rc[1]) - half_px)
+        tc1 = min(base.shape[1], int(rc[1]) + half_px + 1)
+        pr0 = tr0 - (int(rc[0]) - half_px)
+        pc0 = tc0 - (int(rc[1]) - half_px)
+        patch_crop = patch[pr0 : pr0 + (tr1 - tr0), pc0 : pc0 + (tc1 - tc0)]
+        if patch_crop.shape[:2] == (tr1 - tr0, tc1 - tc0):
+            valid_patch_color = np.max(patch_crop, axis=2) > 8
+            yy = np.arange(pr0, pr0 + (tr1 - tr0), dtype=np.float32) - float(half_px)
+            xx = np.arange(pc0, pc0 + (tc1 - tc0), dtype=np.float32) - float(half_px)
+            fb_score = -(yy[:, None] * yy[:, None] + xx[None, :] * xx[None, :])
+            fb_sub_score = fallback_score[tr0:tr1, tc0:tc1]
+            fb_take = np.logical_and(fb_score > fb_sub_score, valid_patch_color)
+            fb_sub = fallback[tr0:tr1, tc0:tc1]
+            fb_sub[fb_take] = patch_crop[fb_take]
+            fb_sub_score[fb_take] = fb_score[fb_take]
+            fb_frame = fallback_filled[tr0:tr1, tc0:tc1]
+            fb_frame[fb_take] = 1
+
+        rr, cc, colors, score = _project_rgbd_tile_to_map(tile=tile, map_shape=base.shape[:2], sim=sim)
+        rec["projected_px"] = int(rr.size)
+        if rr.size == 0:
+            continue
+        take = score > mosaic_score[rr, cc]
+        if not np.any(take):
+            continue
+        order = np.argsort(score[take], kind="mergesort")
+        rr_t = rr[take][order]
+        cc_t = cc[take][order]
+        colors_t = colors[take][order]
+        score_t = score[take][order]
+        mosaic[rr_t, cc_t] = colors_t
+        mosaic_score[rr_t, cc_t] = score_t
+        frame_filled[rr_t, cc_t] = 1
+        filled[np.logical_and(frame_filled > 0, navigable)] = 1
+
+    fill_ratio = float(filled[navigable].mean()) if np.any(navigable) else 0.0
+    fallback_fill_px = int(np.logical_and(frame_filled == 0, fallback_filled > 0).sum())
+    fallback_mask = np.logical_and(frame_filled == 0, fallback_filled > 0)
+    mosaic[fallback_mask] = fallback[fallback_mask]
+    frame_filled[fallback_mask] = 1
+    projected_frame_fill_ratio = float(frame_filled.mean())
+    inpainted_px = int((frame_filled == 0).sum())
+    dilation_filled_px = 0
+    if inpainted_px > 0 and int(frame_filled.sum()) > 0:
+        before = int(frame_filled.sum())
+        mosaic, frame_filled = _fill_uncovered_by_dilation(mosaic, frame_filled)
+        dilation_filled_px = int(frame_filled.sum()) - before
+        if int((frame_filled == 0).sum()) > 0:
+            holes = ((frame_filled == 0).astype(np.uint8) * 255)
+            mosaic = cv2.inpaint(mosaic, holes, 2, cv2.INPAINT_TELEA)
+    elif int(frame_filled.sum()) == 0:
+        mosaic = base
+    frame_fill_ratio = float(frame_filled.mean())
+    info = {
+        "ok": True,
+        "source": "global_topdown_rgb_tile_mosaic",
+        "tile_count": int(len(tile_records)),
+        "successful_tile_count": int(sum(1 for r in tile_records if r.get("ok"))),
+        "coverage_m": float(coverage_m),
+        "half_patch_px": int(half_px),
+        "step_px": int(step_px),
+        "filled_navigable_ratio": float(fill_ratio),
+        "projected_frame_ratio": float(projected_frame_fill_ratio),
+        "filled_frame_ratio": float(frame_fill_ratio),
+        "fallback_filled_px": int(fallback_fill_px),
+        "dilation_filled_px": int(dilation_filled_px),
+        "inpainted_uncovered_px": int(inpainted_px),
+        "mpp": float(mpp),
+        "paste_mode": "rgbd_projected_with_best_center_fallback_no_navmesh_mask",
+        "uncovered_fill": "opencv_inpaint_telea",
+        "fixed_tile_agent_rotation": "identity_quaternion_world_yaw",
+        "records": tile_records[:120],
+    }
+    nav._global_topdown_scene_rgb_cache = {
+        "shape": list(nav.top_down_map.shape[:2]),
+        "image_bgr": mosaic.copy(),
+        "info": info,
+    }
+    return mosaic, info
+
+
+def save_global_topdown_maps(
+    *,
+    nav: Any,
+    sim: Any,
+    out_dir: Path,
+    title: str,
+    frontiers: Optional[List[np.ndarray]] = None,
+    selected_frontier_idx: Optional[int] = None,
+    agent_state: Optional[Any] = None,
+    log: Optional[List[str]] = None,
+) -> None:
+    """Save full-map top-down artifacts.
+
+    topdown_map_rgb is the no-fog top-down slice map, matching the reference
+    script's shadow-free topdown rendering. The camera-derived scene mosaic is
+    saved separately as the full-color bird's-eye texture view.
+    """
+    out_dir.mkdir(parents=True, exist_ok=True)
+    if hasattr(_M, "save_exploration_maps"):
+        _M.save_exploration_maps(out_dir / "exploration_maps", nav.top_down_map, nav.fog.copy())
+
+    entries = [
+        ((0, 165, 255), "goal / target object"),
+        ((255, 0, 0), "agent (pos + heading)"),
+        ((180, 180, 180), "frontier"),
+        ((255, 0, 255), "selected frontier"),
+    ]
+    scene_rgb, scene_info = render_global_topdown_scene_rgb(nav, sim)
+    _write_json(out_dir / "topdown_rgb_mosaic_info.json", scene_info)
+    cv2.imwrite(str(out_dir / "topdown_scene_rgb_raw.png"), scene_rgb)
+
+    for fogged, name in ((True, "topdown_map_fog"), (False, "topdown_map_rgb"), (False, "topdown_navmesh_rgb")):
+        img = _global_topdown_bgr(nav, fog=fogged)
+        for gp in nav.ctx.goal_positions:
+            _VIS._draw_star(img, _rc(gp, nav, sim), (0, 165, 255), size=10)
+        if frontiers is not None:
+            for i, fw in enumerate(frontiers):
+                color = (255, 0, 255) if selected_frontier_idx is not None and int(i) == int(selected_frontier_idx) else (180, 180, 180)
+                _VIS._draw_circle(img, _rc(fw, nav, sim), color, radius=6 if color == (255, 0, 255) else 4)
+        st = agent_state if agent_state is not None else nav.agent.get_state()
+        arc = _rc(np.asarray(st.position, dtype=float), nav, sim)
+        _VIS._draw_agent_arrow(img, arc, float(get_polar_angle(st)), (255, 0, 0), size=12)
+        subtitle = "fog" if fogged else "no-fog top-down RGB slice"
+        _save_raw_and_legend(img, out_dir / name, f"{title} ({subtitle})", entries)
+
+    rgb_img = scene_rgb.copy()
+    for gp in nav.ctx.goal_positions:
+        _VIS._draw_star(rgb_img, _rc(gp, nav, sim), (0, 165, 255), size=10)
+    if frontiers is not None:
+        for i, fw in enumerate(frontiers):
+            color = (255, 0, 255) if selected_frontier_idx is not None and int(i) == int(selected_frontier_idx) else (180, 180, 180)
+            _VIS._draw_circle(rgb_img, _rc(fw, nav, sim), color, radius=6 if color == (255, 0, 255) else 4)
+    st = agent_state if agent_state is not None else nav.agent.get_state()
+    _VIS._draw_agent_arrow(rgb_img, _rc(np.asarray(st.position, dtype=float), nav, sim), float(get_polar_angle(st)), (255, 0, 0), size=12)
+    _save_raw_and_legend(rgb_img, out_dir / "topdown_scene_rgb_mosaic", f"{title} (camera RGB mosaic)", entries)
+    if log is not None:
+        log.append(
+            f"[topdown_global] {out_dir}: saved fog/no-fog topdown + full-frame RGB mosaic "
+            f"tiles={scene_info.get('successful_tile_count', 0)}/{scene_info.get('tile_count', 0)} "
+            f"nav_fill={float(scene_info.get('filled_navigable_ratio', 0.0)):.2f} "
+            f"frame_fill={float(scene_info.get('filled_frame_ratio', 0.0)):.2f}"
+        )
+
+
 _VIS = None  # set in main from teleop module
 
 
@@ -234,142 +642,57 @@ def _forward_xz(state) -> np.ndarray:
 _M = None  # teleop module handle, set in main
 
 
-# ----------------------------- TFS simulation -----------------------------
-def _simulated_tffs_response(image_path: Optional[str]) -> str:
-    """Image-grounded deterministic fallback when the real VLM is unreachable."""
-    tc = ac = rc = neg = 0.3
-    try:
-        img = cv2.imread(str(image_path)) if image_path else None
-        if img is not None:
-            hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-            bright = float(hsv[:, :, 2].mean()) / 255.0
-            sat = float(hsv[:, :, 1].mean()) / 255.0
-            warm = float(((hsv[:, :, 0] < 20) | (hsv[:, :, 0] > 160)).mean())
-            tc = round(min(1.0, 0.2 + warm * 1.2), 3)
-            ac = round(min(1.0, 0.2 + sat), 3)
-            rc = round(min(1.0, 0.3 + bright * 0.5), 3)
-            neg = round(max(0.0, 0.6 - bright), 3)
-    except Exception:
-        pass
-    return json.dumps({
-        "target_context": tc, "anchor_context": ac, "room_context": rc,
-        "negative": neg, "confidence": 0.55,
-        "reason": "simulated fallback from image color statistics",
-    })
-
-
+# ----------------------------- Real TFFS rerank -----------------------------
 def simulate_tffs(*, nav, sim, ctx, goal, dec_dir: Path, frontiers, views, agent_state, log) -> Dict[str, Any]:
-    cfg = tffs.TffsConfig()
+    cfg = tffs.TffsConfig(vlm_call_interval=5)
     agent_xyz = np.asarray(agent_state.position, dtype=float).reshape(3)
-    # Fake frontier logits: closer-to-goal frontier gets a higher logit (PQ3D-like prior).
+    # Frontier prior for this visualization driver: closer-to-goal frontiers get
+    # a stronger baseline logit, then real TFFS can rerank with current views.
     dists = np.asarray([np.linalg.norm((np.asarray(f) - goal)[[0, 2]]) for f in frontiers], dtype=float)
     logits = (-dists).astype(float)
-    norm_logits = tffs._normalize_logits(logits)
     baseline_idx = int(np.argmax(logits)) if len(frontiers) else -1
 
-    view_fwd = [(_forward_xz(s["state"]), s) for s in views]
-
-    def best_view_for(frontier_xyz):
-        d = (np.asarray(frontier_xyz)[[0, 2]] - agent_xyz[[0, 2]])
-        if np.linalg.norm(d) < 1e-6:
-            return None
-        d = d / np.linalg.norm(d)
-        sims = [float(np.dot(fwd / (np.linalg.norm(fwd) + 1e-9), d)) for fwd, _ in view_fwd]
-        return int(np.argmax(sims))
-
-    # Score the baseline + top-logit subset (cost control, like the real module).
-    order = list(np.argsort(-logits))
-    score_idxs = []
-    for i in [baseline_idx] + order:
-        if i not in score_idxs and 0 <= i < len(frontiers):
-            score_idxs.append(int(i))
-        if len(score_idxs) >= min(cfg.top_vlm_logit_candidates, len(frontiers)):
-            break
-
-    records: List[Dict[str, Any]] = []
-    hypo: List[Optional[float]] = [None] * len(frontiers)
-    conf = np.zeros((len(frontiers),), dtype=float)
-    prompt_dir = dec_dir / "prompts"
-    for fi in range(len(frontiers)):
-        vi = best_view_for(frontiers[fi])
-        rec = {
-            "frontier_index": fi,
-            "frontier_xyz": np.asarray(frontiers[fi], dtype=float).tolist(),
-            "dist_to_goal_m": float(dists[fi]),
-            "frontier_logit": float(logits[fi]),
-            "normalized_logit": float(norm_logits[fi]),
-            "assigned_view_index": vi,
-            "assigned_view_image": views[vi]["image_path"] if vi is not None else None,
-            "is_baseline": bool(fi == baseline_idx),
-            "scored_by_vlm": bool(fi in score_idxs),
-        }
-        if fi in score_idxs and vi is not None:
-            prompt = tffs.build_task_facing_prompt(
-                ctx.sentence,
-                frontier_record={
-                    "frontier_index": fi,
-                    "point_xyz": rec["frontier_xyz"],
-                    "relative_bearing_rad": 0.0,
-                },
-                view_index=vi,
-            )
-            vlm_rec = call_vlm(
-                prompt=prompt, image_path=views[vi]["image_path"], tag=f"tffs_frontier_{fi:02d}",
-                max_tokens=cfg.vlm_max_tokens,
-                simulated_fn=lambda p=views[vi]["image_path"]: _simulated_tffs_response(p),
-            )
-            try:
-                parsed = tffs.parse_json_object(vlm_rec["raw_response"])
-                h = tffs._hypothesis_from_scores(parsed, cfg)
-                c = float(parsed.get("confidence", 0.0) or 0.0)
-            except Exception as exc:
-                parsed, h, c = {"parse_error": f"{type(exc).__name__}: {exc}"}, None, 0.0
-            rec["vlm"] = vlm_rec
-            rec["parsed_scores"] = _jsonable(parsed)
-            rec["hypothesis_score"] = h
-            rec["vlm_confidence"] = c
-            hypo[fi] = h
-            conf[fi] = c
-            # Save the exact prompt + response as plain text for easy inspection.
-            (prompt_dir).mkdir(parents=True, exist_ok=True)
-            with open(prompt_dir / f"frontier_{fi:02d}_prompt.txt", "w") as f:
-                f.write(prompt)
-            with open(prompt_dir / f"frontier_{fi:02d}_response.txt", "w") as f:
-                f.write(vlm_rec["raw_response"])
-        records.append(rec)
-
-    fused = np.array(norm_logits, dtype=float)
-    for fi in range(len(frontiers)):
-        if hypo[fi] is not None:
-            fused[fi] = cfg.alpha_logit * norm_logits[fi] + cfg.beta_hypothesis * float(hypo[fi])
-        records[fi]["fused_score"] = float(fused[fi])
-    rerank_idx = int(np.argmax(fused)) if fused.size else baseline_idx
-    margin = float(fused[rerank_idx] - fused[baseline_idx]) if 0 <= baseline_idx < len(frontiers) else 0.0
-    applied = bool(rerank_idx != baseline_idx and margin >= cfg.min_score_margin
-                   and conf[rerank_idx] >= cfg.min_confidence and hypo[rerank_idx] is not None)
-    selected_idx = rerank_idx if applied else baseline_idx
-
-    result = {
-        "module": "tffs",
-        "prompt_version": tffs.PROMPT_VERSION,
-        "task_text": ctx.sentence,
-        "fusion": {"alpha_logit": cfg.alpha_logit, "beta_hypothesis": cfg.beta_hypothesis,
-                   "min_score_margin": cfg.min_score_margin, "min_confidence": cfg.min_confidence},
-        "frontier_count": len(frontiers),
-        "baseline_frontier_index": baseline_idx,
-        "rerank_frontier_index": rerank_idx,
-        "selected_frontier_index": selected_idx,
-        "score_margin": margin,
-        "tffs_applied": applied,
-        "agent_position": agent_xyz.tolist(),
-        "frontiers": records,
-        "vlm_call_count": int(sum(1 for r in records if r.get("vlm"))),
-    }
+    selected_idx, result = tffs.run_tffs_rerank(
+        frontier_candidates=frontiers,
+        task_text=ctx.sentence,
+        frontier_logits=logits,
+        panorama_views=views,
+        agent_pose={"position": agent_xyz.tolist(), "heading_xz": _forward_xz(agent_state).tolist()},
+        branch_is_frontier=True,
+        baseline_frontier_index=baseline_idx,
+        cfg=cfg,
+        context={
+            "decision_num": int(getattr(nav, "decision_num", 0) if hasattr(nav, "decision_num") else 0),
+            "global_step": int(getattr(nav, "step_count", 0)),
+            "scene_name": ctx.scene_name,
+            "episode_id": int(ctx.episode_id),
+            "task_id": int(ctx.task_id),
+            "frontier_logits_source": "visual_sim_negative_distance_to_goal_prior",
+        },
+    )
+    result["module"] = "tffs"
+    result["real_tffs_file"] = str(Path(tffs.__file__).resolve())
+    result["frontier_distance_to_goal_m"] = [float(x) for x in dists.tolist()]
     _write_json(dec_dir / "tffs_decision.json", result)
+
+    prompt_dir = dec_dir / "prompts"
+    prompt_dir.mkdir(parents=True, exist_ok=True)
+    for score in list(result.get("vlm_scores", [])):
+        fi = int(score.get("frontier_index", -1))
+        if fi < 0:
+            continue
+        if score.get("prompt"):
+            with open(prompt_dir / f"frontier_{fi:02d}_prompt.txt", "w", encoding="utf-8") as f:
+                f.write(str(score.get("prompt", "")))
+        with open(prompt_dir / f"frontier_{fi:02d}_response.txt", "w", encoding="utf-8") as f:
+            f.write(str(score.get("raw", "")))
 
     # Visualization (with legend).
     img = _base_topdown_bgr(nav)
-    sh = img.shape[:2]
+    fused = np.asarray(result.get("fused_score", []), dtype=float).reshape(-1)
+    rerank_idx = int(result.get("rerank_frontier_index", baseline_idx))
+    selected_idx = int(result.get("selected_frontier_index", selected_idx))
+    applied = bool(result.get("tffs_applied", False))
     for gp in ctx.goal_positions:
         _VIS._draw_star(img, _rc(gp, nav, sim), (0, 165, 255), size=10)
     for fi, f in enumerate(frontiers):
@@ -381,7 +704,8 @@ def simulate_tffs(*, nav, sim, ctx, goal, dec_dir: Path, frontiers, views, agent
             col = (255, 0, 255)  # TFS-selected = magenta
         r = 7 if (fi == selected_idx or fi == baseline_idx) else 5
         _VIS._draw_circle(img, rcix, col, radius=r)
-        cv2.putText(img, f"{fi}:{fused[fi]:.2f}", (rcix[1] + 8, rcix[0]),
+        label_score = float(fused[fi]) if fi < fused.size else float("nan")
+        cv2.putText(img, f"{fi}:{label_score:.2f}", (rcix[1] + 8, rcix[0]),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 0, 0), 1, cv2.LINE_AA)
     arc = _rc(agent_xyz, nav, sim)
     _VIS._draw_agent_arrow(img, arc, float(get_polar_angle(agent_state)), (255, 0, 0), size=12)
@@ -392,8 +716,18 @@ def simulate_tffs(*, nav, sim, ctx, goal, dec_dir: Path, frontiers, views, agent
         ((255, 0, 255), "TFS-selected frontier (VLM rerank)"),
         ((180, 180, 180), "other frontier  [label = idx:fused_score]"),
     ])
+    save_global_topdown_maps(
+        nav=nav,
+        sim=sim,
+        out_dir=dec_dir,
+        title="TFFS global top-down",
+        frontiers=list(frontiers),
+        selected_frontier_idx=selected_idx if 0 <= selected_idx < len(frontiers) else None,
+        agent_state=agent_state,
+    )
     log.append(f"[tffs] {dec_dir.name}: frontiers={len(frontiers)} baseline={baseline_idx} "
-               f"rerank={rerank_idx} applied={applied} vlm_calls={result['vlm_call_count']}")
+               f"rerank={rerank_idx} selected={selected_idx} applied={applied} "
+               f"gate={result.get('gate_reason', '')} vlm_calls={result.get('vlm_call_count', 0)}")
     return result
 
 
@@ -782,13 +1116,24 @@ def simulate_vista_ls(*, nav, sim, goal, agent_state, out_dir: Path, log) -> Dic
 def scan_and_capture(nav, sim, pano_dir: Path) -> List[Dict[str, Any]]:
     pano_dir.mkdir(parents=True, exist_ok=True)
     views: List[Dict[str, Any]] = []
+    scan_rgb: List[np.ndarray] = []
     for i in range(12):
         nav.step_action("turn_left", 1, status_prefix="scan")
         rgb, _depth, state = nav.context_buffer[-1]
+        rgb_arr = np.asarray(rgb[:, :, :3], dtype=np.uint8).copy()
+        scan_rgb.append(rgb_arr)
         path = pano_dir / f"view_{i:02d}.png"
-        cv2.imwrite(str(path), cv2.cvtColor(np.asarray(rgb[:, :, :3], dtype=np.uint8), cv2.COLOR_RGB2BGR))
+        cv2.imwrite(str(path), cv2.cvtColor(rgb_arr, cv2.COLOR_RGB2BGR))
         views.append({"view_index": i, "image_path": str(path),
-                      "yaw": float(get_polar_angle(state)), "state": state})
+                      "yaw": float(get_polar_angle(state)),
+                      "heading_xz": _forward_xz(state).tolist(),
+                      "state": state})
+    # The stitched ring view follows the same convention as VFV/PosNode:
+    # current decision's final 12 turn_left frames, reversed before stitching.
+    pano_frames = list(reversed(scan_rgb[-12:]))
+    sampled = _subsample_frames_evenly(pano_frames, max_frames=12)
+    if len(sampled) > 0:
+        _save_rgb_jpg(stitch_panorama(sampled), pano_dir / "current_decision_panorama_vfv_order.jpg")
     return views
 
 
@@ -844,6 +1189,7 @@ def main() -> None:
     rounds = 0
     while planar_to_goal() > cli.arrive_thresh_m and rounds < cli.max_rounds:
         dtag = f"dec_{rounds:03d}"
+        nav.decision_num = int(rounds)
         print(f"[module_sim] === round {rounds}: scan + modules @ to_goal={planar_to_goal():.2f}m ===", flush=True)
         pano_dir = mod_dir / "tffs" / dtag / "panorama"
         views = scan_and_capture(nav, sim, pano_dir)
@@ -852,17 +1198,50 @@ def main() -> None:
         # Colored top-down RGBD camera view for this decision (one per module).
         render_topdown_cam(nav, sim, [mod_dir / "tffs" / dtag / "topdown_cam",
                                       mod_dir / "mqsc_r1" / dtag / "topdown_cam"], log)
+        tffs_result: Optional[Dict[str, Any]] = None
         if len(frontiers) >= 2:
-            simulate_tffs(nav=nav, sim=sim, ctx=ctx, goal=goal, dec_dir=mod_dir / "tffs" / dtag,
-                          frontiers=frontiers, views=views, agent_state=agent_state, log=log)
+            tffs_result = simulate_tffs(nav=nav, sim=sim, ctx=ctx, goal=goal, dec_dir=mod_dir / "tffs" / dtag,
+                                        frontiers=frontiers, views=views, agent_state=agent_state, log=log)
         else:
             log.append(f"[tffs] {dtag}: skipped (only {len(frontiers)} frontier)")
+            _write_json(mod_dir / "tffs" / dtag / "tffs_decision.json", {
+                "module": "tffs",
+                "skipped": True,
+                "skip_reason": f"only_{len(frontiers)}_frontier",
+                "decision_idx": int(rounds),
+                "frontier_count": int(len(frontiers)),
+                "real_tffs_file": str(Path(tffs.__file__).resolve()),
+                "vlm_interval_allowed": False,
+                "vlm_call_count": 0,
+                "gate_reason": "skipped_insufficient_frontiers",
+            })
+            save_global_topdown_maps(
+                nav=nav, sim=sim, out_dir=mod_dir / "tffs" / dtag,
+                title="TFFS skipped global top-down", frontiers=list(frontiers),
+                selected_frontier_idx=None, agent_state=agent_state,
+            )
         simulate_mqsc(nav=nav, sim=sim, ctx=ctx, goal=goal, dec_dir=mod_dir / "mqsc_r1" / dtag,
                       agent_state=agent_state, decompose_cache=decompose_cache, log=log)
+        save_global_topdown_maps(
+            nav=nav, sim=sim, out_dir=mod_dir / "mqsc_r1" / dtag,
+            title="MQSC-R1 global top-down", frontiers=list(frontiers),
+            selected_frontier_idx=None, agent_state=agent_state,
+        )
 
-        nav.current_target = goal.copy()
-        nav.current_target_is_final = True
-        actions, _follow = nav._plan_follow_actions(goal)
+        segment_target = goal.copy()
+        segment_is_final = True
+        if tffs_result is not None:
+            try:
+                chosen_i = int(tffs_result.get("selected_frontier_index", -1))
+            except Exception:
+                chosen_i = -1
+            if 0 <= chosen_i < len(frontiers):
+                segment_target = np.asarray(frontiers[chosen_i], dtype=float).reshape(3).copy()
+                segment_is_final = False
+
+        nav.current_target = segment_target.copy()
+        nav.current_target_is_final = bool(segment_is_final)
+        actions, _follow = nav._plan_follow_actions(segment_target)
         seg_start = np.asarray(agent.get_state().position, dtype=float).reshape(3)
         for action in actions:
             if not action:
@@ -874,9 +1253,18 @@ def main() -> None:
         rounds += 1
 
     # VISTA-LS at the final stop (viewpoint correction toward the object).
-    print(f"[module_sim] arrived (to_goal={planar_to_goal():.2f}m). Running VISTA-LS viewpoint sim.", flush=True)
+    stop_reason = "arrived" if planar_to_goal() <= cli.arrive_thresh_m else "max_rounds_reached"
+    print(f"[module_sim] stop_reason={stop_reason} (to_goal={planar_to_goal():.2f}m). Running final panorama + VISTA-LS viewpoint sim.", flush=True)
+    final_pano_dir = mod_dir / "final_panorama"
+    final_views = scan_and_capture(nav, sim, final_pano_dir)
+    log.append(f"[final_panorama] stop_reason={stop_reason} views={len(final_views)} dir={final_pano_dir}")
     simulate_vista_ls(nav=nav, sim=sim, goal=goal, agent_state=agent.get_state(),
                       out_dir=mod_dir / "vista_ls" / "final", log=log)
+    save_global_topdown_maps(
+        nav=nav, sim=sim, out_dir=mod_dir / "vista_ls" / "final",
+        title="VISTA-LS final global top-down", frontiers=list(getattr(nav, "current_frontiers", [])),
+        selected_frontier_idx=None, agent_state=agent.get_state(), log=log,
+    )
 
     nav.save_trajectory_snapshot("route_start_to_goal.png")
     # Add a legend to the trajectory image (the review noted it had none).
@@ -895,9 +1283,11 @@ def main() -> None:
     _write_json(out_dir / "module_sim_summary.json", {
         "scene_name": ctx.scene_name, "episode_id": int(ctx.episode_id), "sentence": ctx.sentence,
         "decision_rounds": rounds, "final_planar_distance_to_goal_m": planar_to_goal(),
+        "stop_reason": stop_reason,
         "vlm_client_file": vlm_client.__file__,
+        "topdown_map": _jsonable(getattr(nav, "topdown_map_info", {})),
         "modules": {"tffs": "modules/tffs/dec_XXX", "mqsc_r1": "modules/mqsc_r1/dec_XXX",
-                    "vista_ls": "modules/vista_ls/final"},
+                    "final_panorama": "modules/final_panorama", "vista_ls": "modules/vista_ls/final"},
         "log": log,
     })
     sim.close()

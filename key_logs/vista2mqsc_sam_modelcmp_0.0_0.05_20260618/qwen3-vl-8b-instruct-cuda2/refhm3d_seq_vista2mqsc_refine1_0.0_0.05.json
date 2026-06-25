@@ -1,0 +1,5594 @@
+{
+  "sequence": [
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 0,
+      "task_id": 0,
+      "task_level": "instance",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "wardrobe",
+      "sentence": "tall brown wood wardrobe in bedroom with plain white sheets and light teal pillows on bed near Mickey Mouse plush toy",
+      "task_time_sec": 4196.370389165357,
+      "steps_total": 378,
+      "decisions_total_episode_counter": 11,
+      "task_decision_start": 0,
+      "task_decision_count": 11,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.387184143066406,
+      "end_goal_geo": 2.993738889694214,
+      "episode_cum_distance": 33.32213819026947,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 145,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -2.37497,
+          3.99337,
+          -6.1985
+        ]
+      ],
+      "baseline_target_position": [
+        -3.742124080657959,
+        4.212308883666992,
+        -9.852401733398438
+      ],
+      "selected_target_position": [
+        -3.7970008850097656,
+        3.1633780002593994,
+        -7.922880172729492
+      ],
+      "baseline_target_to_goal_l2": 3.90743424671141,
+      "selected_target_to_goal_l2": 2.3842284994642715,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.208162784576416
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 0,
+      "task_id": 1,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.6345937458223166,
+      "object_category": "blanket",
+      "sentence": "blanket in the office that has computer desk with printer and black PC tower, black office chair below colorful painting, rack with books and wicker basket, brown leather couch with diamond-patterned blanket by railing",
+      "task_time_sec": 230.53130070865154,
+      "steps_total": 73,
+      "decisions_total_episode_counter": 12,
+      "task_decision_start": 11,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 5.71236515045166,
+      "end_goal_geo": 0.2347438484430313,
+      "episode_cum_distance": 9.001609593629837,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": false,
+      "vistals_input_slot_index": 37,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -6.74151,
+          3.76903,
+          -1.5229
+        ]
+      ],
+      "baseline_target_position": [
+        -3.0690436363220215,
+        3.9389560222625732,
+        -1.2783476114273071
+      ],
+      "selected_target_position": [
+        -5.57089900970459,
+        3.899856686592102,
+        0.7270728051662445
+      ],
+      "baseline_target_to_goal_l2": 3.6845203101821467,
+      "selected_target_to_goal_l2": 2.5396502390118068,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.6371248960494995
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 0,
+      "task_id": 2,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.9138142118913302,
+      "object_category": "nightstand",
+      "sentence": "nightstand in the bedroom that has bed with plain white sheets and light teal pillows, tall wooden headboard, Mickey Mouse plush on dark wood nightstand, matching wardrobe and beige armchair, TV on wood cabinet",
+      "task_time_sec": 321.83988210745156,
+      "steps_total": 88,
+      "decisions_total_episode_counter": 13,
+      "task_decision_start": 12,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 10.513301849365234,
+      "end_goal_geo": 0.1923363357782364,
+      "episode_cum_distance": 11.504857018589973,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 127,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -1.27152,
+          3.53914,
+          -8.49409
+        ]
+      ],
+      "baseline_target_position": [
+        -0.26450642943382263,
+        3.547760248184204,
+        -5.02226448059082
+      ],
+      "selected_target_position": [
+        -1.8226763010025024,
+        3.1633780002593994,
+        -7.667924404144287
+      ],
+      "baseline_target_to_goal_l2": 3.614930577093289,
+      "selected_target_to_goal_l2": 1.0618474185867954,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.334238052368164
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 0,
+      "task_id": 3,
+      "task_level": "room",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.6235195762024388,
+      "object_category": "side table",
+      "sentence": "side table in the office",
+      "task_time_sec": 256.16563799604774,
+      "steps_total": 89,
+      "decisions_total_episode_counter": 14,
+      "task_decision_start": 13,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 6.861649990081787,
+      "end_goal_geo": 0.10888150334358215,
+      "episode_cum_distance": 11.004706591367722,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 29,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -3.00454,
+          3.2852,
+          0.47348
+        ],
+        [
+          -6.52151,
+          3.3252,
+          0.1821
+        ],
+        [
+          -6.51398,
+          3.38777,
+          -2.84769
+        ]
+      ],
+      "baseline_target_position": [
+        -6.420024871826172,
+        3.4245903491973877,
+        0.1620391458272934
+      ],
+      "selected_target_position": [
+        -5.545190952948324,
+        3.1633780002593994,
+        -0.48060766778032415
+      ],
+      "baseline_target_to_goal_l2": 0.14345769628770563,
+      "selected_target_to_goal_l2": 1.191035975179078,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.47899705171585083
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 0,
+      "task_id": 4,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.8371166632129986,
+      "object_category": "bathroom cabinet",
+      "sentence": "bathroom cabinet in the bathroom that has toilet beside black toilet brush, dark wood single-sink vanity by dark blue bath mat, hanging beige towel, blue shower curtain with seashell, starfish, and coral motifs",
+      "task_time_sec": 329.5559999682009,
+      "steps_total": 75,
+      "decisions_total_episode_counter": 15,
+      "task_decision_start": 14,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.494335651397705,
+      "end_goal_geo": 0.07966486364603043,
+      "episode_cum_distance": 8.95255820453167,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 136,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.32408,
+          3.56418,
+          -8.3895
+        ]
+      ],
+      "baseline_target_position": [
+        -4.651387691497803,
+        3.6384873390197754,
+        -8.413496017456055
+      ],
+      "selected_target_position": [
+        -5.000864505767822,
+        3.1133780479431152,
+        -7.63275146484375
+      ],
+      "baseline_target_to_goal_l2": 0.3364932605559459,
+      "selected_target_to_goal_l2": 1.1108231239431519,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.9913756847381592
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 1,
+      "task_id": 0,
+      "task_level": "instance",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "wardrobe",
+      "sentence": "wood dresser below TV in bedroom with bed with plain white sheets and light teal pillows near Mickey Mouse plush toy",
+      "task_time_sec": 3303.8096932284534,
+      "steps_total": 251,
+      "decisions_total_episode_counter": 9,
+      "task_decision_start": 0,
+      "task_decision_count": 9,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.9694013595581055,
+      "end_goal_geo": 1.3005176782608032,
+      "episode_cum_distance": 20.454044967889786,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 112,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -0.21129,
+          3.59345,
+          -5.02502
+        ]
+      ],
+      "baseline_target_position": [
+        -0.1700063943862915,
+        4.301929950714111,
+        -4.946573257446289
+      ],
+      "selected_target_position": [
+        -1.4132790565490723,
+        3.1410908699035645,
+        -7.445167064666748
+      ],
+      "baseline_target_to_goal_l2": 0.714004249338634,
+      "selected_target_to_goal_l2": 2.73980260041858,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.062491416931152344
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 1,
+      "task_id": 1,
+      "task_level": "room",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.8947504817883246,
+      "object_category": "picture",
+      "sentence": "picture in the hall",
+      "task_time_sec": 207.822560723871,
+      "steps_total": 64,
+      "decisions_total_episode_counter": 10,
+      "task_decision_start": 9,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 6.93928861618042,
+      "end_goal_geo": 0.0672425627708435,
+      "episode_cum_distance": 7.755557283759117,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 6,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -7.87147,
+          4.9052,
+          -4.87651
+        ],
+        [
+          -8.54151,
+          4.32214,
+          -4.86306
+        ],
+        [
+          -12.16183,
+          1.7591,
+          -3.0699
+        ],
+        [
+          -2.58588,
+          1.68511,
+          -1.4329
+        ]
+      ],
+      "baseline_target_position": [
+        -8.512873649597168,
+        4.2873005867004395,
+        -4.865222930908203
+      ],
+      "selected_target_position": [
+        -7.565157957860432,
+        3.1414918899536133,
+        -4.310646433830262
+      ],
+      "baseline_target_to_goal_l2": 0.0451497901829574,
+      "selected_target_to_goal_l2": 1.6286049300043823,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.082000732421875
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 1,
+      "task_id": 2,
+      "task_level": "room",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "pc tower",
+      "sentence": "pc tower in the office",
+      "task_time_sec": 305.9832634050399,
+      "steps_total": 42,
+      "decisions_total_episode_counter": 11,
+      "task_decision_start": 10,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 4.509199142456055,
+      "end_goal_geo": 7.408681392669678,
+      "episode_cum_distance": 4.753492936491966,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 76,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.38825,
+          3.27783,
+          0.4592
+        ]
+      ],
+      "baseline_target_position": [
+        -3.682009220123291,
+        3.93420672416687,
+        -4.4084672927856445
+      ],
+      "selected_target_position": [
+        -2.8272652626037598,
+        3.1133780479431152,
+        -5.019872188568115
+      ],
+      "baseline_target_to_goal_l2": 4.962236523629644,
+      "selected_target_to_goal_l2": 5.699469259717077,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.3157604932785034
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 1,
+      "task_id": 3,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.564519608558975,
+      "object_category": "bed",
+      "sentence": "bed in the bedroom that has bed with plain white sheets and light teal pillows, tall wooden headboard, Mickey Mouse plush on dark wood nightstand, matching wardrobe and beige armchair, TV on wood cabinet",
+      "task_time_sec": 334.1535846032202,
+      "steps_total": 23,
+      "decisions_total_episode_counter": 12,
+      "task_decision_start": 11,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 1.5526645183563232,
+      "end_goal_geo": 0.1409202218055725,
+      "episode_cum_distance": 2.750417336821556,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 75,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -0.11123,
+          4.2913,
+          -7.6972
+        ]
+      ],
+      "baseline_target_position": [
+        -0.12662047147750854,
+        3.7443575859069824,
+        -7.538667678833008
+      ],
+      "selected_target_position": [
+        -0.30458219714035895,
+        3.1133780479431152,
+        -6.196275957425435
+      ],
+      "baseline_target_to_goal_l2": 0.5696625034182887,
+      "selected_target_to_goal_l2": 1.917722132858376,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 3.084226608276367
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 1,
+      "task_id": 4,
+      "task_level": "object",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.9402712892596181,
+      "object_category": "shower curtain",
+      "sentence": "shower curtain",
+      "task_time_sec": 218.5450940374285,
+      "steps_total": 57,
+      "decisions_total_episode_counter": 13,
+      "task_decision_start": 12,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 6.115537643432617,
+      "end_goal_geo": 0.041626110672950745,
+      "episode_cum_distance": 6.504014015197754,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 129,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -6.30196,
+          4.02907,
+          -7.72028
+        ]
+      ],
+      "baseline_target_position": [
+        -6.363897800445557,
+        4.103085041046143,
+        -7.840122699737549
+      ],
+      "selected_target_position": [
+        -5.298659801483154,
+        3.1133780479431152,
+        -7.340343475341797
+      ],
+      "baseline_target_to_goal_l2": 0.15387264248553112,
+      "selected_target_to_goal_l2": 1.4104803444837661,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 6.4934611320495605
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 2,
+      "task_id": 0,
+      "task_level": "instance",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.33350082241820417,
+      "object_category": "bed",
+      "sentence": "white bed with mint pillows and wood headboard in bedroom with Mickey Mouse plush on dark wood nightstand and TV on wood cabinet",
+      "task_time_sec": 3108.371399352327,
+      "steps_total": 280,
+      "decisions_total_episode_counter": 8,
+      "task_decision_start": 0,
+      "task_decision_count": 8,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.33719253540039,
+      "end_goal_geo": 0.09155800193548203,
+      "episode_cum_distance": 24.999016419053078,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 97,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -0.11123,
+          4.2913,
+          -7.6972
+        ]
+      ],
+      "baseline_target_position": [
+        -0.02985798567533493,
+        3.803079605102539,
+        -7.6908111572265625
+      ],
+      "selected_target_position": [
+        -1.459498253347107,
+        3.1303305625915527,
+        -7.317292545139629
+      ],
+      "baseline_target_to_goal_l2": 0.4949963394016864,
+      "selected_target_to_goal_l2": 1.8193424613960478,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.711268424987793
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 2,
+      "task_id": 1,
+      "task_level": "room",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.9230810935858748,
+      "object_category": "wardrobe",
+      "sentence": "wardrobe in the office",
+      "task_time_sec": 198.52176876738667,
+      "steps_total": 75,
+      "decisions_total_episode_counter": 9,
+      "task_decision_start": 8,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 9.199312210083008,
+      "end_goal_geo": 0.185934916138649,
+      "episode_cum_distance": 9.965876534581184,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 20,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -3.0413,
+          3.92635,
+          -2.47722
+        ],
+        [
+          -2.99139,
+          4.02401,
+          -1.21294
+        ]
+      ],
+      "baseline_target_position": [
+        -3.1072616577148438,
+        3.850615978240967,
+        -2.4825644493103027
+      ],
+      "selected_target_position": [
+        -4.015512466430664,
+        3.1133780479431152,
+        -2.622880458831787
+      ],
+      "baseline_target_to_goal_l2": 0.10057407955690308,
+      "selected_target_to_goal_l2": 1.2771962628535936,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 2.786731004714966
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 2,
+      "task_id": 2,
+      "task_level": "object",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.8804974890800973,
+      "object_category": "shower curtain",
+      "sentence": "shower curtain",
+      "task_time_sec": 195.1797175705433,
+      "steps_total": 75,
+      "decisions_total_episode_counter": 10,
+      "task_decision_start": 9,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.14484691619873,
+      "end_goal_geo": 0.09173669666051865,
+      "episode_cum_distance": 9.250278413295746,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 119,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -6.30196,
+          4.02907,
+          -7.72028
+        ]
+      ],
+      "baseline_target_position": [
+        -6.380066871643066,
+        4.061351776123047,
+        -8.02452564239502
+      ],
+      "selected_target_position": [
+        -5.798496575204463,
+        3.1133780479431152,
+        -7.571389340346329
+      ],
+      "baseline_target_to_goal_l2": 0.3157660643322572,
+      "selected_target_to_goal_l2": 1.0555262193336103,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 3.683591365814209
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 2,
+      "task_id": 3,
+      "task_level": "room",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.8985283816647234,
+      "object_category": "side table",
+      "sentence": "side table in the office",
+      "task_time_sec": 274.9819006957114,
+      "steps_total": 58,
+      "decisions_total_episode_counter": 11,
+      "task_decision_start": 10,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 5.6163649559021,
+      "end_goal_geo": 0.07014872878789902,
+      "episode_cum_distance": 6.250626102089882,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 38,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -3.00454,
+          3.2852,
+          0.47348
+        ],
+        [
+          -6.52151,
+          3.3252,
+          0.1821
+        ],
+        [
+          -6.51398,
+          3.38777,
+          -2.84769
+        ]
+      ],
+      "baseline_target_position": [
+        -6.5684919357299805,
+        3.3874940872192383,
+        -2.807581663131714
+      ],
+      "selected_target_position": [
+        -6.6995904492174265,
+        3.1133780479431152,
+        -3.9491288966393747
+      ],
+      "baseline_target_to_goal_l2": 0.06767795764672588,
+      "selected_target_to_goal_l2": 1.1501781710858738,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.47228899598121643
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 2,
+      "task_id": 4,
+      "task_level": "room",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.11625951849527048,
+      "object_category": "cross trainer",
+      "sentence": "cross trainer in the office",
+      "task_time_sec": 306.3228968884796,
+      "steps_total": 44,
+      "decisions_total_episode_counter": 12,
+      "task_decision_start": 11,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 0.49447256326675415,
+      "end_goal_geo": 0.11375296860933304,
+      "episode_cum_distance": 4.253179177641869,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 23,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.30149,
+          3.87267,
+          -4.53182
+        ]
+      ],
+      "baseline_target_position": [
+        -3.6948044300079346,
+        3.958157539367676,
+        -4.456765651702881
+      ],
+      "selected_target_position": [
+        -2.8443671135154873,
+        3.1133780479431152,
+        -5.183551159708793
+      ],
+      "baseline_target_to_goal_l2": 0.6172589856956663,
+      "selected_target_to_goal_l2": 1.7676212488286855,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 2.1258578300476074
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 3,
+      "task_id": 0,
+      "task_level": "instance",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.3153475602994607,
+      "object_category": "plush toy",
+      "sentence": "micky mouse plush toy in bedroom with bed having plain white sheets and light teal pillows and beige armchair",
+      "task_time_sec": 2595.1434841994196,
+      "steps_total": 254,
+      "decisions_total_episode_counter": 7,
+      "task_decision_start": 0,
+      "task_decision_count": 7,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.072986602783203,
+      "end_goal_geo": 0.14135383069515228,
+      "episode_cum_distance": 25.600282415747643,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 106,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -1.4517,
+          4.07733,
+          -8.49779
+        ]
+      ],
+      "baseline_target_position": [
+        -1.456791877746582,
+        4.0926666259765625,
+        -8.552865982055664
+      ],
+      "selected_target_position": [
+        -1.9449827671051025,
+        3.1633780002593994,
+        -7.776641368865967
+      ],
+      "baseline_target_to_goal_l2": 0.05739776227978685,
+      "selected_target_to_goal_l2": 1.2643937259964553,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 3.04495906829834
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 3,
+      "task_id": 1,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "blanket",
+      "sentence": "blanket in the office that has computer desk with printer and black PC tower, black office chair below colorful painting, rack with books and wicker basket, brown leather couch with diamond-patterned blanket by railing",
+      "task_time_sec": 216.46795267239213,
+      "steps_total": 33,
+      "decisions_total_episode_counter": 8,
+      "task_decision_start": 7,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.03429126739502,
+      "end_goal_geo": 4.679800987243652,
+      "episode_cum_distance": 3.5030427277088165,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 91,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -6.74151,
+          3.76903,
+          -1.5229
+        ]
+      ],
+      "baseline_target_position": [
+        -3.0690770149230957,
+        3.9012064933776855,
+        -1.271746277809143
+      ],
+      "selected_target_position": [
+        -3.1514368280702323,
+        3.1633780002593994,
+        -4.955500220827512
+      ],
+      "baseline_target_to_goal_l2": 3.6833833424519913,
+      "selected_target_to_goal_l2": 5.003816943156967,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.111314058303833
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 3,
+      "task_id": 2,
+      "task_level": "object",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "shower curtain",
+      "sentence": "shower curtain",
+      "task_time_sec": 200.5629946757108,
+      "steps_total": 33,
+      "decisions_total_episode_counter": 9,
+      "task_decision_start": 8,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 3.547144651412964,
+      "end_goal_geo": 1.4530140161514282,
+      "episode_cum_distance": 3.2181821912527084,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 89,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -6.30196,
+          4.02907,
+          -7.72028
+        ]
+      ],
+      "baseline_target_position": [
+        -3.70407772064209,
+        4.498318672180176,
+        -9.821737289428711
+      ],
+      "selected_target_position": [
+        -3.7970008850097656,
+        3.1633780002593994,
+        -7.922880172729492
+      ],
+      "baseline_target_to_goal_l2": 3.374212410776443,
+      "selected_target_to_goal_l2": 2.658061255159023,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.635715126991272
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 3,
+      "task_id": 3,
+      "task_level": "object",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.7400329165665459,
+      "object_category": "tv",
+      "sentence": "tv",
+      "task_time_sec": 183.46802211552858,
+      "steps_total": 57,
+      "decisions_total_episode_counter": 10,
+      "task_decision_start": 9,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 4.258676052093506,
+      "end_goal_geo": 0.07873944193124771,
+      "episode_cum_distance": 5.7547116577625275,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 92,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -0.15094,
+          4.30008,
+          -4.8529
+        ],
+        [
+          -9.70876,
+          2.04168,
+          0.67388
+        ],
+        [
+          1.61155,
+          1.71578,
+          -4.87655
+        ]
+      ],
+      "baseline_target_position": [
+        -0.29654696583747864,
+        4.257022380828857,
+        -4.951793670654297
+      ],
+      "selected_target_position": [
+        -0.3632838929435337,
+        3.1633780002593994,
+        -5.916703998247782
+      ],
+      "baseline_target_to_goal_l2": 0.1812051466282467,
+      "selected_target_to_goal_l2": 1.5712607395886475,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.6312028169631958
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 3,
+      "task_id": 4,
+      "task_level": "object",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.9678346111953124,
+      "object_category": "photo",
+      "sentence": "photo",
+      "task_time_sec": 81.74952962249517,
+      "steps_total": 77,
+      "decisions_total_episode_counter": 11,
+      "task_decision_start": 10,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 10.407684326171875,
+      "end_goal_geo": 0.11768027395009995,
+      "episode_cum_distance": 10.753577321767807,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": false,
+      "vistals_input_slot_index": 14,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -4.46674,
+          4.22521,
+          0.80584
+        ]
+      ],
+      "baseline_target_position": [
+        -8.510753631591797,
+        4.308751106262207,
+        -4.842912673950195
+      ],
+      "selected_target_position": [
+        -4.826729456583658,
+        4.160760879516602,
+        0.7933780550956726
+      ],
+      "baseline_target_to_goal_l2": 6.947620609992695,
+      "selected_target_to_goal_l2": 0.36592539957384734,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.8154919147491455
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 4,
+      "task_id": 0,
+      "task_level": "instance",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "plush toy",
+      "sentence": "beige bear plush toy beside Mickey Mouse plush toy on nightstand in bedroom with bed having plain white sheets and light teal pillows",
+      "task_time_sec": 2227.74618781358,
+      "steps_total": 197,
+      "decisions_total_episode_counter": 6,
+      "task_decision_start": 0,
+      "task_decision_count": 6,
+      "end_reason": "final_decision",
+      "start_goal_geo": 10.109249114990234,
+      "end_goal_geo": 10.278911590576172,
+      "episode_cum_distance": 19.257247239351273,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 38,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -1.44114,
+          4.0887,
+          -8.62607
+        ]
+      ],
+      "baseline_target_position": [
+        -4.189061164855957,
+        3.661130905151367,
+        -3.481809377670288
+      ],
+      "selected_target_position": [
+        -4.224222071627353,
+        3.1133780479431152,
+        -2.4266697836260422
+      ],
+      "baseline_target_to_goal_l2": 5.8478460487246995,
+      "selected_target_to_goal_l2": 6.865082794136945,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.0950343608856201
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 4,
+      "task_id": 1,
+      "task_level": "room",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.5540330698954425,
+      "object_category": "table",
+      "sentence": "table in the office",
+      "task_time_sec": 279.78031522221863,
+      "steps_total": 26,
+      "decisions_total_episode_counter": 7,
+      "task_decision_start": 6,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 1.1080660820007324,
+      "end_goal_geo": 0.10232719779014587,
+      "episode_cum_distance": 1.9999998956918716,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 8,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -3.00454,
+          3.2852,
+          0.47348
+        ],
+        [
+          -6.52151,
+          3.3252,
+          0.1821
+        ],
+        [
+          -6.51398,
+          3.38777,
+          -2.84769
+        ]
+      ],
+      "baseline_target_position": [
+        -3.060654401779175,
+        3.4873263835906982,
+        0.4988643527030945
+      ],
+      "selected_target_position": [
+        -3.765452493040854,
+        3.1133780479431152,
+        -0.4577303062270077
+      ],
+      "baseline_target_to_goal_l2": 0.2113013639157206,
+      "selected_target_to_goal_l2": 1.214768800923733,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.0035667121410369873
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 4,
+      "task_id": 2,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "wardrobe",
+      "sentence": "wardrobe in the bedroom that has bed with plain white sheets and light teal pillows, tall wooden headboard, Mickey Mouse plush on dark wood nightstand, matching wardrobe and beige armchair, TV on wood cabinet",
+      "task_time_sec": 230.72192401625216,
+      "steps_total": 25,
+      "decisions_total_episode_counter": 8,
+      "task_decision_start": 7,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.152503967285156,
+      "end_goal_geo": 7.290782928466797,
+      "episode_cum_distance": 1.2499999403953552,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 20,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -0.21129,
+          3.59345,
+          -5.02502
+        ],
+        [
+          -2.37497,
+          3.99337,
+          -6.1985
+        ]
+      ],
+      "baseline_target_position": [
+        -0.27380242943763733,
+        4.241653919219971,
+        -4.891566753387451
+      ],
+      "selected_target_position": [
+        -3.918415388234862,
+        3.1133780479431152,
+        -1.7315009866256654
+      ],
+      "baseline_target_to_goal_l2": 0.6647449840034566,
+      "selected_target_to_goal_l2": 4.80735786972799,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.638685941696167
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 4,
+      "task_id": 3,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.4682213696380825,
+      "object_category": "cabinet",
+      "sentence": "cabinet in the bathroom that has toilet beside black toilet brush, dark wood single-sink vanity by dark blue bath mat, hanging beige towel, blue shower curtain with seashell, starfish, and coral motifs",
+      "task_time_sec": 556.9165547359735,
+      "steps_total": 125,
+      "decisions_total_episode_counter": 10,
+      "task_decision_start": 8,
+      "task_decision_count": 2,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.379051685333252,
+      "end_goal_geo": 0.062290214002132416,
+      "episode_cum_distance": 15.75974990427494,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 39,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.32408,
+          3.56418,
+          -8.3895
+        ]
+      ],
+      "baseline_target_position": [
+        -4.125154495239258,
+        3.5201311111450195,
+        -8.369349479675293
+      ],
+      "selected_target_position": [
+        -4.4274749755859375,
+        3.1133780479431152,
+        -7.387904167175293
+      ],
+      "baseline_target_to_goal_l2": 0.20473813646468275,
+      "selected_target_to_goal_l2": 1.1032257852708722,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 2.0238449573516846
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 4,
+      "task_id": 4,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.676873276879986,
+      "object_category": "tv",
+      "sentence": "tv in the bedroom that has bed with plain white sheets and light teal pillows, tall wooden headboard, Mickey Mouse plush on dark wood nightstand, matching wardrobe and beige armchair, TV on wood cabinet",
+      "task_time_sec": 251.18750701472163,
+      "steps_total": 56,
+      "decisions_total_episode_counter": 11,
+      "task_decision_start": 10,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 3.8949079513549805,
+      "end_goal_geo": 0.15935839712619781,
+      "episode_cum_distance": 5.754264622926712,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 113,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -0.15094,
+          4.30008,
+          -4.8529
+        ]
+      ],
+      "baseline_target_position": [
+        -0.2468418926000595,
+        4.256966590881348,
+        -4.889725208282471
+      ],
+      "selected_target_position": [
+        -0.08033511306171731,
+        3.1133930683135986,
+        -5.895124746407696
+      ],
+      "baseline_target_to_goal_l2": 0.11140931296419086,
+      "selected_target_to_goal_l2": 1.5809627908080064,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 3.7182137966156006
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 5,
+      "task_id": 0,
+      "task_level": "instance",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.84075437806557,
+      "object_category": "towel",
+      "sentence": "beige bath towel on rack in bathroom with toilet, dark wood single-sink vanity, blue shower curtain with seashell, starfish, and coral motifs",
+      "task_time_sec": 1710.2183002643287,
+      "steps_total": 122,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.3536152839660645,
+      "end_goal_geo": 0.1205017939209938,
+      "episode_cum_distance": 8.746448993682861,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 104,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -3.53551,
+          3.8552,
+          -7.8586
+        ]
+      ],
+      "baseline_target_position": [
+        -3.5400962829589844,
+        3.8516576290130615,
+        -7.939986228942871
+      ],
+      "selected_target_position": [
+        -4.661871910095215,
+        3.117858409881592,
+        -7.922880172729492
+      ],
+      "baseline_target_to_goal_l2": 0.08159228299986708,
+      "selected_target_to_goal_l2": 1.3477743556092083,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.859302043914795
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 5,
+      "task_id": 1,
+      "task_level": "room",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.8134568497152782,
+      "object_category": "picture",
+      "sentence": "picture in the living room",
+      "task_time_sec": 156.71402628161013,
+      "steps_total": 55,
+      "decisions_total_episode_counter": 6,
+      "task_decision_start": 5,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 4.856578826904297,
+      "end_goal_geo": 0.06959686428308487,
+      "episode_cum_distance": 5.970296800136566,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 65,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -7.87147,
+          4.9052,
+          -4.87651
+        ],
+        [
+          -8.54151,
+          4.32214,
+          -4.86306
+        ],
+        [
+          -12.16183,
+          1.7591,
+          -3.0699
+        ]
+      ],
+      "baseline_target_position": [
+        -7.887643814086914,
+        4.898146152496338,
+        -4.878068923950195
+      ],
+      "selected_target_position": [
+        -7.775830910752137,
+        3.1179375648498535,
+        -4.286207253468656
+      ],
+      "baseline_target_to_goal_l2": 0.01771381581154826,
+      "selected_target_to_goal_l2": 1.5391968891970047,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 3.198169708251953
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 5,
+      "task_id": 2,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "wardrobe",
+      "sentence": "wardrobe in the bedroom that has bed with plain white sheets and light teal pillows, tall wooden headboard, Mickey Mouse plush on dark wood nightstand, matching wardrobe and beige armchair, TV on wood cabinet",
+      "task_time_sec": 458.33700178563595,
+      "steps_total": 105,
+      "decisions_total_episode_counter": 8,
+      "task_decision_start": 6,
+      "task_decision_count": 2,
+      "end_reason": "final_decision",
+      "start_goal_geo": 4.886751174926758,
+      "end_goal_geo": 6.707744598388672,
+      "episode_cum_distance": 12.506161287426949,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 49,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -0.21129,
+          3.59345,
+          -5.02502
+        ],
+        [
+          -2.37497,
+          3.99337,
+          -6.1985
+        ]
+      ],
+      "baseline_target_position": [
+        -0.13131007552146912,
+        4.28950309753418,
+        -4.906054496765137
+      ],
+      "selected_target_position": [
+        -4.24290982713302,
+        3.1133780479431152,
+        -2.427550585667292
+      ],
+      "baseline_target_to_goal_l2": 0.710661307421786,
+      "selected_target_to_goal_l2": 4.299260927058373,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 2.2300543785095215
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 5,
+      "task_id": 3,
+      "task_level": "room",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.3724687929753206,
+      "object_category": "side table",
+      "sentence": "side table in the office",
+      "task_time_sec": 250.02227311767638,
+      "steps_total": 34,
+      "decisions_total_episode_counter": 9,
+      "task_decision_start": 8,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 1.092043161392212,
+      "end_goal_geo": 0.12453896552324295,
+      "episode_cum_distance": 2.931905120611191,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 157,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -3.00454,
+          3.2852,
+          0.47348
+        ],
+        [
+          -6.52151,
+          3.3252,
+          0.1821
+        ],
+        [
+          -6.51398,
+          3.38777,
+          -2.84769
+        ]
+      ],
+      "baseline_target_position": [
+        -4.794312000274658,
+        3.4891679286956787,
+        0.5099407434463501
+      ],
+      "selected_target_position": [
+        -5.774834710785572,
+        3.1133780479431152,
+        -0.13072428521149715
+      ],
+      "baseline_target_to_goal_l2": 1.765666436493436,
+      "selected_target_to_goal_l2": 0.8368103490724307,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.3383265733718872
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 5,
+      "task_id": 4,
+      "task_level": "room",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.8956101452251657,
+      "object_category": "shower curtain",
+      "sentence": "shower curtain in the bathroom",
+      "task_time_sec": 297.3899831008166,
+      "steps_total": 85,
+      "decisions_total_episode_counter": 10,
+      "task_decision_start": 9,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.956382751464844,
+      "end_goal_geo": 0.0966130942106247,
+      "episode_cum_distance": 10.000314086675644,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 114,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -6.30196,
+          4.02907,
+          -7.72028
+        ]
+      ],
+      "baseline_target_position": [
+        -6.382415771484375,
+        4.059432029724121,
+        -7.692076683044434
+      ],
+      "selected_target_position": [
+        -5.71843147277832,
+        3.1133780479431152,
+        -7.3585944175720215
+      ],
+      "baseline_target_to_goal_l2": 0.0905008900586645,
+      "selected_target_to_goal_l2": 1.144470949251014,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 3.839263439178467
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 6,
+      "task_id": 0,
+      "task_level": "instance",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "shower curtain",
+      "sentence": "blue seashell-patterned shower curtain in bathroom with dark wood single-sink vanity",
+      "task_time_sec": 2206.584805360064,
+      "steps_total": 160,
+      "decisions_total_episode_counter": 6,
+      "task_decision_start": 0,
+      "task_decision_count": 6,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.152191162109375,
+      "end_goal_geo": 7.025083541870117,
+      "episode_cum_distance": 12.915610074996948,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 106,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -6.30196,
+          4.02907,
+          -7.72028
+        ]
+      ],
+      "baseline_target_position": [
+        -4.016378402709961,
+        3.52994704246521,
+        -8.416930198669434
+      ],
+      "selected_target_position": [
+        -2.397001266479492,
+        3.1206204891204834,
+        -8.262151718139648
+      ],
+      "baseline_target_to_goal_l2": 2.4409687552107924,
+      "selected_target_to_goal_l2": 4.0456900750347815,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.3943495750427246
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 6,
+      "task_id": 1,
+      "task_level": "object",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.449874053813342,
+      "object_category": "couch",
+      "sentence": "couch",
+      "task_time_sec": 231.44741174578667,
+      "steps_total": 79,
+      "decisions_total_episode_counter": 7,
+      "task_decision_start": 6,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 4.613804817199707,
+      "end_goal_geo": 0.1352730244398117,
+      "episode_cum_distance": 10.255769982933998,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 36,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -11.11151,
+          0.5661,
+          -0.3677
+        ],
+        [
+          -4.51569,
+          3.55406,
+          -3.42574
+        ],
+        [
+          -6.59397,
+          3.52994,
+          -1.46677
+        ],
+        [
+          -9.24927,
+          0.51143,
+          -3.26289
+        ]
+      ],
+      "baseline_target_position": [
+        -4.617956638336182,
+        3.54872989654541,
+        -3.5035855770111084
+      ],
+      "selected_target_position": [
+        -4.8667707443237305,
+        3.1133780479431152,
+        -2.622880458831787
+      ],
+      "baseline_target_to_goal_l2": 0.12863440122926842,
+      "selected_target_to_goal_l2": 0.9808372519171588,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.654304027557373
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 6,
+      "task_id": 2,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.4942409124066447,
+      "object_category": "plush toy",
+      "sentence": "plush toy in the bedroom that has bed with plain white sheets and light teal pillows, tall wooden headboard, Mickey Mouse plush on dark wood nightstand, matching wardrobe and beige armchair, TV on wood cabinet",
+      "task_time_sec": 1010.5254496503621,
+      "steps_total": 179,
+      "decisions_total_episode_counter": 10,
+      "task_decision_start": 7,
+      "task_decision_count": 3,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.954769134521484,
+      "end_goal_geo": 0.13183777034282684,
+      "episode_cum_distance": 18.118227183818817,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 133,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -1.4517,
+          4.07733,
+          -8.49779
+        ],
+        [
+          -1.44114,
+          4.0887,
+          -8.62607
+        ]
+      ],
+      "baseline_target_position": [
+        -1.45936119556427,
+        4.077025890350342,
+        -8.574797630310059
+      ],
+      "selected_target_position": [
+        -2.1036101033569405,
+        3.137086868286133,
+        -7.631842351037175
+      ],
+      "baseline_target_to_goal_l2": 0.05565206822325363,
+      "selected_target_to_goal_l2": 1.4348899819631473,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.1055792570114136
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 6,
+      "task_id": 3,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.8979874633091003,
+      "object_category": "computer desk",
+      "sentence": "computer desk in the office that has computer desk with printer and black PC tower, black office chair below colorful painting, rack with books and wicker basket, brown leather couch with diamond-patterned blanket by railing",
+      "task_time_sec": 259.2960908636451,
+      "steps_total": 86,
+      "decisions_total_episode_counter": 11,
+      "task_decision_start": 10,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 9.882131576538086,
+      "end_goal_geo": 0.023728538304567337,
+      "episode_cum_distance": 11.00475449860096,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 13,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.91651,
+          3.44521,
+          0.58958
+        ]
+      ],
+      "baseline_target_position": [
+        -4.642332077026367,
+        3.4904730319976807,
+        0.5056180357933044
+      ],
+      "selected_target_position": [
+        -4.503840602843151,
+        3.1633780002593994,
+        -0.5510614961039929
+      ],
+      "baseline_target_to_goal_l2": 0.29029620553015273,
+      "selected_target_to_goal_l2": 1.2453065205249423,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.4422321319580078
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 6,
+      "task_id": 4,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.8903215302789476,
+      "object_category": "bathroom cabinet",
+      "sentence": "bathroom cabinet in the bathroom that has toilet beside black toilet brush, dark wood single-sink vanity by dark blue bath mat, hanging beige towel, blue shower curtain with seashell, starfish, and coral motifs",
+      "task_time_sec": 306.7040568459779,
+      "steps_total": 73,
+      "decisions_total_episode_counter": 12,
+      "task_decision_start": 11,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.790757656097412,
+      "end_goal_geo": 0.039912693202495575,
+      "episode_cum_distance": 8.750498995184898,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 39,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.32408,
+          3.56418,
+          -8.3895
+        ]
+      ],
+      "baseline_target_position": [
+        -4.096251487731934,
+        3.5418953895568848,
+        -8.39554214477539
+      ],
+      "selected_target_position": [
+        -4.758423805236816,
+        3.1133780479431152,
+        -7.374846935272217
+      ],
+      "baseline_target_to_goal_l2": 0.22899550733228116,
+      "selected_target_to_goal_l2": 1.1922238811932002,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 4.273110866546631
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 7,
+      "task_id": 0,
+      "task_level": "instance",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "board",
+      "sentence": "dark wood-framed blackboard leaning against white door below doorknob with yellow-and-blue toy",
+      "task_time_sec": 2541.3201078865677,
+      "steps_total": 199,
+      "decisions_total_episode_counter": 7,
+      "task_decision_start": 0,
+      "task_decision_count": 7,
+      "end_reason": "final_decision",
+      "start_goal_geo": 5.140439033508301,
+      "end_goal_geo": 4.908557415008545,
+      "episode_cum_distance": 18.63924330472946,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 33,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -5.36724,
+          3.29007,
+          -5.92198
+        ]
+      ],
+      "baseline_target_position": [
+        -4.839875221252441,
+        4.1573638916015625,
+        0.7914698719978333
+      ],
+      "selected_target_position": [
+        -3.9795466981234062,
+        3.117358446121216,
+        -1.7392107027850403
+      ],
+      "baseline_target_to_goal_l2": 6.789751209587916,
+      "selected_target_to_goal_l2": 4.4103379660339534,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.5898752212524414
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 7,
+      "task_id": 1,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.714865127505781,
+      "object_category": "wardrobe",
+      "sentence": "wardrobe in the bedroom that has bed with plain white sheets and light teal pillows, tall wooden headboard, Mickey Mouse plush on dark wood nightstand, matching wardrobe and beige armchair, TV on wood cabinet",
+      "task_time_sec": 302.27608023025095,
+      "steps_total": 79,
+      "decisions_total_episode_counter": 8,
+      "task_decision_start": 7,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.151778221130371,
+      "end_goal_geo": 0.10864908248186111,
+      "episode_cum_distance": 10.00437417626381,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 114,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -0.21129,
+          3.59345,
+          -5.02502
+        ],
+        [
+          -2.37497,
+          3.99337,
+          -6.1985
+        ]
+      ],
+      "baseline_target_position": [
+        -2.2064661979675293,
+        4.052004814147949,
+        -6.0743584632873535
+      ],
+      "selected_target_position": [
+        -2.397001266479492,
+        3.1585328578948975,
+        -6.897309303283691
+      ],
+      "baseline_target_to_goal_l2": 0.21735384484048112,
+      "selected_target_to_goal_l2": 1.0889319872686007,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.8218846321105957
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 7,
+      "task_id": 2,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.7911044108120872,
+      "object_category": "blanket",
+      "sentence": "blanket in the office that has computer desk with printer and black PC tower, black office chair below colorful painting, rack with books and wicker basket, brown leather couch with diamond-patterned blanket by railing",
+      "task_time_sec": 264.35594202391803,
+      "steps_total": 77,
+      "decisions_total_episode_counter": 9,
+      "task_decision_start": 8,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.321493148803711,
+      "end_goal_geo": 0.08779546618461609,
+      "episode_cum_distance": 9.254774779081345,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 99,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -6.74151,
+          3.76903,
+          -1.5229
+        ]
+      ],
+      "baseline_target_position": [
+        -5.266992568969727,
+        3.5889692306518555,
+        0.011905219405889511
+      ],
+      "selected_target_position": [
+        -5.5319828469209344,
+        3.1633780002593994,
+        -1.7035419602197028
+      ],
+      "baseline_target_to_goal_l2": 2.135942554608134,
+      "selected_target_to_goal_l2": 1.3646984269857403,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.1550803184509277
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 7,
+      "task_id": 3,
+      "task_level": "room",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.8944040318636541,
+      "object_category": "bath towel",
+      "sentence": "bath towel in the bathroom",
+      "task_time_sec": 269.26593222282827,
+      "steps_total": 64,
+      "decisions_total_episode_counter": 10,
+      "task_decision_start": 9,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 6.261127948760986,
+      "end_goal_geo": 0.1107347384095192,
+      "episode_cum_distance": 7.000335112214088,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 133,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -3.53551,
+          3.8552,
+          -7.8586
+        ],
+        [
+          -3.0215,
+          0.72057,
+          -7.79128
+        ],
+        [
+          -2.68033,
+          0.6998,
+          -7.79055
+        ]
+      ],
+      "baseline_target_position": [
+        -3.5306477546691895,
+        3.7747011184692383,
+        -7.890046119689941
+      ],
+      "selected_target_position": [
+        -4.257199267630724,
+        3.1133780479431152,
+        -7.5970690031309385
+      ],
+      "baseline_target_to_goal_l2": 0.08655963147400011,
+      "selected_target_to_goal_l2": 1.0674894237837593,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 4.335587978363037
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 7,
+      "task_id": 4,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "photo",
+      "sentence": "photo in the office that has computer desk with printer and black PC tower, black office chair below colorful painting, rack with books and wicker basket, brown leather couch with diamond-patterned blanket by railing",
+      "task_time_sec": 306.9183769598603,
+      "steps_total": 65,
+      "decisions_total_episode_counter": 11,
+      "task_decision_start": 10,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.32606315612793,
+      "end_goal_geo": 0.7213345170021057,
+      "episode_cum_distance": 7.981333062052727,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 3,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.46674,
+          4.22521,
+          0.80584
+        ]
+      ],
+      "baseline_target_position": [
+        -5.264864921569824,
+        3.586221694946289,
+        0.011507880873978138
+      ],
+      "selected_target_position": [
+        -4.789785451889039,
+        3.124929904937744,
+        -0.8948549263697801
+      ],
+      "baseline_target_to_goal_l2": 1.2947096044679243,
+      "selected_target_to_goal_l2": 2.051179632347277,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.7239430546760559
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 8,
+      "task_id": 0,
+      "task_level": "instance",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.20874468911516478,
+      "object_category": "bicycle",
+      "sentence": "black cross trainer in office with computer desk beside brown leather couch",
+      "task_time_sec": 1940.73470758833,
+      "steps_total": 160,
+      "decisions_total_episode_counter": 6,
+      "task_decision_start": 0,
+      "task_decision_count": 6,
+      "end_reason": "final_decision",
+      "start_goal_geo": 2.871387481689453,
+      "end_goal_geo": 0.03215739503502846,
+      "episode_cum_distance": 13.755499571561813,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 30,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -4.30149,
+          3.87267,
+          -4.53182
+        ]
+      ],
+      "baseline_target_position": [
+        -5.2478766441345215,
+        3.565919876098633,
+        -0.007050409913063049
+      ],
+      "selected_target_position": [
+        -4.059039309215362,
+        3.1133780479431152,
+        -5.341446635465017
+      ],
+      "baseline_target_to_goal_l2": 4.632848277473072,
+      "selected_target_to_goal_l2": 1.1361346288071261,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.6157525777816772
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 8,
+      "task_id": 1,
+      "task_level": "room",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.9006338327887279,
+      "object_category": "pc tower",
+      "sentence": "pc tower in the office",
+      "task_time_sec": 236.67438202165067,
+      "steps_total": 61,
+      "decisions_total_episode_counter": 7,
+      "task_decision_start": 6,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 6.304856300354004,
+      "end_goal_geo": 0.07175705581903458,
+      "episode_cum_distance": 7.000465750694275,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 61,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -4.38825,
+          3.27783,
+          0.4592
+        ]
+      ],
+      "baseline_target_position": [
+        -3.726950168609619,
+        4.006983757019043,
+        -4.458652973175049
+      ],
+      "selected_target_position": [
+        -4.150258963962771,
+        3.150589942932129,
+        -0.5714224993432844
+      ],
+      "baseline_target_to_goal_l2": 5.015402330236189,
+      "selected_target_to_goal_l2": 1.0653696548660034,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.5503337383270264
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 8,
+      "task_id": 2,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.4084645109157346,
+      "object_category": "bath towel",
+      "sentence": "bath towel in the bathroom that has toilet beside black toilet brush, dark wood single-sink vanity by dark blue bath mat, hanging beige towel, blue shower curtain with seashell, starfish, and coral motifs",
+      "task_time_sec": 1025.263939147815,
+      "steps_total": 163,
+      "decisions_total_episode_counter": 10,
+      "task_decision_start": 7,
+      "task_decision_count": 3,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.738189220428467,
+      "end_goal_geo": 0.0717146098613739,
+      "episode_cum_distance": 18.944581508636475,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 0,
+      "module_helpful": null,
+      "module_reason": "baseline_target_kept",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": false,
+      "vistals_input_slot_index": 131,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -3.53551,
+          3.8552,
+          -7.8586
+        ]
+      ],
+      "baseline_target_position": [
+        -3.5627095699310303,
+        3.9994163513183594,
+        -7.83485221862793
+      ],
+      "selected_target_position": [
+        -3.5627095699310303,
+        3.9994163513183594,
+        -7.83485221862793
+      ],
+      "baseline_target_to_goal_l2": 0.1486678502975984,
+      "selected_target_to_goal_l2": 0.1486678502975984,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 3.204346179962158
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 8,
+      "task_id": 3,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.8271227024707397,
+      "object_category": "armchair",
+      "sentence": "armchair in the bedroom that has bed with plain white sheets and light teal pillows, tall wooden headboard, Mickey Mouse plush on dark wood nightstand, matching wardrobe and beige armchair, TV on wood cabinet",
+      "task_time_sec": 258.4748109895736,
+      "steps_total": 62,
+      "decisions_total_episode_counter": 11,
+      "task_decision_start": 10,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 5.380247116088867,
+      "end_goal_geo": 0.12568585574626923,
+      "episode_cum_distance": 6.504775047302246,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 7,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          1.44466,
+          3.56965,
+          -5.65514
+        ]
+      ],
+      "baseline_target_position": [
+        -0.5030044317245483,
+        4.100491523742676,
+        -4.995695114135742
+      ],
+      "selected_target_position": [
+        0.25744202461136934,
+        3.1633780002593994,
+        -5.8732260085951244
+      ],
+      "baseline_target_to_goal_l2": 2.123689482816845,
+      "selected_target_to_goal_l2": 1.2736188464387839,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.2054535150527954
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 8,
+      "task_id": 4,
+      "task_level": "room",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "photo",
+      "sentence": "photo in the office",
+      "task_time_sec": 268.7028680127114,
+      "steps_total": 66,
+      "decisions_total_episode_counter": 12,
+      "task_decision_start": 11,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 11.093902587890625,
+      "end_goal_geo": 5.398214817047119,
+      "episode_cum_distance": 8.253616094589233,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 152,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.46674,
+          4.22521,
+          0.80584
+        ]
+      ],
+      "baseline_target_position": [
+        -8.5406494140625,
+        4.292498588562012,
+        -4.861845016479492
+      ],
+      "selected_target_position": [
+        -7.714007229723481,
+        3.1133780479431152,
+        -4.4095443900426226
+      ],
+      "baseline_target_to_goal_l2": 6.980252080989904,
+      "selected_target_to_goal_l2": 6.2434885350059615,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.44458866119384766
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 9,
+      "task_id": 0,
+      "task_level": "instance",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "toy",
+      "sentence": "blue toy cart beside pink bin and brown leather couch in office with computer desk",
+      "task_time_sec": 2384.86681400612,
+      "steps_total": 190,
+      "decisions_total_episode_counter": 7,
+      "task_decision_start": 0,
+      "task_decision_count": 7,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.528375625610352,
+      "end_goal_geo": 2.8592100143432617,
+      "episode_cum_distance": 14.753801107406616,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 132,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -5.68151,
+          3.20816,
+          -3.6729
+        ]
+      ],
+      "baseline_target_position": [
+        -3.043444871902466,
+        3.240079164505005,
+        -1.5750024318695068
+      ],
+      "selected_target_position": [
+        -5.416757583618164,
+        3.1133780479431152,
+        -0.5228805541992188
+      ],
+      "baseline_target_to_goal_l2": 3.3706943883293237,
+      "selected_target_to_goal_l2": 3.1625464374991865,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.09533238410949707
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 9,
+      "task_id": 1,
+      "task_level": "room",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "tv",
+      "sentence": "tv in the bedroom",
+      "task_time_sec": 236.9498217459768,
+      "steps_total": 12,
+      "decisions_total_episode_counter": 8,
+      "task_decision_start": 7,
+      "task_decision_count": 1,
+      "end_reason": "follower_error",
+      "start_goal_geo": 8.69091796875,
+      "end_goal_geo": 8.69091796875,
+      "episode_cum_distance": 0.0,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 0,
+      "module_helpful": null,
+      "module_reason": "baseline_target_kept",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": false,
+      "vistals_input_slot_index": 94,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -0.15094,
+          4.30008,
+          -4.8529
+        ],
+        [
+          1.61155,
+          1.71578,
+          -4.87655
+        ]
+      ],
+      "baseline_target_position": [
+        -9.687984466552734,
+        2.1683669090270996,
+        0.6330288648605347
+      ],
+      "selected_target_position": [
+        -9.687984466552734,
+        2.1683669090270996,
+        0.6330288648605347
+      ],
+      "baseline_target_to_goal_l2": 11.206910072341053,
+      "selected_target_to_goal_l2": 11.206910072341053,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.7534092664718628
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 9,
+      "task_id": 2,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "picture",
+      "sentence": "picture in the office that has computer desk with printer and black PC tower, black office chair below colorful painting, rack with books and wicker basket, brown leather couch with diamond-patterned blanket by railing",
+      "task_time_sec": 251.22293480858207,
+      "steps_total": 42,
+      "decisions_total_episode_counter": 9,
+      "task_decision_start": 8,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 0.81983482837677,
+      "end_goal_geo": 4.963729381561279,
+      "episode_cum_distance": 4.50000074505806,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 110,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.46674,
+          4.22521,
+          0.80584
+        ]
+      ],
+      "baseline_target_position": [
+        -7.889499664306641,
+        4.889291763305664,
+        -4.875411510467529
+      ],
+      "selected_target_position": [
+        -6.942686696497722,
+        3.1133780479431152,
+        -4.531982337181229
+      ],
+      "baseline_target_to_goal_l2": 6.6658013046556714,
+      "selected_target_to_goal_l2": 5.988224247372795,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.597785234451294
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 9,
+      "task_id": 3,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.9590763568967176,
+      "object_category": "nightstand",
+      "sentence": "nightstand in the bedroom that has bed with plain white sheets and light teal pillows, tall wooden headboard, Mickey Mouse plush on dark wood nightstand, matching wardrobe and beige armchair, TV on wood cabinet",
+      "task_time_sec": 290.3685645163059,
+      "steps_total": 52,
+      "decisions_total_episode_counter": 10,
+      "task_decision_start": 9,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 6.718020439147949,
+      "end_goal_geo": 0.09133278578519821,
+      "episode_cum_distance": 7.004677355289459,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 12,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -1.27152,
+          3.53914,
+          -8.49409
+        ]
+      ],
+      "baseline_target_position": [
+        -1.2927203178405762,
+        3.5945584774017334,
+        -8.47906494140625
+      ],
+      "selected_target_position": [
+        -1.7294670792420703,
+        3.1133780479431152,
+        -7.440874426715847
+      ],
+      "baseline_target_to_goal_l2": 0.061207952913109966,
+      "selected_target_to_goal_l2": 1.2248476684934742,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 3.0506093502044678
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 9,
+      "task_id": 4,
+      "task_level": "object",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.9065571912327484,
+      "object_category": "computer desk",
+      "sentence": "computer desk",
+      "task_time_sec": 272.2424003742635,
+      "steps_total": 75,
+      "decisions_total_episode_counter": 11,
+      "task_decision_start": 10,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 9.704544067382812,
+      "end_goal_geo": 0.13373059034347534,
+      "episode_cum_distance": 10.704833805561066,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 69,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.91651,
+          3.44521,
+          0.58958
+        ]
+      ],
+      "baseline_target_position": [
+        -4.785465717315674,
+        3.499434232711792,
+        0.5069220066070557
+      ],
+      "selected_target_position": [
+        -4.375255372344358,
+        3.1633780002593994,
+        -0.5472445952057544
+      ],
+      "baseline_target_to_goal_l2": 0.16414997809680063,
+      "selected_target_to_goal_l2": 1.2902542417295748,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.22927182912826538
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 10,
+      "task_id": 0,
+      "task_level": "instance",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.7018288279385415,
+      "object_category": "table",
+      "sentence": "square wooden side table with plants to the right of computer desk in office with brown couch",
+      "task_time_sec": 1900.6874002590775,
+      "steps_total": 152,
+      "decisions_total_episode_counter": 6,
+      "task_decision_start": 0,
+      "task_decision_count": 6,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.424179077148438,
+      "end_goal_geo": 0.15797434747219086,
+      "episode_cum_distance": 12.003181889653206,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 88,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -6.52151,
+          3.3252,
+          0.1821
+        ]
+      ],
+      "baseline_target_position": [
+        -4.915638446807861,
+        3.5190818309783936,
+        0.5281605124473572
+      ],
+      "selected_target_position": [
+        -5.625017166137695,
+        3.1133780479431152,
+        -0.41620081663131714
+      ],
+      "baseline_target_to_goal_l2": 1.6541376871381033,
+      "selected_target_to_goal_l2": 1.0984224177070296,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.5134396553039551
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 10,
+      "task_id": 1,
+      "task_level": "object",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.8374511791029005,
+      "object_category": "bed",
+      "sentence": "bed",
+      "task_time_sec": 143.48053994588554,
+      "steps_total": 83,
+      "decisions_total_episode_counter": 7,
+      "task_decision_start": 6,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.950757026672363,
+      "end_goal_geo": 0.06948164105415344,
+      "episode_cum_distance": 10.68809412419796,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 11,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -0.11123,
+          4.2913,
+          -7.6972
+        ],
+        [
+          1.7875,
+          0.81575,
+          -7.53384
+        ]
+      ],
+      "baseline_target_position": [
+        0.04507321119308472,
+        3.7891297340393066,
+        -7.389562606811523
+      ],
+      "selected_target_position": [
+        -1.4672456408528645,
+        3.1133780479431152,
+        -7.309999792873699
+      ],
+      "baseline_target_to_goal_l2": 0.6092999553028905,
+      "selected_target_to_goal_l2": 1.837444568898272,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 5.117190837860107
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 10,
+      "task_id": 2,
+      "task_level": "room",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "picture",
+      "sentence": "picture in the office",
+      "task_time_sec": 209.89116564020514,
+      "steps_total": 65,
+      "decisions_total_episode_counter": 8,
+      "task_decision_start": 7,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 10.60664176940918,
+      "end_goal_geo": 5.303934097290039,
+      "episode_cum_distance": 7.754455745220184,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 137,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.46674,
+          4.22521,
+          0.80584
+        ]
+      ],
+      "baseline_target_position": [
+        -8.511922836303711,
+        4.313237190246582,
+        -4.862788200378418
+      ],
+      "selected_target_position": [
+        -7.557506318535154,
+        3.1633780002593994,
+        -4.310345148614475
+      ],
+      "baseline_target_to_goal_l2": 6.964524293839049,
+      "selected_target_to_goal_l2": 6.070887423298821,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 4.01470947265625
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 10,
+      "task_id": 3,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "cross trainer",
+      "sentence": "cross trainer in the office that has computer desk with printer and black PC tower, black office chair below colorful painting, rack with books and wicker basket, brown leather couch with diamond-patterned blanket by railing",
+      "task_time_sec": 323.451504284516,
+      "steps_total": 51,
+      "decisions_total_episode_counter": 9,
+      "task_decision_start": 8,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 1.3000590801239014,
+      "end_goal_geo": 3.1550445556640625,
+      "episode_cum_distance": 4.919329673051834,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 42,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -4.30149,
+          3.87267,
+          -4.53182
+        ]
+      ],
+      "baseline_target_position": [
+        -3.7091917991638184,
+        4.076307773590088,
+        -4.4155354499816895
+      ],
+      "selected_target_position": [
+        -4.649409000504933,
+        3.1133780479431152,
+        -0.7861068038257901
+      ],
+      "baseline_target_to_goal_l2": 0.6370302960766205,
+      "selected_target_to_goal_l2": 3.837699733872404,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.5306730270385742
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 10,
+      "task_id": 4,
+      "task_level": "room",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.3026478831734448,
+      "object_category": "computer desk",
+      "sentence": "computer desk in the office",
+      "task_time_sec": 315.7163283545524,
+      "steps_total": 14,
+      "decisions_total_episode_counter": 10,
+      "task_decision_start": 9,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 0.07566195726394653,
+      "end_goal_geo": 0.08435261994600296,
+      "episode_cum_distance": 0.24999995529651642,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 44,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.91651,
+          3.44521,
+          0.58958
+        ]
+      ],
+      "baseline_target_position": [
+        -4.904154300689697,
+        3.5080175399780273,
+        0.5119351744651794
+      ],
+      "selected_target_position": [
+        -4.534929373879137,
+        3.1133780479431152,
+        -0.4873226455470563
+      ],
+      "baseline_target_to_goal_l2": 0.10062886919701944,
+      "selected_target_to_goal_l2": 1.1897207767467628,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.264754056930542
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 11,
+      "task_id": 0,
+      "task_level": "instance",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.6963530674754499,
+      "object_category": "couch",
+      "sentence": "brown three-seater leather couch with diamond-patterned throw beside railing in office with computer desk beside couch",
+      "task_time_sec": 2174.1842115353793,
+      "steps_total": 147,
+      "decisions_total_episode_counter": 7,
+      "task_decision_start": 0,
+      "task_decision_count": 7,
+      "end_reason": "final_decision",
+      "start_goal_geo": 6.267996788024902,
+      "end_goal_geo": 0.07184822112321854,
+      "episode_cum_distance": 9.00117638707161,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 12,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -6.59397,
+          3.52994,
+          -1.46677
+        ]
+      ],
+      "baseline_target_position": [
+        -6.550792694091797,
+        3.5583577156066895,
+        -1.593525767326355
+      ],
+      "selected_target_position": [
+        -5.413666911125183,
+        3.1133780479431152,
+        -1.7025633809467158
+      ],
+      "baseline_target_to_goal_l2": 0.13688999545725128,
+      "selected_target_to_goal_l2": 1.2736709779245021,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.4141738414764404
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 11,
+      "task_id": 1,
+      "task_level": "object",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.8143124687664439,
+      "object_category": "bed",
+      "sentence": "bed",
+      "task_time_sec": 460.8260874208063,
+      "steps_total": 84,
+      "decisions_total_episode_counter": 9,
+      "task_decision_start": 7,
+      "task_decision_count": 2,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.742442607879639,
+      "end_goal_geo": 0.14298439025878906,
+      "episode_cum_distance": 9.507950454950333,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 84,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -0.11123,
+          4.2913,
+          -7.6972
+        ],
+        [
+          1.7875,
+          0.81575,
+          -7.53384
+        ]
+      ],
+      "baseline_target_position": [
+        -0.017708847299218178,
+        3.695512533187866,
+        -7.279184341430664
+      ],
+      "selected_target_position": [
+        -1.3580202393424607,
+        3.126024007797241,
+        -7.377110249201457
+      ],
+      "baseline_target_to_goal_l2": 0.733788799602486,
+      "selected_target_to_goal_l2": 1.7363212512349282,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 4.900244235992432
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 11,
+      "task_id": 2,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.9194870585830521,
+      "object_category": "side table",
+      "sentence": "side table in the office that has computer desk with printer and black PC tower, black office chair below colorful painting, rack with books and wicker basket, brown leather couch with diamond-patterned blanket by railing",
+      "task_time_sec": 204.13821450434625,
+      "steps_total": 63,
+      "decisions_total_episode_counter": 10,
+      "task_decision_start": 9,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 6.673023700714111,
+      "end_goal_geo": 0.11044075340032578,
+      "episode_cum_distance": 7.257332921028137,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 9,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -3.00454,
+          3.2852,
+          0.47348
+        ],
+        [
+          -6.52151,
+          3.3252,
+          0.1821
+        ],
+        [
+          -6.51398,
+          3.38777,
+          -2.84769
+        ]
+      ],
+      "baseline_target_position": [
+        -3.076749324798584,
+        4.1751298904418945,
+        0.49850744009017944
+      ],
+      "selected_target_position": [
+        -6.543473507563273,
+        3.124083995819092,
+        -4.012786980668704
+      ],
+      "baseline_target_to_goal_l2": 0.8932053343141526,
+      "selected_target_to_goal_l2": 1.19492725726406,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.5896432399749756
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 11,
+      "task_id": 3,
+      "task_level": "object",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.8885810417209749,
+      "object_category": "plush toy",
+      "sentence": "plush toy",
+      "task_time_sec": 278.3823039457202,
+      "steps_total": 66,
+      "decisions_total_episode_counter": 11,
+      "task_decision_start": 10,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 6.890936374664307,
+      "end_goal_geo": 0.08276110887527466,
+      "episode_cum_distance": 7.754989191889763,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 149,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -1.4517,
+          4.07733,
+          -8.49779
+        ],
+        [
+          -1.44114,
+          4.0887,
+          -8.62607
+        ]
+      ],
+      "baseline_target_position": [
+        -1.4651660919189453,
+        4.1231231689453125,
+        -8.54370403289795
+      ],
+      "selected_target_position": [
+        -2.1628042141016004,
+        3.1133780479431152,
+        -7.941450995235566
+      ],
+      "baseline_target_to_goal_l2": 0.06623026778276964,
+      "selected_target_to_goal_l2": 1.3207519287926914,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.29944002628326416
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 11,
+      "task_id": 4,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "picture",
+      "sentence": "picture in the office that has computer desk with printer and black PC tower, black office chair below colorful painting, rack with books and wicker basket, brown leather couch with diamond-patterned blanket by railing",
+      "task_time_sec": 492.03755998797715,
+      "steps_total": 118,
+      "decisions_total_episode_counter": 13,
+      "task_decision_start": 11,
+      "task_decision_count": 2,
+      "end_reason": "final_decision",
+      "start_goal_geo": 11.271235466003418,
+      "end_goal_geo": 0.46028560400009155,
+      "episode_cum_distance": 13.755086988210678,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 56,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -4.46674,
+          4.22521,
+          0.80584
+        ]
+      ],
+      "baseline_target_position": [
+        -3.6711952686309814,
+        3.9756624698638916,
+        -4.428040027618408
+      ],
+      "selected_target_position": [
+        -4.906459331512451,
+        3.1133780479431152,
+        -0.4323388338088989
+      ],
+      "baseline_target_to_goal_l2": 5.299874105382967,
+      "selected_target_to_goal_l2": 1.7212234615565594,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.44206613302230835
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 12,
+      "task_id": 0,
+      "task_level": "instance",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "picture",
+      "sentence": "black-framed black-and-white striped picture on beige wall above staircase",
+      "task_time_sec": 2856.940441360697,
+      "steps_total": 317,
+      "decisions_total_episode_counter": 9,
+      "task_decision_start": 0,
+      "task_decision_count": 9,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.232321262359619,
+      "end_goal_geo": 3.459061622619629,
+      "episode_cum_distance": 29.757477343082428,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 25,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -8.54151,
+          4.32214,
+          -4.86306
+        ]
+      ],
+      "baseline_target_position": [
+        -3.734241008758545,
+        3.990208387374878,
+        -4.358033657073975
+      ],
+      "selected_target_position": [
+        -4.100889677794591,
+        3.1133780479431152,
+        -5.2674091080478735
+      ],
+      "baseline_target_to_goal_l2": 4.84510736275893,
+      "selected_target_to_goal_l2": 4.61992559506137,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 2.0667104721069336
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 12,
+      "task_id": 1,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.6434142453012752,
+      "object_category": "tv",
+      "sentence": "tv in the bedroom that has bed with plain white sheets and light teal pillows, tall wooden headboard, Mickey Mouse plush on dark wood nightstand, matching wardrobe and beige armchair, TV on wood cabinet",
+      "task_time_sec": 188.2651179842651,
+      "steps_total": 35,
+      "decisions_total_episode_counter": 10,
+      "task_decision_start": 9,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 2.575538158416748,
+      "end_goal_geo": 0.06463824212551117,
+      "episode_cum_distance": 4.002923741936684,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 1,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -0.15094,
+          4.30008,
+          -4.8529
+        ]
+      ],
+      "baseline_target_position": [
+        -0.24387724697589874,
+        4.2552809715271,
+        -4.906189918518066
+      ],
+      "selected_target_position": [
+        -0.3638985809992991,
+        3.145045757293701,
+        -5.901574340905376
+      ],
+      "baseline_target_to_goal_l2": 0.11612105856922392,
+      "selected_target_to_goal_l2": 1.5745390856751298,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.03837776184082031
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 12,
+      "task_id": 2,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.5692011396591502,
+      "object_category": "table",
+      "sentence": "table in the office that has computer desk with printer and black PC tower, black office chair below colorful painting, rack with books and wicker basket, brown leather couch with diamond-patterned blanket by railing",
+      "task_time_sec": 222.04858503304422,
+      "steps_total": 81,
+      "decisions_total_episode_counter": 11,
+      "task_decision_start": 10,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 6.405606746673584,
+      "end_goal_geo": 0.15464451909065247,
+      "episode_cum_distance": 11.25367870926857,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 89,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -3.00454,
+          3.2852,
+          0.47348
+        ],
+        [
+          -6.52151,
+          3.3252,
+          0.1821
+        ],
+        [
+          -6.51398,
+          3.38777,
+          -2.84769
+        ]
+      ],
+      "baseline_target_position": [
+        -3.0974314212799072,
+        3.3703527450561523,
+        0.4355153739452362
+      ],
+      "selected_target_position": [
+        -4.144712924957275,
+        3.1133780479431152,
+        -0.09964067488908768
+      ],
+      "baseline_target_to_goal_l2": 0.1316097221692885,
+      "selected_target_to_goal_l2": 1.2876274267036993,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.7436294555664062
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 12,
+      "task_id": 3,
+      "task_level": "object",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.8816172636266808,
+      "object_category": "bed",
+      "sentence": "bed",
+      "task_time_sec": 242.65520194731653,
+      "steps_total": 84,
+      "decisions_total_episode_counter": 12,
+      "task_decision_start": 11,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 9.70181655883789,
+      "end_goal_geo": 0.10971523076295853,
+      "episode_cum_distance": 11.004567354917526,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 6,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -0.11123,
+          4.2913,
+          -7.6972
+        ],
+        [
+          1.7875,
+          0.81575,
+          -7.53384
+        ]
+      ],
+      "baseline_target_position": [
+        -0.04755119979381561,
+        3.798642158508301,
+        -7.485976219177246
+      ],
+      "selected_target_position": [
+        -1.254769163344759,
+        3.1133780479431152,
+        -6.730395394516874
+      ],
+      "baseline_target_to_goal_l2": 0.5397983178595666,
+      "selected_target_to_goal_l2": 1.905227831106851,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 3.214505434036255
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 12,
+      "task_id": 4,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.9134768496602476,
+      "object_category": "printer",
+      "sentence": "printer in the office that has computer desk with printer and black PC tower, black office chair below colorful painting, rack with books and wicker basket, brown leather couch with diamond-patterned blanket by railing",
+      "task_time_sec": 313.4073446560651,
+      "steps_total": 83,
+      "decisions_total_episode_counter": 13,
+      "task_decision_start": 12,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 9.824285507202148,
+      "end_goal_geo": 0.09251631051301956,
+      "episode_cum_distance": 10.75482702255249,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 100,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -4.44416,
+          3.88428,
+          0.60389
+        ]
+      ],
+      "baseline_target_position": [
+        -3.0424141883850098,
+        4.006154537200928,
+        -1.2961325645446777
+      ],
+      "selected_target_position": [
+        -4.112066537086623,
+        3.1633780002593994,
+        -0.37223877057619537
+      ],
+      "baseline_target_to_goal_l2": 2.364282231244198,
+      "selected_target_to_goal_l2": 1.2580990176001212,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.5328311920166016
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 13,
+      "task_id": 0,
+      "task_level": "instance",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "tv",
+      "sentence": "black wall-mounted tv above fireplace in tie: living room & hall with dark leather couch under staircase",
+      "task_time_sec": 1897.6013587210327,
+      "steps_total": 207,
+      "decisions_total_episode_counter": 6,
+      "task_decision_start": 0,
+      "task_decision_count": 6,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.578639030456543,
+      "end_goal_geo": 12.195998191833496,
+      "episode_cum_distance": 19.000001395121217,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 0,
+      "module_helpful": null,
+      "module_reason": "baseline_target_kept",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": false,
+      "vistals_input_slot_index": 72,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -9.70876,
+          2.04168,
+          0.67388
+        ]
+      ],
+      "baseline_target_position": [
+        1.3661816120147705,
+        1.5750749111175537,
+        -4.899459362030029
+      ],
+      "selected_target_position": [
+        1.3661816120147705,
+        1.5750749111175537,
+        -4.899459362030029
+      ],
+      "baseline_target_to_goal_l2": 12.407020740808836,
+      "selected_target_to_goal_l2": 12.407020740808836,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.0353238582611084
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 13,
+      "task_id": 1,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.8804501126847258,
+      "object_category": "doormat",
+      "sentence": "doormat in the hall that has brown-framed sailboats painting on wall, colorful floral door entry mat",
+      "task_time_sec": 229.6700754929334,
+      "steps_total": 62,
+      "decisions_total_episode_counter": 7,
+      "task_decision_start": 6,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 6.383264064788818,
+      "end_goal_geo": 0.057244688272476196,
+      "episode_cum_distance": 7.250000849366188,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 85,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -0.02138,
+          -0.0035,
+          -0.13289
+        ]
+      ],
+      "baseline_target_position": [
+        -0.9505176544189453,
+        -0.018148165196180344,
+        -0.4442764222621918
+      ],
+      "selected_target_position": [
+        -0.6418030858039856,
+        0.013377934694290161,
+        -1.0497363805770874
+      ],
+      "baseline_target_to_goal_l2": 0.980037169484914,
+      "selected_target_to_goal_l2": 1.107166182492669,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.2446885108947754
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 13,
+      "task_id": 2,
+      "task_level": "room",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.9167660057890599,
+      "object_category": "laundry basket",
+      "sentence": "laundry basket in the bedroom",
+      "task_time_sec": 245.44386131688952,
+      "steps_total": 61,
+      "decisions_total_episode_counter": 8,
+      "task_decision_start": 7,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.563319206237793,
+      "end_goal_geo": 0.05773336440324783,
+      "episode_cum_distance": 8.24999962747097,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 141,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          3.84912,
+          0.2652,
+          -4.9119
+        ],
+        [
+          2.57906,
+          0.25775,
+          -4.92659
+        ]
+      ],
+      "baseline_target_position": [
+        2.6299448013305664,
+        0.31484630703926086,
+        -4.951357364654541
+      ],
+      "selected_target_position": [
+        2.348735972475936,
+        0.013377934694290161,
+        -5.837619784127009
+      ],
+      "baseline_target_to_goal_l2": 0.08039075591076227,
+      "selected_target_to_goal_l2": 0.9709490880181042,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 2.647250175476074
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 13,
+      "task_id": 3,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "bath sink",
+      "sentence": "bath sink in the bathroom that has pedestal sink beneath oval mirror and hand towel, toilet below colorful tropical harbor picture, wire rack with bottle of cleaner, wooden flooring",
+      "task_time_sec": 568.326455520466,
+      "steps_total": 57,
+      "decisions_total_episode_counter": 10,
+      "task_decision_start": 8,
+      "task_decision_count": 2,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.253418922424316,
+      "end_goal_geo": 7.819072246551514,
+      "episode_cum_distance": 4.249999940395355,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 167,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -4.72171,
+          0.41408,
+          -4.792
+        ]
+      ],
+      "baseline_target_position": [
+        -0.9008375406265259,
+        0.8903531432151794,
+        -5.833711624145508
+      ],
+      "selected_target_position": [
+        -1.072585023097102,
+        0.013377934694290161,
+        -6.729591360327036
+      ],
+      "baseline_target_to_goal_l2": 3.988867704703509,
+      "selected_target_to_goal_l2": 4.151016203510992,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.4024820327758789
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 13,
+      "task_id": 4,
+      "task_level": "object",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "sideboard",
+      "sentence": "sideboard",
+      "task_time_sec": 246.27442326955497,
+      "steps_total": 77,
+      "decisions_total_episode_counter": 11,
+      "task_decision_start": 10,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 4.661015033721924,
+      "end_goal_geo": 3.623323917388916,
+      "episode_cum_distance": 8.749999329447746,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 110,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          0.59852,
+          0.52664,
+          -4.3001
+        ]
+      ],
+      "baseline_target_position": [
+        3.680736541748047,
+        0.47009721398353577,
+        -6.649376392364502
+      ],
+      "selected_target_position": [
+        -4.1970014572143555,
+        0.013377934694290161,
+        -1.3986808061599731
+      ],
+      "baseline_target_to_goal_l2": 3.8758683497504096,
+      "selected_target_to_goal_l2": 5.628383189928391,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.91499662399292
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 14,
+      "task_id": 0,
+      "task_level": "instance",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "fireplace",
+      "sentence": "white mantel fireplace below TV in living room with dark couch near staircase",
+      "task_time_sec": 4779.72622198984,
+      "steps_total": 326,
+      "decisions_total_episode_counter": 10,
+      "task_decision_start": 0,
+      "task_decision_count": 10,
+      "end_reason": "final_decision",
+      "start_goal_geo": 9.85085391998291,
+      "end_goal_geo": 12.02912425994873,
+      "episode_cum_distance": 30.00000155903399,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 172,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -9.71872,
+          0.68522,
+          0.83246
+        ]
+      ],
+      "baseline_target_position": [
+        1.6256023645401,
+        1.7078253030776978,
+        -4.926565170288086
+      ],
+      "selected_target_position": [
+        1.0867114524046575,
+        0.013377934694290161,
+        -5.730620869082265
+      ],
+      "baseline_target_to_goal_l2": 12.763453389600286,
+      "selected_target_to_goal_l2": 12.660282426843553,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 2.25799822807312
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 14,
+      "task_id": 1,
+      "task_level": "object",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "cabinet",
+      "sentence": "cabinet",
+      "task_time_sec": 392.7244608066976,
+      "steps_total": 54,
+      "decisions_total_episode_counter": 11,
+      "task_decision_start": 10,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 0.15677312016487122,
+      "end_goal_geo": 0.5949897766113281,
+      "episode_cum_distance": 5.750000983476639,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 0,
+      "module_helpful": null,
+      "module_reason": "baseline_target_kept",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": false,
+      "vistals_input_slot_index": 17,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -1.72031,
+          0.436,
+          -6.08728
+        ],
+        [
+          -4.32408,
+          3.56418,
+          -8.3895
+        ],
+        [
+          0.59852,
+          0.52664,
+          -4.3001
+        ],
+        [
+          3.78052,
+          0.30183,
+          -6.87918
+        ],
+        [
+          -3.44945,
+          1.91517,
+          -0.73493
+        ],
+        [
+          -6.13531,
+          1.92519,
+          0.64733
+        ],
+        [
+          -3.48151,
+          0.43497,
+          -0.54433
+        ],
+        [
+          -0.21129,
+          3.59345,
+          -5.02502
+        ],
+        [
+          1.6839,
+          0.67873,
+          -4.93562
+        ]
+      ],
+      "baseline_target_position": [
+        0.4214858114719391,
+        0.5494650602340698,
+        -4.249484062194824
+      ],
+      "selected_target_position": [
+        0.4214858114719391,
+        0.5494650602340698,
+        -4.249484062194824
+      ],
+      "baseline_target_to_goal_l2": 0.18553722117778776,
+      "selected_target_to_goal_l2": 0.18553722117778776,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.26967328786849976
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 14,
+      "task_id": 2,
+      "task_level": "room",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.8653693728358653,
+      "object_category": "armchair",
+      "sentence": "armchair in the hall",
+      "task_time_sec": 526.7271683756262,
+      "steps_total": 71,
+      "decisions_total_episode_counter": 12,
+      "task_decision_start": 11,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.788325309753418,
+      "end_goal_geo": 0.04073580354452133,
+      "episode_cum_distance": 9.000001102685928,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 67,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -11.11151,
+          0.5661,
+          -0.3677
+        ],
+        [
+          -7.86612,
+          0.49594,
+          -0.01946
+        ]
+      ],
+      "baseline_target_position": [
+        -7.90235710144043,
+        0.42330121994018555,
+        -0.03062625601887703
+      ],
+      "selected_target_position": [
+        -8.032556676260446,
+        0.013377934694290161,
+        -1.1678159963139287
+      ],
+      "baseline_target_to_goal_l2": 0.08194025361726207,
+      "selected_target_to_goal_l2": 1.2566975803059752,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.4208588600158691
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 14,
+      "task_id": 3,
+      "task_level": "room",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "bath towel",
+      "sentence": "bath towel in the bathroom",
+      "task_time_sec": 1213.246395939961,
+      "steps_total": 152,
+      "decisions_total_episode_counter": 14,
+      "task_decision_start": 12,
+      "task_decision_count": 2,
+      "end_reason": "final_decision",
+      "start_goal_geo": 12.559528350830078,
+      "end_goal_geo": 2.856018304824829,
+      "episode_cum_distance": 18.25000174343586,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 226,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -3.53551,
+          3.8552,
+          -7.8586
+        ],
+        [
+          -3.0215,
+          0.72057,
+          -7.79128
+        ],
+        [
+          -2.68033,
+          0.6998,
+          -7.79055
+        ]
+      ],
+      "baseline_target_position": [
+        -1.1025737524032593,
+        0.760467529296875,
+        -4.388906955718994
+      ],
+      "selected_target_position": [
+        -0.2537057636098303,
+        0.013377934694290161,
+        -5.801981909197659
+      ],
+      "baseline_target_to_goal_l2": 3.7502227569368305,
+      "selected_target_to_goal_l2": 3.211554683970366,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.7680120468139648
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 14,
+      "task_id": 4,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "floor mat",
+      "sentence": "floor mat in the tie: hall & living room that has dark leather couch between lamps under staircase, white-mantled fireplace with wall-mounted TV above between windows, leather armchair",
+      "task_time_sec": 661.9107957184315,
+      "steps_total": 73,
+      "decisions_total_episode_counter": 15,
+      "task_decision_start": 14,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 10.29755687713623,
+      "end_goal_geo": 3.4828028678894043,
+      "episode_cum_distance": 8.250001728534698,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 233,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -9.6615,
+          0.00077,
+          0.40648
+        ]
+      ],
+      "baseline_target_position": [
+        -1.586733102798462,
+        -0.013452133163809776,
+        -4.895201683044434
+      ],
+      "selected_target_position": [
+        -4.769424915313721,
+        0.013377934694290161,
+        -0.6228799819946289
+      ],
+      "baseline_target_to_goal_l2": 9.659704518335039,
+      "selected_target_to_goal_l2": 4.999213894879625,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.7395548820495605
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 15,
+      "task_id": 0,
+      "task_level": "instance",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.673437916218511,
+      "object_category": "armchair",
+      "sentence": "dark two-seater leather couch beside fireplace with white mantel below TV",
+      "task_time_sec": 4393.838453067467,
+      "steps_total": 289,
+      "decisions_total_episode_counter": 11,
+      "task_decision_start": 0,
+      "task_decision_count": 11,
+      "end_reason": "final_decision",
+      "start_goal_geo": 16.09371566772461,
+      "end_goal_geo": 0.12086770683526993,
+      "episode_cum_distance": 23.897846082225442,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 181,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -11.11151,
+          0.5661,
+          -0.3677
+        ]
+      ],
+      "baseline_target_position": [
+        -9.80360221862793,
+        0.5027563571929932,
+        -3.298349142074585
+      ],
+      "selected_target_position": [
+        -10.174838490689547,
+        0.013377934694290161,
+        -1.0963208624466525
+      ],
+      "baseline_target_to_goal_l2": 3.209881551646443,
+      "selected_target_to_goal_l2": 1.3091002860828642,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.334404468536377
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 15,
+      "task_id": 1,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "pedestal sink",
+      "sentence": "pedestal sink in the bathroom that has pedestal sink beneath oval mirror and hand towel, toilet below colorful tropical harbor picture, wire rack with bottle of cleaner, wooden flooring",
+      "task_time_sec": 275.3377352282405,
+      "steps_total": 84,
+      "decisions_total_episode_counter": 12,
+      "task_decision_start": 11,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 5.5740180015563965,
+      "end_goal_geo": 5.067561149597168,
+      "episode_cum_distance": 11.250000536441803,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 4,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.72171,
+          0.41408,
+          -4.792
+        ]
+      ],
+      "baseline_target_position": [
+        -1.3827266693115234,
+        0.6040773391723633,
+        -6.04918098449707
+      ],
+      "selected_target_position": [
+        -0.8502762317657471,
+        0.013377934694290161,
+        -5.376222610473633
+      ],
+      "baseline_target_to_goal_l2": 3.572871772018849,
+      "selected_target_to_goal_l2": 3.9357181842140774,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.9949058890342712
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 15,
+      "task_id": 2,
+      "task_level": "room",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "tv",
+      "sentence": "tv in the hall",
+      "task_time_sec": 396.13228952139616,
+      "steps_total": 24,
+      "decisions_total_episode_counter": 13,
+      "task_decision_start": 12,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 10.132880210876465,
+      "end_goal_geo": 12.288884162902832,
+      "episode_cum_distance": 2.2499996721744537,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 129,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -9.70876,
+          2.04168,
+          0.67388
+        ]
+      ],
+      "baseline_target_position": [
+        -8.790534973144531,
+        1.6371278762817383,
+        -0.17525729537010193
+      ],
+      "selected_target_position": [
+        1.3969066216795432,
+        0.013377934694290161,
+        -5.841511253020232
+      ],
+      "baseline_target_to_goal_l2": 1.3144709076800192,
+      "selected_target_to_goal_l2": 13.034575695431863,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.2837991714477539
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 15,
+      "task_id": 3,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.48013982161471075,
+      "object_category": "cabinet",
+      "sentence": "cabinet in the kitchen that has wood kitchen cabinets with granite countertop, stove above stainless oven with towel, silver dishwasher, microwave, coffee machine, stainless steel refrigerator, wall clock, wall-mounted US flag",
+      "task_time_sec": 1457.9116360656917,
+      "steps_total": 112,
+      "decisions_total_episode_counter": 15,
+      "task_decision_start": 13,
+      "task_decision_count": 2,
+      "end_reason": "final_decision",
+      "start_goal_geo": 6.3668599128723145,
+      "end_goal_geo": 0.1176217794418335,
+      "episode_cum_distance": 13.260428788140416,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 222,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -3.44945,
+          1.91517,
+          -0.73493
+        ],
+        [
+          -6.13531,
+          1.92519,
+          0.64733
+        ],
+        [
+          -3.48151,
+          0.43497,
+          -0.54433
+        ]
+      ],
+      "baseline_target_position": [
+        -6.04576301574707,
+        0.7416858077049255,
+        0.5876386165618896
+      ],
+      "selected_target_position": [
+        -4.25060524334616,
+        0.08768575638532639,
+        -0.6217659839181809
+      ],
+      "baseline_target_to_goal_l2": 1.1883870988973106,
+      "selected_target_to_goal_l2": 0.8474138132023116,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.06621241569519043
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 15,
+      "task_id": 4,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.6277434331234009,
+      "object_category": "bathroom cabinet",
+      "sentence": "bathroom cabinet in the bathroom that has dark wood double-sink bath vanity below rectangle mirror, built-in bathtub, grey bath mat, gray towel by white towel, connects to bedroom with striped bedding",
+      "task_time_sec": 803.4347220454365,
+      "steps_total": 81,
+      "decisions_total_episode_counter": 16,
+      "task_decision_start": 15,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 6.427127361297607,
+      "end_goal_geo": 0.041697461158037186,
+      "episode_cum_distance": 10.238462120294571,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "mqsc_r1_semantic_target_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": false,
+      "vistals_input_slot_index": 4,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -1.72031,
+          0.436,
+          -6.08728
+        ]
+      ],
+      "baseline_target_position": [
+        -2.034742593765259,
+        0.4273664355278015,
+        -6.105484485626221
+      ],
+      "selected_target_position": [
+        -1.310039440790812,
+        0.5702207585175832,
+        -6.068118969599406
+      ],
+      "baseline_target_to_goal_l2": 0.315077447232199,
+      "selected_target_to_goal_l2": 0.43209291692513047,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.9168463349342346
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 16,
+      "task_id": 0,
+      "task_level": "instance",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "table",
+      "sentence": "small wooden side table with remote between white fireplace and armchair in living room",
+      "task_time_sec": 1576.7694314885885,
+      "steps_total": 119,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 9.994194030761719,
+      "end_goal_geo": 2.6915054321289062,
+      "episode_cum_distance": 9.500000754371285,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 0,
+      "module_helpful": null,
+      "module_reason": "baseline_target_kept",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": false,
+      "vistals_input_slot_index": 18,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -8.62393,
+          0.34295,
+          0.34652
+        ]
+      ],
+      "baseline_target_position": [
+        -7.846127510070801,
+        0.39835143089294434,
+        -3.205994129180908
+      ],
+      "selected_target_position": [
+        -7.846127510070801,
+        0.39835143089294434,
+        -3.205994129180908
+      ],
+      "baseline_target_to_goal_l2": 3.6370871133250344,
+      "selected_target_to_goal_l2": 3.6370871133250344,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.8853449821472168
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 16,
+      "task_id": 1,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.401315826067088,
+      "object_category": "doormat",
+      "sentence": "doormat in the hall that has brown-framed sailboats painting on wall, colorful floral door entry mat",
+      "task_time_sec": 1419.9987493474036,
+      "steps_total": 172,
+      "decisions_total_episode_counter": 10,
+      "task_decision_start": 5,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 6.621710777282715,
+      "end_goal_geo": 0.11965278536081314,
+      "episode_cum_distance": 16.49999912083149,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 64,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -0.02138,
+          -0.0035,
+          -0.13289
+        ]
+      ],
+      "baseline_target_position": [
+        -0.07421326637268066,
+        -0.013525838032364845,
+        -0.22166933119297028
+      ],
+      "selected_target_position": [
+        -0.8159029793286529,
+        0.013377934694290161,
+        0.17372020255578224
+      ],
+      "baseline_target_to_goal_l2": 0.10379615171541258,
+      "selected_target_to_goal_l2": 0.8517989467427871,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 2.726922035217285
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 16,
+      "task_id": 2,
+      "task_level": "room",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.20590323044384287,
+      "object_category": "armchair",
+      "sentence": "armchair in the living room",
+      "task_time_sec": 3284.6770365834236,
+      "steps_total": 320,
+      "decisions_total_episode_counter": 16,
+      "task_decision_start": 10,
+      "task_decision_count": 6,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.183637619018555,
+      "end_goal_geo": 0.14841657876968384,
+      "episode_cum_distance": 39.74506665766239,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 101,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -11.11151,
+          0.5661,
+          -0.3677
+        ],
+        [
+          -7.86612,
+          0.49594,
+          -0.01946
+        ]
+      ],
+      "baseline_target_position": [
+        -7.8270416259765625,
+        0.46015894412994385,
+        -0.02461177296936512
+      ],
+      "selected_target_position": [
+        -8.060454593690054,
+        0.013377934694290161,
+        -1.1992773890487105
+      ],
+      "baseline_target_to_goal_l2": 0.05323480102545327,
+      "selected_target_to_goal_l2": 1.2894189205523963,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 2.245851993560791
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 16,
+      "task_id": 3,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "sideboard",
+      "sentence": "sideboard in the dining room that has rectangular wooden dining table with carved chairs, potted plant on side cabinet, large canal scene painting above",
+      "task_time_sec": 686.1424540169537,
+      "steps_total": 38,
+      "decisions_total_episode_counter": 17,
+      "task_decision_start": 16,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.135791778564453,
+      "end_goal_geo": 4.657359600067139,
+      "episode_cum_distance": 3.7568470388650894,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 82,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          0.59852,
+          0.52664,
+          -4.3001
+        ]
+      ],
+      "baseline_target_position": [
+        -3.3366525173187256,
+        0.905039370059967,
+        -0.1682180017232895
+      ],
+      "selected_target_position": [
+        -4.332839012145996,
+        0.013377934694290161,
+        -0.6370422840118408
+      ],
+      "baseline_target_to_goal_l2": 5.718497851009959,
+      "selected_target_to_goal_l2": 6.164392223489336,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.4817962646484375
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 16,
+      "task_id": 4,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "case",
+      "sentence": "case in the walk-in closet that has ironing board and tightly packed clothes hanging above storage boxes",
+      "task_time_sec": 821.5818992573768,
+      "steps_total": 112,
+      "decisions_total_episode_counter": 18,
+      "task_decision_start": 17,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 12.628899574279785,
+      "end_goal_geo": 0.7818425297737122,
+      "episode_cum_distance": 14.75098167359829,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 242,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -5.70145,
+          0.16944,
+          -8.2729
+        ]
+      ],
+      "baseline_target_position": [
+        -5.651273727416992,
+        1.029008388519287,
+        -6.854109764099121
+      ],
+      "selected_target_position": [
+        -4.944645881652832,
+        0.04995571821928024,
+        -6.022880554199219
+      ],
+      "baseline_target_to_goal_l2": 1.659620801978464,
+      "selected_target_to_goal_l2": 2.3768921880517726,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.491672158241272
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 17,
+      "task_id": 0,
+      "task_level": "instance",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "floor mat",
+      "sentence": "dark floor mat beside fireplace in tie: living room & hall with dark leather couch near staircase",
+      "task_time_sec": 6625.387613395229,
+      "steps_total": 400,
+      "decisions_total_episode_counter": 11,
+      "task_decision_start": 0,
+      "task_decision_count": 11,
+      "end_reason": "final_decision",
+      "start_goal_geo": 15.819483757019043,
+      "end_goal_geo": 11.94666576385498,
+      "episode_cum_distance": 37.50176376849413,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 0,
+      "module_helpful": null,
+      "module_reason": "baseline_target_kept",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": false,
+      "vistals_input_slot_index": 32,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -9.6615,
+          0.00077,
+          0.40648
+        ]
+      ],
+      "baseline_target_position": [
+        -2.1344969272613525,
+        -5.397819768404588e-05,
+        -6.549417018890381
+      ],
+      "selected_target_position": [
+        -2.1344969272613525,
+        -5.397819768404588e-05,
+        -6.549417018890381
+      ],
+      "baseline_target_to_goal_l2": 10.248916004796078,
+      "selected_target_to_goal_l2": 10.248916004796078,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.5758057832717896
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 17,
+      "task_id": 1,
+      "task_level": "room",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "kitchen cabinet",
+      "sentence": "kitchen cabinet in the kitchen",
+      "task_time_sec": 593.9581793639809,
+      "steps_total": 65,
+      "decisions_total_episode_counter": 12,
+      "task_decision_start": 11,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 6.7207865715026855,
+      "end_goal_geo": 2.5218119621276855,
+      "episode_cum_distance": 7.250001281499863,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 0,
+      "module_helpful": null,
+      "module_reason": "baseline_target_kept",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": false,
+      "vistals_input_slot_index": 208,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -3.44945,
+          1.91517,
+          -0.73493
+        ],
+        [
+          -6.13531,
+          1.92519,
+          0.64733
+        ],
+        [
+          -3.48151,
+          0.43497,
+          -0.54433
+        ]
+      ],
+      "baseline_target_position": [
+        -2.9850542545318604,
+        2.1379520893096924,
+        -1.3325036764144897
+      ],
+      "selected_target_position": [
+        -2.9850542545318604,
+        2.1379520893096924,
+        -1.3325036764144897
+      ],
+      "baseline_target_to_goal_l2": 0.7889167043925679,
+      "selected_target_to_goal_l2": 0.7889167043925679,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.4335046410560608
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 17,
+      "task_id": 2,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.8157320334064463,
+      "object_category": "fireplace",
+      "sentence": "fireplace in the tie: hall & living room that has dark leather couch between lamps under staircase, white-mantled fireplace with wall-mounted TV above between windows, leather armchair",
+      "task_time_sec": 1345.1363748405129,
+      "steps_total": 97,
+      "decisions_total_episode_counter": 14,
+      "task_decision_start": 12,
+      "task_decision_count": 2,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.366962432861328,
+      "end_goal_geo": 0.11764218658208847,
+      "episode_cum_distance": 10.256998732686043,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 118,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -9.71872,
+          0.68522,
+          0.83246
+        ]
+      ],
+      "baseline_target_position": [
+        -9.554890632629395,
+        0.80092853307724,
+        0.6350093483924866
+      ],
+      "selected_target_position": [
+        -9.870540486855774,
+        0.09687395393848419,
+        -0.30021787426931446
+      ],
+      "baseline_target_to_goal_l2": 0.2814521026039261,
+      "selected_target_to_goal_l2": 1.2853636438784926,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 2.3918421268463135
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 17,
+      "task_id": 3,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "doormat",
+      "sentence": "doormat in the hall that has brown-framed sailboats painting on wall, colorful floral door entry mat",
+      "task_time_sec": 679.0141395144165,
+      "steps_total": 70,
+      "decisions_total_episode_counter": 15,
+      "task_decision_start": 14,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 9.683990478515625,
+      "end_goal_geo": 2.155817985534668,
+      "episode_cum_distance": 9.750001788139343,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 216,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -0.02138,
+          -0.0035,
+          -0.13289
+        ]
+      ],
+      "baseline_target_position": [
+        -2.1344969272613525,
+        -5.397819768404588e-05,
+        -6.549417018890381
+      ],
+      "selected_target_position": [
+        -0.929247502264817,
+        0.013377934694290161,
+        -3.4150862697582727
+      ],
+      "baseline_target_to_goal_l2": 6.755523222334078,
+      "selected_target_to_goal_l2": 3.40548390387669,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.5550563335418701
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 17,
+      "task_id": 4,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "wardrobe",
+      "sentence": "wardrobe in the bedroom that has wood bed with gray-striped bedding, lamp on nightstand, TV atop dresser, laundry basket, dark cabinet below wall decoration between windows",
+      "task_time_sec": 831.134277831763,
+      "steps_total": 68,
+      "decisions_total_episode_counter": 16,
+      "task_decision_start": 15,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 3.118208408355713,
+      "end_goal_geo": 3.8891868591308594,
+      "episode_cum_distance": 7.250000685453415,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 43,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          1.6839,
+          0.67873,
+          -4.93562
+        ]
+      ],
+      "baseline_target_position": [
+        -2.9557180404663086,
+        0.6648034453392029,
+        -7.886870384216309
+      ],
+      "selected_target_position": [
+        -2.8814358353614806,
+        0.013377934694290161,
+        -7.195698054631551
+      ],
+      "baseline_target_to_goal_l2": 5.49873879545865,
+      "selected_target_to_goal_l2": 5.137405714314319,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.8910815715789795
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 18,
+      "task_id": 0,
+      "task_level": "instance",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "plant",
+      "sentence": "green leafy plant in flowerpot left of black three-seater couch under staircase",
+      "task_time_sec": 5831.535603350028,
+      "steps_total": 322,
+      "decisions_total_episode_counter": 11,
+      "task_decision_start": 0,
+      "task_decision_count": 11,
+      "end_reason": "final_decision",
+      "start_goal_geo": 16.713502883911133,
+      "end_goal_geo": 3.407423496246338,
+      "episode_cum_distance": 26.414789460599422,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 94,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -10.85151,
+          0.6552,
+          -3.2406
+        ]
+      ],
+      "baseline_target_position": [
+        -7.780342102050781,
+        0.5261805057525635,
+        -0.4443066120147705
+      ],
+      "selected_target_position": [
+        -6.969522761038533,
+        0.013377934694290161,
+        -0.9363020887631845
+      ],
+      "baseline_target_to_goal_l2": 4.155475303618059,
+      "selected_target_to_goal_l2": 4.559775142559478,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.3864626884460449
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 18,
+      "task_id": 1,
+      "task_level": "room",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "kitchen sink",
+      "sentence": "kitchen sink in the kitchen",
+      "task_time_sec": 601.7569851987064,
+      "steps_total": 90,
+      "decisions_total_episode_counter": 12,
+      "task_decision_start": 11,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 1.48442542552948,
+      "end_goal_geo": 9.183052062988281,
+      "episode_cum_distance": 11.751835480332375,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 0,
+      "module_helpful": null,
+      "module_reason": "baseline_target_kept",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": false,
+      "vistals_input_slot_index": 81,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.77501,
+          0.76925,
+          0.4571
+        ]
+      ],
+      "baseline_target_position": [
+        -1.317539930343628,
+        0.7610831260681152,
+        -6.070093631744385
+      ],
+      "selected_target_position": [
+        -1.317539930343628,
+        0.7610831260681152,
+        -6.070093631744385
+      ],
+      "baseline_target_to_goal_l2": 7.38636735389487,
+      "selected_target_to_goal_l2": 7.38636735389487,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.7066842913627625
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 18,
+      "task_id": 2,
+      "task_level": "object",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.1139293218724707,
+      "object_category": "sink",
+      "sentence": "sink",
+      "task_time_sec": 598.766120262444,
+      "steps_total": 18,
+      "decisions_total_episode_counter": 13,
+      "task_decision_start": 12,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 0.08544697612524033,
+      "end_goal_geo": 0.20586149394512177,
+      "episode_cum_distance": 0.7499998658895493,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 71,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.72171,
+          0.41408,
+          -4.792
+        ],
+        [
+          -1.27413,
+          0.7552,
+          -6.09345
+        ],
+        [
+          -2.16636,
+          0.73809,
+          -6.09509
+        ],
+        [
+          -4.77501,
+          0.76925,
+          0.4571
+        ]
+      ],
+      "baseline_target_position": [
+        -2.1940512657165527,
+        0.768772542476654,
+        -6.032715320587158
+      ],
+      "selected_target_position": [
+        -1.8866267388555764,
+        0.013377934694290161,
+        -6.929829025133522
+      ],
+      "baseline_target_to_goal_l2": 0.07482529813954089,
+      "selected_target_to_goal_l2": 1.1402839624720784,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.09078407287597656
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 18,
+      "task_id": 3,
+      "task_level": "object",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "floor mat",
+      "sentence": "floor mat",
+      "task_time_sec": 613.1184324603528,
+      "steps_total": 14,
+      "decisions_total_episode_counter": 14,
+      "task_decision_start": 13,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 9.16385269165039,
+      "end_goal_geo": 9.316568374633789,
+      "episode_cum_distance": 0.2500000596046448,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 39,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -9.6615,
+          0.00077,
+          0.40648
+        ],
+        [
+          -4.70958,
+          0.0115,
+          -0.04865
+        ]
+      ],
+      "baseline_target_position": [
+        -1.861770749092102,
+        -0.0011515304213389754,
+        -6.565931797027588
+      ],
+      "selected_target_position": [
+        -2.1223071990907996,
+        0.013377934694290161,
+        -7.269584385223564
+      ],
+      "baseline_target_to_goal_l2": 7.112323081289667,
+      "selected_target_to_goal_l2": 7.670454841055207,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.10774922370910645
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 18,
+      "task_id": 4,
+      "task_level": "room",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "case",
+      "sentence": "case in the walk-in closet",
+      "task_time_sec": 585.2838198877871,
+      "steps_total": 29,
+      "decisions_total_episode_counter": 15,
+      "task_decision_start": 14,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 2.679946184158325,
+      "end_goal_geo": 0.5078062415122986,
+      "episode_cum_distance": 2.2499998211860657,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 4,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -5.70145,
+          0.16944,
+          -8.2729
+        ]
+      ],
+      "baseline_target_position": [
+        -4.912464618682861,
+        1.0750426054000854,
+        -8.411937713623047
+      ],
+      "selected_target_position": [
+        -4.398170046806336,
+        0.013377934694290161,
+        -7.376298693804545
+      ],
+      "baseline_target_to_goal_l2": 1.2091093815900604,
+      "selected_target_to_goal_l2": 1.589587338555312,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.09066367149353027
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 19,
+      "task_id": 0,
+      "task_level": "instance",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.7296256642512391,
+      "object_category": "table",
+      "sentence": "small dark wood side table with lamp and plant to the right of black three-seater couch under staircase in living room with fireplace",
+      "task_time_sec": 4068.5145514272153,
+      "steps_total": 273,
+      "decisions_total_episode_counter": 11,
+      "task_decision_start": 0,
+      "task_decision_count": 11,
+      "end_reason": "final_decision",
+      "start_goal_geo": 14.754919052124023,
+      "end_goal_geo": 0.037532348185777664,
+      "episode_cum_distance": 20.222587794065475,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 164,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -7.89995,
+          0.28874,
+          -3.19289
+        ]
+      ],
+      "baseline_target_position": [
+        -7.850717544555664,
+        0.3751212954521179,
+        -3.1775476932525635
+      ],
+      "selected_target_position": [
+        -8.062642955664264,
+        0.013377934694290161,
+        -2.2188294400318185
+      ],
+      "baseline_target_to_goal_l2": 0.10060292863230673,
+      "selected_target_to_goal_l2": 1.0252254577982969,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.5204013586044312
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 19,
+      "task_id": 1,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.42949736236403807,
+      "object_category": "cabinet",
+      "sentence": "cabinet in the kitchen that has wood kitchen cabinets with granite countertop, stove above stainless oven with towel, silver dishwasher, microwave, coffee machine, stainless steel refrigerator, wall clock, wall-mounted US flag",
+      "task_time_sec": 451.3882587328553,
+      "steps_total": 41,
+      "decisions_total_episode_counter": 12,
+      "task_decision_start": 11,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 1.9365066289901733,
+      "end_goal_geo": 0.10843143612146378,
+      "episode_cum_distance": 4.50877420604229,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 202,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -3.44945,
+          1.91517,
+          -0.73493
+        ],
+        [
+          -6.13531,
+          1.92519,
+          0.64733
+        ],
+        [
+          -3.48151,
+          0.43497,
+          -0.54433
+        ]
+      ],
+      "baseline_target_position": [
+        -3.8088011741638184,
+        1.8900059461593628,
+        0.5976191759109497
+      ],
+      "selected_target_position": [
+        -4.212390331085068,
+        0.013377934694290161,
+        -0.42946021869965045
+      ],
+      "baseline_target_to_goal_l2": 1.3803817595866588,
+      "selected_target_to_goal_l2": 0.8515403657794164,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.3521111011505127
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 19,
+      "task_id": 2,
+      "task_level": "region",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "sideboard",
+      "sentence": "sideboard in the dining room that has rectangular wooden dining table with carved chairs, potted plant on side cabinet, large canal scene painting above",
+      "task_time_sec": 600.9735991675407,
+      "steps_total": 12,
+      "decisions_total_episode_counter": 13,
+      "task_decision_start": 12,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 4.73266077041626,
+      "end_goal_geo": 4.73266077041626,
+      "episode_cum_distance": 0.0,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 229,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          0.59852,
+          0.52664,
+          -4.3001
+        ]
+      ],
+      "baseline_target_position": [
+        0.5477936267852783,
+        0.428385853767395,
+        -2.6139655113220215
+      ],
+      "selected_target_position": [
+        -4.147232568345519,
+        0.013377934694290161,
+        -0.49560538685162725
+      ],
+      "baseline_target_to_goal_l2": 1.689756359982339,
+      "selected_target_to_goal_l2": 6.104079344922947,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.7525334358215332
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 19,
+      "task_id": 3,
+      "task_level": "room",
+      "navigation_type": "sequence",
+      "sr": 1.0,
+      "spl": 0.25961780747765734,
+      "object_category": "armchair",
+      "sentence": "armchair in the living room",
+      "task_time_sec": 1686.8791044987738,
+      "steps_total": 75,
+      "decisions_total_episode_counter": 15,
+      "task_decision_start": 13,
+      "task_decision_count": 2,
+      "end_reason": "final_decision",
+      "start_goal_geo": 2.012037992477417,
+      "end_goal_geo": 0.12943576276302338,
+      "episode_cum_distance": 7.749999940395355,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 194,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -11.11151,
+          0.5661,
+          -0.3677
+        ],
+        [
+          -7.86612,
+          0.49594,
+          -0.01946
+        ]
+      ],
+      "baseline_target_position": [
+        -7.939287185668945,
+        0.4607526361942291,
+        0.010013232938945293
+      ],
+      "selected_target_position": [
+        -7.916407176653544,
+        0.013377934694290161,
+        -1.198581844327661
+      ],
+      "baseline_target_to_goal_l2": 0.08637279137660762,
+      "selected_target_to_goal_l2": 1.2750385369778285,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 2.574880361557007
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 19,
+      "task_id": 4,
+      "task_level": "room",
+      "navigation_type": "sequence",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "sink",
+      "sentence": "sink in the kitchen",
+      "task_time_sec": 715.0154661610723,
+      "steps_total": 88,
+      "decisions_total_episode_counter": 16,
+      "task_decision_start": 15,
+      "task_decision_count": 1,
+      "end_reason": "final_decision",
+      "start_goal_geo": 2.3903799057006836,
+      "end_goal_geo": 9.165483474731445,
+      "episode_cum_distance": 12.250000447034836,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 0,
+      "module_helpful": null,
+      "module_reason": "baseline_target_kept",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": false,
+      "vistals_input_slot_index": 81,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.77501,
+          0.76925,
+          0.4571
+        ]
+      ],
+      "baseline_target_position": [
+        -1.245544195175171,
+        0.7607688903808594,
+        -6.081697940826416
+      ],
+      "selected_target_position": [
+        -1.245544195175171,
+        0.7607688903808594,
+        -6.081697940826416
+      ],
+      "baseline_target_to_goal_l2": 7.430550404082051,
+      "selected_target_to_goal_l2": 7.430550404082051,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.18251878023147583
+    }
+  ]
+}

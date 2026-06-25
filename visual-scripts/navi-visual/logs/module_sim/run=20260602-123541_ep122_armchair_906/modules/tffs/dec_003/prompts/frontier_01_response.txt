@@ -1,3 +1,0 @@
-```json
-{"target_context": 0.6, "anchor_context": 0.7, "room_context": 0.8, "negative": 0.2, "confidence": 0.7, "reason": "The room layout suggests proximity to the target furniture."}
-```

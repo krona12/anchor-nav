@@ -1,8 +1,0 @@
-{
-  "target_context": 0.5,
-  "anchor_context": 0.6,
-  "room_context": 0.7,
-  "negative": 0.2,
-  "confidence": 0.65,
-  "reason": "The room has relevant furniture and a clear path to explore towards the target." 
-}

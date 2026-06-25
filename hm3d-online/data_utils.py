@@ -364,9 +364,12 @@ class PQ3DModel:
             img_feats_list.append(img_feats)
         img_feats = torch.cat(img_feats_list, dim=0)
         torch.cuda.empty_cache()
-        # get sam result – pass task_level so SamFastSAM can select the right profile;
-        # the legacy FastSAM path ignores the extra keyword harmlessly.
-        everything_result = self.mask_generator(color_list, device='cuda', retina_masks=True, imgsz=640, conf=0.1, iou=0.9, task_level=task_level)
+        # SamFastSAM accepts task_level for per-level profiles; legacy FastSAM
+        # rejects unknown YOLO kwargs, so only pass it to the wrapper.
+        mask_kwargs = dict(device='cuda', retina_masks=True, imgsz=640, conf=0.1, iou=0.9)
+        if hasattr(self.mask_generator, "_level_generators"):
+            mask_kwargs["task_level"] = task_level
+        everything_result = self.mask_generator(color_list, **mask_kwargs)
         # process to esam format, points, superpoints, img_feat
         points_list = []
         super_points_list = []
@@ -379,7 +382,10 @@ class PQ3DModel:
             try:
                 masks = format_result(everything_result[idx])
             except:
-                everything_result = self.mask_generator(color, device='cuda', retina_masks=True, imgsz=640, conf=0.1, iou=0.7, task_level=task_level)
+                mask_kwargs = dict(device='cuda', retina_masks=True, imgsz=640, conf=0.1, iou=0.7)
+                if hasattr(self.mask_generator, "_level_generators"):
+                    mask_kwargs["task_level"] = task_level
+                everything_result = self.mask_generator(color, **mask_kwargs)
                 masks = format_result(everything_result[0])
             masks = sorted(masks, key=(lambda x: x['area']), reverse=True)
             group_ids = np.full((color.shape[0], color.shape[1]), -1, dtype=int)

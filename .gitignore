@@ -184,7 +184,9 @@ output_logs/
 output_process/
 visual-output/
 
-
-# 但不要忽略 key_logs 目录及其下面的 .log
+# Keep key_logs
 !key_logs/
 !key_logs/**/*.log
+
+# Ignore navigation visual logs
+visual-scripts/navi-visual/logs/

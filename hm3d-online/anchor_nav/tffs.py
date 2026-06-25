@@ -24,7 +24,7 @@ except Exception as exc:  # pragma: no cover - depends on deployment path.
 
 
 MODULE_NAME = "tffs"
-PROMPT_VERSION = "tffs_task_facing_visual_hypothesis_v1"
+PROMPT_VERSION = "tffs_task_facing_visual_hypothesis_v2"
 
 
 @dataclass
@@ -40,7 +40,7 @@ class TffsConfig:
     min_score_margin: float = 0.05
     min_confidence: float = 0.45
     max_vlm_candidates: int = 16
-    vlm_call_interval: int = 1
+    vlm_call_interval: int = 5
     max_vlm_calls_per_decision: int = 4
     top_vlm_logit_candidates: int = 3
     min_logit_gap_for_vlm: float = 0.12
@@ -373,7 +373,17 @@ def _coerce_view_record(view: Any, default_index: int = 0) -> Dict[str, Any]:
         if isinstance(raw, (str, Path)):
             rec["image_path"] = str(raw)
             rec["view_source"] = key
-        for meta_key in ("yaw", "heading", "camera_heading", "timestamp"):
+        for meta_key in (
+            "yaw",
+            "heading",
+            "heading_xz",
+            "heading_vector",
+            "forward",
+            "forward_xz",
+            "forward_vector",
+            "camera_heading",
+            "timestamp",
+        ):
             if meta_key in view:
                 rec[meta_key] = _jsonable(view[meta_key])
         return rec
@@ -451,8 +461,10 @@ def _coerce_agent_pose(agent_pose: Any) -> Tuple[Optional[np.ndarray], Optional[
         "location",
     )
     heading_keys = (
+        "heading_xz",
         "heading",
         "heading_vector",
+        "forward_xz",
         "forward",
         "forward_vector",
         "direction",
@@ -563,7 +575,77 @@ def _frontier_view_assignment(
         "frontier_distance_m": dist,
         "bearing_ok": True,
         "bearing_reason": "ok",
+        "view_assignment_source": "uniform_panorama_index",
     }
+
+
+def _view_heading_xz(view_rec: Mapping[str, Any]) -> Optional[np.ndarray]:
+    for key in ("heading_xz", "forward_xz", "heading", "heading_vector", "forward", "forward_vector"):
+        if key not in view_rec:
+            continue
+        heading = _heading_xz(view_rec.get(key))
+        if heading is not None:
+            return heading
+    for key in ("yaw", "camera_heading"):
+        if key not in view_rec:
+            continue
+        heading = _heading_from_yaw(view_rec.get(key))
+        if heading is not None:
+            return heading
+    return None
+
+
+def _frontier_view_assignment_from_views(
+    *,
+    frontier_xyz: np.ndarray,
+    agent_xyz: np.ndarray,
+    heading_xz: np.ndarray,
+    views: Sequence[Mapping[str, Any]],
+    cfg: TffsConfig,
+) -> Dict[str, Any]:
+    fallback = _frontier_view_assignment(
+        frontier_xyz=frontier_xyz,
+        agent_xyz=agent_xyz,
+        heading_xz=heading_xz,
+        n_views=len(views),
+        cfg=cfg,
+    )
+    if not bool(fallback.get("bearing_ok", False)):
+        return fallback
+
+    frontier = np.asarray(frontier_xyz, dtype=float).reshape(3)
+    agent = np.asarray(agent_xyz, dtype=float).reshape(3)
+    delta = frontier[[0, 2]] - agent[[0, 2]]
+    dist = float(np.linalg.norm(delta))
+    if dist <= float(cfg.min_frontier_distance_m) or not math.isfinite(dist):
+        return fallback
+    direction = delta / dist
+
+    best_idx: Optional[int] = None
+    best_sim = -float("inf")
+    headings_found = 0
+    for idx, view_rec in enumerate(views):
+        heading = _view_heading_xz(view_rec)
+        if heading is None:
+            continue
+        headings_found += 1
+        sim = float(np.dot(heading, direction))
+        if sim > best_sim:
+            best_sim = sim
+            best_idx = int(idx)
+
+    if best_idx is None:
+        fallback["view_assignment_source"] = "uniform_panorama_index_no_view_headings"
+        return fallback
+    fallback.update(
+        {
+            "view_index": int(best_idx),
+            "view_assignment_source": "view_heading_nearest_bearing",
+            "view_heading_similarity": float(best_sim),
+            "view_heading_records_found": int(headings_found),
+        }
+    )
+    return fallback
 
 
 def _task_text_available(task_text: str, cfg: TffsConfig) -> bool:
@@ -631,7 +713,7 @@ def _vlm_interval_gate(context: Optional[Mapping[str, Any]], cfg: TffsConfig) ->
             "vlm_interval_counter_source": "",
             "cost_control_reason": "vlm_interval_counter_missing_allow",
         }
-    allowed = bool(counter <= 1 or counter % interval == 0)
+    allowed = bool(counter <= 0 or counter % interval == 0)
     reason = "vlm_interval_allow" if allowed else "vlm_interval_skip_keep_baseline"
     return allowed, {
         "vlm_call_interval": int(interval),
@@ -857,14 +939,18 @@ def build_task_facing_prompt(
         frontier_bits.append(f"current_panorama_view_index={int(view_index)}")
     frontier_context = ", ".join(frontier_bits) if frontier_bits else "not provided"
     return (
-        "You evaluate one current robot panorama view for test-time frontier reranking.\n"
-        "The image is already observed at the current step. It is not a rendered future view.\n"
+        "You evaluate one CURRENT robot panorama view for test-time frontier reranking.\n"
+        "The image is already observed at the current decision step; it is not a rendered future view.\n"
         "Navigation task: "
         f"{str(task_text).strip()}\n"
         f"Frontier/view metadata: {frontier_context}\n\n"
-        "Judge whether this direction is promising for continuing exploration toward the task.\n"
-        "Do not require the target object to already be visible. Use room type, relevant furniture, "
-        "landmarks, anchor objects, traversable direction, and clearly irrelevant or low-quality cues.\n\n"
+        "Judge whether moving/exploring in this viewed direction is promising for reaching the task target.\n"
+        "Do not require the target object to already be visible. Reward concrete visual cues that make this "
+        "direction task-facing: likely target category, named anchor objects, semantically compatible furniture, "
+        "room context, signs of traversable continuation, and spatial layout that plausibly leads toward the target. "
+        "Penalize dead ends, blank walls, blocked/narrow views, unrelated rooms, clutter that prevents progress, "
+        "or cues that contradict the task. Keep scores calibrated: 0.0=no support, 0.5=weak/ambiguous support, "
+        "1.0=strong support.\n\n"
         "Return strict JSON only with this exact schema:\n"
         "{"
         "\"target_context\": number between 0 and 1, "
@@ -908,6 +994,7 @@ def score_task_facing_view(
         "hypothesis_score": None,
         "confidence": 0.0,
         "raw": "",
+        "prompt": prompt,
         "parsed": None,
         "source": "vlm",
         "parse_ok": False,
@@ -980,7 +1067,15 @@ def score_task_facing_view(
 
     info.update(
         {
-            "raw": last_raw,
+            "raw": last_raw
+            or json.dumps(
+                {
+                    "ok": False,
+                    "error_type": errors[-1]["error_type"] if errors else "",
+                    "error_message": errors[-1]["error_message"] if errors else "",
+                },
+                ensure_ascii=False,
+            ),
             "source": "vlm_error",
             "parse_ok": False,
             "parse_attempts": int(len(errors)),
@@ -1251,11 +1346,11 @@ def run_tffs_rerank(
         if point is None:
             rec.update({"bearing_ok": False, "bearing_reason": "invalid_frontier_point"})
             continue
-        assign = _frontier_view_assignment(
+        assign = _frontier_view_assignment_from_views(
             frontier_xyz=np.asarray(point, dtype=float),
             agent_xyz=agent_xyz,
             heading_xz=heading_xz,
-            n_views=len(views),
+            views=views,
             cfg=cfg,
         )
         rec.update(assign)
