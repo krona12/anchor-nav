@@ -164,16 +164,50 @@ def _save_raw_and_legend(img_markers: np.ndarray, base_path: Path, title: str,
     cv2.imwrite(str(base_path.with_name(base_path.name + "_legend.png")), leg)
 
 
+def _fill_border_connected_black_bgr(img_bgr: np.ndarray, fill: Tuple[int, int, int] = (184, 184, 184)) -> Tuple[np.ndarray, int]:
+    """Replace simulator no-geometry background touching the image edge.
+
+    Downward RGB sensors can render empty space outside the captured mesh as
+    pure black.  Keep real dark content inside the scene, but neutralize the
+    edge-connected background so the local topdown RGB is not mistaken for a
+    black-bordered map.
+    """
+    img = np.asarray(img_bgr, dtype=np.uint8).copy()
+    near_black = (img.max(axis=2) <= 8).astype(np.uint8)
+    if near_black.size == 0 or int(near_black.sum()) == 0:
+        return img, 0
+    h, w = near_black.shape
+    mask = np.zeros((h + 2, w + 2), dtype=np.uint8)
+    work = near_black.copy()
+    seeds: List[Tuple[int, int]] = []
+    xs = np.where(work[0, :] > 0)[0]
+    seeds.extend((int(x), 0) for x in xs)
+    xs = np.where(work[h - 1, :] > 0)[0]
+    seeds.extend((int(x), h - 1) for x in xs)
+    ys = np.where(work[:, 0] > 0)[0]
+    seeds.extend((0, int(y)) for y in ys)
+    ys = np.where(work[:, w - 1] > 0)[0]
+    seeds.extend((w - 1, int(y)) for y in ys)
+    for seed in seeds:
+        if work[seed[1], seed[0]] > 0:
+            cv2.floodFill(work, mask, seed, 2)
+    edge_background = work == 2
+    replaced = int(edge_background.sum())
+    if replaced > 0:
+        img[edge_background] = fill
+    return img, replaced
+
+
 def render_topdown_cam(nav: Any, sim: Any, base_paths: List[Path], log: List[str],
                        candidates: Tuple[float, ...] = (2.5, 2.3, 2.1, 1.9, 1.7, 1.5)) -> Optional[Dict[str, Any]]:
     """Render a colored top-down RGBD camera view (robot-centric, looks straight
     down). Adaptively picks the HIGHEST slice height that is not cut by the
-    ceiling (when the camera sits at/above the ceiling the median depth collapses
-    to a small value). Furniture lowers the median legitimately, so the accept
-    threshold (0.6*H) only rejects true ceiling occlusion. Saves, per output dir:
-      <base>_rgb_raw.png   (plain colored top-down, for relabeling)
-      <base>_rgb_legend.png(+ robot position/heading marker + legend)
+    ceiling. The output is intentionally clean: no legend panel is burned into
+    the photo, so white boxes/edges cannot be mistaken for simulator artifacts.
+    Saves, per output dir:
+      <base>_rgb.png       (plain colored local bird's-eye)
       <base>_depth.png     (colorized depth top-down)
+      <base>_info.json     (chosen height diagnostics)
     """
     sensors = sim.get_agent(0)._sensors
     if "topdown_rgb" not in sensors or "topdown_depth" not in sensors:
@@ -194,25 +228,36 @@ def render_topdown_cam(nav: Any, sim: Any, base_paths: List[Path], log: List[str
     if chosen is None:
         chosen = float(candidates[-1])  # lowest slice already rendered
     rgb_bgr = cv2.cvtColor(np.asarray(obs["topdown_rgb"][:, :, :3], dtype=np.uint8), cv2.COLOR_RGB2BGR)
+    rgb_bgr, edge_black_fill_px = _fill_border_connected_black_bgr(rgb_bgr)
     depth = np.asarray(obs["topdown_depth"], dtype=np.float32)
     dep_vis = cv2.cvtColor(_VIS._depth_to_rgb(depth), cv2.COLOR_RGB2BGR)
     slice_ok = bool(med >= 0.5 * chosen)  # only flags true ceiling occlusion
     for bp in base_paths:
         bp.parent.mkdir(parents=True, exist_ok=True)
-        cv2.imwrite(str(bp.with_name(bp.name + "_rgb_raw.png")), rgb_bgr)
-        ann = rgb_bgr.copy()
-        h, w = ann.shape[:2]
-        c = (w // 2, h // 2)
-        cv2.circle(ann, c, 7, (255, 0, 0), -1)
-        cv2.circle(ann, c, 7, (255, 255, 255), 1)
-        cv2.arrowedLine(ann, c, (c[0], c[1] - 46), (255, 0, 0), 3, tipLength=0.35)
-        _draw_legend(ann, f"Top-down RGBD cam (slice H={chosen:.1f}m)", [
-            ((255, 0, 0), "robot position (center) + front (arrow up)"),
-        ])
-        cv2.imwrite(str(bp.with_name(bp.name + "_rgb_legend.png")), ann)
+        cv2.imwrite(str(bp.with_name(bp.name + "_rgb.png")), rgb_bgr)
         cv2.imwrite(str(bp.with_name(bp.name + "_depth.png")), dep_vis)
-    log.append(f"[topdown_cam] slice_H={chosen:.1f} median_depth={med:.2f} slice_ok={slice_ok} -> {len(base_paths)} dir(s)")
-    return {"slice_height_m": chosen, "median_depth_m": med, "slice_ok": slice_ok}
+        _write_json(
+            bp.with_name(bp.name + "_info.json"),
+            {
+                "source": "robot_center_downward_rgbd_camera",
+                "slice_height_m": float(chosen),
+                "median_depth_m": float(med),
+                "slice_ok": bool(slice_ok),
+                "edge_connected_black_fill_px": int(edge_black_fill_px),
+                "uncovered_fill": "neutral_gray_for_edge_connected_no_geometry_black",
+                "note": "Clean local RGB photo; robot marker is stored in decision metadata, not drawn into the image.",
+            },
+        )
+    log.append(
+        f"[topdown_cam] slice_H={chosen:.1f} median_depth={med:.2f} "
+        f"slice_ok={slice_ok} edge_black_fill_px={edge_black_fill_px} -> {len(base_paths)} dir(s)"
+    )
+    return {
+        "slice_height_m": chosen,
+        "median_depth_m": med,
+        "slice_ok": slice_ok,
+        "edge_connected_black_fill_px": edge_black_fill_px,
+    }
 
 
 def _base_topdown_bgr(nav: Any) -> np.ndarray:
@@ -228,6 +273,111 @@ def _global_topdown_bgr(nav: Any, *, fog: bool) -> np.ndarray:
     if rgb is None:
         rgb = _VIS._base_rgb_floor(nav.top_down_map, fog_mask)
     return cv2.cvtColor(rgb.copy(), cv2.COLOR_RGB2BGR)
+
+
+def render_gray_topdown_rgb(
+    nav: Any,
+    sim: Any,
+    *,
+    fog: Optional[np.ndarray] = None,
+    agent_state: Optional[Any] = None,
+    target: Optional[np.ndarray] = None,
+    is_final: bool = False,
+    frontiers: Optional[List[np.ndarray]] = None,
+    selected_frontier_idx: Optional[int] = None,
+    draw_path: bool = True,
+) -> np.ndarray:
+    """Render the single TopDown Map type used by the demo.
+
+    The base theme is intentionally only black / gray / white:
+      - black: non-navigable / outside the current floor map
+      - gray: navigable but unseen
+      - white: navigable and explored
+
+    Small colored overlays are limited to navigation markers. This avoids the
+    older confusing family of topdown_map_rgb/navmesh_rgb/frontiers maps.
+    """
+    top = np.asarray(nav.top_down_map)
+    fog_mask = np.asarray(nav.fog if fog is None else fog)
+    navigable = top > 0
+    explored = np.logical_and(navigable, fog_mask > 0)
+    unexplored = np.logical_and(navigable, fog_mask <= 0)
+
+    rgb = np.zeros((*top.shape[:2], 3), dtype=np.uint8)
+    rgb[~navigable] = (28, 28, 28)
+    rgb[unexplored] = (112, 112, 112)
+    rgb[explored] = (238, 238, 238)
+    shape = rgb.shape[:2]
+
+    if draw_path:
+        for prev, nxt in zip(getattr(nav, "path_pixels", [])[:-1], getattr(nav, "path_pixels", [])[1:]):
+            cv2.line(rgb, (prev[1], prev[0]), (nxt[1], nxt[0]), (20, 120, 255), 2)
+
+    goal_positions = list(getattr(getattr(nav, "ctx", None), "goal_positions", []) or [])
+    for gp in goal_positions:
+        _VIS._draw_star(rgb, _rc(gp, nav, sim), (255, 165, 0), size=9)
+
+    if frontiers is not None:
+        for idx, fw in enumerate(frontiers):
+            color = (255, 0, 255) if selected_frontier_idx is not None and int(idx) == int(selected_frontier_idx) else (170, 170, 170)
+            _VIS._draw_circle(rgb, _rc(fw, nav, sim), color, radius=6 if color == (255, 0, 255) else 4)
+
+    used_target = target
+    if used_target is None:
+        used_target = getattr(nav, "current_target", None)
+    if used_target is not None:
+        trc = _VIS._clamp_rc(_rc(np.asarray(used_target, dtype=float), nav, sim), shape)
+        color = (255, 60, 60) if bool(is_final) else (0, 120, 255)
+        cv2.drawMarker(rgb, (trc[1], trc[0]), color, cv2.MARKER_CROSS, 18, 2)
+
+    st = agent_state if agent_state is not None else nav.agent.get_state()
+    arc = _VIS._clamp_rc(_rc(np.asarray(st.position, dtype=float), nav, sim), shape)
+    _VIS._draw_agent_arrow(rgb, arc, float(get_polar_angle(st)), (255, 0, 0), size=11)
+    return rgb
+
+
+def save_decision_topdown_map(
+    *,
+    nav: Any,
+    sim: Any,
+    out_dir: Path,
+    agent_state: Optional[Any],
+    target: Optional[np.ndarray],
+    is_final: bool,
+    frontiers: Optional[List[np.ndarray]],
+    selected_frontier_idx: Optional[int],
+) -> Dict[str, Any]:
+    out_dir.mkdir(parents=True, exist_ok=True)
+    rgb = render_gray_topdown_rgb(
+        nav,
+        sim,
+        fog=nav.fog.copy(),
+        agent_state=agent_state,
+        target=target,
+        is_final=bool(is_final),
+        frontiers=frontiers,
+        selected_frontier_idx=selected_frontier_idx,
+    )
+    cv2.imwrite(str(out_dir / "topdown_map.png"), cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR))
+    info = {
+        "source": "single_gray_topdown_theme",
+        "file": "topdown_map.png",
+        "theme": {
+            "black": "non_navigable_or_outside_current_floor",
+            "gray": "navigable_unexplored",
+            "white": "navigable_explored",
+        },
+        "overlays": {
+            "red_arrow": "agent_position_and_heading",
+            "blue_line": "path",
+            "orange_star": "goal",
+            "magenta_circle": "selected_frontier",
+            "red_cross": "final_target",
+            "blue_cross": "non_final_target",
+        },
+    }
+    _write_json(out_dir / "topdown_map_info.json", info)
+    return info
 
 
 def _world_from_map_rc(nav: Any, sim: Any, rc: Tuple[int, int], y: float) -> np.ndarray:
@@ -443,9 +593,6 @@ def render_global_topdown_scene_rgb(nav: Any, sim: Any) -> Tuple[np.ndarray, Dic
 
     mosaic = np.zeros_like(base, dtype=np.uint8)
     mosaic_score = np.full(base.shape[:2], -np.inf, dtype=np.float32)
-    fallback = np.zeros_like(base, dtype=np.uint8)
-    fallback_score = np.full(base.shape[:2], -np.inf, dtype=np.float32)
-    fallback_filled = np.zeros(nav.top_down_map.shape[:2], dtype=np.uint8)
     filled = np.zeros(nav.top_down_map.shape[:2], dtype=np.uint8)
     frame_filled = np.zeros(nav.top_down_map.shape[:2], dtype=np.uint8)
     start_y = float(nav.agent.get_state().position[1])
@@ -477,29 +624,6 @@ def render_global_topdown_scene_rgb(nav: Any, sim: Any) -> Tuple[np.ndarray, Dic
         tile_records.append(rec)
         if tile is None:
             continue
-        rgb_tile = np.asarray(tile["rgb_bgr"], dtype=np.uint8)
-        patch_size = 2 * half_px + 1
-        patch = cv2.resize(rgb_tile, (patch_size, patch_size), interpolation=cv2.INTER_AREA)
-        tr0 = max(0, int(rc[0]) - half_px)
-        tr1 = min(base.shape[0], int(rc[0]) + half_px + 1)
-        tc0 = max(0, int(rc[1]) - half_px)
-        tc1 = min(base.shape[1], int(rc[1]) + half_px + 1)
-        pr0 = tr0 - (int(rc[0]) - half_px)
-        pc0 = tc0 - (int(rc[1]) - half_px)
-        patch_crop = patch[pr0 : pr0 + (tr1 - tr0), pc0 : pc0 + (tc1 - tc0)]
-        if patch_crop.shape[:2] == (tr1 - tr0, tc1 - tc0):
-            valid_patch_color = np.max(patch_crop, axis=2) > 8
-            yy = np.arange(pr0, pr0 + (tr1 - tr0), dtype=np.float32) - float(half_px)
-            xx = np.arange(pc0, pc0 + (tc1 - tc0), dtype=np.float32) - float(half_px)
-            fb_score = -(yy[:, None] * yy[:, None] + xx[None, :] * xx[None, :])
-            fb_sub_score = fallback_score[tr0:tr1, tc0:tc1]
-            fb_take = np.logical_and(fb_score > fb_sub_score, valid_patch_color)
-            fb_sub = fallback[tr0:tr1, tc0:tc1]
-            fb_sub[fb_take] = patch_crop[fb_take]
-            fb_sub_score[fb_take] = fb_score[fb_take]
-            fb_frame = fallback_filled[tr0:tr1, tc0:tc1]
-            fb_frame[fb_take] = 1
-
         rr, cc, colors, score = _project_rgbd_tile_to_map(tile=tile, map_shape=base.shape[:2], sim=sim)
         rec["projected_px"] = int(rr.size)
         if rr.size == 0:
@@ -518,22 +642,15 @@ def render_global_topdown_scene_rgb(nav: Any, sim: Any) -> Tuple[np.ndarray, Dic
         filled[np.logical_and(frame_filled > 0, navigable)] = 1
 
     fill_ratio = float(filled[navigable].mean()) if np.any(navigable) else 0.0
-    fallback_fill_px = int(np.logical_and(frame_filled == 0, fallback_filled > 0).sum())
-    fallback_mask = np.logical_and(frame_filled == 0, fallback_filled > 0)
-    mosaic[fallback_mask] = fallback[fallback_mask]
-    frame_filled[fallback_mask] = 1
     projected_frame_fill_ratio = float(frame_filled.mean())
-    inpainted_px = int((frame_filled == 0).sum())
-    dilation_filled_px = 0
-    if inpainted_px > 0 and int(frame_filled.sum()) > 0:
-        before = int(frame_filled.sum())
-        mosaic, frame_filled = _fill_uncovered_by_dilation(mosaic, frame_filled)
-        dilation_filled_px = int(frame_filled.sum()) - before
-        if int((frame_filled == 0).sum()) > 0:
-            holes = ((frame_filled == 0).astype(np.uint8) * 255)
-            mosaic = cv2.inpaint(mosaic, holes, 2, cv2.INPAINT_TELEA)
-    elif int(frame_filled.sum()) == 0:
-        mosaic = base
+    projected_px = int(frame_filled.sum())
+    if projected_px > 0:
+        clean = np.full_like(base, 184, dtype=np.uint8)
+        clean[np.asarray(nav.top_down_map) > 0] = (216, 216, 216)
+        clean[frame_filled > 0] = mosaic[frame_filled > 0]
+        mosaic = clean
+    else:
+        mosaic = np.full_like(base, 184, dtype=np.uint8)
     frame_fill_ratio = float(frame_filled.mean())
     info = {
         "ok": True,
@@ -546,12 +663,12 @@ def render_global_topdown_scene_rgb(nav: Any, sim: Any) -> Tuple[np.ndarray, Dic
         "filled_navigable_ratio": float(fill_ratio),
         "projected_frame_ratio": float(projected_frame_fill_ratio),
         "filled_frame_ratio": float(frame_fill_ratio),
-        "fallback_filled_px": int(fallback_fill_px),
-        "dilation_filled_px": int(dilation_filled_px),
-        "inpainted_uncovered_px": int(inpainted_px),
+        "fallback_filled_px": 0,
+        "dilation_filled_px": 0,
+        "inpainted_uncovered_px": 0,
         "mpp": float(mpp),
-        "paste_mode": "rgbd_projected_with_best_center_fallback_no_navmesh_mask",
-        "uncovered_fill": "opencv_inpaint_telea",
+        "paste_mode": "rgbd_projected_best_center_no_patch_fallback",
+        "uncovered_fill": "neutral_gray_no_dilation_no_inpaint",
         "fixed_tile_agent_rotation": "identity_quaternion_world_yaw",
         "records": tile_records[:120],
     }
@@ -574,53 +691,31 @@ def save_global_topdown_maps(
     agent_state: Optional[Any] = None,
     log: Optional[List[str]] = None,
 ) -> None:
-    """Save full-map top-down artifacts.
+    """Save the two global map artifacts used in the demo.
 
-    topdown_map_rgb is the no-fog top-down slice map, matching the reference
-    script's shadow-free topdown rendering. The camera-derived scene mosaic is
-    saved separately as the full-color bird's-eye texture view.
+    1. ``topdown_map.png``: the single gray TopDown Map theme.
+    2. ``topdown_scene_rgb.png``: a clean full-scene RGB bird's-eye projection.
+
+    Older duplicate names such as topdown_map_rgb/topdown_navmesh_rgb are no
+    longer emitted because they did not actually encode different image types.
     """
     out_dir.mkdir(parents=True, exist_ok=True)
-    if hasattr(_M, "save_exploration_maps"):
-        _M.save_exploration_maps(out_dir / "exploration_maps", nav.top_down_map, nav.fog.copy())
-
-    entries = [
-        ((0, 165, 255), "goal / target object"),
-        ((255, 0, 0), "agent (pos + heading)"),
-        ((180, 180, 180), "frontier"),
-        ((255, 0, 255), "selected frontier"),
-    ]
+    save_decision_topdown_map(
+        nav=nav,
+        sim=sim,
+        out_dir=out_dir,
+        agent_state=agent_state,
+        target=getattr(nav, "current_target", None),
+        is_final=bool(getattr(nav, "current_target_is_final", False)),
+        frontiers=frontiers,
+        selected_frontier_idx=selected_frontier_idx,
+    )
     scene_rgb, scene_info = render_global_topdown_scene_rgb(nav, sim)
-    _write_json(out_dir / "topdown_rgb_mosaic_info.json", scene_info)
-    cv2.imwrite(str(out_dir / "topdown_scene_rgb_raw.png"), scene_rgb)
-
-    for fogged, name in ((True, "topdown_map_fog"), (False, "topdown_map_rgb"), (False, "topdown_navmesh_rgb")):
-        img = _global_topdown_bgr(nav, fog=fogged)
-        for gp in nav.ctx.goal_positions:
-            _VIS._draw_star(img, _rc(gp, nav, sim), (0, 165, 255), size=10)
-        if frontiers is not None:
-            for i, fw in enumerate(frontiers):
-                color = (255, 0, 255) if selected_frontier_idx is not None and int(i) == int(selected_frontier_idx) else (180, 180, 180)
-                _VIS._draw_circle(img, _rc(fw, nav, sim), color, radius=6 if color == (255, 0, 255) else 4)
-        st = agent_state if agent_state is not None else nav.agent.get_state()
-        arc = _rc(np.asarray(st.position, dtype=float), nav, sim)
-        _VIS._draw_agent_arrow(img, arc, float(get_polar_angle(st)), (255, 0, 0), size=12)
-        subtitle = "fog" if fogged else "no-fog top-down RGB slice"
-        _save_raw_and_legend(img, out_dir / name, f"{title} ({subtitle})", entries)
-
-    rgb_img = scene_rgb.copy()
-    for gp in nav.ctx.goal_positions:
-        _VIS._draw_star(rgb_img, _rc(gp, nav, sim), (0, 165, 255), size=10)
-    if frontiers is not None:
-        for i, fw in enumerate(frontiers):
-            color = (255, 0, 255) if selected_frontier_idx is not None and int(i) == int(selected_frontier_idx) else (180, 180, 180)
-            _VIS._draw_circle(rgb_img, _rc(fw, nav, sim), color, radius=6 if color == (255, 0, 255) else 4)
-    st = agent_state if agent_state is not None else nav.agent.get_state()
-    _VIS._draw_agent_arrow(rgb_img, _rc(np.asarray(st.position, dtype=float), nav, sim), float(get_polar_angle(st)), (255, 0, 0), size=12)
-    _save_raw_and_legend(rgb_img, out_dir / "topdown_scene_rgb_mosaic", f"{title} (camera RGB mosaic)", entries)
+    _write_json(out_dir / "topdown_scene_rgb_info.json", scene_info)
+    cv2.imwrite(str(out_dir / "topdown_scene_rgb.png"), scene_rgb)
     if log is not None:
         log.append(
-            f"[topdown_global] {out_dir}: saved fog/no-fog topdown + full-frame RGB mosaic "
+            f"[topdown_global] {out_dir}: saved gray topdown map + clean scene RGB "
             f"tiles={scene_info.get('successful_tile_count', 0)}/{scene_info.get('tile_count', 0)} "
             f"nav_fill={float(scene_info.get('filled_navigable_ratio', 0.0)):.2f} "
             f"frame_fill={float(scene_info.get('filled_frame_ratio', 0.0)):.2f}"

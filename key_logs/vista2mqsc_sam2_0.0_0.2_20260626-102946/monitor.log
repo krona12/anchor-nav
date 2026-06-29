@@ -1,0 +1,21 @@
+=== monitor iteration 1 2026-06-26 10:32:35 ===
+balanced: ok session=vista2mqsc_sam2_balanced_cuda1 rows=0 live_lines=0 out_dir=output_logs/anchor/vista2mqsc_sam2_balanced_all_0.0_0.2/20260626-102948-balanced-detailed-20260626-102946
+quality: ok session=vista2mqsc_sam2_quality_cuda2 rows=0 live_lines=0 out_dir=output_logs/anchor/vista2mqsc_sam2_quality_all_0.0_0.2/20260626-102948-quality-detailed-20260626-102946
+0, 47347 MiB, 100 %
+1, 25350 MiB, 0 %
+2, 31564 MiB, 100 %
+3, 20123 MiB, 71 %
+=== monitor iteration 2 2026-06-26 10:37:35 ===
+balanced: ok session=vista2mqsc_sam2_balanced_cuda1 rows=0 live_lines=0 out_dir=output_logs/anchor/vista2mqsc_sam2_balanced_all_0.0_0.2/20260626-102948-balanced-detailed-20260626-102946
+quality: ok session=vista2mqsc_sam2_quality_cuda2 rows=0 live_lines=0 out_dir=output_logs/anchor/vista2mqsc_sam2_quality_all_0.0_0.2/20260626-102948-quality-detailed-20260626-102946
+0, 47347 MiB, 100 %
+1, 25590 MiB, 1 %
+2, 31599 MiB, 100 %
+3, 23719 MiB, 100 %
+=== monitor iteration 3 2026-06-26 10:42:35 ===
+balanced: ok session=vista2mqsc_sam2_balanced_cuda1 rows=0 live_lines=0 out_dir=output_logs/anchor/vista2mqsc_sam2_balanced_all_0.0_0.2/20260626-102948-balanced-detailed-20260626-102946
+quality: ok session=vista2mqsc_sam2_quality_cuda2 rows=0 live_lines=0 out_dir=output_logs/anchor/vista2mqsc_sam2_quality_all_0.0_0.2/20260626-102948-quality-detailed-20260626-102946
+0, 47347 MiB, 100 %
+1, 22548 MiB, 1 %
+2, 28041 MiB, 47 %
+3, 23719 MiB, 98 %

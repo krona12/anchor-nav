@@ -168,6 +168,7 @@ CLIP/
 
 # FastSAM: upstream clone + large weights (FastSAM-x.pt)
 hm3d-online/FastSAM/
+hm3d-online/SAM2
 
 
 # IDE / tooling

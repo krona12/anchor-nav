@@ -1,12 +1,14 @@
-"""RefHM3D Vista2MQSC refine1 batch evaluation.
+"""RefHM3D TFFS + Vista2MQSC refine1 batch evaluation.
 
 This batch script keeps the template refine1 scaffold and plugs in the
-combined MQSC-R1 + VISTA-LS policy only at final PQ3D object decisions:
+combined policy at the same places as the real navigation pipeline:
 
 - scene slicing via ``--start_ratio`` / ``--end_ratio``
 - episode resume via the output JSON
 - sequence navigation over tasks in an episode
 - PQ3D + frontier exploration loop
+- TFFS only on non-final frontier decisions, as a baseline frontier override
+- MQSC-R1 + VISTA-LS only at final PQ3D object decisions
 - per-decision JSON logs under ``process/``
 - task metrics, live metrics, and final JSON summaries
 """
@@ -20,14 +22,19 @@ import json
 import math
 import os
 import random
+import signal
 import sys
+import threading
 import time
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
+import cv2
 import habitat_sim
 import numpy as np
 from habitat.utils.visualizations import maps
+from habitat_sim.utils import common as hsu
 from omegaconf import OmegaConf
 from tqdm import tqdm
 
@@ -56,13 +63,40 @@ from frontier_utils import (
     reveal_fog_of_war,
 )
 from anchor_nav.mqsc_r1 import MqscR1Config, run_mqsc_r1_refine
+from anchor_nav.tffs import TffsConfig, run_tffs_rerank
 from anchor_nav.vista_ls import VistaLsConfig, VistaLsRejectedError, correct_final_decision_with_vistals
 
 
 TASK_LEVEL_ORDER = ("object", "room", "region", "instance")
 MQSC_R1_CFG = MqscR1Config()
+TFFS_CFG = TffsConfig(vlm_call_interval=5)
+TFFS_TIMEOUT_SEC = float(os.environ.get("TFFS_TIMEOUT_SEC", "120"))
 VISTALS_CFG = VistaLsConfig()
 VISTA2MQSC_VISTALS_APPLY_TASK_LEVELS = set(TASK_LEVEL_ORDER)
+
+
+class _TffsTimeoutError(TimeoutError):
+    pass
+
+
+@contextmanager
+def _tffs_time_limit(seconds: float) -> Any:
+    seconds = float(seconds)
+    if seconds <= 0 or threading.current_thread() is not threading.main_thread():
+        yield
+        return
+
+    def _handle_timeout(_signum: int, _frame: Any) -> None:
+        raise _TffsTimeoutError(f"TFFS rerank timed out after {seconds:.1f}s")
+
+    old_handler = signal.getsignal(signal.SIGALRM)
+    signal.signal(signal.SIGALRM, _handle_timeout)
+    old_timer = signal.setitimer(signal.ITIMER_REAL, seconds)
+    try:
+        yield
+    finally:
+        signal.signal(signal.SIGALRM, old_handler)
+        signal.setitimer(signal.ITIMER_REAL, old_timer[0], old_timer[1])
 
 
 class _TeeStream:
@@ -83,16 +117,16 @@ class _TeeStream:
 def _setup_run_logging(log_dir: str) -> None:
     os.makedirs(log_dir, exist_ok=True)
     ts = datetime.datetime.now().strftime("%Y%m%d-%H%M%S-%f")
-    log_path = os.path.join(log_dir, f"refhm3d-nav-sequence-analyze-vista2mqsc-sequence-refine1-{ts}-pid{os.getpid()}.log")
+    log_path = os.path.join(log_dir, f"refhm3d-nav-sequence-analyze-tffs-vista2mqsc-sequence-refine1-{ts}-pid{os.getpid()}.log")
     log_fp = open(log_path, "w", encoding="utf-8", buffering=1)
     old_out, old_err = sys.stdout, sys.stderr
     sys.stdout = _TeeStream(old_out, log_fp)
     sys.stderr = _TeeStream(old_err, log_fp)
-    print(f"[Vista2MQSCRefine1] logging enabled -> {os.path.abspath(log_path)}")
+    print(f"[TFFSVista2MQSCRefine1] logging enabled -> {os.path.abspath(log_path)}")
 
     def _cleanup() -> None:
         try:
-            print(f"[Vista2MQSCRefine1] run finished, log saved -> {os.path.abspath(log_path)}")
+            print(f"[TFFSVista2MQSCRefine1] run finished, log saved -> {os.path.abspath(log_path)}")
         finally:
             sys.stdout, sys.stderr = old_out, old_err
             log_fp.close()
@@ -135,7 +169,7 @@ def _set_seed(seed: int) -> None:
         torch.cuda.manual_seed_all(int(seed))
     except Exception:
         pass
-    _tqdm_print(f"[Vista2MQSCRefine1] seed={int(seed)}")
+    _tqdm_print(f"[TFFSVista2MQSCRefine1] seed={int(seed)}")
 
 
 def resolve_scene_path(hm3d_root: str, scene_name: str) -> str:
@@ -359,6 +393,308 @@ def _capture_scan_frames(
         if total_steps >= int(max_steps):
             break
     return scan_rgb, scan_depth, scan_state, fog_of_war_mask, total_steps
+
+
+def _forward_xz(agent_state: Any) -> np.ndarray:
+    forward = hsu.quat_rotate_vector(agent_state.rotation, np.asarray([0.0, 0.0, -1.0], dtype=float))
+    return np.asarray([forward[0], forward[2]], dtype=float)
+
+
+def _nearest_frontier_index(target: np.ndarray, frontier_waypoints: Sequence[Any], *, max_dist_m: float = 1.0) -> int:
+    frontier_seq = [] if frontier_waypoints is None else list(frontier_waypoints)
+    if len(frontier_seq) <= 0:
+        return -1
+    target_xyz = np.asarray(target, dtype=float).reshape(3)
+    frontiers = [np.asarray(f, dtype=float).reshape(3) for f in frontier_seq]
+    dists = [float(np.linalg.norm((f - target_xyz)[[0, 2]])) for f in frontiers]
+    idx = int(np.argmin(dists)) if dists else -1
+    if idx < 0 or dists[idx] > float(max_dist_m):
+        return -1
+    return idx
+
+
+def _stage2_frontier_logits(pq3d_model: Any, frontier_count: int) -> np.ndarray:
+    stage2 = getattr(pq3d_model, "last_stage2_decision", {}) or {}
+    candidates = stage2.get("frontier_candidates", [])
+    logits = []
+    if isinstance(candidates, list):
+        for rec in candidates[: int(frontier_count)]:
+            try:
+                logits.append(float(rec.get("og3d_logit", 0.0)))
+            except Exception:
+                logits.append(0.0)
+    if len(logits) < int(frontier_count):
+        logits.extend([0.0 for _ in range(int(frontier_count) - len(logits))])
+    return np.asarray(logits[: int(frontier_count)], dtype=float)
+
+
+def _stage2_baseline_frontier_index(pq3d_model: Any, baseline_target: np.ndarray, frontier_waypoints: Sequence[Any]) -> int:
+    frontier_seq = [] if frontier_waypoints is None else list(frontier_waypoints)
+    stage2 = getattr(pq3d_model, "last_stage2_decision", {}) or {}
+    chosen = stage2.get("chosen", {}) if isinstance(stage2, dict) else {}
+    try:
+        idx = int(chosen.get("frontier_argmax_index", -1))
+    except Exception:
+        idx = -1
+    if 0 <= idx < len(frontier_seq):
+        return idx
+    return _nearest_frontier_index(baseline_target, frontier_seq)
+
+
+def _save_tffs_panorama_views(
+    *,
+    output_dir: Path,
+    decision_num: int,
+    scan_rgb: Sequence[np.ndarray],
+    scan_states: Sequence[Any],
+) -> List[Dict[str, Any]]:
+    pano_dir = output_dir / "panorama"
+    pano_dir.mkdir(parents=True, exist_ok=True)
+    views: List[Dict[str, Any]] = []
+    for view_idx, (rgb, state) in enumerate(zip(list(scan_rgb), list(scan_states))):
+        rgb_u8 = np.asarray(rgb[:, :, :3], dtype=np.uint8)
+        path = pano_dir / f"view_{view_idx:02d}.png"
+        cv2.imwrite(str(path), cv2.cvtColor(rgb_u8, cv2.COLOR_RGB2BGR))
+        pos = np.asarray(state.position, dtype=float).reshape(3)
+        views.append(
+            {
+                "view_index": int(view_idx),
+                "image_path": str(path),
+                "position": pos.tolist(),
+                "yaw": float(get_polar_angle(state)),
+                "heading_xz": _forward_xz(state).tolist(),
+                "decision_num": int(decision_num),
+            }
+        )
+    _write_json(pano_dir / "views.json", views)
+    return views
+
+
+def _save_extra_stop_scan(
+    *,
+    sim: Any,
+    agent: Any,
+    output_dir: Path,
+    reason: str,
+    task_id: int,
+    decision_num: int,
+    total_steps: int,
+    count_navigation_steps: bool = False,
+) -> Dict[str, Any]:
+    """Save a final 12-view look-around without changing the navigation policy."""
+    output_dir.mkdir(parents=True, exist_ok=True)
+    views: List[Dict[str, Any]] = []
+    step_start = int(total_steps)
+    counted_steps = 0
+    for view_idx in range(12):
+        obs = sim.step(action="turn_left")
+        state = agent.get_state()
+        rgb = np.asarray(obs["color_sensor"][:, :, :3], dtype=np.uint8)
+        dep = np.asarray(obs["depth_sensor"][:, :], dtype=np.float32)
+        rgb_path = output_dir / f"view_{view_idx:02d}.png"
+        depth_npy_path = output_dir / f"view_{view_idx:02d}_depth.npy"
+        depth_png_path = output_dir / f"view_{view_idx:02d}_depth.png"
+        cv2.imwrite(str(rgb_path), cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR))
+        np.save(str(depth_npy_path), dep)
+        finite = dep[np.isfinite(dep) & (dep > 0)]
+        hi = float(np.percentile(finite, 95.0)) if finite.size else 1.0
+        hi = max(hi, 1e-6)
+        dep_u8 = (np.clip(dep / hi, 0.0, 1.0) * 255.0).astype(np.uint8)
+        cv2.imwrite(str(depth_png_path), cv2.applyColorMap(dep_u8, cv2.COLORMAP_VIRIDIS))
+        pos = np.asarray(state.position, dtype=float).reshape(3)
+        views.append(
+            {
+                "view_index": int(view_idx),
+                "image_path": str(rgb_path),
+                "depth_npy_path": str(depth_npy_path),
+                "depth_vis_path": str(depth_png_path),
+                "position": pos.tolist(),
+                "yaw": float(get_polar_angle(state)),
+                "heading_xz": _forward_xz(state).tolist(),
+            }
+        )
+        counted_steps += 1
+    summary = {
+        "ok": True,
+        "module": "extra_stop_scan",
+        "reason": str(reason),
+        "task_id": int(task_id),
+        "decision_num": int(decision_num),
+        "view_count": int(len(views)),
+        "output_dir": str(output_dir),
+        "navigation_steps_counted": bool(count_navigation_steps),
+        "navigation_step_start": int(step_start),
+        "navigation_step_after": int(step_start + counted_steps if count_navigation_steps else step_start),
+        "views": views,
+    }
+    _write_json(output_dir / "extra_stop_scan.json", summary)
+    return summary
+
+
+def tffs_frontier_hook(
+    *,
+    sentence: str,
+    scene_name: str,
+    episode_id: int,
+    task_id: int,
+    decision_num: int,
+    pq3d_model: Any,
+    baseline_target: np.ndarray,
+    frontier_waypoints: Sequence[Any],
+    scan_rgb: Sequence[np.ndarray],
+    scan_states: Sequence[Any],
+    output_dir: Path,
+    disabled: bool,
+    is_final: bool = False,
+) -> Tuple[np.ndarray, Dict[str, Any]]:
+    """Run TFFS as a non-final frontier override only.
+
+    TFFS must never create a final decision and must never interrupt navigation.
+    On single/no frontier, disabled mode, VLM gating, or any runtime error, the
+    PQ3D baseline frontier target is kept.
+    """
+    target = np.asarray(baseline_target, dtype=float).reshape(3).copy()
+    frontier_seq = [] if frontier_waypoints is None else list(frontier_waypoints)
+    frontiers = [np.asarray(f, dtype=float).reshape(3) for f in frontier_seq]
+    baseline_idx = _stage2_baseline_frontier_index(pq3d_model, target, frontiers)
+    info: Dict[str, Any] = {
+        "ok": True,
+        "module": "tffs",
+        "called": False,
+        "tffs_called": False,
+        "tffs_applied": False,
+        "reason": "baseline_frontier_kept",
+        "frontier_count": int(len(frontiers)),
+        "baseline_frontier_index": int(baseline_idx),
+        "selected_frontier_index": int(baseline_idx),
+        "target_before": target.tolist(),
+        "target_after": target.tolist(),
+        "is_final": bool(is_final),
+        "policy": "TFFS only reranks an existing non-final frontier choice; it cannot affect final object decisions.",
+    }
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    if bool(is_final):
+        info["reason"] = "final_decision_skip_tffs_keep_baseline"
+        _write_json(output_dir / "tffs_decision.json", info)
+        return target, info
+    if bool(disabled):
+        info["reason"] = "tffs_disabled_keep_baseline"
+        _write_json(output_dir / "tffs_decision.json", info)
+        return target, info
+    if len(frontiers) <= 0:
+        info["reason"] = "no_frontier_candidates_keep_baseline"
+        _write_json(output_dir / "tffs_decision.json", info)
+        return target, info
+    if len(frontiers) == 1:
+        info.update(
+            {
+                "reason": "single_frontier_direct_keep_baseline",
+                "baseline_frontier_index": 0,
+                "selected_frontier_index": 0,
+                "target_after": frontiers[0].tolist(),
+            }
+        )
+        _write_json(output_dir / "tffs_decision.json", info)
+        return frontiers[0].copy(), info
+    if baseline_idx < 0:
+        info["reason"] = "baseline_frontier_unmatched_keep_baseline"
+        _write_json(output_dir / "tffs_decision.json", info)
+        return target, info
+
+    try:
+        views = _save_tffs_panorama_views(
+            output_dir=output_dir,
+            decision_num=int(decision_num),
+            scan_rgb=scan_rgb,
+            scan_states=scan_states,
+        )
+        agent_state = scan_states[-1] if len(scan_states) > 0 else None
+        agent_pose = None
+        if agent_state is not None:
+            agent_pose = {
+                "position": np.asarray(agent_state.position, dtype=float).reshape(3).tolist(),
+                "heading_xz": _forward_xz(agent_state).tolist(),
+            }
+        logits = _stage2_frontier_logits(pq3d_model, len(frontiers))
+        tffs_started_at = time.time()
+        with _tffs_time_limit(TFFS_TIMEOUT_SEC):
+            selected_idx, result = run_tffs_rerank(
+                frontier_candidates=frontiers,
+                task_text=sentence,
+                frontier_logits=logits,
+                panorama_views=views,
+                agent_pose=agent_pose,
+                branch_is_frontier=True,
+                baseline_frontier_index=baseline_idx,
+                cfg=TFFS_CFG,
+                context={
+                    "scene_name": scene_name,
+                    "episode_id": int(episode_id),
+                    "task_id": int(task_id),
+                    "decision_num": int(decision_num),
+                    "module_scope": "frontier_override_only",
+                },
+            )
+        result.update(
+            {
+                "called": True,
+                "scene_name": scene_name,
+                "episode_id": int(episode_id),
+                "task_id": int(task_id),
+                "decision_num": int(decision_num),
+                "elapsed_sec": float(time.time() - tffs_started_at),
+                "timeout_sec": float(TFFS_TIMEOUT_SEC),
+                "target_before": target.tolist(),
+                "target_after": target.tolist(),
+                "is_final": False,
+                "policy": info["policy"],
+            }
+        )
+        try:
+            selected_idx_int = int(selected_idx)
+        except Exception:
+            selected_idx_int = -1
+        result["raw_selected_frontier_index"] = int(selected_idx_int)
+        if bool(result.get("tffs_applied", False)) and 0 <= selected_idx_int < len(frontiers):
+            target = frontiers[selected_idx_int].copy()
+            result["target_after"] = target.tolist()
+        else:
+            result["tffs_applied"] = False
+            result["selected_frontier_index"] = int(baseline_idx)
+            result["target_after"] = target.tolist()
+            result["gate_enforced_keep_baseline"] = True
+        _write_json(output_dir / "tffs_decision.json", result)
+        return target, result
+    except _TffsTimeoutError as exc:
+        info.update(
+            {
+                "ok": False,
+                "called": True,
+                "tffs_called": True,
+                "tffs_applied": False,
+                "reason": "tffs_timeout_keep_baseline",
+                "timeout_sec": float(TFFS_TIMEOUT_SEC),
+                "error_type": type(exc).__name__,
+                "error_message": str(exc),
+            }
+        )
+        _write_json(output_dir / "tffs_decision.json", info)
+        return target, info
+    except Exception as exc:
+        info.update(
+            {
+                "ok": False,
+                "called": True,
+                "tffs_called": True,
+                "tffs_applied": False,
+                "reason": "tffs_error_keep_baseline",
+                "error_type": type(exc).__name__,
+                "error_message": str(exc),
+            }
+        )
+        _write_json(output_dir / "tffs_decision.json", info)
+        return target, info
 
 
 def _shortest_path_diagnostics(path_finder: Any, start: np.ndarray, end: np.ndarray) -> Dict[str, Any]:
@@ -713,7 +1049,7 @@ def vista2mqsc_refine_hook(
         vistals_t0 = time.perf_counter()
         try:
             _tqdm_print(
-                f"[vista2mqsc-refine1][vistals-start] scene={scene_name} ep={episode_id} task={task_id} "
+                f"[tffs-vista2mqsc-refine1][vistals-start] scene={scene_name} ep={episode_id} task={task_id} "
                 f"dec={decision_num} slot={vistals_slot_idx} mqsc_applied={mqsc_applied}"
             )
             corrected_target, vistals_info = correct_final_decision_with_vistals(
@@ -878,8 +1214,9 @@ def _append_sequence_episode_row(result_dict: Dict[str, Any], row: Dict[str, Any
 def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
-            "Run RefHM3D Vista2MQSC refine1 batch evaluation. "
-            "Final PQ3D object decisions are first refined by MQSC-R1, then adjusted by VISTA-LS."
+            "Run RefHM3D TFFS + Vista2MQSC refine1 batch evaluation. "
+            "TFFS reranks only non-final frontier decisions; final PQ3D object decisions "
+            "are first refined by MQSC-R1, then adjusted by VISTA-LS."
         )
     )
     parser.add_argument("--start_ratio", type=float, default=0.0)
@@ -889,7 +1226,7 @@ def main() -> None:
     parser.add_argument("--hm3d_data_base_path", type=str, default=str(PROJECT_ROOT / "datascene"))
     parser.add_argument("--pq3d_stage1_path", type=str, default=str(PROJECT_ROOT / "checkpoint/stage1-pretrain-all"))
     parser.add_argument("--pq3d_stage2_path", type=str, default=str(PROJECT_ROOT / "checkpoint/stage2-fine-tune-goat"))
-    parser.add_argument("--output_log_dir", type=str, default=str(PROJECT_ROOT / "output_logs/anchor/vista2mqsc"))
+    parser.add_argument("--output_log_dir", type=str, default=str(PROJECT_ROOT / "output_logs/anchor/tffs_vista2mqsc"))
     parser.add_argument(
         "--task_levels",
         type=str,
@@ -900,6 +1237,11 @@ def main() -> None:
     parser.add_argument("--decision_num_min", type=int, default=3)
     parser.add_argument("--success_distance", type=float, default=0.25)
     parser.add_argument("--seed", type=int, default=1234)
+    parser.add_argument("--scene_name", type=str, default="", help="Optional exact scene name for a focused real run.")
+    parser.add_argument("--episode_id", type=int, default=-1, help="Optional exact sequence episode id for a focused real run.")
+    parser.add_argument("--max_scenes", type=int, default=0, help="Optional maximum scene count after filtering; <=0 means all.")
+    parser.add_argument("--max_episodes_per_scene", type=int, default=0, help="Optional maximum episode count per scene; <=0 means all.")
+    parser.add_argument("--max_tasks_per_episode", type=int, default=0, help="Optional maximum task count per sequence episode; <=0 means all.")
     parser.add_argument(
         "--quiet_nav_steps",
         action="store_true",
@@ -911,6 +1253,14 @@ def main() -> None:
         default=0,
         help="Print target detail every N decisions; <=0 disables detail.",
     )
+    parser.add_argument("--tffs_disable", action="store_true")
+    parser.add_argument("--tffs_vlm_model", type=str, default=os.environ.get("VLM_MODEL", TffsConfig().vlm_model))
+    parser.add_argument("--tffs_vlm_call_interval", type=int, default=5)
+    parser.add_argument("--tffs_timeout_sec", type=float, default=float(os.environ.get("TFFS_TIMEOUT_SEC", "120")))
+    parser.add_argument("--tffs_max_vlm_calls_per_decision", type=int, default=4)
+    parser.add_argument("--tffs_min_score_margin", type=float, default=TffsConfig().min_score_margin)
+    parser.add_argument("--tffs_min_confidence", type=float, default=TffsConfig().min_confidence)
+    parser.add_argument("--tffs_disable_no_proxy", action="store_true")
     parser.add_argument("--mqsc_r1_top_k", type=int, default=8)
     parser.add_argument("--mqsc_r1_temperature", type=float, default=1.0)
     parser.add_argument("--mqsc_r1_cluster_eps", type=float, default=1.2)
@@ -952,7 +1302,17 @@ def main() -> None:
     parser.add_argument("--vistals_apply_task_levels", type=str, default="object,room,region,instance")
     args = parser.parse_args()
 
-    global MQSC_R1_CFG, VISTALS_CFG, VISTA2MQSC_VISTALS_APPLY_TASK_LEVELS
+    global MQSC_R1_CFG, TFFS_CFG, TFFS_TIMEOUT_SEC, VISTALS_CFG, VISTA2MQSC_VISTALS_APPLY_TASK_LEVELS
+    TFFS_TIMEOUT_SEC = float(args.tffs_timeout_sec)
+    TFFS_CFG = TffsConfig(
+        vlm_call_interval=int(args.tffs_vlm_call_interval),
+        max_vlm_calls_per_decision=int(args.tffs_max_vlm_calls_per_decision),
+        min_score_margin=float(args.tffs_min_score_margin),
+        min_confidence=float(args.tffs_min_confidence),
+        use_vlm=not bool(args.tffs_disable),
+        vlm_model=str(args.tffs_vlm_model),
+        vlm_no_proxy=not bool(args.tffs_disable_no_proxy),
+    )
     MQSC_R1_CFG = MqscR1Config(
         top_k=int(args.mqsc_r1_top_k),
         temperature=float(args.mqsc_r1_temperature),
@@ -1010,10 +1370,12 @@ def main() -> None:
     if not enabled_task_levels:
         enabled_task_levels = set(TASK_LEVEL_ORDER)
     _tqdm_print(
-        f"[Vista2MQSCRefine1] cfg start_ratio={args.start_ratio} end_ratio={args.end_ratio} "
+        f"[TFFSVista2MQSCRefine1] cfg start_ratio={args.start_ratio} end_ratio={args.end_ratio} "
         f"levels={sorted(enabled_task_levels)} max_steps={args.max_steps} "
         f"decision_num_min={args.decision_num_min} success_distance={args.success_distance} "
         f"quiet_nav_steps={bool(args.quiet_nav_steps)} output_log_dir={output_log_dir} "
+        f"tffs_enabled={not bool(args.tffs_disable)} tffs_vlm_model={TFFS_CFG.vlm_model} "
+        f"tffs_vlm_call_interval={TFFS_CFG.vlm_call_interval} tffs_timeout_sec={TFFS_TIMEOUT_SEC} "
         f"mqsc_r1_top_k={MQSC_R1_CFG.top_k} mqsc_r1_eps={MQSC_R1_CFG.cluster_eps} "
         f"mqsc_r1_vlm={MQSC_R1_CFG.use_vlm} mqsc_r1_vlm_model={MQSC_R1_CFG.vlm_model} "
         f"vistals_enable_vvd_replacement={VISTALS_CFG.enable_vvd_replacement} "
@@ -1027,19 +1389,26 @@ def main() -> None:
     if not scene_data_paths:
         raise FileNotFoundError(f"No *.json.gz found under navigation_data_path={navigation_data_root}")
     scene_data_paths = scene_data_paths[int(args.start_ratio * len(scene_data_paths)): int(args.end_ratio * len(scene_data_paths))]
-    _tqdm_print(f"[Vista2MQSCRefine1] selected_scenes={len(scene_data_paths)}")
+    if str(args.scene_name).strip():
+        wanted_scene = str(args.scene_name).strip()
+        scene_data_paths = [p for p in scene_data_paths if p.name[: -len(".json.gz")] == wanted_scene]
+        if not scene_data_paths:
+            raise FileNotFoundError(f"scene_name={wanted_scene!r} not found in selected data slice")
+    if int(args.max_scenes) > 0:
+        scene_data_paths = scene_data_paths[: int(args.max_scenes)]
+    _tqdm_print(f"[TFFSVista2MQSCRefine1] selected_scenes={len(scene_data_paths)}")
 
-    out_name = f"refhm3d_seq_vista2mqsc_refine1_{args.start_ratio}_{args.end_ratio}.json"
-    eff_name = f"refhm3d_seq_vista2mqsc_refine1_effectiveness_{args.start_ratio}_{args.end_ratio}.json"
+    out_name = f"refhm3d_seq_tffs_vista2mqsc_refine1_{args.start_ratio}_{args.end_ratio}.json"
+    eff_name = f"refhm3d_seq_tffs_vista2mqsc_refine1_effectiveness_{args.start_ratio}_{args.end_ratio}.json"
     if args.concise_description:
-        out_name = f"refhm3d_seq_vista2mqsc_refine1_concisedesc_{args.start_ratio}_{args.end_ratio}.json"
-        eff_name = f"refhm3d_seq_vista2mqsc_refine1_effectiveness_concisedesc_{args.start_ratio}_{args.end_ratio}.json"
+        out_name = f"refhm3d_seq_tffs_vista2mqsc_refine1_concisedesc_{args.start_ratio}_{args.end_ratio}.json"
+        eff_name = f"refhm3d_seq_tffs_vista2mqsc_refine1_effectiveness_concisedesc_{args.start_ratio}_{args.end_ratio}.json"
     output_path = Path(output_log_dir) / out_name
     effectiveness_path = Path(output_log_dir) / eff_name
-    metrics_log_path = Path(output_log_dir) / f"vista2mqsc_live_metrics_{args.start_ratio}_{args.end_ratio}.log"
-    _tqdm_print(f"[Vista2MQSCRefine1] output_json={output_path}")
-    _tqdm_print(f"[Vista2MQSCRefine1] effectiveness_json={effectiveness_path}")
-    _tqdm_print(f"[Vista2MQSCRefine1] live_metrics_log={metrics_log_path}")
+    metrics_log_path = Path(output_log_dir) / f"tffs_vista2mqsc_live_metrics_{args.start_ratio}_{args.end_ratio}.log"
+    _tqdm_print(f"[TFFSVista2MQSCRefine1] output_json={output_path}")
+    _tqdm_print(f"[TFFSVista2MQSCRefine1] effectiveness_json={effectiveness_path}")
+    _tqdm_print(f"[TFFSVista2MQSCRefine1] live_metrics_log={metrics_log_path}")
 
     if output_path.exists():
         with open(output_path, "r", encoding="utf-8") as f:
@@ -1079,7 +1448,12 @@ def main() -> None:
         }
         all_navigation_goals_dict = {x["object_id"]: x for x in scene_data["goals"]}
 
+        processed_episodes_in_scene = 0
         for _, cur_episode in tqdm(enumerate(scene_data["episode_by_sequence"]), desc="=== Episode ==="):
+            if int(args.episode_id) >= 0 and int(cur_episode["episode_id"]) != int(args.episode_id):
+                continue
+            if int(args.max_episodes_per_scene) > 0 and processed_episodes_in_scene >= int(args.max_episodes_per_scene):
+                break
             pq3d_model.reset()
             decision_num = 0
             visited_frontier_set = set()
@@ -1089,6 +1463,7 @@ def main() -> None:
             episode_key = "_".join([scene_name, navigation_type, str(episode_id)])
             if episode_key in existing_episodes:
                 continue
+            processed_episodes_in_scene += 1
 
             sim_settings = OmegaConf.load("configs/habitat/goat_sim_config.yaml")
             goat_agent_setting = OmegaConf.load("configs/habitat/goat_agent_config.yaml")
@@ -1109,9 +1484,12 @@ def main() -> None:
             out_episode_dir.mkdir(parents=True, exist_ok=True)
             episode_t0 = time.perf_counter()
             episode_task_rows: List[Dict[str, Any]] = []
+            task_sequence = list(cur_episode["task_sequence"])
+            if int(args.max_tasks_per_episode) > 0:
+                task_sequence = task_sequence[: int(args.max_tasks_per_episode)]
 
             try:
-                for idx, cur_task_ref in enumerate(cur_episode["task_sequence"]):
+                for idx, cur_task_ref in enumerate(task_sequence):
                     task_t0 = time.perf_counter()
                     task_type, task_idx = cur_task_ref
                     if task_type not in enabled_task_levels:
@@ -1131,13 +1509,14 @@ def main() -> None:
                         concise_description=bool(args.concise_description),
                     )
                     _tqdm_print(
-                        f"[vista2mqsc-refine1][task-start] scene={scene_name} ep={episode_id} "
+                        f"[tffs-vista2mqsc-refine1][task-start] scene={scene_name} ep={episode_id} "
                         f"task={idx} level={task_type} decision_start={decision_num}"
                     )
-                    _tqdm_print(f"[vista2mqsc-refine1][task-desc] {sentence}")
+                    _tqdm_print(f"[tffs-vista2mqsc-refine1][task-desc] {sentence}")
                     _tqdm_print(
-                        f"[vista2mqsc-refine1][nav] task={idx} entering navigation loop; "
-                        f"each step = 12 turns + frontier + PQ3D. Vista2MQSC runs only on final object decisions."
+                        f"[tffs-vista2mqsc-refine1][nav] task={idx} entering navigation loop; "
+                        f"each step = 12 turns + frontier + PQ3D. TFFS only reranks non-final frontiers; "
+                        f"Vista2MQSC runs only on final object decisions."
                     )
 
                     total_steps = 0
@@ -1150,6 +1529,11 @@ def main() -> None:
                     hook_called = 0
                     hook_applied = 0
                     hook_logs: List[Dict[str, Any]] = []
+                    tffs_called = 0
+                    tffs_applied = 0
+                    tffs_logs: List[Dict[str, Any]] = []
+                    extra_stop_scan_logs: List[Dict[str, Any]] = []
+                    extra_stop_scan_done = False
                     task_pq3d_object_gap: Optional[float] = None
                     task_end_reason = "max_steps"
                     task_decision_start = int(decision_num)
@@ -1183,6 +1567,18 @@ def main() -> None:
                         depth_list.extend(scan_depth)
                         agent_state_list.extend(scan_states)
                         if total_steps >= int(args.max_steps):
+                            if not extra_stop_scan_done:
+                                extra_log = _save_extra_stop_scan(
+                                    sim=sim,
+                                    agent=agent,
+                                    output_dir=task_dir / "extra_stop_scan" / f"dec_{decision_num:03d}",
+                                    reason="max_steps_after_decision_scan",
+                                    task_id=int(idx),
+                                    decision_num=int(decision_num),
+                                    total_steps=int(total_steps),
+                                )
+                                extra_stop_scan_logs.append(extra_log)
+                                extra_stop_scan_done = True
                             break
 
                         t_frontier = time.perf_counter()
@@ -1218,7 +1614,7 @@ def main() -> None:
                         pq_ms = (time.perf_counter() - t_pq) * 1000.0
                         if not bool(args.quiet_nav_steps):
                             _tqdm_print(
-                                f"[vista2mqsc-refine1][step] task={idx} dec={decision_num} "
+                                f"[tffs-vista2mqsc-refine1][step] task={idx} dec={decision_num} "
                                 f"scan_ms={scan_ms:.0f} frontier_ms={frontier_ms:.0f} pq3d_ms={pq_ms:.0f} "
                                 f"frames={len(color_list)} frontiers={len(frontier_waypoints)} final={bool(is_final)}"
                             )
@@ -1226,13 +1622,23 @@ def main() -> None:
                             decision_num % int(args.decision_log_interval) == 0
                         ):
                             _tqdm_print(
-                                f"[vista2mqsc-refine1][decision] task={idx} dec={decision_num} "
+                                f"[tffs-vista2mqsc-refine1][decision] task={idx} dec={decision_num} "
                                 f"target={np.asarray(target_position, dtype=float).reshape(-1)[:3].tolist()} "
                                 f"final={bool(is_final)}"
                             )
 
                         used_target = np.asarray(target_position, dtype=float).reshape(3).copy()
                         aux = getattr(pq3d_model, "last_decision_aux", {}) or {}
+                        tffs_info: Dict[str, Any] = {
+                            "ok": True,
+                            "module": "tffs",
+                            "called": False,
+                            "tffs_called": False,
+                            "tffs_applied": False,
+                            "reason": "final_decision_skip_tffs" if bool(is_final) else "no_frontier_override_attempted",
+                            "target_before": used_target.tolist(),
+                            "target_after": used_target.tolist(),
+                        }
                         module_info: Dict[str, Any] = {
                             "ok": True,
                             "module": "vista2mqsc",
@@ -1276,11 +1682,45 @@ def main() -> None:
                                 }
                             )
                             _tqdm_print(
-                                f"[vista2mqsc-refine1][final] task={idx} dec={decision_num} "
+                                f"[tffs-vista2mqsc-refine1][final] task={idx} dec={decision_num} "
                                 f"hook_called={hook_called} hook_applied={hook_applied} "
                                 f"reason={module_info.get('reason')}"
                             )
                         else:
+                            used_target, tffs_info = tffs_frontier_hook(
+                                sentence=sentence,
+                                scene_name=scene_name,
+                                episode_id=int(episode_id),
+                                task_id=int(idx),
+                                decision_num=int(decision_num),
+                                pq3d_model=pq3d_model,
+                                baseline_target=used_target,
+                                frontier_waypoints=frontier_waypoints,
+                                scan_rgb=scan_rgb,
+                                scan_states=scan_states,
+                                output_dir=task_dir / "tffs" / f"dec_{decision_num:03d}",
+                                disabled=bool(args.tffs_disable),
+                                is_final=False,
+                            )
+                            tffs_called += int(bool(tffs_info.get("called", tffs_info.get("tffs_called", False))))
+                            tffs_applied += int(bool(tffs_info.get("tffs_applied", False)))
+                            tffs_logs.append(
+                                {
+                                    "scene_name": scene_name,
+                                    "episode_id": int(episode_id),
+                                    "task_id": int(idx),
+                                    "decision_num": int(decision_num),
+                                    "sentence": sentence,
+                                    "module_info": tffs_info,
+                                }
+                            )
+                            _tqdm_print(
+                                f"[tffs-vista2mqsc-refine1][frontier] task={idx} dec={decision_num} "
+                                f"frontiers={len(frontier_waypoints)} "
+                                f"called={bool(tffs_info.get('called', False))} "
+                                f"applied={bool(tffs_info.get('tffs_applied', False))} "
+                                f"reason={tffs_info.get('gate_reason', tffs_info.get('reason'))}"
+                            )
                             visited_frontier_set.add(tuple(np.round(used_target, 1)))
 
                         (
@@ -1303,13 +1743,15 @@ def main() -> None:
                         )
 
                         _write_json(
-                            task_dir / f"dec_{decision_num:03d}_vista2mqsc.json",
+                            task_dir / f"dec_{decision_num:03d}_tffs_vista2mqsc.json",
                             {
                                 "task_id": int(idx),
                                 "decision_num": int(decision_num),
                                 "is_final": bool(is_final),
                                 "target_used": used_target.tolist(),
                                 "pq3d_aux": aux,
+                                "tffs": tffs_info,
+                                "vista2mqsc": module_info,
                                 "module": module_info,
                                 "module_info": module_info,
                                 "follow": follow_log,
@@ -1321,14 +1763,68 @@ def main() -> None:
                             if not bool(is_final):
                                 visited_frontier_set.add(tuple(np.round(used_target, 1)))
                                 _tqdm_print(
-                                    f"[vista2mqsc-refine1][frontier-follow-retry] task={idx} dec={decision_num - 1} "
+                                    f"[tffs-vista2mqsc-refine1][frontier-follow-retry] task={idx} dec={decision_num - 1} "
                                     f"error={follow_log.get('error_type')} candidates={follow_log.get('candidate_attempt_count')}"
                                 )
+                                if total_steps >= int(args.max_steps):
+                                    if not extra_stop_scan_done:
+                                        extra_log = _save_extra_stop_scan(
+                                            sim=sim,
+                                            agent=agent,
+                                            output_dir=task_dir / "extra_stop_scan" / f"dec_{decision_num - 1:03d}",
+                                            reason="max_steps_after_frontier_follow_retry",
+                                            task_id=int(idx),
+                                            decision_num=int(decision_num - 1),
+                                            total_steps=int(total_steps),
+                                        )
+                                        extra_stop_scan_logs.append(extra_log)
+                                        extra_stop_scan_done = True
+                                    task_end_reason = "max_steps"
+                                    break
                                 continue
+                            if not extra_stop_scan_done:
+                                extra_log = _save_extra_stop_scan(
+                                    sim=sim,
+                                    agent=agent,
+                                    output_dir=task_dir / "extra_stop_scan" / f"dec_{decision_num - 1:03d}",
+                                    reason="follower_error_before_task_stop",
+                                    task_id=int(idx),
+                                    decision_num=int(decision_num - 1),
+                                    total_steps=int(total_steps),
+                                )
+                                extra_stop_scan_logs.append(extra_log)
+                                extra_stop_scan_done = True
                             task_end_reason = "follower_error"
                             break
                         if bool(is_final):
+                            if not extra_stop_scan_done:
+                                extra_log = _save_extra_stop_scan(
+                                    sim=sim,
+                                    agent=agent,
+                                    output_dir=task_dir / "extra_stop_scan" / f"dec_{decision_num - 1:03d}",
+                                    reason="final_decision_before_task_stop",
+                                    task_id=int(idx),
+                                    decision_num=int(decision_num - 1),
+                                    total_steps=int(total_steps),
+                                )
+                                extra_stop_scan_logs.append(extra_log)
+                                extra_stop_scan_done = True
                             task_end_reason = "final_decision"
+                            break
+                        if total_steps >= int(args.max_steps):
+                            if not extra_stop_scan_done:
+                                extra_log = _save_extra_stop_scan(
+                                    sim=sim,
+                                    agent=agent,
+                                    output_dir=task_dir / "extra_stop_scan" / f"dec_{decision_num - 1:03d}",
+                                    reason="max_steps_after_frontier_follow",
+                                    task_id=int(idx),
+                                    decision_num=int(decision_num - 1),
+                                    total_steps=int(total_steps),
+                                )
+                                extra_stop_scan_logs.append(extra_log)
+                                extra_stop_scan_done = True
+                            task_end_reason = "max_steps"
                             break
 
                     task_time = float(time.perf_counter() - task_t0)
@@ -1391,7 +1887,13 @@ def main() -> None:
                         "start_goal_geo": float(start_end_geo_distance),
                         "end_goal_geo": float(agent_end_geo_distance),
                         "episode_cum_distance": float(episode_cum_distance),
-                        "module_name": "vista2mqsc",
+                        "module_name": "tffs_vista2mqsc",
+                        "tffs_called": int(tffs_called),
+                        "tffs_applied": int(tffs_applied),
+                        "extra_stop_scan_count": int(len(extra_stop_scan_logs)),
+                        "extra_stop_scan_last_reason": (
+                            extra_stop_scan_logs[-1].get("reason") if extra_stop_scan_logs else None
+                        ),
                         "module_hook_called": int(hook_called),
                         "module_hook_applied": int(hook_applied),
                         "module_helpful": module_helpful,
@@ -1423,7 +1925,11 @@ def main() -> None:
                         "task_id": int(idx),
                         "task_level": task_type,
                         "navigation_type": navigation_type,
-                        "module_name": "vista2mqsc",
+                        "module_name": "tffs_vista2mqsc",
+                        "tffs_called": int(tffs_called),
+                        "tffs_applied": int(tffs_applied),
+                        "extra_stop_scan_count": int(len(extra_stop_scan_logs)),
+                        "extra_stop_scan_logs": extra_stop_scan_logs,
                         "module_hook_called": int(hook_called),
                         "module_hook_applied": int(hook_applied),
                         "module_helpful": module_helpful,
@@ -1436,6 +1942,7 @@ def main() -> None:
                         "selected_target_to_goal_l2": float(selected_target_to_goal_l2),
                         "baseline_target_to_goal_l2_valid": bool(np.isfinite(baseline_target_to_goal_l2)),
                         "selected_target_to_goal_l2_valid": bool(np.isfinite(selected_target_to_goal_l2)),
+                        "tffs_logs": tffs_logs,
                         "hook_logs": hook_logs,
                     }
                     effectiveness_dict["records"].append(effectiveness_record)
@@ -1443,9 +1950,10 @@ def main() -> None:
                     _write_json(task_dir / "effectiveness.json", effectiveness_record)
 
                     _tqdm_print(
-                        f"[vista2mqsc-refine1] scene={scene_name} ep={episode_id} task={idx} "
+                        f"[tffs-vista2mqsc-refine1] scene={scene_name} ep={episode_id} task={idx} "
                         f"SR={sr:.1f} SPL={spl:.4f} time={task_time:.3f}s steps={total_steps} "
                         f"task_decisions={decision_num - task_decision_start} "
+                        f"tffs_called={tffs_called} tffs_applied={tffs_applied} "
                         f"hook_called={hook_called} hook_applied={hook_applied} helpful={module_helpful} "
                         f"reason={final_module_info.get('reason')}"
                     )
@@ -1468,7 +1976,7 @@ def main() -> None:
                 scene_name=scene_name,
                 episode_id=int(episode_id),
                 navigation_type=navigation_type,
-                task_sequence=cur_episode["task_sequence"],
+                task_sequence=task_sequence,
                 task_rows=episode_task_rows,
                 episode_wall_time_sec=float(time.perf_counter() - episode_t0),
             )
