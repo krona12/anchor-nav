@@ -88,8 +88,14 @@ fi
 RUN_TAG="${SAM2_LEVEL_PRESET}-${DESC_MODE}-${USER_TAG}"
 OUT_DIR="output_logs/anchor/single_goal/vista2mqsc_sam2/${RUN_TAG}"
 LOG_DIR="${OUT_DIR}/shard_logs"
-mkdir -p "${LOG_DIR}"
-exec > >(tee -a "${OUT_DIR}/run_stdout_stderr.log") 2>&1
+WORKER_ID="${SAM2_WORKER_ID:-}"
+WORKER_LOG_DIR="${OUT_DIR}/worker_logs"
+mkdir -p "${LOG_DIR}" "${WORKER_LOG_DIR}"
+if [ -n "${WORKER_ID}" ]; then
+  exec > >(tee -a "${WORKER_LOG_DIR}/worker_${WORKER_ID}_stdout_stderr.log") 2>&1
+else
+  exec > >(tee -a "${OUT_DIR}/run_stdout_stderr.log") 2>&1
+fi
 
 MQSC_R1_SEED="${MQSC_R1_SEED:-1234}"
 MQSC_R1_TOP_K="${MQSC_R1_TOP_K:-8}"
@@ -125,6 +131,10 @@ echo ">>> SAM2_MODEL_CFG: ${SAM2_MODEL_CFG}"
 echo ">>> SAM2_LEVEL_PRESET: ${SAM2_LEVEL_PRESET}"
 echo ">>> SAM2_POINTS_PER_BATCH: ${SAM2_POINTS_PER_BATCH}"
 echo ">>> MQSC-R1 VLM model: ${MQSC_R1_VLM_MODEL}"
+if [ -n "${WORKER_ID}" ]; then
+  echo ">>> SAM2 worker id: ${WORKER_ID}"
+  echo ">>> SAM2 shard indices: ${SAM2_SHARD_INDICES:-all}"
+fi
 
 {
   echo "run_tag=${RUN_TAG}"
@@ -172,6 +182,21 @@ echo ">>> MQSC-R1 VLM model: ${MQSC_R1_VLM_MODEL}"
   echo "vistals_radial_step_m=${VISTALS_RADIAL_STEP_M}"
   echo "vistals_angle_step_deg=${VISTALS_ANGLE_STEP_DEG}"
 } > "${OUT_DIR}/run_args.txt"
+
+if [ -n "${WORKER_ID}" ]; then
+  {
+    echo "worker_id=${WORKER_ID}"
+    echo "run_tag=${RUN_TAG}"
+    echo "desc_mode=${DESC_MODE}"
+    echo "user_tag=${USER_TAG}"
+    echo "command=${RUN_CMD}"
+    echo "cuda_visible_devices=${CUDA_VISIBLE_DEVICES}"
+    echo "sam2_level_preset=${SAM2_LEVEL_PRESET}"
+    echo "sam2_shard_indices=${SAM2_SHARD_INDICES:-all}"
+    echo "mqsc_r1_vlm_model=${MQSC_R1_VLM_MODEL}"
+    echo "worker_log=${WORKER_LOG_DIR}/worker_${WORKER_ID}_stdout_stderr.log"
+  } > "${WORKER_LOG_DIR}/worker_${WORKER_ID}_run_args.txt"
+fi
 
 cp "$0" "${OUT_DIR}/run_vista2mqsc_sam2_single_goal_all_20x0.05.sh.snapshot"
 {
@@ -280,7 +305,18 @@ run_one () {
 
 STARTS=(0.0 0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 0.5 0.55 0.6 0.65 0.7 0.75 0.8 0.85 0.9 0.95)
 ENDS=(0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 0.5 0.55 0.6 0.65 0.7 0.75 0.8 0.85 0.9 0.95 1.0)
-for i in "${!STARTS[@]}"; do
+if [ -n "${SAM2_SHARD_INDICES:-}" ]; then
+  IFS=',' read -r -a SHARD_INDEX_LIST <<< "${SAM2_SHARD_INDICES}"
+else
+  SHARD_INDEX_LIST=("${!STARTS[@]}")
+fi
+
+echo ">>> Planned shard indices: ${SHARD_INDEX_LIST[*]}"
+for i in "${SHARD_INDEX_LIST[@]}"; do
+  if ! [[ "${i}" =~ ^[0-9]+$ ]] || [ "${i}" -lt 0 ] || [ "${i}" -ge "${#STARTS[@]}" ]; then
+    echo "Invalid shard index: ${i}; valid range is 0-$((${#STARTS[@]} - 1))"
+    exit 1
+  fi
   run_one "${STARTS[$i]}" "${ENDS[$i]}"
 done
 

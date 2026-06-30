@@ -1,0 +1,119 @@
+{
+  "task_sentence": "black side table with lamp between black-and-beige leaf-patterned armchairs in living room with wooden piano beneath cityscape prints",
+  "task_start_vlm": {
+    "main_target": "black side table with lamp",
+    "anchor": "black-and-beige leaf-patterned armchairs",
+    "anchor_descs": [
+      "black-and-beige leaf-patterned armchairs",
+      "wooden piano",
+      "cityscape prints"
+    ],
+    "raw": "{\"target_desc\":\"black side table with lamp\",\"anchor_descs\":[\"black-and-beige leaf-patterned armchairs\",\"wooden piano\",\"cityscape prints\"]}",
+    "parse_ok": true,
+    "phase": "task_start"
+  },
+  "final_decision_vlm": {
+    "main_target": "black side table with lamp",
+    "anchor": "to",
+    "anchor_descs": [
+      "to",
+      "the",
+      "left"
+    ],
+    "raw": "```json\n{\"main_target\":\"black side table with lamp\",\"anchor\":\"black-and-beige leaf-patterned armchairs\",\"anchor_descs\":[\"to\",\"the\",\"left\"]}\n```",
+    "parse_ok": true,
+    "phase": "final_decision"
+  },
+  "og3d_topk_object_candidates": [
+    {
+      "slot_index": 2,
+      "merged_object_score": 0.9473028779029846,
+      "center_habitat_xyz": [
+        -1.82147216796875,
+        0.305315226316452,
+        -0.5710874795913696
+      ],
+      "og3d_logit": -1.5798741579055786
+    },
+    {
+      "slot_index": 20,
+      "merged_object_score": 0.9931405186653137,
+      "center_habitat_xyz": [
+        1.3287352323532104,
+        0.31473150849342346,
+        -0.4563436806201935
+      ],
+      "og3d_logit": -1.8454002141952515
+    },
+    {
+      "slot_index": 94,
+      "merged_object_score": 0.9755365252494812,
+      "center_habitat_xyz": [
+        -3.157719373703003,
+        0.2494746744632721,
+        -7.876668453216553
+      ],
+      "og3d_logit": -2.821441650390625
+    },
+    {
+      "slot_index": 13,
+      "merged_object_score": 0.9900676012039185,
+      "center_habitat_xyz": [
+        1.5649495124816895,
+        0.32953426241874695,
+        1.1815738677978516
+      ],
+      "og3d_logit": -3.8705692291259766
+    },
+    {
+      "slot_index": 19,
+      "merged_object_score": 0.930224597454071,
+      "center_habitat_xyz": [
+        1.8508501052856445,
+        0.9838237762451172,
+        0.025326434522867203
+      ],
+      "og3d_logit": -4.241766929626465
+    }
+  ],
+  "clip_rerank_topk": [
+    {
+      "slot_index": 2,
+      "og3d_rank": 1,
+      "clip_score": null,
+      "rerank_after_clip": 1
+    },
+    {
+      "slot_index": 20,
+      "og3d_rank": 2,
+      "clip_score": null,
+      "rerank_after_clip": 2
+    },
+    {
+      "slot_index": 94,
+      "og3d_rank": 3,
+      "clip_score": null,
+      "rerank_after_clip": 3
+    },
+    {
+      "slot_index": 13,
+      "og3d_rank": 4,
+      "clip_score": null,
+      "rerank_after_clip": 4
+    },
+    {
+      "slot_index": 19,
+      "og3d_rank": 5,
+      "clip_score": null,
+      "rerank_after_clip": 5
+    }
+  ],
+  "clip_meta": {
+    "clip_model_path": "openai/clip-vit-large-patch14",
+    "clip_model": "openai/clip-vit-large-patch14",
+    "clip_backend": "anchor_nav.semantic_enhance",
+    "device_requested": null,
+    "device": "cuda",
+    "error": null
+  }
+}

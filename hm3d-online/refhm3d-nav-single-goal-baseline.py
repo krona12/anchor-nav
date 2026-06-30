@@ -42,18 +42,19 @@ def sequence_compute_metric_results(result_dict: dict) -> None:
         print("[Metrics] single_goal count: 0")
         return
 
-    # Navigation follower errors are valid failed trials and must remain in
-    # the denominator. Decision/model exceptions are raised before appending
-    # a row, so they cannot silently pollute SR/SPL.
+    # Navigation follower and decision/model errors are valid failed trials
+    # and must remain in the denominator.
     total_sr = sum(float(item.get("sr", 0)) for item in sequence_results)
     total_spl = sum(float(item.get("spl", 0)) for item in sequence_results)
     avg_sr = total_sr / total_count
     avg_spl = total_spl / total_count
     invalid_count = sum(1 for item in sequence_results if not bool(item.get("valid_for_metric", True)))
     follower_error_count = sum(1 for item in sequence_results if item.get("end_reason") == "follower_error")
+    decision_error_count = sum(1 for item in sequence_results if item.get("end_reason") == "baseline_decision_error")
     print(
         f"[Metrics] single_goal count: {total_count}, invalid_count: {invalid_count}, "
-        f"follower_error_count: {follower_error_count}, avg_sr: {avg_sr:.6f}, avg_spl: {avg_spl:.6f}"
+        f"follower_error_count: {follower_error_count}, decision_error_count: {decision_error_count}, "
+        f"avg_sr: {avg_sr:.6f}, avg_spl: {avg_spl:.6f}"
     )
 
 
@@ -89,6 +90,7 @@ def _baseline_metric_snapshot(result_dict: dict) -> dict:
         "avg_sr": float(avg_sr),
         "avg_spl": float(avg_spl),
         "follower_error_count": sum(1 for item in rows if item.get("end_reason") == "follower_error"),
+        "decision_error_count": sum(1 for item in rows if item.get("end_reason") == "baseline_decision_error"),
         "by_level": by_level_out,
     }
 
@@ -102,7 +104,8 @@ def _format_baseline_metric_snapshot(snapshot: dict) -> str:
         )
     return (
         f"rows={snapshot['rows']} avg_sr={snapshot['avg_sr']:.6f} avg_spl={snapshot['avg_spl']:.6f} "
-        f"follower_error_count={snapshot['follower_error_count']} levels=[{'; '.join(level_parts)}]"
+        f"follower_error_count={snapshot['follower_error_count']} "
+        f"decision_error_count={snapshot['decision_error_count']} levels=[{'; '.join(level_parts)}]"
     )
 
 
@@ -459,6 +462,7 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
             goto_agent_state_list = []
             task_end_reason = "max_steps"
             follower_error_info = None
+            decision_error_info = None
 
             t_episode_start = time.perf_counter()
             while total_steps < 400:
@@ -536,14 +540,15 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                     error_path = os.path.join(output_log_dir, "baseline_decision_error.json")
                     with open(error_path, "w", encoding="utf-8") as f:
                         json.dump(error_info, f, ensure_ascii=False, indent=2)
+                    with open(os.path.join(output_log_dir, "baseline_decision_errors.jsonl"), "a", encoding="utf-8") as f:
+                        f.write(json.dumps(error_info, ensure_ascii=False) + "\n")
                     print(
                         f"[baseline][decision-error] scene={scene_name} episode_id={episode_id} "
                         f"task_id={idx} task_level={task_type} error={type(e).__name__}: {e}"
                     )
-                    raise RuntimeError(
-                        f"baseline decision failed for scene={scene_name} episode={episode_id} task={idx}; "
-                        f"wrote {error_path}"
-                    ) from e
+                    decision_error_info = error_info
+                    task_end_reason = "baseline_decision_error"
+                    break
                 decision_num += 1
                 if not is_final_decision:
                     visited_frontier_set.add(tuple(np.round(target_position, 1)))
@@ -656,8 +661,9 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                 raw_sr = bool(agent_end_geo_distance <= 0.25)
                 raw_spl = raw_sr * start_end_geo_distance / max(start_end_geo_distance, episode_cum_distance)
             valid_for_metric = True
-            sr = 0 if task_end_reason == "follower_error" else raw_sr
-            spl = 0 if task_end_reason == "follower_error" else raw_spl
+            failed_trial_end_reasons = {"follower_error", "baseline_decision_error"}
+            sr = 0 if task_end_reason in failed_trial_end_reasons else raw_sr
+            spl = 0 if task_end_reason in failed_trial_end_reasons else raw_spl
 
             row = {
                 "scene_name": scene_name,
@@ -674,6 +680,7 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
                 "steps_total": int(total_steps),
                 "decisions": int(decision_num),
                 "follower_error_info": follower_error_info,
+                "decision_error_info": decision_error_info,
                 "object_category": goal_category,
                 "task_time_sec": episode_time,
             }

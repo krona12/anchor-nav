@@ -1,0 +1,119 @@
+{
+  "task_sentence": "black side table with lamp between black-and-beige leaf-patterned armchairs in living room with wooden piano beneath cityscape prints",
+  "task_start_vlm": {
+    "main_target": "black side table with lamp",
+    "anchor": "black-and-beige leaf-patterned armchairs",
+    "anchor_descs": [
+      "black-and-beige leaf-patterned armchairs",
+      "wooden piano",
+      "cityscape prints"
+    ],
+    "raw": "```json\n{\"target_desc\":\"black side table with lamp\",\"anchor_descs\":[\"black-and-beige leaf-patterned armchairs\",\"wooden piano\",\"cityscape prints\"]}\n```",
+    "parse_ok": true,
+    "phase": "task_start"
+  },
+  "final_decision_vlm": {
+    "main_target": "black side table with lamp",
+    "anchor": "two",
+    "anchor_descs": [
+      "two",
+      "cozy",
+      "near"
+    ],
+    "raw": "```json\n{\"main_target\":\"black side table with lamp\",\"anchor\":\"black-and-beige leaf-patterned armchairs\",\"anchor_descs\":[\"two\",\"cozy\",\"near\"]} \n```",
+    "parse_ok": true,
+    "phase": "final_decision"
+  },
+  "og3d_topk_object_candidates": [
+    {
+      "slot_index": 1,
+      "merged_object_score": 0.9285815358161926,
+      "center_habitat_xyz": [
+        -1.8098344802856445,
+        0.32524722814559937,
+        -0.5590327978134155
+      ],
+      "og3d_logit": -1.7731878757476807
+    },
+    {
+      "slot_index": 21,
+      "merged_object_score": 0.9951958656311035,
+      "center_habitat_xyz": [
+        1.3247697353363037,
+        0.3211897313594818,
+        -0.4471924901008606
+      ],
+      "og3d_logit": -2.223968505859375
+    },
+    {
+      "slot_index": 20,
+      "merged_object_score": 0.9334564208984375,
+      "center_habitat_xyz": [
+        1.848461389541626,
+        1.0282195806503296,
+        0.028123142197728157
+      ],
+      "og3d_logit": -3.6585726737976074
+    },
+    {
+      "slot_index": 58,
+      "merged_object_score": 0.9584720134735107,
+      "center_habitat_xyz": [
+        -2.3520240783691406,
+        0.18730947375297546,
+        -4.106478691101074
+      ],
+      "og3d_logit": -3.82375168800354
+    },
+    {
+      "slot_index": 50,
+      "merged_object_score": 0.9787969589233398,
+      "center_habitat_xyz": [
+        -0.052200574427843094,
+        0.16715939342975616,
+        -4.1823225021362305
+      ],
+      "og3d_logit": -4.8011794090271
+    }
+  ],
+  "clip_rerank_topk": [
+    {
+      "slot_index": 1,
+      "og3d_rank": 1,
+      "clip_score": null,
+      "rerank_after_clip": 1
+    },
+    {
+      "slot_index": 21,
+      "og3d_rank": 2,
+      "clip_score": null,
+      "rerank_after_clip": 2
+    },
+    {
+      "slot_index": 20,
+      "og3d_rank": 3,
+      "clip_score": null,
+      "rerank_after_clip": 3
+    },
+    {
+      "slot_index": 58,
+      "og3d_rank": 4,
+      "clip_score": null,
+      "rerank_after_clip": 4
+    },
+    {
+      "slot_index": 50,
+      "og3d_rank": 5,
+      "clip_score": null,
+      "rerank_after_clip": 5
+    }
+  ],
+  "clip_meta": {
+    "clip_model_path": "/home/chenlin/.cache/huggingface/hub/models--openai--clip-vit-large-patch14/snapshots/32bd64288804d66eefd0ccbe215aa642df71cc41",
+    "clip_model": "/home/chenlin/.cache/huggingface/hub/models--openai--clip-vit-large-patch14/snapshots/32bd64288804d66eefd0ccbe215aa642df71cc41",
+    "clip_backend": "CLIPModel.get_text_features+get_image_features",
+    "device_requested": null,
+    "device": "cuda",
+    "error": "/home/chenlin/.cache/huggingface/hub/models--openai--clip-vit-large-patch14/snapshots/32bd64288804d66eefd0ccbe215aa642df71cc41 does not appear to have a file named preprocessor_config.json. Checkout 'https://huggingface.co//home/chenlin/.cache/huggingface/hub/models--openai--clip-vit-large-patch14/snapshots/32bd64288804d66eefd0ccbe215aa642df71cc41/main' for available files."
+  }
+}

@@ -1,0 +1,6381 @@
+{
+  "sequence": [
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 0,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "wardrobe",
+      "sentence": "wardrobe",
+      "task_time_sec": 327.53179006592836,
+      "steps_total": 179,
+      "decisions_total_episode_counter": 6,
+      "task_decision_start": 0,
+      "task_decision_count": 6,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.691944122314453,
+      "end_goal_geo": 5.801042556762695,
+      "episode_cum_distance": 15.250002468004823,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 44,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -0.21129,
+          3.59345,
+          -5.02502
+        ],
+        [
+          -3.0413,
+          3.92635,
+          -2.47722
+        ],
+        [
+          -2.99139,
+          4.02401,
+          -1.21294
+        ],
+        [
+          1.6839,
+          0.67873,
+          -4.93562
+        ],
+        [
+          -2.37497,
+          3.99337,
+          -6.1985
+        ]
+      ],
+      "baseline_target_position": [
+        -2.1076788902282715,
+        1.4756696224212646,
+        -5.154825687408447
+      ],
+      "selected_target_position": [
+        -3.7470016479492188,
+        0.013377934694290161,
+        -4.074683666229248
+      ],
+      "baseline_target_to_goal_l2": 2.738524383566186,
+      "selected_target_to_goal_l2": 4.285003543137819,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.8894529342651367
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 1,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.4303458137814727,
+      "object_category": "tv",
+      "sentence": "tv",
+      "task_time_sec": 245.00339495099615,
+      "steps_total": 183,
+      "decisions_total_episode_counter": 6,
+      "task_decision_start": 0,
+      "task_decision_count": 6,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.536632537841797,
+      "end_goal_geo": 0.1033664271235466,
+      "episode_cum_distance": 17.51296816766262,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 86,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -0.15094,
+          4.30008,
+          -4.8529
+        ],
+        [
+          -9.70876,
+          2.04168,
+          0.67388
+        ],
+        [
+          1.61155,
+          1.71578,
+          -4.87655
+        ]
+      ],
+      "baseline_target_position": [
+        -0.2082851082086563,
+        4.274524688720703,
+        -4.913377285003662
+      ],
+      "selected_target_position": [
+        -0.2753956161237634,
+        3.1133780479431152,
+        -5.8226467752456665
+      ],
+      "baseline_target_to_goal_l2": 0.08717245764264336,
+      "selected_target_to_goal_l2": 1.5375823657611765,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 6.1826677322387695
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 2,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.867812507893363,
+      "object_category": "dresser",
+      "sentence": "dresser",
+      "task_time_sec": 261.7753420099616,
+      "steps_total": 123,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.402759552001953,
+      "end_goal_geo": 0.07000438123941422,
+      "episode_cum_distance": 9.682690069079399,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 21,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          3.78052,
+          0.30183,
+          -6.87918
+        ],
+        [
+          -0.21129,
+          3.59345,
+          -5.02502
+        ],
+        [
+          1.6839,
+          0.67873,
+          -4.93562
+        ]
+      ],
+      "baseline_target_position": [
+        -1.372040867805481,
+        2.4222934246063232,
+        -5.073121547698975
+      ],
+      "selected_target_position": [
+        -1.8991459864052291,
+        3.1133780479431152,
+        -5.348049458927682
+      ],
+      "baseline_target_to_goal_l2": 1.6496254302386522,
+      "selected_target_to_goal_l2": 1.7842855548736554,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.48079913854599
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 3,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.5279400343492605,
+      "object_category": "bed",
+      "sentence": "bed",
+      "task_time_sec": 404.3160387510434,
+      "steps_total": 230,
+      "decisions_total_episode_counter": 9,
+      "task_decision_start": 0,
+      "task_decision_count": 9,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.713109016418457,
+      "end_goal_geo": 0.05804024264216423,
+      "episode_cum_distance": 16.50397478789091,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 156,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -0.11123,
+          4.2913,
+          -7.6972
+        ],
+        [
+          1.7875,
+          0.81575,
+          -7.53384
+        ]
+      ],
+      "baseline_target_position": [
+        1.6854071617126465,
+        0.6881517767906189,
+        -7.364773273468018
+      ],
+      "selected_target_position": [
+        0.2731812554027244,
+        0.013377934694290161,
+        -7.54639874898613
+      ],
+      "baseline_target_to_goal_l2": 0.23513360503339115,
+      "selected_target_to_goal_l2": 1.7138027639135478,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 5.790677547454834
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 4,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "nightstand",
+      "sentence": "nightstand",
+      "task_time_sec": 223.7608342389576,
+      "steps_total": 176,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 10.753911018371582,
+      "end_goal_geo": 13.685494422912598,
+      "episode_cum_distance": 19.75518255867064,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 57,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -1.27152,
+          3.53914,
+          -8.49409
+        ],
+        [
+          0.21495,
+          0.38029,
+          -8.41313
+        ],
+        [
+          3.34433,
+          0.27929,
+          -8.47848
+        ]
+      ],
+      "baseline_target_position": [
+        -10.613752365112305,
+        0.5533161759376526,
+        -3.2709779739379883
+      ],
+      "selected_target_position": [
+        -11.032564005735981,
+        0.013377934694290161,
+        -2.3563423122509044
+      ],
+      "baseline_target_to_goal_l2": 11.111856222471733,
+      "selected_target_to_goal_l2": 12.057401249918346,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 2.31551456451416
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 5,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "plush toy",
+      "sentence": "plush toy",
+      "task_time_sec": 196.22347025002819,
+      "steps_total": 139,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.993315696716309,
+      "end_goal_geo": 9.77180004119873,
+      "episode_cum_distance": 11.250349208712578,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 49,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -1.4517,
+          4.07733,
+          -8.49779
+        ],
+        [
+          -1.44114,
+          4.0887,
+          -8.62607
+        ]
+      ],
+      "baseline_target_position": [
+        -3.209671974182129,
+        3.720463752746582,
+        -1.458694577217102
+      ],
+      "selected_target_position": [
+        -4.1976634520841305,
+        3.1276509761810303,
+        -1.582898238384195
+      ],
+      "baseline_target_to_goal_l2": 7.264067961650806,
+      "selected_target_to_goal_l2": 7.5005288882401935,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.5501877069473267
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 6,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.7201062114383111,
+      "object_category": "armchair",
+      "sentence": "armchair",
+      "task_time_sec": 173.42322554206476,
+      "steps_total": 152,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 10.801594734191895,
+      "end_goal_geo": 0.07423713803291321,
+      "episode_cum_distance": 15.000002169981599,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 89,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -11.11151,
+          0.5661,
+          -0.3677
+        ],
+        [
+          -7.86612,
+          0.49594,
+          -0.01946
+        ],
+        [
+          1.44466,
+          3.56965,
+          -5.65514
+        ]
+      ],
+      "baseline_target_position": [
+        -11.211202621459961,
+        0.523196816444397,
+        -0.1861094832420349
+      ],
+      "selected_target_position": [
+        -9.718102744420369,
+        0.013377934694290161,
+        -0.3834624025893087
+      ],
+      "baseline_target_to_goal_l2": 0.21155239944087012,
+      "selected_target_to_goal_l2": 1.4991110414886413,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.9608645439147949
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 7,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "bath towel",
+      "sentence": "bath towel",
+      "task_time_sec": 342.01389597693924,
+      "steps_total": 220,
+      "decisions_total_episode_counter": 8,
+      "task_decision_start": 0,
+      "task_decision_count": 8,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.357213020324707,
+      "end_goal_geo": 8.523198127746582,
+      "episode_cum_distance": 17.980277741327882,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 46,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -3.53551,
+          3.8552,
+          -7.8586
+        ],
+        [
+          -3.0215,
+          0.72057,
+          -7.79128
+        ],
+        [
+          -2.68033,
+          0.6998,
+          -7.79055
+        ]
+      ],
+      "baseline_target_position": [
+        -3.5322353839874268,
+        0.6293342113494873,
+        -4.686715126037598
+      ],
+      "selected_target_position": [
+        -3.9737415313720703,
+        0.013377934694290161,
+        -4.027459144592285
+      ],
+      "baseline_target_to_goal_l2": 3.14761777511639,
+      "selected_target_to_goal_l2": 3.9462934486557444,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 2.186020851135254
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 8,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "towel",
+      "sentence": "towel",
+      "task_time_sec": 273.4664822689956,
+      "steps_total": 174,
+      "decisions_total_episode_counter": 7,
+      "task_decision_start": 0,
+      "task_decision_count": 7,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.537842273712158,
+      "end_goal_geo": 0.4339005649089813,
+      "episode_cum_distance": 13.750000515952706,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 136,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.76276,
+          1.14258,
+          -5.05863
+        ],
+        [
+          -3.53551,
+          3.8552,
+          -7.8586
+        ],
+        [
+          -3.0215,
+          0.72057,
+          -7.79128
+        ],
+        [
+          -2.68033,
+          0.6998,
+          -7.79055
+        ]
+      ],
+      "baseline_target_position": [
+        -1.3666263818740845,
+        0.645542323589325,
+        -6.278544902801514
+      ],
+      "selected_target_position": [
+        -1.8014071273100636,
+        0.013377934694290161,
+        -7.282033504241687
+      ],
+      "baseline_target_to_goal_l2": 2.003726654431889,
+      "selected_target_to_goal_l2": 1.2256711199724013,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.7345327138900757
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 9,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "bathroom cabinet",
+      "sentence": "bathroom cabinet",
+      "task_time_sec": 233.27398795902263,
+      "steps_total": 142,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 9.126819610595703,
+      "end_goal_geo": 4.896474361419678,
+      "episode_cum_distance": 9.443609366193414,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 111,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -1.72031,
+          0.436,
+          -6.08728
+        ],
+        [
+          -4.32408,
+          3.56418,
+          -8.3895
+        ]
+      ],
+      "baseline_target_position": [
+        -4.232395172119141,
+        1.2135673761367798,
+        -4.709479808807373
+      ],
+      "selected_target_position": [
+        -3.964480400085449,
+        0.013377934694290161,
+        -3.8700196743011475
+      ],
+      "baseline_target_to_goal_l2": 2.9687566931736806,
+      "selected_target_to_goal_l2": 3.1829473050336743,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.3243169784545898
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 10,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.7511602386055182,
+      "object_category": "cabinet",
+      "sentence": "cabinet",
+      "task_time_sec": 184.1469743020134,
+      "steps_total": 124,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.07736587524414,
+      "end_goal_geo": 0.09959694743156433,
+      "episode_cum_distance": 10.753186151385307,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 106,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -1.72031,
+          0.436,
+          -6.08728
+        ],
+        [
+          -4.32408,
+          3.56418,
+          -8.3895
+        ],
+        [
+          0.59852,
+          0.52664,
+          -4.3001
+        ],
+        [
+          3.78052,
+          0.30183,
+          -6.87918
+        ],
+        [
+          -3.44945,
+          1.91517,
+          -0.73493
+        ],
+        [
+          -6.13531,
+          1.92519,
+          0.64733
+        ],
+        [
+          -3.48151,
+          0.43497,
+          -0.54433
+        ],
+        [
+          -0.21129,
+          3.59345,
+          -5.02502
+        ],
+        [
+          1.6839,
+          0.67873,
+          -4.93562
+        ]
+      ],
+      "baseline_target_position": [
+        -3.0436244010925293,
+        3.858996868133545,
+        -2.4911110401153564
+      ],
+      "selected_target_position": [
+        -1.6497734036163174,
+        3.132918357849121,
+        -5.503132734298706
+      ],
+      "baseline_target_to_goal_l2": 2.650911004856091,
+      "selected_target_to_goal_l2": 1.5842713412166352,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.03991430997848511
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 11,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "toilet",
+      "sentence": "toilet",
+      "task_time_sec": 199.00527331698686,
+      "steps_total": 213,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 9.420768737792969,
+      "end_goal_geo": 8.012831687927246,
+      "episode_cum_distance": 21.750002497807145,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 13,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.85591,
+          0.30209,
+          -4.01625
+        ],
+        [
+          -5.75198,
+          3.61786,
+          -8.3146
+        ]
+      ],
+      "baseline_target_position": [
+        -1.080369234085083,
+        0.5930668115615845,
+        -8.12829303741455
+      ],
+      "selected_target_position": [
+        -0.2774333357810974,
+        0.013377934694290161,
+        -8.023420333862305
+      ],
+      "baseline_target_to_goal_l2": 5.5684855450421535,
+      "selected_target_to_goal_l2": 6.091241031681169,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.38636016845703125
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 12,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "shower curtain",
+      "sentence": "shower curtain",
+      "task_time_sec": 193.28714069502894,
+      "steps_total": 155,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.132699012756348,
+      "end_goal_geo": 7.833269119262695,
+      "episode_cum_distance": 13.505026996135712,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 44,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -6.30196,
+          4.02907,
+          -7.72028
+        ]
+      ],
+      "baseline_target_position": [
+        -5.759788513183594,
+        4.347754001617432,
+        -0.11285707354545593
+      ],
+      "selected_target_position": [
+        -5.562835454940796,
+        3.1133780479431152,
+        -1.321807068910271
+      ],
+      "baseline_target_to_goal_l2": 7.633373631360503,
+      "selected_target_to_goal_l2": 6.505786093475462,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.39862775802612305
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 13,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "photo",
+      "sentence": "photo",
+      "task_time_sec": 175.45767924992833,
+      "steps_total": 217,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.805129051208496,
+      "end_goal_geo": 5.3501715660095215,
+      "episode_cum_distance": 23.01202490925789,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 89,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -4.46674,
+          4.22521,
+          0.80584
+        ]
+      ],
+      "baseline_target_position": [
+        -8.428914070129395,
+        4.336826324462891,
+        -4.865571022033691
+      ],
+      "selected_target_position": [
+        -7.757012712665214,
+        3.1633780002593994,
+        -4.283798822013948
+      ],
+      "baseline_target_to_goal_l2": 6.919261849846238,
+      "selected_target_to_goal_l2": 6.152869660405131,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.5580539703369141
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 14,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "cross trainer",
+      "sentence": "cross trainer",
+      "task_time_sec": 180.85528102901299,
+      "steps_total": 116,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 3.030106782913208,
+      "end_goal_geo": 2.324159622192383,
+      "episode_cum_distance": 9.00127598643303,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 18,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.30149,
+          3.87267,
+          -4.53182
+        ]
+      ],
+      "baseline_target_position": [
+        -3.724928140640259,
+        3.8224916458129883,
+        -4.407516956329346
+      ],
+      "selected_target_position": [
+        -4.2400835854311785,
+        3.1133780479431152,
+        -2.6147911765415772
+      ],
+      "baseline_target_to_goal_l2": 0.5919397702157442,
+      "selected_target_to_goal_l2": 2.0628365243467393,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.06420594453811646
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 15,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.6875574219659629,
+      "object_category": "couch",
+      "sentence": "couch",
+      "task_time_sec": 631.0203599180095,
+      "steps_total": 266,
+      "decisions_total_episode_counter": 11,
+      "task_decision_start": 0,
+      "task_decision_count": 11,
+      "end_reason": "final_decision",
+      "start_goal_geo": 13.925498962402344,
+      "end_goal_geo": 0.03557005524635315,
+      "episode_cum_distance": 20.253579581156373,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 70,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -11.11151,
+          0.5661,
+          -0.3677
+        ],
+        [
+          -4.51569,
+          3.55406,
+          -3.42574
+        ],
+        [
+          -6.59397,
+          3.52994,
+          -1.46677
+        ],
+        [
+          -9.24927,
+          0.51143,
+          -3.26289
+        ]
+      ],
+      "baseline_target_position": [
+        -8.842000961303711,
+        0.6578922867774963,
+        -2.7699010372161865
+      ],
+      "selected_target_position": [
+        -8.842029444958044,
+        0.013377934694290161,
+        -2.0287083337187086
+      ],
+      "baseline_target_to_goal_l2": 0.656016302202432,
+      "selected_target_to_goal_l2": 1.3917992365319893,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 5.219174385070801
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 16,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.7273948673825751,
+      "object_category": "shelving",
+      "sentence": "shelving",
+      "task_time_sec": 273.30911092995666,
+      "steps_total": 192,
+      "decisions_total_episode_counter": 8,
+      "task_decision_start": 0,
+      "task_decision_count": 8,
+      "end_reason": "final_decision",
+      "start_goal_geo": 10.004483222961426,
+      "end_goal_geo": 0.04028816148638725,
+      "episode_cum_distance": 13.75385457277298,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 84,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -2.99139,
+          4.02401,
+          -1.21294
+        ]
+      ],
+      "baseline_target_position": [
+        -3.067601442337036,
+        3.907623291015625,
+        -1.3164558410644531
+      ],
+      "selected_target_position": [
+        -3.929647959868113,
+        3.1133780479431152,
+        -1.4553684918396173
+      ],
+      "baseline_target_to_goal_l2": 0.1734058226317272,
+      "selected_target_to_goal_l2": 1.3297932640145373,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 2.9455671310424805
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 17,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "pc tower",
+      "sentence": "pc tower",
+      "task_time_sec": 174.1740032080561,
+      "steps_total": 144,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 10.185064315795898,
+      "end_goal_geo": 6.941242694854736,
+      "episode_cum_distance": 10.755850300192833,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 41,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -4.38825,
+          3.27783,
+          0.4592
+        ]
+      ],
+      "baseline_target_position": [
+        -5.608912944793701,
+        3.638274908065796,
+        -5.953615188598633
+      ],
+      "selected_target_position": [
+        -3.192468468310794,
+        3.1133780479431152,
+        -5.046995896901161
+      ],
+      "baseline_target_to_goal_l2": 6.53790006039128,
+      "selected_target_to_goal_l2": 5.636943424509021,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.05292662978172302
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 18,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.8597101374200219,
+      "object_category": "computer desk",
+      "sentence": "computer desk",
+      "task_time_sec": 172.78707526996732,
+      "steps_total": 133,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 10.105731964111328,
+      "end_goal_geo": 0.1527828425168991,
+      "episode_cum_distance": 11.754813075065613,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 56,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.91651,
+          3.44521,
+          0.58958
+        ]
+      ],
+      "baseline_target_position": [
+        -4.56130313873291,
+        3.751055955886841,
+        0.29661816358566284
+      ],
+      "selected_target_position": [
+        -4.327694873879365,
+        3.1133780479431152,
+        -0.5939281313054278
+      ],
+      "baseline_target_to_goal_l2": 0.5527569996108721,
+      "selected_target_to_goal_l2": 1.3629039562714635,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.322155475616455
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 19,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.4387817388675359,
+      "object_category": "printer",
+      "sentence": "printer",
+      "task_time_sec": 268.09234380407725,
+      "steps_total": 166,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.1743059158325195,
+      "end_goal_geo": 0.08616700023412704,
+      "episode_cum_distance": 16.350511610507965,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 112,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -4.44416,
+          3.88428,
+          0.60389
+        ]
+      ],
+      "baseline_target_position": [
+        -4.877342700958252,
+        3.834106922149658,
+        0.30759090185165405
+      ],
+      "selected_target_position": [
+        -4.083355554962794,
+        3.1133780479431152,
+        -0.3416520344375553
+      ],
+      "baseline_target_to_goal_l2": 0.5272169816251994,
+      "selected_target_to_goal_l2": 1.272210440977448,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.8438328504562378
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 20,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "side table",
+      "sentence": "side table",
+      "task_time_sec": 224.1096596349962,
+      "steps_total": 113,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 10.648506164550781,
+      "end_goal_geo": 9.524776458740234,
+      "episode_cum_distance": 7.750001415610313,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 63,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -3.00454,
+          3.2852,
+          0.47348
+        ],
+        [
+          -6.52151,
+          3.3252,
+          0.1821
+        ],
+        [
+          -6.51398,
+          3.38777,
+          -2.84769
+        ],
+        [
+          -8.62393,
+          0.34295,
+          0.34652
+        ],
+        [
+          -10.68226,
+          0.32506,
+          -3.2489
+        ],
+        [
+          -7.89995,
+          0.28874,
+          -3.19289
+        ]
+      ],
+      "baseline_target_position": [
+        0.2221052050590515,
+        0.37724629044532776,
+        -8.38736629486084
+      ],
+      "selected_target_position": [
+        -0.3117822838842401,
+        0.013377934694290161,
+        -7.406460561308539
+      ],
+      "baseline_target_to_goal_l2": 9.22638121624342,
+      "selected_target_to_goal_l2": 8.404532548026872,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 2.3261308670043945
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 21,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "table",
+      "sentence": "table",
+      "task_time_sec": 345.06370222906116,
+      "steps_total": 158,
+      "decisions_total_episode_counter": 6,
+      "task_decision_start": 0,
+      "task_decision_count": 6,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.427663803100586,
+      "end_goal_geo": 7.376833915710449,
+      "episode_cum_distance": 11.754270236939192,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 120,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -3.00454,
+          3.2852,
+          0.47348
+        ],
+        [
+          -6.52151,
+          3.3252,
+          0.1821
+        ],
+        [
+          -6.51398,
+          3.38777,
+          -2.84769
+        ],
+        [
+          -8.62393,
+          0.34295,
+          0.34652
+        ],
+        [
+          -10.68226,
+          0.32506,
+          -3.2489
+        ],
+        [
+          -7.89995,
+          0.28874,
+          -3.19289
+        ],
+        [
+          0.5969,
+          0.72388,
+          -2.56286
+        ]
+      ],
+      "baseline_target_position": [
+        3.2864022254943848,
+        0.39878952503204346,
+        -8.389443397521973
+      ],
+      "selected_target_position": [
+        3.312939405441284,
+        0.013377934694290161,
+        -7.532821178436279
+      ],
+      "baseline_target_to_goal_l2": 6.425587920660088,
+      "selected_target_to_goal_l2": 5.708081757637784,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 4.453987121582031
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 22,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "blanket",
+      "sentence": "blanket",
+      "task_time_sec": 154.9839416850591,
+      "steps_total": 121,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.257126808166504,
+      "end_goal_geo": 8.466347694396973,
+      "episode_cum_distance": 8.978108808398247,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 22,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -6.74151,
+          3.76903,
+          -1.5229
+        ],
+        [
+          -5.01746,
+          1.7966,
+          -8.50728
+        ]
+      ],
+      "baseline_target_position": [
+        1.7703289985656738,
+        3.6452176570892334,
+        -6.1723713874816895
+      ],
+      "selected_target_position": [
+        0.6029987335205078,
+        3.1133780479431152,
+        -5.7228803634643555
+      ],
+      "baseline_target_to_goal_l2": 7.412372424532071,
+      "selected_target_to_goal_l2": 6.409082784509158,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.49918854236602783
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 23,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "picture",
+      "sentence": "picture",
+      "task_time_sec": 220.23460997396614,
+      "steps_total": 114,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 9.147637367248535,
+      "end_goal_geo": 7.078229904174805,
+      "episode_cum_distance": 6.500864773988724,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 0,
+      "module_helpful": null,
+      "module_reason": "baseline_target_kept",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": false,
+      "vistals_input_slot_index": 67,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.46674,
+          4.22521,
+          0.80584
+        ],
+        [
+          -7.87147,
+          4.9052,
+          -4.87651
+        ],
+        [
+          -8.54151,
+          4.32214,
+          -4.86306
+        ],
+        [
+          -12.16183,
+          1.7591,
+          -3.0699
+        ],
+        [
+          -5.27129,
+          1.6352,
+          -5.11298
+        ],
+        [
+          -4.4986,
+          1.50551,
+          -4.02265
+        ],
+        [
+          -2.58588,
+          1.68511,
+          -1.4329
+        ],
+        [
+          0.71047,
+          1.78532,
+          -4.54169
+        ],
+        [
+          -3.74151,
+          1.63633,
+          -5.10356
+        ]
+      ],
+      "baseline_target_position": [
+        -2.4048573970794678,
+        1.4455034732818604,
+        -8.049881935119629
+      ],
+      "selected_target_position": [
+        -2.4048573970794678,
+        1.4455034732818604,
+        -8.049881935119629
+      ],
+      "baseline_target_to_goal_l2": 3.2409671225670613,
+      "selected_target_to_goal_l2": 3.2409671225670613,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.6835947036743164
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 24,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "fireplace",
+      "sentence": "fireplace",
+      "task_time_sec": 205.01966210000683,
+      "steps_total": 159,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 11.895548820495605,
+      "end_goal_geo": 15.588475227355957,
+      "episode_cum_distance": 13.750004136934876,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 45,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -9.71872,
+          0.68522,
+          0.83246
+        ]
+      ],
+      "baseline_target_position": [
+        3.3572728633880615,
+        0.9546810388565063,
+        -8.02042293548584
+      ],
+      "selected_target_position": [
+        3.3079145398335354,
+        0.013377934694290161,
+        -7.7448510342079775
+      ],
+      "baseline_target_to_goal_l2": 15.793281321000189,
+      "selected_target_to_goal_l2": 15.611369055039477,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.9885135889053345
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 25,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "floor mat",
+      "sentence": "floor mat",
+      "task_time_sec": 159.5352947480278,
+      "steps_total": 134,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 9.969090461730957,
+      "end_goal_geo": 4.292011737823486,
+      "episode_cum_distance": 10.000000515952706,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 26,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -9.6615,
+          0.00077,
+          0.40648
+        ],
+        [
+          -4.70958,
+          0.0115,
+          -0.04865
+        ]
+      ],
+      "baseline_target_position": [
+        -1.4930886030197144,
+        0.6418376564979553,
+        -4.96755313873291
+      ],
+      "selected_target_position": [
+        -1.0411065062074893,
+        0.013377934694290161,
+        -3.6335524769752583
+      ],
+      "baseline_target_to_goal_l2": 5.9109009936120565,
+      "selected_target_to_goal_l2": 5.129252096623863,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 2.1391396522521973
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 26,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "plant",
+      "sentence": "plant",
+      "task_time_sec": 166.1820298769744,
+      "steps_total": 121,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.122753143310547,
+      "end_goal_geo": 8.252612113952637,
+      "episode_cum_distance": 8.478005344048142,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 71,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -8.5715,
+          0.69739,
+          0.4771
+        ],
+        [
+          -10.85151,
+          0.6552,
+          -3.2406
+        ],
+        [
+          -7.72975,
+          0.66945,
+          -3.12466
+        ],
+        [
+          0.72988,
+          1.15738,
+          -4.05528
+        ]
+      ],
+      "baseline_target_position": [
+        -1.6722218990325928,
+        0.9622038006782532,
+        -5.837869167327881
+      ],
+      "selected_target_position": [
+        3.232175642143226,
+        0.013377934694290161,
+        -7.587344181730523
+      ],
+      "baseline_target_to_goal_l2": 2.997634304179277,
+      "selected_target_to_goal_l2": 4.477242632466596,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.0198049545288086
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 27,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "wall clock",
+      "sentence": "wall clock",
+      "task_time_sec": 176.05526314501185,
+      "steps_total": 162,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.239452838897705,
+      "end_goal_geo": 4.6876397132873535,
+      "episode_cum_distance": 12.534752301871777,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 21,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -5.22581,
+          1.9952,
+          -3.48907
+        ]
+      ],
+      "baseline_target_position": [
+        3.6973602771759033,
+        0.8442994952201843,
+        -6.612164497375488
+      ],
+      "selected_target_position": [
+        0.7029991149902344,
+        0.013377934694290161,
+        -3.622880458831787
+      ],
+      "baseline_target_to_goal_l2": 9.523720859355075,
+      "selected_target_to_goal_l2": 6.252703532026499,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.7079265117645264
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 28,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "flag",
+      "sentence": "flag",
+      "task_time_sec": 252.63391527801286,
+      "steps_total": 174,
+      "decisions_total_episode_counter": 7,
+      "task_decision_start": 0,
+      "task_decision_count": 7,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.830477714538574,
+      "end_goal_geo": 4.723923683166504,
+      "episode_cum_distance": 12.500160202383995,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 95,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -2.77156,
+          1.28518,
+          -3.49914
+        ]
+      ],
+      "baseline_target_position": [
+        1.6863820552825928,
+        1.7051849365234375,
+        -4.915598392486572
+      ],
+      "selected_target_position": [
+        1.5675974059104918,
+        0.013377934694290161,
+        -5.851133688290914
+      ],
+      "baseline_target_to_goal_l2": 4.696382213215497,
+      "selected_target_to_goal_l2": 5.0968266398165865,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.403874158859253
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 29,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.34895558913220176,
+      "object_category": "refrigerator",
+      "sentence": "refrigerator",
+      "task_time_sec": 208.55434075801168,
+      "steps_total": 201,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.415307998657227,
+      "end_goal_geo": 0.11204644292593002,
+      "episode_cum_distance": 21.250004956498742,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 4,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -3.16405,
+          0.84659,
+          -1.74326
+        ]
+      ],
+      "baseline_target_position": [
+        -2.955785036087036,
+        4.210977077484131,
+        -1.580043911933899
+      ],
+      "selected_target_position": [
+        -3.9582882804131785,
+        0.013377934694290161,
+        -1.4565468071316998
+      ],
+      "baseline_target_to_goal_l2": 3.374776169428053,
+      "selected_target_to_goal_l2": 1.186280425030028,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.01702570915222168
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 30,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "kitchen cabinet",
+      "sentence": "kitchen cabinet",
+      "task_time_sec": 278.40355143800844,
+      "steps_total": 172,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 10.216252326965332,
+      "end_goal_geo": 3.496273994445801,
+      "episode_cum_distance": 17.25000005401671,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 39,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -3.44945,
+          1.91517,
+          -0.73493
+        ],
+        [
+          -6.13531,
+          1.92519,
+          0.64733
+        ],
+        [
+          -3.48151,
+          0.43497,
+          -0.54433
+        ]
+      ],
+      "baseline_target_position": [
+        0.11573964357376099,
+        1.0184904336929321,
+        -6.7260870933532715
+      ],
+      "selected_target_position": [
+        -1.6573425430059432,
+        0.013377934694290161,
+        -4.9490542984008785
+      ],
+      "baseline_target_to_goal_l2": 7.029123327735504,
+      "selected_target_to_goal_l2": 4.786117730019605,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.15796518325805664
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 31,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "coffee machine",
+      "sentence": "coffee machine",
+      "task_time_sec": 173.4527653499972,
+      "steps_total": 114,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 10.89974594116211,
+      "end_goal_geo": 9.616634368896484,
+      "episode_cum_distance": 7.25000318326056,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 0,
+      "module_helpful": null,
+      "module_reason": "baseline_target_kept",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": false,
+      "vistals_input_slot_index": 66,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -2.93708,
+          1.06909,
+          -0.17143
+        ],
+        [
+          -3.67056,
+          1.07897,
+          0.66144
+        ]
+      ],
+      "baseline_target_position": [
+        -2.5352907180786133,
+        0.13825902342796326,
+        -6.661092758178711
+      ],
+      "selected_target_position": [
+        -2.5352907180786133,
+        0.13825902342796326,
+        -6.661092758178711
+      ],
+      "baseline_target_to_goal_l2": 6.568379073173584,
+      "selected_target_to_goal_l2": 6.568379073173584,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 2.037165641784668
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 32,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "worktop",
+      "sentence": "worktop",
+      "task_time_sec": 220.00767523096874,
+      "steps_total": 151,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.924453735351562,
+      "end_goal_geo": 7.82816219329834,
+      "episode_cum_distance": 12.000000486150384,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 53,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.31151,
+          0.87918,
+          -0.25839
+        ]
+      ],
+      "baseline_target_position": [
+        -1.46652090549469,
+        0.7949111461639404,
+        -6.098330974578857
+      ],
+      "selected_target_position": [
+        -1.8481983307997387,
+        0.013377934694290161,
+        -6.836829864184062
+      ],
+      "baseline_target_to_goal_l2": 6.4966125614928005,
+      "selected_target_to_goal_l2": 7.077668305493825,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 4.211215019226074
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 33,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.4319602445741481,
+      "object_category": "kitchen top",
+      "sentence": "kitchen top",
+      "task_time_sec": 447.786445253063,
+      "steps_total": 219,
+      "decisions_total_episode_counter": 7,
+      "task_decision_start": 0,
+      "task_decision_count": 7,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.315234184265137,
+      "end_goal_geo": 0.14331819117069244,
+      "episode_cum_distance": 19.249998787418008,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 117,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.31151,
+          0.87918,
+          -0.25839
+        ]
+      ],
+      "baseline_target_position": [
+        -5.192765235900879,
+        0.631292462348938,
+        -1.491405963897705
+      ],
+      "selected_target_position": [
+        -3.9502441247304283,
+        0.013377934694290161,
+        -1.4614408228422204
+      ],
+      "baseline_target_to_goal_l2": 1.5357041998223508,
+      "selected_target_to_goal_l2": 1.5256007116094519,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.7047275304794312
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 34,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "kitchen sink",
+      "sentence": "kitchen sink",
+      "task_time_sec": 201.08038645901252,
+      "steps_total": 129,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 9.778031349182129,
+      "end_goal_geo": 9.267940521240234,
+      "episode_cum_distance": 9.000001618638635,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 21,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -4.77501,
+          0.76925,
+          0.4571
+        ]
+      ],
+      "baseline_target_position": [
+        -2.1665279865264893,
+        0.7577159404754639,
+        -6.050987243652344
+      ],
+      "selected_target_position": [
+        -1.3806606539940924,
+        0.013377934694290161,
+        -6.896230565313924
+      ],
+      "baseline_target_to_goal_l2": 7.011384386847885,
+      "selected_target_to_goal_l2": 8.134151490144514,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.27403759956359863
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 35,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.4837687634524256,
+      "object_category": "sink",
+      "sentence": "sink",
+      "task_time_sec": 142.10250357794575,
+      "steps_total": 154,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 6.288997173309326,
+      "end_goal_geo": 0.08016587048768997,
+      "episode_cum_distance": 13.000006714835763,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 53,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.72171,
+          0.41408,
+          -4.792
+        ],
+        [
+          -1.27413,
+          0.7552,
+          -6.09345
+        ],
+        [
+          -2.16636,
+          0.73809,
+          -6.09509
+        ],
+        [
+          -4.77501,
+          0.76925,
+          0.4571
+        ]
+      ],
+      "baseline_target_position": [
+        -1.3037599325180054,
+        0.7599923610687256,
+        -6.0493388175964355
+      ],
+      "selected_target_position": [
+        -1.2558371831549824,
+        0.013377934694290161,
+        -6.688520480029774
+      ],
+      "baseline_target_to_goal_l2": 0.053354437853613525,
+      "selected_target_to_goal_l2": 0.9511800460088614,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.5827803611755371
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 36,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.5184658462318802,
+      "object_category": "microwave",
+      "sentence": "microwave",
+      "task_time_sec": 269.0714788379846,
+      "steps_total": 137,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.6482930183410645,
+      "end_goal_geo": 0.06250655651092529,
+      "episode_cum_distance": 14.751777911558747,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 58,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -6.24149,
+          1.63732,
+          0.5359
+        ]
+      ],
+      "baseline_target_position": [
+        -6.2436203956604,
+        1.7245129346847534,
+        0.5348572731018066
+      ],
+      "selected_target_position": [
+        -6.576619803563299,
+        0.013377934694290161,
+        -0.5039453668911025
+      ],
+      "baseline_target_to_goal_l2": 0.08722518973320566,
+      "selected_target_to_goal_l2": 1.9572373907501976,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.4029545783996582
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 37,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.4231933738343617,
+      "object_category": "oven and stove",
+      "sentence": "oven and stove",
+      "task_time_sec": 462.0007130809827,
+      "steps_total": 273,
+      "decisions_total_episode_counter": 10,
+      "task_decision_start": 0,
+      "task_decision_count": 10,
+      "end_reason": "final_decision",
+      "start_goal_geo": 10.156639099121094,
+      "end_goal_geo": 0.04091733694076538,
+      "episode_cum_distance": 23.999995574355125,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 142,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -6.20151,
+          0.59082,
+          0.4163
+        ]
+      ],
+      "baseline_target_position": [
+        -6.087712287902832,
+        0.5644992589950562,
+        0.5464125871658325
+      ],
+      "selected_target_position": [
+        -6.195441854225015,
+        0.013377934694290161,
+        -0.48269871945651066
+      ],
+      "baseline_target_to_goal_l2": 0.17484846589142725,
+      "selected_target_to_goal_l2": 1.0684918618137043,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 3.75589656829834
+    }
+  ],
+  "object": [
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 0,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "wardrobe",
+      "sentence": "wardrobe",
+      "task_time_sec": 327.53179006592836,
+      "steps_total": 179,
+      "decisions_total_episode_counter": 6,
+      "task_decision_start": 0,
+      "task_decision_count": 6,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.691944122314453,
+      "end_goal_geo": 5.801042556762695,
+      "episode_cum_distance": 15.250002468004823,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 44,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -0.21129,
+          3.59345,
+          -5.02502
+        ],
+        [
+          -3.0413,
+          3.92635,
+          -2.47722
+        ],
+        [
+          -2.99139,
+          4.02401,
+          -1.21294
+        ],
+        [
+          1.6839,
+          0.67873,
+          -4.93562
+        ],
+        [
+          -2.37497,
+          3.99337,
+          -6.1985
+        ]
+      ],
+      "baseline_target_position": [
+        -2.1076788902282715,
+        1.4756696224212646,
+        -5.154825687408447
+      ],
+      "selected_target_position": [
+        -3.7470016479492188,
+        0.013377934694290161,
+        -4.074683666229248
+      ],
+      "baseline_target_to_goal_l2": 2.738524383566186,
+      "selected_target_to_goal_l2": 4.285003543137819,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.8894529342651367
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 1,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.4303458137814727,
+      "object_category": "tv",
+      "sentence": "tv",
+      "task_time_sec": 245.00339495099615,
+      "steps_total": 183,
+      "decisions_total_episode_counter": 6,
+      "task_decision_start": 0,
+      "task_decision_count": 6,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.536632537841797,
+      "end_goal_geo": 0.1033664271235466,
+      "episode_cum_distance": 17.51296816766262,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 86,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -0.15094,
+          4.30008,
+          -4.8529
+        ],
+        [
+          -9.70876,
+          2.04168,
+          0.67388
+        ],
+        [
+          1.61155,
+          1.71578,
+          -4.87655
+        ]
+      ],
+      "baseline_target_position": [
+        -0.2082851082086563,
+        4.274524688720703,
+        -4.913377285003662
+      ],
+      "selected_target_position": [
+        -0.2753956161237634,
+        3.1133780479431152,
+        -5.8226467752456665
+      ],
+      "baseline_target_to_goal_l2": 0.08717245764264336,
+      "selected_target_to_goal_l2": 1.5375823657611765,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 6.1826677322387695
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 2,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.867812507893363,
+      "object_category": "dresser",
+      "sentence": "dresser",
+      "task_time_sec": 261.7753420099616,
+      "steps_total": 123,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.402759552001953,
+      "end_goal_geo": 0.07000438123941422,
+      "episode_cum_distance": 9.682690069079399,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 21,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          3.78052,
+          0.30183,
+          -6.87918
+        ],
+        [
+          -0.21129,
+          3.59345,
+          -5.02502
+        ],
+        [
+          1.6839,
+          0.67873,
+          -4.93562
+        ]
+      ],
+      "baseline_target_position": [
+        -1.372040867805481,
+        2.4222934246063232,
+        -5.073121547698975
+      ],
+      "selected_target_position": [
+        -1.8991459864052291,
+        3.1133780479431152,
+        -5.348049458927682
+      ],
+      "baseline_target_to_goal_l2": 1.6496254302386522,
+      "selected_target_to_goal_l2": 1.7842855548736554,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.48079913854599
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 3,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.5279400343492605,
+      "object_category": "bed",
+      "sentence": "bed",
+      "task_time_sec": 404.3160387510434,
+      "steps_total": 230,
+      "decisions_total_episode_counter": 9,
+      "task_decision_start": 0,
+      "task_decision_count": 9,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.713109016418457,
+      "end_goal_geo": 0.05804024264216423,
+      "episode_cum_distance": 16.50397478789091,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 156,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -0.11123,
+          4.2913,
+          -7.6972
+        ],
+        [
+          1.7875,
+          0.81575,
+          -7.53384
+        ]
+      ],
+      "baseline_target_position": [
+        1.6854071617126465,
+        0.6881517767906189,
+        -7.364773273468018
+      ],
+      "selected_target_position": [
+        0.2731812554027244,
+        0.013377934694290161,
+        -7.54639874898613
+      ],
+      "baseline_target_to_goal_l2": 0.23513360503339115,
+      "selected_target_to_goal_l2": 1.7138027639135478,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 5.790677547454834
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 4,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "nightstand",
+      "sentence": "nightstand",
+      "task_time_sec": 223.7608342389576,
+      "steps_total": 176,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 10.753911018371582,
+      "end_goal_geo": 13.685494422912598,
+      "episode_cum_distance": 19.75518255867064,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 57,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -1.27152,
+          3.53914,
+          -8.49409
+        ],
+        [
+          0.21495,
+          0.38029,
+          -8.41313
+        ],
+        [
+          3.34433,
+          0.27929,
+          -8.47848
+        ]
+      ],
+      "baseline_target_position": [
+        -10.613752365112305,
+        0.5533161759376526,
+        -3.2709779739379883
+      ],
+      "selected_target_position": [
+        -11.032564005735981,
+        0.013377934694290161,
+        -2.3563423122509044
+      ],
+      "baseline_target_to_goal_l2": 11.111856222471733,
+      "selected_target_to_goal_l2": 12.057401249918346,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 2.31551456451416
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 5,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "plush toy",
+      "sentence": "plush toy",
+      "task_time_sec": 196.22347025002819,
+      "steps_total": 139,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.993315696716309,
+      "end_goal_geo": 9.77180004119873,
+      "episode_cum_distance": 11.250349208712578,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 49,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -1.4517,
+          4.07733,
+          -8.49779
+        ],
+        [
+          -1.44114,
+          4.0887,
+          -8.62607
+        ]
+      ],
+      "baseline_target_position": [
+        -3.209671974182129,
+        3.720463752746582,
+        -1.458694577217102
+      ],
+      "selected_target_position": [
+        -4.1976634520841305,
+        3.1276509761810303,
+        -1.582898238384195
+      ],
+      "baseline_target_to_goal_l2": 7.264067961650806,
+      "selected_target_to_goal_l2": 7.5005288882401935,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.5501877069473267
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 6,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.7201062114383111,
+      "object_category": "armchair",
+      "sentence": "armchair",
+      "task_time_sec": 173.42322554206476,
+      "steps_total": 152,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 10.801594734191895,
+      "end_goal_geo": 0.07423713803291321,
+      "episode_cum_distance": 15.000002169981599,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 89,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -11.11151,
+          0.5661,
+          -0.3677
+        ],
+        [
+          -7.86612,
+          0.49594,
+          -0.01946
+        ],
+        [
+          1.44466,
+          3.56965,
+          -5.65514
+        ]
+      ],
+      "baseline_target_position": [
+        -11.211202621459961,
+        0.523196816444397,
+        -0.1861094832420349
+      ],
+      "selected_target_position": [
+        -9.718102744420369,
+        0.013377934694290161,
+        -0.3834624025893087
+      ],
+      "baseline_target_to_goal_l2": 0.21155239944087012,
+      "selected_target_to_goal_l2": 1.4991110414886413,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.9608645439147949
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 7,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "bath towel",
+      "sentence": "bath towel",
+      "task_time_sec": 342.01389597693924,
+      "steps_total": 220,
+      "decisions_total_episode_counter": 8,
+      "task_decision_start": 0,
+      "task_decision_count": 8,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.357213020324707,
+      "end_goal_geo": 8.523198127746582,
+      "episode_cum_distance": 17.980277741327882,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 46,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -3.53551,
+          3.8552,
+          -7.8586
+        ],
+        [
+          -3.0215,
+          0.72057,
+          -7.79128
+        ],
+        [
+          -2.68033,
+          0.6998,
+          -7.79055
+        ]
+      ],
+      "baseline_target_position": [
+        -3.5322353839874268,
+        0.6293342113494873,
+        -4.686715126037598
+      ],
+      "selected_target_position": [
+        -3.9737415313720703,
+        0.013377934694290161,
+        -4.027459144592285
+      ],
+      "baseline_target_to_goal_l2": 3.14761777511639,
+      "selected_target_to_goal_l2": 3.9462934486557444,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 2.186020851135254
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 8,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "towel",
+      "sentence": "towel",
+      "task_time_sec": 273.4664822689956,
+      "steps_total": 174,
+      "decisions_total_episode_counter": 7,
+      "task_decision_start": 0,
+      "task_decision_count": 7,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.537842273712158,
+      "end_goal_geo": 0.4339005649089813,
+      "episode_cum_distance": 13.750000515952706,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 136,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.76276,
+          1.14258,
+          -5.05863
+        ],
+        [
+          -3.53551,
+          3.8552,
+          -7.8586
+        ],
+        [
+          -3.0215,
+          0.72057,
+          -7.79128
+        ],
+        [
+          -2.68033,
+          0.6998,
+          -7.79055
+        ]
+      ],
+      "baseline_target_position": [
+        -1.3666263818740845,
+        0.645542323589325,
+        -6.278544902801514
+      ],
+      "selected_target_position": [
+        -1.8014071273100636,
+        0.013377934694290161,
+        -7.282033504241687
+      ],
+      "baseline_target_to_goal_l2": 2.003726654431889,
+      "selected_target_to_goal_l2": 1.2256711199724013,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.7345327138900757
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 9,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "bathroom cabinet",
+      "sentence": "bathroom cabinet",
+      "task_time_sec": 233.27398795902263,
+      "steps_total": 142,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 9.126819610595703,
+      "end_goal_geo": 4.896474361419678,
+      "episode_cum_distance": 9.443609366193414,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 111,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -1.72031,
+          0.436,
+          -6.08728
+        ],
+        [
+          -4.32408,
+          3.56418,
+          -8.3895
+        ]
+      ],
+      "baseline_target_position": [
+        -4.232395172119141,
+        1.2135673761367798,
+        -4.709479808807373
+      ],
+      "selected_target_position": [
+        -3.964480400085449,
+        0.013377934694290161,
+        -3.8700196743011475
+      ],
+      "baseline_target_to_goal_l2": 2.9687566931736806,
+      "selected_target_to_goal_l2": 3.1829473050336743,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.3243169784545898
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 10,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.7511602386055182,
+      "object_category": "cabinet",
+      "sentence": "cabinet",
+      "task_time_sec": 184.1469743020134,
+      "steps_total": 124,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.07736587524414,
+      "end_goal_geo": 0.09959694743156433,
+      "episode_cum_distance": 10.753186151385307,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 106,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -1.72031,
+          0.436,
+          -6.08728
+        ],
+        [
+          -4.32408,
+          3.56418,
+          -8.3895
+        ],
+        [
+          0.59852,
+          0.52664,
+          -4.3001
+        ],
+        [
+          3.78052,
+          0.30183,
+          -6.87918
+        ],
+        [
+          -3.44945,
+          1.91517,
+          -0.73493
+        ],
+        [
+          -6.13531,
+          1.92519,
+          0.64733
+        ],
+        [
+          -3.48151,
+          0.43497,
+          -0.54433
+        ],
+        [
+          -0.21129,
+          3.59345,
+          -5.02502
+        ],
+        [
+          1.6839,
+          0.67873,
+          -4.93562
+        ]
+      ],
+      "baseline_target_position": [
+        -3.0436244010925293,
+        3.858996868133545,
+        -2.4911110401153564
+      ],
+      "selected_target_position": [
+        -1.6497734036163174,
+        3.132918357849121,
+        -5.503132734298706
+      ],
+      "baseline_target_to_goal_l2": 2.650911004856091,
+      "selected_target_to_goal_l2": 1.5842713412166352,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.03991430997848511
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 11,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "toilet",
+      "sentence": "toilet",
+      "task_time_sec": 199.00527331698686,
+      "steps_total": 213,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 9.420768737792969,
+      "end_goal_geo": 8.012831687927246,
+      "episode_cum_distance": 21.750002497807145,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 13,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.85591,
+          0.30209,
+          -4.01625
+        ],
+        [
+          -5.75198,
+          3.61786,
+          -8.3146
+        ]
+      ],
+      "baseline_target_position": [
+        -1.080369234085083,
+        0.5930668115615845,
+        -8.12829303741455
+      ],
+      "selected_target_position": [
+        -0.2774333357810974,
+        0.013377934694290161,
+        -8.023420333862305
+      ],
+      "baseline_target_to_goal_l2": 5.5684855450421535,
+      "selected_target_to_goal_l2": 6.091241031681169,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.38636016845703125
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 12,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "shower curtain",
+      "sentence": "shower curtain",
+      "task_time_sec": 193.28714069502894,
+      "steps_total": 155,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.132699012756348,
+      "end_goal_geo": 7.833269119262695,
+      "episode_cum_distance": 13.505026996135712,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 44,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -6.30196,
+          4.02907,
+          -7.72028
+        ]
+      ],
+      "baseline_target_position": [
+        -5.759788513183594,
+        4.347754001617432,
+        -0.11285707354545593
+      ],
+      "selected_target_position": [
+        -5.562835454940796,
+        3.1133780479431152,
+        -1.321807068910271
+      ],
+      "baseline_target_to_goal_l2": 7.633373631360503,
+      "selected_target_to_goal_l2": 6.505786093475462,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.39862775802612305
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 13,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "photo",
+      "sentence": "photo",
+      "task_time_sec": 175.45767924992833,
+      "steps_total": 217,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.805129051208496,
+      "end_goal_geo": 5.3501715660095215,
+      "episode_cum_distance": 23.01202490925789,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 89,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -4.46674,
+          4.22521,
+          0.80584
+        ]
+      ],
+      "baseline_target_position": [
+        -8.428914070129395,
+        4.336826324462891,
+        -4.865571022033691
+      ],
+      "selected_target_position": [
+        -7.757012712665214,
+        3.1633780002593994,
+        -4.283798822013948
+      ],
+      "baseline_target_to_goal_l2": 6.919261849846238,
+      "selected_target_to_goal_l2": 6.152869660405131,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.5580539703369141
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 14,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "cross trainer",
+      "sentence": "cross trainer",
+      "task_time_sec": 180.85528102901299,
+      "steps_total": 116,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 3.030106782913208,
+      "end_goal_geo": 2.324159622192383,
+      "episode_cum_distance": 9.00127598643303,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 18,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.30149,
+          3.87267,
+          -4.53182
+        ]
+      ],
+      "baseline_target_position": [
+        -3.724928140640259,
+        3.8224916458129883,
+        -4.407516956329346
+      ],
+      "selected_target_position": [
+        -4.2400835854311785,
+        3.1133780479431152,
+        -2.6147911765415772
+      ],
+      "baseline_target_to_goal_l2": 0.5919397702157442,
+      "selected_target_to_goal_l2": 2.0628365243467393,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.06420594453811646
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 15,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.6875574219659629,
+      "object_category": "couch",
+      "sentence": "couch",
+      "task_time_sec": 631.0203599180095,
+      "steps_total": 266,
+      "decisions_total_episode_counter": 11,
+      "task_decision_start": 0,
+      "task_decision_count": 11,
+      "end_reason": "final_decision",
+      "start_goal_geo": 13.925498962402344,
+      "end_goal_geo": 0.03557005524635315,
+      "episode_cum_distance": 20.253579581156373,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 70,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -11.11151,
+          0.5661,
+          -0.3677
+        ],
+        [
+          -4.51569,
+          3.55406,
+          -3.42574
+        ],
+        [
+          -6.59397,
+          3.52994,
+          -1.46677
+        ],
+        [
+          -9.24927,
+          0.51143,
+          -3.26289
+        ]
+      ],
+      "baseline_target_position": [
+        -8.842000961303711,
+        0.6578922867774963,
+        -2.7699010372161865
+      ],
+      "selected_target_position": [
+        -8.842029444958044,
+        0.013377934694290161,
+        -2.0287083337187086
+      ],
+      "baseline_target_to_goal_l2": 0.656016302202432,
+      "selected_target_to_goal_l2": 1.3917992365319893,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 5.219174385070801
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 16,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.7273948673825751,
+      "object_category": "shelving",
+      "sentence": "shelving",
+      "task_time_sec": 273.30911092995666,
+      "steps_total": 192,
+      "decisions_total_episode_counter": 8,
+      "task_decision_start": 0,
+      "task_decision_count": 8,
+      "end_reason": "final_decision",
+      "start_goal_geo": 10.004483222961426,
+      "end_goal_geo": 0.04028816148638725,
+      "episode_cum_distance": 13.75385457277298,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 84,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -2.99139,
+          4.02401,
+          -1.21294
+        ]
+      ],
+      "baseline_target_position": [
+        -3.067601442337036,
+        3.907623291015625,
+        -1.3164558410644531
+      ],
+      "selected_target_position": [
+        -3.929647959868113,
+        3.1133780479431152,
+        -1.4553684918396173
+      ],
+      "baseline_target_to_goal_l2": 0.1734058226317272,
+      "selected_target_to_goal_l2": 1.3297932640145373,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 2.9455671310424805
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 17,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "pc tower",
+      "sentence": "pc tower",
+      "task_time_sec": 174.1740032080561,
+      "steps_total": 144,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 10.185064315795898,
+      "end_goal_geo": 6.941242694854736,
+      "episode_cum_distance": 10.755850300192833,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 41,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -4.38825,
+          3.27783,
+          0.4592
+        ]
+      ],
+      "baseline_target_position": [
+        -5.608912944793701,
+        3.638274908065796,
+        -5.953615188598633
+      ],
+      "selected_target_position": [
+        -3.192468468310794,
+        3.1133780479431152,
+        -5.046995896901161
+      ],
+      "baseline_target_to_goal_l2": 6.53790006039128,
+      "selected_target_to_goal_l2": 5.636943424509021,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.05292662978172302
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 18,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.8597101374200219,
+      "object_category": "computer desk",
+      "sentence": "computer desk",
+      "task_time_sec": 172.78707526996732,
+      "steps_total": 133,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 10.105731964111328,
+      "end_goal_geo": 0.1527828425168991,
+      "episode_cum_distance": 11.754813075065613,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 56,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.91651,
+          3.44521,
+          0.58958
+        ]
+      ],
+      "baseline_target_position": [
+        -4.56130313873291,
+        3.751055955886841,
+        0.29661816358566284
+      ],
+      "selected_target_position": [
+        -4.327694873879365,
+        3.1133780479431152,
+        -0.5939281313054278
+      ],
+      "baseline_target_to_goal_l2": 0.5527569996108721,
+      "selected_target_to_goal_l2": 1.3629039562714635,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.322155475616455
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 19,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.4387817388675359,
+      "object_category": "printer",
+      "sentence": "printer",
+      "task_time_sec": 268.09234380407725,
+      "steps_total": 166,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.1743059158325195,
+      "end_goal_geo": 0.08616700023412704,
+      "episode_cum_distance": 16.350511610507965,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 112,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -4.44416,
+          3.88428,
+          0.60389
+        ]
+      ],
+      "baseline_target_position": [
+        -4.877342700958252,
+        3.834106922149658,
+        0.30759090185165405
+      ],
+      "selected_target_position": [
+        -4.083355554962794,
+        3.1133780479431152,
+        -0.3416520344375553
+      ],
+      "baseline_target_to_goal_l2": 0.5272169816251994,
+      "selected_target_to_goal_l2": 1.272210440977448,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.8438328504562378
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 20,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "side table",
+      "sentence": "side table",
+      "task_time_sec": 224.1096596349962,
+      "steps_total": 113,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 10.648506164550781,
+      "end_goal_geo": 9.524776458740234,
+      "episode_cum_distance": 7.750001415610313,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 63,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -3.00454,
+          3.2852,
+          0.47348
+        ],
+        [
+          -6.52151,
+          3.3252,
+          0.1821
+        ],
+        [
+          -6.51398,
+          3.38777,
+          -2.84769
+        ],
+        [
+          -8.62393,
+          0.34295,
+          0.34652
+        ],
+        [
+          -10.68226,
+          0.32506,
+          -3.2489
+        ],
+        [
+          -7.89995,
+          0.28874,
+          -3.19289
+        ]
+      ],
+      "baseline_target_position": [
+        0.2221052050590515,
+        0.37724629044532776,
+        -8.38736629486084
+      ],
+      "selected_target_position": [
+        -0.3117822838842401,
+        0.013377934694290161,
+        -7.406460561308539
+      ],
+      "baseline_target_to_goal_l2": 9.22638121624342,
+      "selected_target_to_goal_l2": 8.404532548026872,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 2.3261308670043945
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 21,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "table",
+      "sentence": "table",
+      "task_time_sec": 345.06370222906116,
+      "steps_total": 158,
+      "decisions_total_episode_counter": 6,
+      "task_decision_start": 0,
+      "task_decision_count": 6,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.427663803100586,
+      "end_goal_geo": 7.376833915710449,
+      "episode_cum_distance": 11.754270236939192,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 120,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -3.00454,
+          3.2852,
+          0.47348
+        ],
+        [
+          -6.52151,
+          3.3252,
+          0.1821
+        ],
+        [
+          -6.51398,
+          3.38777,
+          -2.84769
+        ],
+        [
+          -8.62393,
+          0.34295,
+          0.34652
+        ],
+        [
+          -10.68226,
+          0.32506,
+          -3.2489
+        ],
+        [
+          -7.89995,
+          0.28874,
+          -3.19289
+        ],
+        [
+          0.5969,
+          0.72388,
+          -2.56286
+        ]
+      ],
+      "baseline_target_position": [
+        3.2864022254943848,
+        0.39878952503204346,
+        -8.389443397521973
+      ],
+      "selected_target_position": [
+        3.312939405441284,
+        0.013377934694290161,
+        -7.532821178436279
+      ],
+      "baseline_target_to_goal_l2": 6.425587920660088,
+      "selected_target_to_goal_l2": 5.708081757637784,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 4.453987121582031
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 22,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "blanket",
+      "sentence": "blanket",
+      "task_time_sec": 154.9839416850591,
+      "steps_total": 121,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.257126808166504,
+      "end_goal_geo": 8.466347694396973,
+      "episode_cum_distance": 8.978108808398247,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 22,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -6.74151,
+          3.76903,
+          -1.5229
+        ],
+        [
+          -5.01746,
+          1.7966,
+          -8.50728
+        ]
+      ],
+      "baseline_target_position": [
+        1.7703289985656738,
+        3.6452176570892334,
+        -6.1723713874816895
+      ],
+      "selected_target_position": [
+        0.6029987335205078,
+        3.1133780479431152,
+        -5.7228803634643555
+      ],
+      "baseline_target_to_goal_l2": 7.412372424532071,
+      "selected_target_to_goal_l2": 6.409082784509158,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.49918854236602783
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 23,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "picture",
+      "sentence": "picture",
+      "task_time_sec": 220.23460997396614,
+      "steps_total": 114,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 9.147637367248535,
+      "end_goal_geo": 7.078229904174805,
+      "episode_cum_distance": 6.500864773988724,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 0,
+      "module_helpful": null,
+      "module_reason": "baseline_target_kept",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": false,
+      "vistals_input_slot_index": 67,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.46674,
+          4.22521,
+          0.80584
+        ],
+        [
+          -7.87147,
+          4.9052,
+          -4.87651
+        ],
+        [
+          -8.54151,
+          4.32214,
+          -4.86306
+        ],
+        [
+          -12.16183,
+          1.7591,
+          -3.0699
+        ],
+        [
+          -5.27129,
+          1.6352,
+          -5.11298
+        ],
+        [
+          -4.4986,
+          1.50551,
+          -4.02265
+        ],
+        [
+          -2.58588,
+          1.68511,
+          -1.4329
+        ],
+        [
+          0.71047,
+          1.78532,
+          -4.54169
+        ],
+        [
+          -3.74151,
+          1.63633,
+          -5.10356
+        ]
+      ],
+      "baseline_target_position": [
+        -2.4048573970794678,
+        1.4455034732818604,
+        -8.049881935119629
+      ],
+      "selected_target_position": [
+        -2.4048573970794678,
+        1.4455034732818604,
+        -8.049881935119629
+      ],
+      "baseline_target_to_goal_l2": 3.2409671225670613,
+      "selected_target_to_goal_l2": 3.2409671225670613,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.6835947036743164
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 24,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "fireplace",
+      "sentence": "fireplace",
+      "task_time_sec": 205.01966210000683,
+      "steps_total": 159,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 11.895548820495605,
+      "end_goal_geo": 15.588475227355957,
+      "episode_cum_distance": 13.750004136934876,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 45,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -9.71872,
+          0.68522,
+          0.83246
+        ]
+      ],
+      "baseline_target_position": [
+        3.3572728633880615,
+        0.9546810388565063,
+        -8.02042293548584
+      ],
+      "selected_target_position": [
+        3.3079145398335354,
+        0.013377934694290161,
+        -7.7448510342079775
+      ],
+      "baseline_target_to_goal_l2": 15.793281321000189,
+      "selected_target_to_goal_l2": 15.611369055039477,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.9885135889053345
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 25,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "floor mat",
+      "sentence": "floor mat",
+      "task_time_sec": 159.5352947480278,
+      "steps_total": 134,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 9.969090461730957,
+      "end_goal_geo": 4.292011737823486,
+      "episode_cum_distance": 10.000000515952706,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 26,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -9.6615,
+          0.00077,
+          0.40648
+        ],
+        [
+          -4.70958,
+          0.0115,
+          -0.04865
+        ]
+      ],
+      "baseline_target_position": [
+        -1.4930886030197144,
+        0.6418376564979553,
+        -4.96755313873291
+      ],
+      "selected_target_position": [
+        -1.0411065062074893,
+        0.013377934694290161,
+        -3.6335524769752583
+      ],
+      "baseline_target_to_goal_l2": 5.9109009936120565,
+      "selected_target_to_goal_l2": 5.129252096623863,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 2.1391396522521973
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 26,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "plant",
+      "sentence": "plant",
+      "task_time_sec": 166.1820298769744,
+      "steps_total": 121,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.122753143310547,
+      "end_goal_geo": 8.252612113952637,
+      "episode_cum_distance": 8.478005344048142,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 71,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -8.5715,
+          0.69739,
+          0.4771
+        ],
+        [
+          -10.85151,
+          0.6552,
+          -3.2406
+        ],
+        [
+          -7.72975,
+          0.66945,
+          -3.12466
+        ],
+        [
+          0.72988,
+          1.15738,
+          -4.05528
+        ]
+      ],
+      "baseline_target_position": [
+        -1.6722218990325928,
+        0.9622038006782532,
+        -5.837869167327881
+      ],
+      "selected_target_position": [
+        3.232175642143226,
+        0.013377934694290161,
+        -7.587344181730523
+      ],
+      "baseline_target_to_goal_l2": 2.997634304179277,
+      "selected_target_to_goal_l2": 4.477242632466596,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.0198049545288086
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 27,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "wall clock",
+      "sentence": "wall clock",
+      "task_time_sec": 176.05526314501185,
+      "steps_total": 162,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.239452838897705,
+      "end_goal_geo": 4.6876397132873535,
+      "episode_cum_distance": 12.534752301871777,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 21,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -5.22581,
+          1.9952,
+          -3.48907
+        ]
+      ],
+      "baseline_target_position": [
+        3.6973602771759033,
+        0.8442994952201843,
+        -6.612164497375488
+      ],
+      "selected_target_position": [
+        0.7029991149902344,
+        0.013377934694290161,
+        -3.622880458831787
+      ],
+      "baseline_target_to_goal_l2": 9.523720859355075,
+      "selected_target_to_goal_l2": 6.252703532026499,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.7079265117645264
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 28,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "flag",
+      "sentence": "flag",
+      "task_time_sec": 252.63391527801286,
+      "steps_total": 174,
+      "decisions_total_episode_counter": 7,
+      "task_decision_start": 0,
+      "task_decision_count": 7,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.830477714538574,
+      "end_goal_geo": 4.723923683166504,
+      "episode_cum_distance": 12.500160202383995,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 95,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -2.77156,
+          1.28518,
+          -3.49914
+        ]
+      ],
+      "baseline_target_position": [
+        1.6863820552825928,
+        1.7051849365234375,
+        -4.915598392486572
+      ],
+      "selected_target_position": [
+        1.5675974059104918,
+        0.013377934694290161,
+        -5.851133688290914
+      ],
+      "baseline_target_to_goal_l2": 4.696382213215497,
+      "selected_target_to_goal_l2": 5.0968266398165865,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.403874158859253
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 29,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.34895558913220176,
+      "object_category": "refrigerator",
+      "sentence": "refrigerator",
+      "task_time_sec": 208.55434075801168,
+      "steps_total": 201,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.415307998657227,
+      "end_goal_geo": 0.11204644292593002,
+      "episode_cum_distance": 21.250004956498742,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 4,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -3.16405,
+          0.84659,
+          -1.74326
+        ]
+      ],
+      "baseline_target_position": [
+        -2.955785036087036,
+        4.210977077484131,
+        -1.580043911933899
+      ],
+      "selected_target_position": [
+        -3.9582882804131785,
+        0.013377934694290161,
+        -1.4565468071316998
+      ],
+      "baseline_target_to_goal_l2": 3.374776169428053,
+      "selected_target_to_goal_l2": 1.186280425030028,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.01702570915222168
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 30,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "kitchen cabinet",
+      "sentence": "kitchen cabinet",
+      "task_time_sec": 278.40355143800844,
+      "steps_total": 172,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 10.216252326965332,
+      "end_goal_geo": 3.496273994445801,
+      "episode_cum_distance": 17.25000005401671,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 39,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -3.44945,
+          1.91517,
+          -0.73493
+        ],
+        [
+          -6.13531,
+          1.92519,
+          0.64733
+        ],
+        [
+          -3.48151,
+          0.43497,
+          -0.54433
+        ]
+      ],
+      "baseline_target_position": [
+        0.11573964357376099,
+        1.0184904336929321,
+        -6.7260870933532715
+      ],
+      "selected_target_position": [
+        -1.6573425430059432,
+        0.013377934694290161,
+        -4.9490542984008785
+      ],
+      "baseline_target_to_goal_l2": 7.029123327735504,
+      "selected_target_to_goal_l2": 4.786117730019605,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.15796518325805664
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 31,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "coffee machine",
+      "sentence": "coffee machine",
+      "task_time_sec": 173.4527653499972,
+      "steps_total": 114,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 10.89974594116211,
+      "end_goal_geo": 9.616634368896484,
+      "episode_cum_distance": 7.25000318326056,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 0,
+      "module_helpful": null,
+      "module_reason": "baseline_target_kept",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": false,
+      "vistals_input_slot_index": 66,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -2.93708,
+          1.06909,
+          -0.17143
+        ],
+        [
+          -3.67056,
+          1.07897,
+          0.66144
+        ]
+      ],
+      "baseline_target_position": [
+        -2.5352907180786133,
+        0.13825902342796326,
+        -6.661092758178711
+      ],
+      "selected_target_position": [
+        -2.5352907180786133,
+        0.13825902342796326,
+        -6.661092758178711
+      ],
+      "baseline_target_to_goal_l2": 6.568379073173584,
+      "selected_target_to_goal_l2": 6.568379073173584,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 2.037165641784668
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 32,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "worktop",
+      "sentence": "worktop",
+      "task_time_sec": 220.00767523096874,
+      "steps_total": 151,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.924453735351562,
+      "end_goal_geo": 7.82816219329834,
+      "episode_cum_distance": 12.000000486150384,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 53,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.31151,
+          0.87918,
+          -0.25839
+        ]
+      ],
+      "baseline_target_position": [
+        -1.46652090549469,
+        0.7949111461639404,
+        -6.098330974578857
+      ],
+      "selected_target_position": [
+        -1.8481983307997387,
+        0.013377934694290161,
+        -6.836829864184062
+      ],
+      "baseline_target_to_goal_l2": 6.4966125614928005,
+      "selected_target_to_goal_l2": 7.077668305493825,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 4.211215019226074
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 33,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.4319602445741481,
+      "object_category": "kitchen top",
+      "sentence": "kitchen top",
+      "task_time_sec": 447.786445253063,
+      "steps_total": 219,
+      "decisions_total_episode_counter": 7,
+      "task_decision_start": 0,
+      "task_decision_count": 7,
+      "end_reason": "final_decision",
+      "start_goal_geo": 8.315234184265137,
+      "end_goal_geo": 0.14331819117069244,
+      "episode_cum_distance": 19.249998787418008,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": true,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 117,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.31151,
+          0.87918,
+          -0.25839
+        ]
+      ],
+      "baseline_target_position": [
+        -5.192765235900879,
+        0.631292462348938,
+        -1.491405963897705
+      ],
+      "selected_target_position": [
+        -3.9502441247304283,
+        0.013377934694290161,
+        -1.4614408228422204
+      ],
+      "baseline_target_to_goal_l2": 1.5357041998223508,
+      "selected_target_to_goal_l2": 1.5256007116094519,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.7047275304794312
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 34,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 0.0,
+      "spl": 0.0,
+      "object_category": "kitchen sink",
+      "sentence": "kitchen sink",
+      "task_time_sec": 201.08038645901252,
+      "steps_total": 129,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 9.778031349182129,
+      "end_goal_geo": 9.267940521240234,
+      "episode_cum_distance": 9.000001618638635,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "mqsc_r1_semantic_target_then_vistals_viewpoint",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": true,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 21,
+      "vistals_input_slot_source": "mqsc_r1_selected_object",
+      "goal_positions": [
+        [
+          -4.77501,
+          0.76925,
+          0.4571
+        ]
+      ],
+      "baseline_target_position": [
+        -2.1665279865264893,
+        0.7577159404754639,
+        -6.050987243652344
+      ],
+      "selected_target_position": [
+        -1.3806606539940924,
+        0.013377934694290161,
+        -6.896230565313924
+      ],
+      "baseline_target_to_goal_l2": 7.011384386847885,
+      "selected_target_to_goal_l2": 8.134151490144514,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.27403759956359863
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 35,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.4837687634524256,
+      "object_category": "sink",
+      "sentence": "sink",
+      "task_time_sec": 142.10250357794575,
+      "steps_total": 154,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 6.288997173309326,
+      "end_goal_geo": 0.08016587048768997,
+      "episode_cum_distance": 13.000006714835763,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 53,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -4.72171,
+          0.41408,
+          -4.792
+        ],
+        [
+          -1.27413,
+          0.7552,
+          -6.09345
+        ],
+        [
+          -2.16636,
+          0.73809,
+          -6.09509
+        ],
+        [
+          -4.77501,
+          0.76925,
+          0.4571
+        ]
+      ],
+      "baseline_target_position": [
+        -1.3037599325180054,
+        0.7599923610687256,
+        -6.0493388175964355
+      ],
+      "selected_target_position": [
+        -1.2558371831549824,
+        0.013377934694290161,
+        -6.688520480029774
+      ],
+      "baseline_target_to_goal_l2": 0.053354437853613525,
+      "selected_target_to_goal_l2": 0.9511800460088614,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 0.5827803611755371
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 36,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.5184658462318802,
+      "object_category": "microwave",
+      "sentence": "microwave",
+      "task_time_sec": 269.0714788379846,
+      "steps_total": 137,
+      "decisions_total_episode_counter": 5,
+      "task_decision_start": 0,
+      "task_decision_count": 5,
+      "end_reason": "final_decision",
+      "start_goal_geo": 7.6482930183410645,
+      "end_goal_geo": 0.06250655651092529,
+      "episode_cum_distance": 14.751777911558747,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 58,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -6.24149,
+          1.63732,
+          0.5359
+        ]
+      ],
+      "baseline_target_position": [
+        -6.2436203956604,
+        1.7245129346847534,
+        0.5348572731018066
+      ],
+      "selected_target_position": [
+        -6.576619803563299,
+        0.013377934694290161,
+        -0.5039453668911025
+      ],
+      "baseline_target_to_goal_l2": 0.08722518973320566,
+      "selected_target_to_goal_l2": 1.9572373907501976,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 1.4029545783996582
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 37,
+      "task_id": 0,
+      "task_level": "object",
+      "navigation_type": "object",
+      "sr": 1.0,
+      "spl": 0.4231933738343617,
+      "object_category": "oven and stove",
+      "sentence": "oven and stove",
+      "task_time_sec": 462.0007130809827,
+      "steps_total": 273,
+      "decisions_total_episode_counter": 10,
+      "task_decision_start": 0,
+      "task_decision_count": 10,
+      "end_reason": "final_decision",
+      "start_goal_geo": 10.156639099121094,
+      "end_goal_geo": 0.04091733694076538,
+      "episode_cum_distance": 23.999995574355125,
+      "module_name": "vista2mqsc",
+      "module_hook_called": 1,
+      "module_hook_applied": 1,
+      "module_helpful": false,
+      "module_reason": "vistals_viewpoint_only",
+      "mqsc_r1_called": true,
+      "mqsc_r1_applied": false,
+      "vistals_called": true,
+      "vistals_applied": true,
+      "vistals_input_slot_index": 142,
+      "vistals_input_slot_source": "pq3d_baseline_object",
+      "goal_positions": [
+        [
+          -6.20151,
+          0.59082,
+          0.4163
+        ]
+      ],
+      "baseline_target_position": [
+        -6.087712287902832,
+        0.5644992589950562,
+        0.5464125871658325
+      ],
+      "selected_target_position": [
+        -6.195441854225015,
+        0.013377934694290161,
+        -0.48269871945651066
+      ],
+      "baseline_target_to_goal_l2": 0.17484846589142725,
+      "selected_target_to_goal_l2": 1.0684918618137043,
+      "baseline_target_to_goal_l2_valid": true,
+      "selected_target_to_goal_l2_valid": true,
+      "pq3d_object_top1_top2_logit_gap": 3.75589656829834
+    }
+  ],
+  "sequence_episodes": [
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 0,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          0
+        ]
+      ],
+      "task_sr": [
+        0.0
+      ],
+      "task_spl": [
+        0.0
+      ],
+      "task_success_count": 0,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 0.0,
+      "avg_task_spl": 0.0,
+      "total_task_time_sec": 327.53179006592836,
+      "episode_wall_time_sec": 327.5832429259317,
+      "total_steps": 179,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 0.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.0,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 1,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          1
+        ]
+      ],
+      "task_sr": [
+        1.0
+      ],
+      "task_spl": [
+        0.4303458137814727
+      ],
+      "task_success_count": 1,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 1.0,
+      "avg_task_spl": 0.4303458137814727,
+      "total_task_time_sec": 245.00339495099615,
+      "episode_wall_time_sec": 245.06733444007114,
+      "total_steps": 183,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 1.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.4303458137814727,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 2,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          2
+        ]
+      ],
+      "task_sr": [
+        1.0
+      ],
+      "task_spl": [
+        0.867812507893363
+      ],
+      "task_success_count": 1,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 1.0,
+      "avg_task_spl": 0.867812507893363,
+      "total_task_time_sec": 261.7753420099616,
+      "episode_wall_time_sec": 261.8641826210078,
+      "total_steps": 123,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 1.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.867812507893363,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 3,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          3
+        ]
+      ],
+      "task_sr": [
+        1.0
+      ],
+      "task_spl": [
+        0.5279400343492605
+      ],
+      "task_success_count": 1,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 1.0,
+      "avg_task_spl": 0.5279400343492605,
+      "total_task_time_sec": 404.3160387510434,
+      "episode_wall_time_sec": 404.3845168550033,
+      "total_steps": 230,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 1.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.5279400343492605,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 4,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          4
+        ]
+      ],
+      "task_sr": [
+        0.0
+      ],
+      "task_spl": [
+        0.0
+      ],
+      "task_success_count": 0,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 0.0,
+      "avg_task_spl": 0.0,
+      "total_task_time_sec": 223.7608342389576,
+      "episode_wall_time_sec": 223.84201449900866,
+      "total_steps": 176,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 0.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.0,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 5,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          5
+        ]
+      ],
+      "task_sr": [
+        0.0
+      ],
+      "task_spl": [
+        0.0
+      ],
+      "task_success_count": 0,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 0.0,
+      "avg_task_spl": 0.0,
+      "total_task_time_sec": 196.22347025002819,
+      "episode_wall_time_sec": 196.30887066700961,
+      "total_steps": 139,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 0.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.0,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 6,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          6
+        ]
+      ],
+      "task_sr": [
+        1.0
+      ],
+      "task_spl": [
+        0.7201062114383111
+      ],
+      "task_success_count": 1,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 1.0,
+      "avg_task_spl": 0.7201062114383111,
+      "total_task_time_sec": 173.42322554206476,
+      "episode_wall_time_sec": 173.5143641580362,
+      "total_steps": 152,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 1.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.7201062114383111,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 7,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          7
+        ]
+      ],
+      "task_sr": [
+        0.0
+      ],
+      "task_spl": [
+        0.0
+      ],
+      "task_success_count": 0,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 0.0,
+      "avg_task_spl": 0.0,
+      "total_task_time_sec": 342.01389597693924,
+      "episode_wall_time_sec": 342.0773823610507,
+      "total_steps": 220,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 0.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.0,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 8,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          8
+        ]
+      ],
+      "task_sr": [
+        0.0
+      ],
+      "task_spl": [
+        0.0
+      ],
+      "task_success_count": 0,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 0.0,
+      "avg_task_spl": 0.0,
+      "total_task_time_sec": 273.4664822689956,
+      "episode_wall_time_sec": 273.559618281899,
+      "total_steps": 174,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 0.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.0,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 9,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          9
+        ]
+      ],
+      "task_sr": [
+        0.0
+      ],
+      "task_spl": [
+        0.0
+      ],
+      "task_success_count": 0,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 0.0,
+      "avg_task_spl": 0.0,
+      "total_task_time_sec": 233.27398795902263,
+      "episode_wall_time_sec": 233.3433842160739,
+      "total_steps": 142,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 0.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.0,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 10,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          10
+        ]
+      ],
+      "task_sr": [
+        1.0
+      ],
+      "task_spl": [
+        0.7511602386055182
+      ],
+      "task_success_count": 1,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 1.0,
+      "avg_task_spl": 0.7511602386055182,
+      "total_task_time_sec": 184.1469743020134,
+      "episode_wall_time_sec": 184.2333744049538,
+      "total_steps": 124,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 1.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.7511602386055182,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 11,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          11
+        ]
+      ],
+      "task_sr": [
+        0.0
+      ],
+      "task_spl": [
+        0.0
+      ],
+      "task_success_count": 0,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 0.0,
+      "avg_task_spl": 0.0,
+      "total_task_time_sec": 199.00527331698686,
+      "episode_wall_time_sec": 199.07103628502227,
+      "total_steps": 213,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 0.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.0,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 12,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          12
+        ]
+      ],
+      "task_sr": [
+        0.0
+      ],
+      "task_spl": [
+        0.0
+      ],
+      "task_success_count": 0,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 0.0,
+      "avg_task_spl": 0.0,
+      "total_task_time_sec": 193.28714069502894,
+      "episode_wall_time_sec": 193.34854447306134,
+      "total_steps": 155,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 0.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.0,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 13,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          13
+        ]
+      ],
+      "task_sr": [
+        0.0
+      ],
+      "task_spl": [
+        0.0
+      ],
+      "task_success_count": 0,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 0.0,
+      "avg_task_spl": 0.0,
+      "total_task_time_sec": 175.45767924992833,
+      "episode_wall_time_sec": 175.51956906495616,
+      "total_steps": 217,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 0.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.0,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 14,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          14
+        ]
+      ],
+      "task_sr": [
+        0.0
+      ],
+      "task_spl": [
+        0.0
+      ],
+      "task_success_count": 0,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 0.0,
+      "avg_task_spl": 0.0,
+      "total_task_time_sec": 180.85528102901299,
+      "episode_wall_time_sec": 180.9163020279957,
+      "total_steps": 116,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 0.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.0,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 15,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          15
+        ]
+      ],
+      "task_sr": [
+        1.0
+      ],
+      "task_spl": [
+        0.6875574219659629
+      ],
+      "task_success_count": 1,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 1.0,
+      "avg_task_spl": 0.6875574219659629,
+      "total_task_time_sec": 631.0203599180095,
+      "episode_wall_time_sec": 631.116387471091,
+      "total_steps": 266,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 1.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.6875574219659629,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 16,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          16
+        ]
+      ],
+      "task_sr": [
+        1.0
+      ],
+      "task_spl": [
+        0.7273948673825751
+      ],
+      "task_success_count": 1,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 1.0,
+      "avg_task_spl": 0.7273948673825751,
+      "total_task_time_sec": 273.30911092995666,
+      "episode_wall_time_sec": 273.36994937993586,
+      "total_steps": 192,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 1.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.7273948673825751,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 17,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          17
+        ]
+      ],
+      "task_sr": [
+        0.0
+      ],
+      "task_spl": [
+        0.0
+      ],
+      "task_success_count": 0,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 0.0,
+      "avg_task_spl": 0.0,
+      "total_task_time_sec": 174.1740032080561,
+      "episode_wall_time_sec": 174.2519253139617,
+      "total_steps": 144,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 0.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.0,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 18,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          18
+        ]
+      ],
+      "task_sr": [
+        1.0
+      ],
+      "task_spl": [
+        0.8597101374200219
+      ],
+      "task_success_count": 1,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 1.0,
+      "avg_task_spl": 0.8597101374200219,
+      "total_task_time_sec": 172.78707526996732,
+      "episode_wall_time_sec": 172.85828087001573,
+      "total_steps": 133,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 1.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.8597101374200219,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 19,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          19
+        ]
+      ],
+      "task_sr": [
+        1.0
+      ],
+      "task_spl": [
+        0.4387817388675359
+      ],
+      "task_success_count": 1,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 1.0,
+      "avg_task_spl": 0.4387817388675359,
+      "total_task_time_sec": 268.09234380407725,
+      "episode_wall_time_sec": 268.4050294049084,
+      "total_steps": 166,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 1.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.4387817388675359,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 20,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          20
+        ]
+      ],
+      "task_sr": [
+        0.0
+      ],
+      "task_spl": [
+        0.0
+      ],
+      "task_success_count": 0,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 0.0,
+      "avg_task_spl": 0.0,
+      "total_task_time_sec": 224.1096596349962,
+      "episode_wall_time_sec": 224.17449898796622,
+      "total_steps": 113,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 0.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.0,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 21,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          21
+        ]
+      ],
+      "task_sr": [
+        0.0
+      ],
+      "task_spl": [
+        0.0
+      ],
+      "task_success_count": 0,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 0.0,
+      "avg_task_spl": 0.0,
+      "total_task_time_sec": 345.06370222906116,
+      "episode_wall_time_sec": 345.1411268290831,
+      "total_steps": 158,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 0.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.0,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 22,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          22
+        ]
+      ],
+      "task_sr": [
+        0.0
+      ],
+      "task_spl": [
+        0.0
+      ],
+      "task_success_count": 0,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 0.0,
+      "avg_task_spl": 0.0,
+      "total_task_time_sec": 154.9839416850591,
+      "episode_wall_time_sec": 155.02597297902685,
+      "total_steps": 121,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 0.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.0,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 23,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          23
+        ]
+      ],
+      "task_sr": [
+        0.0
+      ],
+      "task_spl": [
+        0.0
+      ],
+      "task_success_count": 0,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 0.0,
+      "avg_task_spl": 0.0,
+      "total_task_time_sec": 220.23460997396614,
+      "episode_wall_time_sec": 220.3072404289851,
+      "total_steps": 114,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 0.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.0,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 24,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          24
+        ]
+      ],
+      "task_sr": [
+        0.0
+      ],
+      "task_spl": [
+        0.0
+      ],
+      "task_success_count": 0,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 0.0,
+      "avg_task_spl": 0.0,
+      "total_task_time_sec": 205.01966210000683,
+      "episode_wall_time_sec": 205.08765323099215,
+      "total_steps": 159,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 0.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.0,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 25,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          25
+        ]
+      ],
+      "task_sr": [
+        0.0
+      ],
+      "task_spl": [
+        0.0
+      ],
+      "task_success_count": 0,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 0.0,
+      "avg_task_spl": 0.0,
+      "total_task_time_sec": 159.5352947480278,
+      "episode_wall_time_sec": 159.6107557329815,
+      "total_steps": 134,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 0.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.0,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 26,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          26
+        ]
+      ],
+      "task_sr": [
+        0.0
+      ],
+      "task_spl": [
+        0.0
+      ],
+      "task_success_count": 0,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 0.0,
+      "avg_task_spl": 0.0,
+      "total_task_time_sec": 166.1820298769744,
+      "episode_wall_time_sec": 166.25859239103738,
+      "total_steps": 121,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 0.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.0,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 27,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          27
+        ]
+      ],
+      "task_sr": [
+        0.0
+      ],
+      "task_spl": [
+        0.0
+      ],
+      "task_success_count": 0,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 0.0,
+      "avg_task_spl": 0.0,
+      "total_task_time_sec": 176.05526314501185,
+      "episode_wall_time_sec": 176.15455938398372,
+      "total_steps": 162,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 0.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.0,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 28,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          28
+        ]
+      ],
+      "task_sr": [
+        0.0
+      ],
+      "task_spl": [
+        0.0
+      ],
+      "task_success_count": 0,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 0.0,
+      "avg_task_spl": 0.0,
+      "total_task_time_sec": 252.63391527801286,
+      "episode_wall_time_sec": 252.72181648295373,
+      "total_steps": 174,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 0.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.0,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 29,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          29
+        ]
+      ],
+      "task_sr": [
+        1.0
+      ],
+      "task_spl": [
+        0.34895558913220176
+      ],
+      "task_success_count": 1,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 1.0,
+      "avg_task_spl": 0.34895558913220176,
+      "total_task_time_sec": 208.55434075801168,
+      "episode_wall_time_sec": 208.63470642804168,
+      "total_steps": 201,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 1.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.34895558913220176,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 30,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          30
+        ]
+      ],
+      "task_sr": [
+        0.0
+      ],
+      "task_spl": [
+        0.0
+      ],
+      "task_success_count": 0,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 0.0,
+      "avg_task_spl": 0.0,
+      "total_task_time_sec": 278.40355143800844,
+      "episode_wall_time_sec": 278.4768483280204,
+      "total_steps": 172,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 0.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.0,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 31,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          31
+        ]
+      ],
+      "task_sr": [
+        0.0
+      ],
+      "task_spl": [
+        0.0
+      ],
+      "task_success_count": 0,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 0.0,
+      "avg_task_spl": 0.0,
+      "total_task_time_sec": 173.4527653499972,
+      "episode_wall_time_sec": 173.52813703706488,
+      "total_steps": 114,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 0.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.0,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 32,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          32
+        ]
+      ],
+      "task_sr": [
+        0.0
+      ],
+      "task_spl": [
+        0.0
+      ],
+      "task_success_count": 0,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 0.0,
+      "avg_task_spl": 0.0,
+      "total_task_time_sec": 220.00767523096874,
+      "episode_wall_time_sec": 220.09958276699763,
+      "total_steps": 151,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 0.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.0,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 33,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          33
+        ]
+      ],
+      "task_sr": [
+        1.0
+      ],
+      "task_spl": [
+        0.4319602445741481
+      ],
+      "task_success_count": 1,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 1.0,
+      "avg_task_spl": 0.4319602445741481,
+      "total_task_time_sec": 447.786445253063,
+      "episode_wall_time_sec": 447.86416819505394,
+      "total_steps": 219,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 1.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.4319602445741481,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 34,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          34
+        ]
+      ],
+      "task_sr": [
+        0.0
+      ],
+      "task_spl": [
+        0.0
+      ],
+      "task_success_count": 0,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 0.0,
+      "avg_task_spl": 0.0,
+      "total_task_time_sec": 201.08038645901252,
+      "episode_wall_time_sec": 201.16049536003266,
+      "total_steps": 129,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 0.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.0,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 35,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          35
+        ]
+      ],
+      "task_sr": [
+        1.0
+      ],
+      "task_spl": [
+        0.4837687634524256
+      ],
+      "task_success_count": 1,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 1.0,
+      "avg_task_spl": 0.4837687634524256,
+      "total_task_time_sec": 142.10250357794575,
+      "episode_wall_time_sec": 142.18116342893336,
+      "total_steps": 154,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 1.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.4837687634524256,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 36,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          36
+        ]
+      ],
+      "task_sr": [
+        1.0
+      ],
+      "task_spl": [
+        0.5184658462318802
+      ],
+      "task_success_count": 1,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 1.0,
+      "avg_task_spl": 0.5184658462318802,
+      "total_task_time_sec": 269.0714788379846,
+      "episode_wall_time_sec": 269.1349350090604,
+      "total_steps": 137,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 1.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.5184658462318802,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    },
+    {
+      "scene_name": "00800-TEEsavR23oF",
+      "episode_id": 37,
+      "navigation_type": "object",
+      "expected_task_count": 1,
+      "completed_task_count": 1,
+      "sequence_complete": true,
+      "sequence_metric_definition": "Single-goal wrapper over one LangMap task; success_at_1 equals SR.",
+      "task_sequence": [
+        [
+          "object",
+          37
+        ]
+      ],
+      "task_sr": [
+        1.0
+      ],
+      "task_spl": [
+        0.4231933738343617
+      ],
+      "task_success_count": 1,
+      "task_levels": [
+        "object"
+      ],
+      "task_end_reasons": [
+        "final_decision"
+      ],
+      "avg_task_sr": 1.0,
+      "avg_task_spl": 0.4231933738343617,
+      "total_task_time_sec": 462.0007130809827,
+      "episode_wall_time_sec": 462.0774339570198,
+      "total_steps": 273,
+      "prefix_success_at_4": 0.0,
+      "any_contiguous_4_success": 0.0,
+      "success_at_1": 1.0,
+      "success_at_2": 0.0,
+      "success_at_3": 0.0,
+      "success_at_4": 0.0,
+      "success_at_5": 0.0,
+      "spl_at_1": 0.4231933738343617,
+      "spl_at_2": 0.0,
+      "spl_at_3": 0.0,
+      "spl_at_4": 0.0,
+      "spl_at_5": 0.0
+    }
+  ],
+  "sequence_episode_metrics": {
+    "episode_count": 38,
+    "success_at_1": 0.3684210526315789,
+    "spl_at_1": 0.21624086286655364,
+    "success_at_2": 0.0,
+    "spl_at_2": 0.0,
+    "success_at_3": 0.0,
+    "spl_at_3": 0.0,
+    "success_at_4": 0.0,
+    "spl_at_4": 0.0,
+    "success_at_5": 0.0,
+    "spl_at_5": 0.0,
+    "avg_task_sr": 0.3684210526315789,
+    "avg_task_spl": 0.21624086286655364
+  }
+}

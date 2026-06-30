@@ -1,0 +1,112 @@
+{
+  "decision_index": 4,
+  "pq3d_last_decision_aux": {
+    "goto_frontier_probability": 0.02056284248828888,
+    "is_object_decision": true,
+    "real_object_decision_idx": 21,
+    "n_real_objects": 124,
+    "object_top1_top2_logit_gap": 1.0059266090393066,
+    "analysis_stage2_json": "/home/chenlin/krona/anchor-nav/hm3d-online/output_logs/baseline_analysis/20260504-170544/scene=00802-wcojb4TFT35/episode=17/task=0/dec_004/stage2_decision.json"
+  },
+  "is_final_decision": true,
+  "target_habitat_xyz": [
+    1.3204255104064941,
+    0.3063527047634125,
+    -0.4483526349067688
+  ],
+  "n_scan_views": 18,
+  "n_frontiers_input": 5,
+  "object_topk": 5,
+  "object_topk_candidates": [
+    {
+      "rank_by_og3d_logit": 1,
+      "slot_index": 21,
+      "og3d_logit": -2.020784378051758,
+      "merged_object_score": 0.9950696229934692,
+      "center_habitat_xyz": [
+        1.3204255104064941,
+        0.3063527047634125,
+        -0.4483526349067688
+      ],
+      "files": {
+        "first_detection_rgb": "/home/chenlin/krona/anchor-nav/hm3d-online/output_logs/baseline_analysis/20260504-170544/scene=00802-wcojb4TFT35/episode=17/task=0/dec_004/object_candidates_topk/rank01_slot021_first_detection_rgb.jpg",
+        "mask_bev_xz": "/home/chenlin/krona/anchor-nav/hm3d-online/output_logs/baseline_analysis/20260504-170544/scene=00802-wcojb4TFT35/episode=17/task=0/dec_004/object_candidates_topk/rank01_slot021_mask_bev_xz.png"
+      }
+    },
+    {
+      "rank_by_og3d_logit": 2,
+      "slot_index": 1,
+      "og3d_logit": -3.0267109870910645,
+      "merged_object_score": 0.9816995859146118,
+      "center_habitat_xyz": [
+        -1.8307409286499023,
+        0.29207122325897217,
+        -0.5613181591033936
+      ],
+      "files": {
+        "first_detection_rgb": "/home/chenlin/krona/anchor-nav/hm3d-online/output_logs/baseline_analysis/20260504-170544/scene=00802-wcojb4TFT35/episode=17/task=0/dec_004/object_candidates_topk/rank02_slot001_first_detection_rgb.jpg",
+        "mask_bev_xz": "/home/chenlin/krona/anchor-nav/hm3d-online/output_logs/baseline_analysis/20260504-170544/scene=00802-wcojb4TFT35/episode=17/task=0/dec_004/object_candidates_topk/rank02_slot001_mask_bev_xz.png"
+      }
+    },
+    {
+      "rank_by_og3d_logit": 3,
+      "slot_index": 12,
+      "og3d_logit": -3.716381072998047,
+      "merged_object_score": 0.8459142446517944,
+      "center_habitat_xyz": [
+        0.4974551200866699,
+        1.661755919456482,
+        1.1131240129470825
+      ],
+      "files": {
+        "first_detection_rgb": "/home/chenlin/krona/anchor-nav/hm3d-online/output_logs/baseline_analysis/20260504-170544/scene=00802-wcojb4TFT35/episode=17/task=0/dec_004/object_candidates_topk/rank03_slot012_first_detection_rgb.jpg",
+        "mask_bev_xz": "/home/chenlin/krona/anchor-nav/hm3d-online/output_logs/baseline_analysis/20260504-170544/scene=00802-wcojb4TFT35/episode=17/task=0/dec_004/object_candidates_topk/rank03_slot012_mask_bev_xz.png"
+      }
+    },
+    {
+      "rank_by_og3d_logit": 4,
+      "slot_index": 14,
+      "og3d_logit": -3.7919564247131348,
+      "merged_object_score": 0.9891867637634277,
+      "center_habitat_xyz": [
+        1.5700784921646118,
+        0.3269263207912445,
+        1.1942726373672485
+      ],
+      "files": {
+        "first_detection_rgb": "/home/chenlin/krona/anchor-nav/hm3d-online/output_logs/baseline_analysis/20260504-170544/scene=00802-wcojb4TFT35/episode=17/task=0/dec_004/object_candidates_topk/rank04_slot014_first_detection_rgb.jpg",
+        "mask_bev_xz": "/home/chenlin/krona/anchor-nav/hm3d-online/output_logs/baseline_analysis/20260504-170544/scene=00802-wcojb4TFT35/episode=17/task=0/dec_004/object_candidates_topk/rank04_slot014_mask_bev_xz.png"
+      }
+    },
+    {
+      "rank_by_og3d_logit": 5,
+      "slot_index": 20,
+      "og3d_logit": -3.878080129623413,
+      "merged_object_score": 0.9355822801589966,
+      "center_habitat_xyz": [
+        1.8659584522247314,
+        1.020026683807373,
+        0.023539168760180473
+      ],
+      "files": {
+        "first_detection_rgb": "/home/chenlin/krona/anchor-nav/hm3d-online/output_logs/baseline_analysis/20260504-170544/scene=00802-wcojb4TFT35/episode=17/task=0/dec_004/object_candidates_topk/rank05_slot020_first_detection_rgb.jpg",
+        "mask_bev_xz": "/home/chenlin/krona/anchor-nav/hm3d-online/output_logs/baseline_analysis/20260504-170544/scene=00802-wcojb4TFT35/episode=17/task=0/dec_004/object_candidates_topk/rank05_slot020_mask_bev_xz.png"
+      }
+    }
+  ],
+  "topdown_legend": {
+    "object_topk": "按 stage2 og3d_logit 前 5；1=金 2=橙 3=紫 4=青 5=绿；旁注数字",
+    "agent": "红白圆点",
+    "frontier": "绿点",
+    "chosen_target": "蓝点",
+    "visited_frontier": "灰点"
+  },
+  "files": {
+    "topdown_before": "/home/chenlin/krona/anchor-nav/hm3d-online/output_logs/baseline_analysis/20260504-170544/scene=00802-wcojb4TFT35/episode=17/task=0/dec_004/topdown_before_decision.jpg",
+    "topdown_chosen": "/home/chenlin/krona/anchor-nav/hm3d-online/output_logs/baseline_analysis/20260504-170544/scene=00802-wcojb4TFT35/episode=17/task=0/dec_004/topdown_with_chosen_target.jpg",
+    "stage2_json": "/home/chenlin/krona/anchor-nav/hm3d-online/output_logs/baseline_analysis/20260504-170544/scene=00802-wcojb4TFT35/episode=17/task=0/dec_004/stage2_decision.json",
+    "memory_thumbnails_dir": "/home/chenlin/krona/anchor-nav/hm3d-online/output_logs/baseline_analysis/20260504-170544/scene=00802-wcojb4TFT35/episode=17/task=0/dec_004/memory_object_first_rgb",
+    "object_candidates_topk_index": "/home/chenlin/krona/anchor-nav/hm3d-online/output_logs/baseline_analysis/20260504-170544/scene=00802-wcojb4TFT35/episode=17/task=0/dec_004/object_candidates_topk/index.json",
+    "coselect_final": "/home/chenlin/krona/anchor-nav/hm3d-online/output_logs/baseline_analysis/20260504-170544/scene=00802-wcojb4TFT35/episode=17/task=0/dec_004/coselect_final.json"
+  }
+}
