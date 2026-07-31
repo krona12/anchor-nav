@@ -1,0 +1,146 @@
+{
+  "module": "mqsc_r1",
+  "prompt_version": "mqsc_r1_decompose_v1_object_only_region_consensus",
+  "sentence": "nightstand in the bedroom that has white-sheeted bed",
+  "decomposition": {
+    "vlm": {
+      "tag": "mqsc_decompose",
+      "vlm_client_file": "/home/chenlin/krona/anchor-nav/hm3d-online/anchor_nav/vlm/client.py",
+      "model": "gpt-4o-mini",
+      "prompt": "You decompose a RefHM3D navigation instruction for multi-query 3D object grounding.\nThe downstream algorithm will query a detector separately with full task, target, anchors, and room context.\n\nReturn strict JSON only with this exact schema:\n{\"target_desc\": string, \"target_aliases\": [string], \"anchor_primary\": [string], \"anchor_support\": [string], \"room_context\": [string], \"relations\": [string]}\n\nDefinitions and hard rules:\n1. target_desc is the primary object to navigate to, not a location or anchor.\n2. target_aliases are short alternative names for the same target object; keep 0-3.\n3. anchor_primary are the strongest nearby objects/furniture/fixtures that identify the target area; keep 0-2.\n4. anchor_support are other useful nearby concrete objects or visual area cues; keep 0-4.\n5. room_context contains room or region labels only when explicit or strongly implied; keep 0-2.\n6. Do not put the target object itself into anchor_primary, anchor_support, or room_context.\n7. Avoid generic structural anchors such as wall, floor, ceiling, door, window unless modified into a distinctive object phrase.\n8. Use lowercase concise noun phrases. No instructions, no sentences, no markdown.\n\ntask_type: region\nnavigation_instruction: nightstand in the bedroom that has white-sheeted bed",
+      "image_path": null,
+      "raw_response": "{\"target_desc\":\"nightstand\",\"target_aliases\":[\"bedside table\",\"night table\"],\"anchor_primary\":[\"white-sheeted bed\"],\"anchor_support\":[\"lamp\",\"alarm clock\"],\"room_context\":[\"bedroom\"],\"relations\":\"\"}",
+      "source": "anchor_nav_vlm_real",
+      "ok": true,
+      "error": ""
+    },
+    "parsed_roles": {
+      "target_desc": "nightstand",
+      "target_aliases": [
+        "bedside table",
+        "night table"
+      ],
+      "anchor_primary": [
+        "white-sheeted bed"
+      ],
+      "anchor_support": [
+        "lamp",
+        "alarm clock"
+      ],
+      "room_context": [
+        "bedroom"
+      ],
+      "relations": ""
+    }
+  },
+  "cluster_eps_m": 1.2,
+  "candidates": [
+    {
+      "object_index": 0,
+      "xyz": [
+        -1.8862134218215942,
+        3.1633780002593994,
+        -8.425790786743164
+      ],
+      "source": "target_cluster",
+      "footprint_radius_m": 0.3,
+      "logit": 1.1,
+      "prob": 0.21021290469853604
+    },
+    {
+      "object_index": 1,
+      "xyz": [
+        -1.8646883964538574,
+        3.1633780002593994,
+        -8.102203369140625
+      ],
+      "source": "target_cluster",
+      "footprint_radius_m": 0.3,
+      "logit": 0.9,
+      "prob": 0.17210776977054246
+    },
+    {
+      "object_index": 2,
+      "xyz": [
+        -1.852927565574646,
+        3.1633780002593994,
+        -8.126218795776367
+      ],
+      "source": "target_cluster",
+      "footprint_radius_m": 0.3,
+      "logit": 0.8,
+      "prob": 0.15572955002310498
+    },
+    {
+      "object_index": 3,
+      "xyz": [
+        2.5529985427856445,
+        0.7633779048919678,
+        -7.922880172729492
+      ],
+      "source": "distractor",
+      "footprint_radius_m": 0.3,
+      "logit": 1.6,
+      "prob": 0.34658248735213526
+    },
+    {
+      "object_index": 4,
+      "xyz": [
+        -4.415544509887695,
+        3.1308231353759766,
+        -7.922880172729492
+      ],
+      "source": "distractor",
+      "footprint_radius_m": 0.3,
+      "logit": 0.5,
+      "prob": 0.11536728815568122
+    }
+  ],
+  "clusters": [
+    {
+      "members": [
+        0,
+        1,
+        2
+      ],
+      "size": 3,
+      "noisy_or_prob": 0.4479665057799843,
+      "compactness": 0.9849342001403056,
+      "consensus": 0.4412175320600564
+    },
+    {
+      "members": [
+        3
+      ],
+      "size": 1,
+      "noisy_or_prob": 0.34658248735213526,
+      "compactness": 1.0,
+      "consensus": 0.34658248735213526
+    },
+    {
+      "members": [
+        4
+      ],
+      "size": 1,
+      "noisy_or_prob": 0.1153672881556812,
+      "compactness": 1.0,
+      "consensus": 0.1153672881556812
+    }
+  ],
+  "baseline_object_index": 3,
+  "selected_object_index": 0,
+  "mqsc_applied": true,
+  "guided_visualization_mode": true,
+  "fake_object_selection": true,
+  "guided_object_selection": {
+    "selected_object_index": 0,
+    "selected_xyz": [
+      -1.8862134218215942,
+      3.1633780002593994,
+      -8.425790786743164
+    ],
+    "note": "Visualization-only MQSC selection is pinned to the target cluster."
+  },
+  "reason": "guided_visualization_target_cluster_selected",
+  "goal_index": 2
+}

@@ -1,0 +1,112 @@
+{
+  "module": "Evidence Grounding",
+  "question": "Which frontier?",
+  "implementation_module": "Evidence Grounding",
+  "guided_visualization_mode": true,
+  "fake_frontier_selection": true,
+  "decision_idx": 4,
+  "frontier_count": 4,
+  "baseline_frontier_index": 0,
+  "rerank_frontier_index": 0,
+  "selected_frontier_index": 0,
+  "grounding_applied": true,
+  "branch_is_frontier": true,
+  "frontier_logits_source": "guided_route_waypoint",
+  "fused_score": [
+    1.0,
+    0.0,
+    0.11003921950542273,
+    0.37650426968581163
+  ],
+  "vlm_interval_allowed": true,
+  "vlm_call_count": 4,
+  "vlm_scores": [
+    {
+      "frontier_index": 0,
+      "view_index": 0,
+      "prompt": "You evaluate one CURRENT robot panorama view for test-time frontier reranking.\nThe image is already observed at the current decision step; it is not a rendered future view.\nNavigation task: bathroom cabinet in the bathroom that has blue shower curtain\nFrontier/view metadata: frontier_index=0, frontier_xyz=[-4.110465049743652, 3.1154637336730957, -7.1519269943237305], relative_bearing_rad=0.0000, current_panorama_view_index=0\n\nJudge whether moving/exploring in this viewed direction is promising for reaching the task target.\nDo not require the target object to already be visible. Reward concrete visual cues that make this direction task-facing: likely target category, named anchor objects, semantically compatible furniture, room context, signs of traversable continuation, and spatial layout that plausibly leads toward the target. Penalize dead ends, blank walls, blocked/narrow views, unrelated rooms, clutter that prevents progress, or cues that contradict the task. Keep scores calibrated: 0.0=no support, 0.5=weak/ambiguous support, 1.0=strong support.\n\nReturn strict JSON only with this exact schema:\n{\"target_context\": number between 0 and 1, \"anchor_context\": number between 0 and 1, \"room_context\": number between 0 and 1, \"negative\": number between 0 and 1, \"confidence\": number between 0 and 1, \"reason\": \"one short sentence\"}",
+      "raw": "{\"target_context\": 1.0, \"anchor_context\": 1.0, \"room_context\": 1.0, \"negative\": 0.0, \"confidence\": 0.99, \"reason\": \"guided visualization selects the route waypoint\"}",
+      "parsed": {
+        "target_context": 1.0,
+        "anchor_context": 1.0,
+        "room_context": 1.0,
+        "negative": 0.0,
+        "confidence": 0.99,
+        "reason": "guided visualization selects the route waypoint"
+      },
+      "source": "guided_visualization_fake_vlm_response",
+      "hypothesis_score": 1.0,
+      "confidence": 0.99
+    },
+    {
+      "frontier_index": 1,
+      "view_index": 1,
+      "prompt": "You evaluate one CURRENT robot panorama view for test-time frontier reranking.\nThe image is already observed at the current decision step; it is not a rendered future view.\nNavigation task: bathroom cabinet in the bathroom that has blue shower curtain\nFrontier/view metadata: frontier_index=1, frontier_xyz=[-3.3910839557647705, 3.1492037773132324, -5.872880458831787], relative_bearing_rad=0.0000, current_panorama_view_index=1\n\nJudge whether moving/exploring in this viewed direction is promising for reaching the task target.\nDo not require the target object to already be visible. Reward concrete visual cues that make this direction task-facing: likely target category, named anchor objects, semantically compatible furniture, room context, signs of traversable continuation, and spatial layout that plausibly leads toward the target. Penalize dead ends, blank walls, blocked/narrow views, unrelated rooms, clutter that prevents progress, or cues that contradict the task. Keep scores calibrated: 0.0=no support, 0.5=weak/ambiguous support, 1.0=strong support.\n\nReturn strict JSON only with this exact schema:\n{\"target_context\": number between 0 and 1, \"anchor_context\": number between 0 and 1, \"room_context\": number between 0 and 1, \"negative\": number between 0 and 1, \"confidence\": number between 0 and 1, \"reason\": \"one short sentence\"}",
+      "raw": "{\"target_context\": 0.26999999999999996, \"anchor_context\": 0.26999999999999996, \"room_context\": 0.26999999999999996, \"negative\": 0.55, \"confidence\": 0.4, \"reason\": \"guided visualization distractor frontier\"}",
+      "parsed": {
+        "target_context": 0.26999999999999996,
+        "anchor_context": 0.26999999999999996,
+        "room_context": 0.26999999999999996,
+        "negative": 0.55,
+        "confidence": 0.4,
+        "reason": "guided visualization distractor frontier"
+      },
+      "source": "guided_visualization_fake_vlm_response",
+      "hypothesis_score": 0.26999999999999996,
+      "confidence": 0.4
+    },
+    {
+      "frontier_index": 2,
+      "view_index": 2,
+      "prompt": "You evaluate one CURRENT robot panorama view for test-time frontier reranking.\nThe image is already observed at the current decision step; it is not a rendered future view.\nNavigation task: bathroom cabinet in the bathroom that has blue shower curtain\nFrontier/view metadata: frontier_index=2, frontier_xyz=[-4.972147464752197, 3.1133780479431152, -6.170542240142822], relative_bearing_rad=0.0000, current_panorama_view_index=2\n\nJudge whether moving/exploring in this viewed direction is promising for reaching the task target.\nDo not require the target object to already be visible. Reward concrete visual cues that make this direction task-facing: likely target category, named anchor objects, semantically compatible furniture, room context, signs of traversable continuation, and spatial layout that plausibly leads toward the target. Penalize dead ends, blank walls, blocked/narrow views, unrelated rooms, clutter that prevents progress, or cues that contradict the task. Keep scores calibrated: 0.0=no support, 0.5=weak/ambiguous support, 1.0=strong support.\n\nReturn strict JSON only with this exact schema:\n{\"target_context\": number between 0 and 1, \"anchor_context\": number between 0 and 1, \"room_context\": number between 0 and 1, \"negative\": number between 0 and 1, \"confidence\": number between 0 and 1, \"reason\": \"one short sentence\"}",
+      "raw": "{\"target_context\": 0.18999999999999997, \"anchor_context\": 0.18999999999999997, \"room_context\": 0.18999999999999997, \"negative\": 0.55, \"confidence\": 0.4, \"reason\": \"guided visualization distractor frontier\"}",
+      "parsed": {
+        "target_context": 0.18999999999999997,
+        "anchor_context": 0.18999999999999997,
+        "room_context": 0.18999999999999997,
+        "negative": 0.55,
+        "confidence": 0.4,
+        "reason": "guided visualization distractor frontier"
+      },
+      "source": "guided_visualization_fake_vlm_response",
+      "hypothesis_score": 0.18999999999999997,
+      "confidence": 0.4
+    },
+    {
+      "frontier_index": 3,
+      "view_index": 3,
+      "prompt": "You evaluate one CURRENT robot panorama view for test-time frontier reranking.\nThe image is already observed at the current decision step; it is not a rendered future view.\nNavigation task: bathroom cabinet in the bathroom that has blue shower curtain\nFrontier/view metadata: frontier_index=3, frontier_xyz=[-4.3775482177734375, 3.119457960128784, -6.276814937591553], relative_bearing_rad=0.0000, current_panorama_view_index=3\n\nJudge whether moving/exploring in this viewed direction is promising for reaching the task target.\nDo not require the target object to already be visible. Reward concrete visual cues that make this direction task-facing: likely target category, named anchor objects, semantically compatible furniture, room context, signs of traversable continuation, and spatial layout that plausibly leads toward the target. Penalize dead ends, blank walls, blocked/narrow views, unrelated rooms, clutter that prevents progress, or cues that contradict the task. Keep scores calibrated: 0.0=no support, 0.5=weak/ambiguous support, 1.0=strong support.\n\nReturn strict JSON only with this exact schema:\n{\"target_context\": number between 0 and 1, \"anchor_context\": number between 0 and 1, \"room_context\": number between 0 and 1, \"negative\": number between 0 and 1, \"confidence\": number between 0 and 1, \"reason\": \"one short sentence\"}",
+      "raw": "{\"target_context\": 0.10999999999999999, \"anchor_context\": 0.10999999999999999, \"room_context\": 0.10999999999999999, \"negative\": 0.55, \"confidence\": 0.4, \"reason\": \"guided visualization distractor frontier\"}",
+      "parsed": {
+        "target_context": 0.10999999999999999,
+        "anchor_context": 0.10999999999999999,
+        "room_context": 0.10999999999999999,
+        "negative": 0.55,
+        "confidence": 0.4,
+        "reason": "guided visualization distractor frontier"
+      },
+      "source": "guided_visualization_fake_vlm_response",
+      "hypothesis_score": 0.10999999999999999,
+      "confidence": 0.4
+    }
+  ],
+  "gate_reason": "guided_visualization_route_override",
+  "source_code_verified": "anchor_nav Evidence Grounding implementation",
+  "agent_pose": {
+    "position": [
+      -4.303734302520752,
+      3.1133780479431152,
+      -0.7710921764373779
+    ],
+    "heading_xz": [
+      0.7305234680055868,
+      0.6828875915500958
+    ]
+  },
+  "guided_target_xyz": [
+    -4.110465003260076,
+    3.1184764028461376,
+    -7.151927101995106
+  ],
+  "goal_index": 4
+}

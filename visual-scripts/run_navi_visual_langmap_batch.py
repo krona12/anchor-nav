@@ -17,7 +17,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent
 CHECK_SH = SCRIPT_DIR / "run_navi_visual_module_check.sh"
 DEFAULT_NAV_ROOT = PROJECT_ROOT / "LangMap_Annotations"
-DEFAULT_BATCH_ROOT = SCRIPT_DIR / "navi-visual" / "logs" / "batch"
+DEFAULT_BATCH_ROOT = SCRIPT_DIR / "navi-visual" / "logs" / "batch-5"
 
 DISALLOWED_MOCK_ENV_NAMES = {
     "MOCK",
@@ -35,6 +35,7 @@ DISALLOWED_MOCK_ENV_NAMES = {
 @dataclass
 class BatchTask:
     index: int
+    scene_source_index: int
     scene_name: str
     episode_id: int
     task_id: int
@@ -58,10 +59,17 @@ def _read_scene(path: Path) -> Dict[str, Any]:
     return data
 
 
-def build_manifest(nav_root: Path, scene_limit: int = 10) -> List[BatchTask]:
+def build_manifest(nav_root: Path, scene_count: int = 5, scene_stride: int = 2) -> List[BatchTask]:
     tasks: List[BatchTask] = []
-    scene_files = sorted(nav_root.glob("*.json.gz"))[: int(scene_limit)]
-    for scene_file in scene_files:
+    all_scene_files = sorted(nav_root.glob("*.json.gz"))
+    stride = max(1, int(scene_stride))
+    scene_files = [(idx, path) for idx, path in enumerate(all_scene_files) if idx % stride == 0][: int(scene_count)]
+    if len(scene_files) < int(scene_count):
+        raise RuntimeError(
+            f"not enough LangMap scenes for scene_count={scene_count}, scene_stride={scene_stride}: "
+            f"selected {len(scene_files)} from {len(all_scene_files)}"
+        )
+    for scene_source_index, scene_file in scene_files:
         scene_name = scene_file.name[: -len(".json.gz")]
         scene = _read_scene(scene_file)
         chosen = None
@@ -78,6 +86,7 @@ def build_manifest(nav_root: Path, scene_limit: int = 10) -> List[BatchTask]:
             tasks.append(
                 BatchTask(
                     index=len(tasks),
+                    scene_source_index=int(scene_source_index),
                     scene_name=scene_name,
                     episode_id=episode_id,
                     task_id=int(task_id),
@@ -163,8 +172,11 @@ def quick_artifact_check(run_dir: Path) -> List[str]:
     required = [
         run_dir / "module_sim_summary.json",
         run_dir / "module_visual_check_report.json",
+        run_dir / "log_streams" / "manifest.json",
         run_dir / "modules" / "final_panorama" / "current_decision_panorama_vfv_order.jpg",
-        run_dir / "modules" / "vista_ls" / "final" / "topdown_scene_rgb_mosaic.png",
+        run_dir / "modules" / "vista_ls" / "final" / "topdown_scene_rgb.png",
+        run_dir / "modules" / "vista_ls" / "final" / "topdown_scene_rgb_annotated.png",
+        run_dir / "modules" / "vista_ls" / "final" / "topdown_map.png",
         run_dir / "trajectory" / "route_start_to_goal.png",
     ]
     for path in required:
@@ -326,10 +338,12 @@ def run_one_task(
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Run the first LangMap multi-goal sequence for the first 10 scenes.")
+    ap = argparse.ArgumentParser(description="Run the first LangMap multi-goal sequence for 5 stride-selected scenes.")
     ap.add_argument("--navigation_data_path", default=str(DEFAULT_NAV_ROOT))
     ap.add_argument("--batch_root", default=str(DEFAULT_BATCH_ROOT))
-    ap.add_argument("--scene_limit", type=int, default=10)
+    ap.add_argument("--scene_count", type=int, default=5)
+    ap.add_argument("--scene_stride", type=int, default=2)
+    ap.add_argument("--scene_limit", type=int, default=None, help="Deprecated compatibility alias for first N contiguous scenes.")
     ap.add_argument("--max_rounds", type=int, default=4)
     ap.add_argument("--segment_advance_m", type=float, default=1.0)
     ap.add_argument("--check_interval_sec", type=int, default=300)
@@ -343,16 +357,28 @@ def main() -> int:
     _require_single_cuda_device()
     _require_real_batch_mode(args, batch_root)
     batch_root.mkdir(parents=True, exist_ok=True)
-    tasks = build_manifest(nav_root, scene_limit=int(args.scene_limit))
+    if args.scene_limit is not None:
+        scene_count = int(args.scene_limit)
+        scene_stride = 1
+    else:
+        scene_count = int(args.scene_count)
+        scene_stride = int(args.scene_stride)
+    tasks = build_manifest(nav_root, scene_count=scene_count, scene_stride=scene_stride)
+    expected_tasks = int(scene_count) * 5
+    if len(tasks) != expected_tasks:
+        raise RuntimeError(f"expected {expected_tasks} subtasks from {scene_count} scenes, got {len(tasks)}")
     _write_json(
         batch_root / "batch_manifest.json",
         {
             "navigation_data_path": str(nav_root),
-            "scene_limit": int(args.scene_limit),
+            "scene_count": int(scene_count),
+            "scene_stride": int(scene_stride),
+            "scene_selection": "sorted_scene_files[::scene_stride][:scene_count]",
             "total_tasks": len(tasks),
             "tasks": [
                 {
                     "index": t.index,
+                    "scene_source_index": t.scene_source_index,
                     "scene_name": t.scene_name,
                     "episode_id": t.episode_id,
                     "task_id": t.task_id,

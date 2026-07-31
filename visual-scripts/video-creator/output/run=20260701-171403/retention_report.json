@@ -1,0 +1,7 @@
+{
+  "policy": "keep_latest_two_dynamic_windows",
+  "kept_output_run_count": 2,
+  "kept_nav_log_run_count": 2,
+  "deleted_output_run_count": 1,
+  "deleted_nav_log_run_count": 1
+}

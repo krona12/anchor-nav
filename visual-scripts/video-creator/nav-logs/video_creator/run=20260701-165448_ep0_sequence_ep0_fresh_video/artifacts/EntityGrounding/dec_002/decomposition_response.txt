@@ -1,0 +1,1 @@
+{"target_desc":"nightstand","target_aliases":["bedside table","night table"],"anchor_primary":["bed"],"anchor_support":["lamp","alarm clock"],"room_context":["bedroom"],"relations":""}

@@ -1,0 +1,1 @@
+{"target_context": 0.26999999999999996, "anchor_context": 0.26999999999999996, "room_context": 0.26999999999999996, "negative": 0.55, "confidence": 0.4, "reason": "guided visualization distractor frontier"}

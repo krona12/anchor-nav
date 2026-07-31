@@ -1,0 +1,1535 @@
+{
+  "scene_name": "00800-TEEsavR23oF",
+  "episode_id": 0,
+  "sentence": "tall wardrobe near white-sheeted bed",
+  "multi_goal_sequence": true,
+  "goal_count": 5,
+  "goals": [
+    {
+      "goal_index": 0,
+      "task_id": 0,
+      "task_level": "instance",
+      "sentence": "tall wardrobe near white-sheeted bed",
+      "decision_rounds": 1,
+      "final_planar_distance_to_goal_m": 0.8624364471121351,
+      "stop_reason": "max_rounds_reached",
+      "endpoint_artifacts": "artifacts/EndpointGrounding/goal_00"
+    },
+    {
+      "goal_index": 1,
+      "task_id": 1,
+      "task_level": "region",
+      "sentence": "blanket in the office that has computer desk beside couch",
+      "decision_rounds": 1,
+      "final_planar_distance_to_goal_m": 1.3586071416949388,
+      "stop_reason": "max_rounds_reached",
+      "endpoint_artifacts": "artifacts/EndpointGrounding/goal_01"
+    },
+    {
+      "goal_index": 2,
+      "task_id": 2,
+      "task_level": "region",
+      "sentence": "nightstand in the bedroom that has white-sheeted bed",
+      "decision_rounds": 1,
+      "final_planar_distance_to_goal_m": 1.2889524013511033,
+      "stop_reason": "max_rounds_reached",
+      "endpoint_artifacts": "artifacts/EndpointGrounding/goal_02"
+    },
+    {
+      "goal_index": 3,
+      "task_id": 3,
+      "task_level": "room",
+      "sentence": "side table in the office",
+      "decision_rounds": 1,
+      "final_planar_distance_to_goal_m": 1.7991291610288724,
+      "stop_reason": "max_rounds_reached",
+      "endpoint_artifacts": "artifacts/EndpointGrounding/goal_03"
+    },
+    {
+      "goal_index": 4,
+      "task_id": 4,
+      "task_level": "region",
+      "sentence": "bathroom cabinet in the bathroom that has blue shower curtain",
+      "decision_rounds": 1,
+      "final_planar_distance_to_goal_m": 1.4880851032432125,
+      "stop_reason": "max_rounds_reached",
+      "endpoint_artifacts": "artifacts/EndpointGrounding/final"
+    }
+  ],
+  "decision_rounds": 5,
+  "final_planar_distance_to_goal_m": 1.4880851032432125,
+  "stop_reason": "max_rounds_reached",
+  "guided_visualization_mode": true,
+  "guided_route": {
+    "mode": "guided_visualization_oracle_route",
+    "start_xyz": [
+      -4.03902006149292,
+      3.113379955291748,
+      -0.06032000109553337
+    ],
+    "goal_object_xyz": [
+      -2.37497,
+      3.99337,
+      -6.1985
+    ],
+    "snapped_start_xyz": [
+      -4.03902006149292,
+      3.1133780479431152,
+      -0.06032000109553337
+    ],
+    "snapped_goal_xyz": [
+      -1.9247132539749146,
+      3.141089916229248,
+      -6.233135223388672
+    ],
+    "guided_stop_xyz": [
+      -2.2284757689397248,
+      3.1133780479431152,
+      -5.589214510689636
+    ],
+    "guided_stop_margin_m": 0.8,
+    "guided_motion_distance_m": 9.129593207697274,
+    "shortest_path_ok": true,
+    "geodesic_distance_m": 9.93065357208252,
+    "island_index": 0,
+    "path_points": [
+      [
+        -4.03902006149292,
+        3.1133780479431152,
+        -0.06032000109553337
+      ],
+      [
+        -5.897001266479492,
+        3.1133780479431152,
+        -2.9728803634643555
+      ],
+      [
+        -6.047001361846924,
+        3.1133780479431152,
+        -3.2728800773620605
+      ],
+      [
+        -6.047001361846924,
+        3.1133780479431152,
+        -4.122880458831787
+      ],
+      [
+        -5.9970011711120605,
+        3.1133780479431152,
+        -4.372880458831787
+      ],
+      [
+        -5.897001266479492,
+        3.1133780479431152,
+        -4.7728800773620605
+      ],
+      [
+        -5.6970014572143555,
+        3.1133780479431152,
+        -4.922880172729492
+      ],
+      [
+        -2.647001266479492,
+        3.1133780479431152,
+        -5.322880268096924
+      ],
+      [
+        -2.097001075744629,
+        3.1133780479431152,
+        -5.672880172729492
+      ],
+      [
+        -1.8970012664794922,
+        3.1133780479431152,
+        -5.872880458831787
+      ],
+      [
+        -1.9247132539749146,
+        3.141089916229248,
+        -6.233135223388672
+      ]
+    ],
+    "motion_path_points": [
+      [
+        -4.03902006149292,
+        3.1133780479431152,
+        -0.06032000109553337
+      ],
+      [
+        -5.897001266479492,
+        3.1133780479431152,
+        -2.9728803634643555
+      ],
+      [
+        -6.047001361846924,
+        3.1133780479431152,
+        -3.2728800773620605
+      ],
+      [
+        -6.047001361846924,
+        3.1133780479431152,
+        -4.122880458831787
+      ],
+      [
+        -5.9970011711120605,
+        3.1133780479431152,
+        -4.372880458831787
+      ],
+      [
+        -5.897001266479492,
+        3.1133780479431152,
+        -4.7728800773620605
+      ],
+      [
+        -5.6970014572143555,
+        3.1133780479431152,
+        -4.922880172729492
+      ],
+      [
+        -2.647001266479492,
+        3.1133780479431152,
+        -5.322880268096924
+      ],
+      [
+        -2.2284757689397248,
+        3.1133780479431152,
+        -5.589214510689636
+      ]
+    ],
+    "decision_move_waypoints": [
+      [
+        -2.2284757689397248,
+        3.1133780479431152,
+        -5.589214510689636
+      ]
+    ],
+    "goal_index": 0,
+    "task_id": 0,
+    "task_level": "instance",
+    "sentence": "tall wardrobe near white-sheeted bed"
+  },
+  "guided_routes": [
+    {
+      "mode": "guided_visualization_oracle_route",
+      "start_xyz": [
+        -4.03902006149292,
+        3.113379955291748,
+        -0.06032000109553337
+      ],
+      "goal_object_xyz": [
+        -2.37497,
+        3.99337,
+        -6.1985
+      ],
+      "snapped_start_xyz": [
+        -4.03902006149292,
+        3.1133780479431152,
+        -0.06032000109553337
+      ],
+      "snapped_goal_xyz": [
+        -1.9247132539749146,
+        3.141089916229248,
+        -6.233135223388672
+      ],
+      "guided_stop_xyz": [
+        -2.2284757689397248,
+        3.1133780479431152,
+        -5.589214510689636
+      ],
+      "guided_stop_margin_m": 0.8,
+      "guided_motion_distance_m": 9.129593207697274,
+      "shortest_path_ok": true,
+      "geodesic_distance_m": 9.93065357208252,
+      "island_index": 0,
+      "path_points": [
+        [
+          -4.03902006149292,
+          3.1133780479431152,
+          -0.06032000109553337
+        ],
+        [
+          -5.897001266479492,
+          3.1133780479431152,
+          -2.9728803634643555
+        ],
+        [
+          -6.047001361846924,
+          3.1133780479431152,
+          -3.2728800773620605
+        ],
+        [
+          -6.047001361846924,
+          3.1133780479431152,
+          -4.122880458831787
+        ],
+        [
+          -5.9970011711120605,
+          3.1133780479431152,
+          -4.372880458831787
+        ],
+        [
+          -5.897001266479492,
+          3.1133780479431152,
+          -4.7728800773620605
+        ],
+        [
+          -5.6970014572143555,
+          3.1133780479431152,
+          -4.922880172729492
+        ],
+        [
+          -2.647001266479492,
+          3.1133780479431152,
+          -5.322880268096924
+        ],
+        [
+          -2.097001075744629,
+          3.1133780479431152,
+          -5.672880172729492
+        ],
+        [
+          -1.8970012664794922,
+          3.1133780479431152,
+          -5.872880458831787
+        ],
+        [
+          -1.9247132539749146,
+          3.141089916229248,
+          -6.233135223388672
+        ]
+      ],
+      "motion_path_points": [
+        [
+          -4.03902006149292,
+          3.1133780479431152,
+          -0.06032000109553337
+        ],
+        [
+          -5.897001266479492,
+          3.1133780479431152,
+          -2.9728803634643555
+        ],
+        [
+          -6.047001361846924,
+          3.1133780479431152,
+          -3.2728800773620605
+        ],
+        [
+          -6.047001361846924,
+          3.1133780479431152,
+          -4.122880458831787
+        ],
+        [
+          -5.9970011711120605,
+          3.1133780479431152,
+          -4.372880458831787
+        ],
+        [
+          -5.897001266479492,
+          3.1133780479431152,
+          -4.7728800773620605
+        ],
+        [
+          -5.6970014572143555,
+          3.1133780479431152,
+          -4.922880172729492
+        ],
+        [
+          -2.647001266479492,
+          3.1133780479431152,
+          -5.322880268096924
+        ],
+        [
+          -2.2284757689397248,
+          3.1133780479431152,
+          -5.589214510689636
+        ]
+      ],
+      "decision_move_waypoints": [
+        [
+          -2.2284757689397248,
+          3.1133780479431152,
+          -5.589214510689636
+        ]
+      ],
+      "goal_index": 0,
+      "task_id": 0,
+      "task_level": "instance",
+      "sentence": "tall wardrobe near white-sheeted bed"
+    },
+    {
+      "mode": "guided_visualization_oracle_route",
+      "start_xyz": [
+        -2.462632894515991,
+        3.1133780479431152,
+        -5.3405303955078125
+      ],
+      "goal_object_xyz": [
+        -6.74151,
+        3.76903,
+        -1.5229
+      ],
+      "snapped_start_xyz": [
+        -2.462632894515991,
+        3.1133780479431152,
+        -5.3405303955078125
+      ],
+      "snapped_goal_xyz": [
+        -5.797001361846924,
+        3.1133780479431152,
+        -1.5228999853134155
+      ],
+      "guided_stop_xyz": [
+        -5.797001361846924,
+        3.1133780479431152,
+        -2.3228999853134153
+      ],
+      "guided_stop_margin_m": 0.8,
+      "guided_motion_distance_m": 6.014466247201402,
+      "shortest_path_ok": true,
+      "geodesic_distance_m": 6.8144659996032715,
+      "island_index": 0,
+      "path_points": [
+        [
+          -2.462632894515991,
+          3.1133780479431152,
+          -5.3405303955078125
+        ],
+        [
+          -5.6970014572143555,
+          3.1133780479431152,
+          -4.922880172729492
+        ],
+        [
+          -5.897001266479492,
+          3.1133780479431152,
+          -4.7728800773620605
+        ],
+        [
+          -5.9970011711120605,
+          3.1133780479431152,
+          -4.372880458831787
+        ],
+        [
+          -6.047001361846924,
+          3.1133780479431152,
+          -4.122880458831787
+        ],
+        [
+          -6.047001361846924,
+          3.1133780479431152,
+          -3.2728800773620605
+        ],
+        [
+          -5.797001361846924,
+          3.1133780479431152,
+          -2.422880172729492
+        ],
+        [
+          -5.797001361846924,
+          3.1133780479431152,
+          -1.5228999853134155
+        ]
+      ],
+      "motion_path_points": [
+        [
+          -2.462632894515991,
+          3.1133780479431152,
+          -5.3405303955078125
+        ],
+        [
+          -5.6970014572143555,
+          3.1133780479431152,
+          -4.922880172729492
+        ],
+        [
+          -5.897001266479492,
+          3.1133780479431152,
+          -4.7728800773620605
+        ],
+        [
+          -5.9970011711120605,
+          3.1133780479431152,
+          -4.372880458831787
+        ],
+        [
+          -6.047001361846924,
+          3.1133780479431152,
+          -4.122880458831787
+        ],
+        [
+          -6.047001361846924,
+          3.1133780479431152,
+          -3.2728800773620605
+        ],
+        [
+          -5.797001361846924,
+          3.1133780479431152,
+          -2.422880172729492
+        ],
+        [
+          -5.797001361846924,
+          3.1133780479431152,
+          -2.3228999853134153
+        ]
+      ],
+      "decision_move_waypoints": [
+        [
+          -5.797001361846924,
+          3.1133780479431152,
+          -2.3228999853134153
+        ]
+      ],
+      "goal_index": 1,
+      "task_id": 1,
+      "task_level": "region",
+      "sentence": "blanket in the office that has computer desk beside couch"
+    },
+    {
+      "mode": "guided_visualization_oracle_route",
+      "start_xyz": [
+        -5.843303680419922,
+        3.1133780479431152,
+        -2.5422325134277344
+      ],
+      "goal_object_xyz": [
+        -1.27152,
+        3.53914,
+        -8.49409
+      ],
+      "snapped_start_xyz": [
+        -5.843303680419922,
+        3.1133780479431152,
+        -2.5422325134277344
+      ],
+      "snapped_goal_xyz": [
+        -1.8862134218215942,
+        3.1633780002593994,
+        -8.425790786743164
+      ],
+      "guided_stop_xyz": [
+        -1.9875916095311557,
+        3.1586730034855623,
+        -7.639385236870909
+      ],
+      "guided_stop_margin_m": 0.8,
+      "guided_motion_distance_m": 8.305493747083707,
+      "shortest_path_ok": true,
+      "geodesic_distance_m": 9.106133460998535,
+      "island_index": 0,
+      "path_points": [
+        [
+          -5.843303680419922,
+          3.1133780479431152,
+          -2.5422325134277344
+        ],
+        [
+          -5.9470014572143555,
+          3.1133780479431152,
+          -2.922880172729492
+        ],
+        [
+          -6.047001361846924,
+          3.1133780479431152,
+          -3.2728800773620605
+        ],
+        [
+          -6.047001361846924,
+          3.1133780479431152,
+          -4.122880458831787
+        ],
+        [
+          -5.9970011711120605,
+          3.1133780479431152,
+          -4.372880458831787
+        ],
+        [
+          -5.897001266479492,
+          3.1133780479431152,
+          -4.7728800773620605
+        ],
+        [
+          -5.6970014572143555,
+          3.1133780479431152,
+          -4.922880172729492
+        ],
+        [
+          -2.647001266479492,
+          3.1133780479431152,
+          -5.322880268096924
+        ],
+        [
+          -2.097001075744629,
+          3.1133780479431152,
+          -5.672880172729492
+        ],
+        [
+          -1.8970012664794922,
+          3.1133780479431152,
+          -5.872880458831787
+        ],
+        [
+          -1.9970016479492188,
+          3.1633780002593994,
+          -7.822880268096924
+        ],
+        [
+          -1.9970016479492188,
+          3.1633780002593994,
+          -7.9728803634643555
+        ],
+        [
+          -1.8862134218215942,
+          3.1633780002593994,
+          -8.425790786743164
+        ]
+      ],
+      "motion_path_points": [
+        [
+          -5.843303680419922,
+          3.1133780479431152,
+          -2.5422325134277344
+        ],
+        [
+          -5.9470014572143555,
+          3.1133780479431152,
+          -2.922880172729492
+        ],
+        [
+          -6.047001361846924,
+          3.1133780479431152,
+          -3.2728800773620605
+        ],
+        [
+          -6.047001361846924,
+          3.1133780479431152,
+          -4.122880458831787
+        ],
+        [
+          -5.9970011711120605,
+          3.1133780479431152,
+          -4.372880458831787
+        ],
+        [
+          -5.897001266479492,
+          3.1133780479431152,
+          -4.7728800773620605
+        ],
+        [
+          -5.6970014572143555,
+          3.1133780479431152,
+          -4.922880172729492
+        ],
+        [
+          -2.647001266479492,
+          3.1133780479431152,
+          -5.322880268096924
+        ],
+        [
+          -2.097001075744629,
+          3.1133780479431152,
+          -5.672880172729492
+        ],
+        [
+          -1.8970012664794922,
+          3.1133780479431152,
+          -5.872880458831787
+        ],
+        [
+          -1.9875916095311557,
+          3.1586730034855623,
+          -7.639385236870909
+        ]
+      ],
+      "decision_move_waypoints": [
+        [
+          -1.9875916095311557,
+          3.1586730034855623,
+          -7.639385236870909
+        ]
+      ],
+      "goal_index": 2,
+      "task_id": 2,
+      "task_level": "region",
+      "sentence": "nightstand in the bedroom that has white-sheeted bed"
+    },
+    {
+      "mode": "guided_visualization_oracle_route",
+      "start_xyz": [
+        -2.048431158065796,
+        3.1633780002593994,
+        -7.465592384338379
+      ],
+      "goal_object_xyz": [
+        -3.00454,
+        3.2852,
+        0.47348
+      ],
+      "snapped_start_xyz": [
+        -2.048431158065796,
+        3.1633780002593994,
+        -7.465592384338379
+      ],
+      "snapped_goal_xyz": [
+        -3.7470016479492188,
+        3.1133780479431152,
+        0.07711982727050781
+      ],
+      "guided_stop_xyz": [
+        -4.207927190291496,
+        3.1133780479431152,
+        -0.5767514478414046
+      ],
+      "guided_stop_margin_m": 0.8,
+      "guided_motion_distance_m": 10.645247103571979,
+      "shortest_path_ok": true,
+      "geodesic_distance_m": 11.447161674499512,
+      "island_index": 0,
+      "path_points": [
+        [
+          -2.048431158065796,
+          3.1633780002593994,
+          -7.465592384338379
+        ],
+        [
+          -1.9470014572143555,
+          3.1633780002593994,
+          -6.522880554199219
+        ],
+        [
+          -1.8970012664794922,
+          3.1133780479431152,
+          -5.872880458831787
+        ],
+        [
+          -2.097001075744629,
+          3.1133780479431152,
+          -5.672880172729492
+        ],
+        [
+          -2.647001266479492,
+          3.1133780479431152,
+          -5.322880268096924
+        ],
+        [
+          -5.6970014572143555,
+          3.1133780479431152,
+          -4.922880172729492
+        ],
+        [
+          -5.897001266479492,
+          3.1133780479431152,
+          -4.7728800773620605
+        ],
+        [
+          -5.9970011711120605,
+          3.1133780479431152,
+          -4.372880458831787
+        ],
+        [
+          -6.047001361846924,
+          3.1133780479431152,
+          -4.122880458831787
+        ],
+        [
+          -6.047001361846924,
+          3.1133780479431152,
+          -3.2728800773620605
+        ],
+        [
+          -5.897001266479492,
+          3.1133780479431152,
+          -2.9728803634643555
+        ],
+        [
+          -3.7470016479492188,
+          3.1133780479431152,
+          0.07711982727050781
+        ]
+      ],
+      "motion_path_points": [
+        [
+          -2.048431158065796,
+          3.1633780002593994,
+          -7.465592384338379
+        ],
+        [
+          -1.9470014572143555,
+          3.1633780002593994,
+          -6.522880554199219
+        ],
+        [
+          -1.8970012664794922,
+          3.1133780479431152,
+          -5.872880458831787
+        ],
+        [
+          -2.097001075744629,
+          3.1133780479431152,
+          -5.672880172729492
+        ],
+        [
+          -2.647001266479492,
+          3.1133780479431152,
+          -5.322880268096924
+        ],
+        [
+          -5.6970014572143555,
+          3.1133780479431152,
+          -4.922880172729492
+        ],
+        [
+          -5.897001266479492,
+          3.1133780479431152,
+          -4.7728800773620605
+        ],
+        [
+          -5.9970011711120605,
+          3.1133780479431152,
+          -4.372880458831787
+        ],
+        [
+          -6.047001361846924,
+          3.1133780479431152,
+          -4.122880458831787
+        ],
+        [
+          -6.047001361846924,
+          3.1133780479431152,
+          -3.2728800773620605
+        ],
+        [
+          -5.897001266479492,
+          3.1133780479431152,
+          -2.9728803634643555
+        ],
+        [
+          -4.207927190291496,
+          3.1133780479431152,
+          -0.5767514478414046
+        ]
+      ],
+      "decision_move_waypoints": [
+        [
+          -4.207927190291496,
+          3.1133780479431152,
+          -0.5767514478414046
+        ]
+      ],
+      "goal_index": 3,
+      "task_id": 3,
+      "task_level": "room",
+      "sentence": "side table in the office"
+    },
+    {
+      "mode": "guided_visualization_oracle_route",
+      "start_xyz": [
+        -4.303734302520752,
+        3.1133780479431152,
+        -0.7710921764373779
+      ],
+      "goal_object_xyz": [
+        -4.32408,
+        3.56418,
+        -8.3895
+      ],
+      "snapped_start_xyz": [
+        -4.303734302520752,
+        3.1133780479431152,
+        -0.7710921764373779
+      ],
+      "snapped_goal_xyz": [
+        -4.324079990386963,
+        3.135637044906616,
+        -7.922880172729492
+      ],
+      "guided_stop_xyz": [
+        -4.110465003260076,
+        3.1184764028461376,
+        -7.151927101995106
+      ],
+      "guided_stop_margin_m": 0.8,
+      "guided_motion_distance_m": 7.696072345738583,
+      "shortest_path_ok": true,
+      "geodesic_distance_m": 8.496310234069824,
+      "island_index": 0,
+      "path_points": [
+        [
+          -4.303734302520752,
+          3.1133780479431152,
+          -0.7710921764373779
+        ],
+        [
+          -5.897001266479492,
+          3.1133780479431152,
+          -2.9728803634643555
+        ],
+        [
+          -6.047001361846924,
+          3.1133780479431152,
+          -3.2728800773620605
+        ],
+        [
+          -6.047001361846924,
+          3.1133780479431152,
+          -4.122880458831787
+        ],
+        [
+          -5.9970011711120605,
+          3.1133780479431152,
+          -4.372880458831787
+        ],
+        [
+          -5.897001266479492,
+          3.1133780479431152,
+          -4.7728800773620605
+        ],
+        [
+          -4.047000885009766,
+          3.1133780479431152,
+          -6.7228803634643555
+        ],
+        [
+          -4.047000885009766,
+          3.1133780479431152,
+          -6.922880172729492
+        ],
+        [
+          -4.324079990386963,
+          3.135637044906616,
+          -7.922880172729492
+        ]
+      ],
+      "motion_path_points": [
+        [
+          -4.303734302520752,
+          3.1133780479431152,
+          -0.7710921764373779
+        ],
+        [
+          -5.897001266479492,
+          3.1133780479431152,
+          -2.9728803634643555
+        ],
+        [
+          -6.047001361846924,
+          3.1133780479431152,
+          -3.2728800773620605
+        ],
+        [
+          -6.047001361846924,
+          3.1133780479431152,
+          -4.122880458831787
+        ],
+        [
+          -5.9970011711120605,
+          3.1133780479431152,
+          -4.372880458831787
+        ],
+        [
+          -5.897001266479492,
+          3.1133780479431152,
+          -4.7728800773620605
+        ],
+        [
+          -4.047000885009766,
+          3.1133780479431152,
+          -6.7228803634643555
+        ],
+        [
+          -4.047000885009766,
+          3.1133780479431152,
+          -6.922880172729492
+        ],
+        [
+          -4.110465003260076,
+          3.1184764028461376,
+          -7.151927101995106
+        ]
+      ],
+      "decision_move_waypoints": [
+        [
+          -4.110465003260076,
+          3.1184764028461376,
+          -7.151927101995106
+        ]
+      ],
+      "goal_index": 4,
+      "task_id": 4,
+      "task_level": "region",
+      "sentence": "bathroom cabinet in the bathroom that has blue shower curtain"
+    }
+  ],
+  "guided_moves": [
+    {
+      "round": 0,
+      "goal_index": 0,
+      "target_xyz": [
+        -2.2284757689397248,
+        3.1133780479431152,
+        -5.589214510689636
+      ],
+      "start_xyz": [
+        -4.03902006149292,
+        3.1133780479431152,
+        -0.06032000109553337
+      ],
+      "end_xyz": [
+        -2.462632894515991,
+        3.1133780479431152,
+        -5.3405303955078125
+      ],
+      "planned_action_count": 71,
+      "executed_action_count": 69,
+      "executed_actions": [
+        "turn_left",
+        "turn_left",
+        "turn_left",
+        "turn_left",
+        "turn_left",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "move_forward",
+        "turn_right",
+        "turn_right",
+        "move_forward",
+        "turn_left",
+        "turn_left",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "turn_right",
+        "turn_right",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "turn_right",
+        "turn_right",
+        "move_forward",
+        "turn_left",
+        "turn_left",
+        "turn_left",
+        "move_forward"
+      ],
+      "end_distance_to_waypoint_m": 0.34157480674356777,
+      "teleported_to_waypoint": false,
+      "planner": {
+        "ok": true,
+        "planner": "vis_nav_sample_follower",
+        "action_count": 71
+      },
+      "frame_dir": "/home/chenlin/krona/anchor-nav/visual-scripts/video-creator/nav-logs/video_creator/run=20260701-171240_ep0_sequence_ep0_fresh_video/guided_frames/dec_000",
+      "saved_frame_count": 69
+    },
+    {
+      "round": 1,
+      "goal_index": 1,
+      "target_xyz": [
+        -5.797001361846924,
+        3.1133780479431152,
+        -2.3228999853134153
+      ],
+      "start_xyz": [
+        -2.462632894515991,
+        3.1133780479431152,
+        -5.3405303955078125
+      ],
+      "end_xyz": [
+        -5.843303680419922,
+        3.1133780479431152,
+        -2.5422325134277344
+      ],
+      "planned_action_count": 48,
+      "executed_action_count": 44,
+      "executed_actions": [
+        "turn_left",
+        "turn_left",
+        "turn_left",
+        "turn_left",
+        "turn_left",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "turn_right",
+        "turn_right",
+        "move_forward"
+      ],
+      "end_distance_to_waypoint_m": 0.2241665956253383,
+      "teleported_to_waypoint": false,
+      "planner": {
+        "ok": true,
+        "planner": "vis_nav_sample_follower",
+        "action_count": 48
+      },
+      "frame_dir": "/home/chenlin/krona/anchor-nav/visual-scripts/video-creator/nav-logs/video_creator/run=20260701-171240_ep0_sequence_ep0_fresh_video/guided_frames/dec_001",
+      "saved_frame_count": 44
+    },
+    {
+      "round": 2,
+      "goal_index": 2,
+      "target_xyz": [
+        -1.9875916095311557,
+        3.1586730034855623,
+        -7.639385236870909
+      ],
+      "start_xyz": [
+        -5.843303680419922,
+        3.1133780479431152,
+        -2.5422325134277344
+      ],
+      "end_xyz": [
+        -2.048431158065796,
+        3.1633780002593994,
+        -7.465592384338379
+      ],
+      "planned_action_count": 70,
+      "executed_action_count": 69,
+      "executed_actions": [
+        "turn_right",
+        "turn_right",
+        "turn_right",
+        "turn_right",
+        "turn_right",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "turn_left",
+        "turn_left",
+        "turn_left",
+        "move_forward",
+        "turn_right",
+        "turn_right",
+        "move_forward",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "turn_right",
+        "turn_right",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "move_forward",
+        "turn_right",
+        "turn_right",
+        "move_forward",
+        "turn_left",
+        "turn_left",
+        "turn_left",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "turn_left",
+        "turn_left",
+        "move_forward",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "move_forward",
+        "move_forward"
+      ],
+      "end_distance_to_waypoint_m": 0.1841342071894648,
+      "teleported_to_waypoint": false,
+      "planner": {
+        "ok": true,
+        "planner": "vis_nav_sample_follower",
+        "action_count": 70
+      },
+      "frame_dir": "/home/chenlin/krona/anchor-nav/visual-scripts/video-creator/nav-logs/video_creator/run=20260701-171240_ep0_sequence_ep0_fresh_video/guided_frames/dec_002",
+      "saved_frame_count": 69
+    },
+    {
+      "round": 3,
+      "goal_index": 3,
+      "target_xyz": [
+        -4.207927190291496,
+        3.1133780479431152,
+        -0.5767514478414046
+      ],
+      "start_xyz": [
+        -2.048431158065796,
+        3.1633780002593994,
+        -7.465592384338379
+      ],
+      "end_xyz": [
+        -4.303734302520752,
+        3.1133780479431152,
+        -0.7710921764373779
+      ],
+      "planned_action_count": 82,
+      "executed_action_count": 79,
+      "executed_actions": [
+        "turn_left",
+        "turn_left",
+        "turn_left",
+        "turn_left",
+        "turn_left",
+        "turn_left",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "turn_right",
+        "turn_right",
+        "turn_right",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "turn_left",
+        "move_forward"
+      ],
+      "end_distance_to_waypoint_m": 0.2166733060275838,
+      "teleported_to_waypoint": false,
+      "planner": {
+        "ok": true,
+        "planner": "vis_nav_sample_follower",
+        "action_count": 82
+      },
+      "frame_dir": "/home/chenlin/krona/anchor-nav/visual-scripts/video-creator/nav-logs/video_creator/run=20260701-171240_ep0_sequence_ep0_fresh_video/guided_frames/dec_003",
+      "saved_frame_count": 79
+    },
+    {
+      "round": 4,
+      "goal_index": 4,
+      "target_xyz": [
+        -4.110465003260076,
+        3.1184764028461376,
+        -7.151927101995106
+      ],
+      "start_xyz": [
+        -4.303734302520752,
+        3.1133780479431152,
+        -0.7710921764373779
+      ],
+      "end_xyz": [
+        -4.045340538024902,
+        3.1133780479431152,
+        -6.927753925323486
+      ],
+      "planned_action_count": 52,
+      "executed_action_count": 50,
+      "executed_actions": [
+        "turn_left",
+        "turn_left",
+        "turn_left",
+        "turn_left",
+        "turn_left",
+        "turn_left",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "turn_right",
+        "move_forward",
+        "turn_left",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "move_forward",
+        "turn_left",
+        "turn_left",
+        "move_forward"
+      ],
+      "end_distance_to_waypoint_m": 0.23344123267154993,
+      "teleported_to_waypoint": false,
+      "planner": {
+        "ok": true,
+        "planner": "vis_nav_sample_follower",
+        "action_count": 52
+      },
+      "frame_dir": "/home/chenlin/krona/anchor-nav/visual-scripts/video-creator/nav-logs/video_creator/run=20260701-171240_ep0_sequence_ep0_fresh_video/guided_frames/dec_004",
+      "saved_frame_count": 50
+    }
+  ],
+  "vlm_client_file": "/home/chenlin/krona/anchor-nav/hm3d-online/anchor_nav/vlm/client.py",
+  "topdown_map": {
+    "strategy": "reference_agent_current_height_raw_pathfinder_view",
+    "mpp": 0.021733807399868965,
+    "agent_y": 3.113379955291748,
+    "agent_radius_m": 0.17,
+    "chosen_height_m": 3.113379955291748,
+    "chosen_delta_from_agent_y_m": 0.0,
+    "raw_area_px": 38239,
+    "chosen_area_px": 38239,
+    "raw_shape": [
+      512,
+      762
+    ],
+    "start_rc": [
+      456,
+      386
+    ],
+    "diagnostic_start_component_filter_not_applied": {
+      "raw_area_px": 38239,
+      "clean_area_px": 10836,
+      "component_label": 5,
+      "connected_component_count": 5,
+      "morph_radius_px": 8,
+      "morph_radius_m": 0.17387045919895172,
+      "reason": "start_component_after_width_filter"
+    },
+    "reference": "visual-scripts/habitat_teleop_cn_explained.py:get_topdown_map_visualize uses pathfinder.get_topdown_view(meters_per_pixel, state.position[1])"
+  },
+  "modules": {
+    "Evidence Grounding": "artifacts/EvidenceGrounding/dec_XXX",
+    "Entity Grounding": "artifacts/EntityGrounding/dec_XXX",
+    "Endpoint Grounding": "artifacts/EndpointGrounding/final"
+  },
+  "log_streams": {
+    "version": "navi_visual_log_streams_v1",
+    "root": "/home/chenlin/krona/anchor-nav/visual-scripts/video-creator/nav-logs/video_creator/run=20260701-171240_ep0_sequence_ep0_fresh_video",
+    "note": "Indexes reference existing artifacts; no duplicate images are created. Legend data stays in *_info.json so clean/no-legend images remain available.",
+    "categories": {
+      "evidence_grounding": {
+        "description": "Evidence Grounding / Which frontier? prompts, panorama evidence, map context, and selected frontier artifacts.",
+        "index": "log_streams/evidence_grounding/index.json",
+        "entry_count": 5
+      },
+      "entity_grounding": {
+        "description": "Entity Grounding / Which object? decomposition, object candidates, map context, and selected object artifacts.",
+        "index": "log_streams/entity_grounding/index.json",
+        "entry_count": 5
+      },
+      "endpoint_grounding": {
+        "description": "Endpoint Grounding / Which viewpoint? candidate viewpoints, target RGB, map context, and selected stop artifacts.",
+        "index": "log_streams/endpoint_grounding/index.json",
+        "entry_count": 1
+      }
+    }
+  },
+  "log": [
+    "[topdown_cam] slice_H=2.5 median_depth=1.97 slice_ok=True edge_black_fill_px=0 edge_white_fill_px=505 -> 2 dir(s)",
+    "[evidence_grounding] dec_000: frontiers=4 selected=0 guided_target=[-2.2284757689397248, 3.1133780479431152, -5.589214510689636]",
+    "[entity_grounding] dec_000: cands=5 clusters=3 baseline=3 consensus=0 applied=True vlm_source=anchor_nav_vlm_real",
+    "[guided_move] round=0 actions=69/71 end_dist=0.34 teleported=False",
+    "[endpoint_panorama] goal=0 stop_reason=max_rounds_reached views=12 dir=<fresh_run>/artifacts/EndpointGrounding/goal_00/panorama",
+    "[topdown_cam] slice_H=2.1 median_depth=1.86 slice_ok=True edge_black_fill_px=0 edge_white_fill_px=0 -> 1 dir(s)",
+    "[endpoint_grounding] candidates=72 counts={'too_close': 29, 'bad_viewpoint': 23, 'feasible': 13, 'too_far': 6, 'unreachable': 1} selected=yes target_rgb_points=22",
+    "[topdown_global] <fresh_run>/artifacts/EndpointGrounding/goal_00: saved gray topdown map + clean/annotated scene RGB tiles=99/99 nav_fill=1.00 frame_fill=0.53",
+    "[topdown_cam] slice_H=2.1 median_depth=1.86 slice_ok=True edge_black_fill_px=0 edge_white_fill_px=0 -> 2 dir(s)",
+    "[evidence_grounding] dec_001: frontiers=4 selected=0 guided_target=[-5.797001361846924, 3.1133780479431152, -2.3228999853134153]",
+    "[entity_grounding] dec_001: cands=5 clusters=3 baseline=3 consensus=0 applied=True vlm_source=anchor_nav_vlm_real",
+    "[guided_move] round=1 actions=44/48 end_dist=0.22 teleported=False",
+    "[endpoint_panorama] goal=1 stop_reason=max_rounds_reached views=12 dir=<fresh_run>/artifacts/EndpointGrounding/goal_01/panorama",
+    "[topdown_cam] slice_H=2.5 median_depth=2.41 slice_ok=True edge_black_fill_px=1379 edge_white_fill_px=0 -> 1 dir(s)",
+    "[endpoint_grounding] candidates=72 counts={'unreachable': 50, 'bad_viewpoint': 16, 'too_far': 6} selected=none target_rgb_points=31",
+    "[topdown_global] <fresh_run>/artifacts/EndpointGrounding/goal_01: saved gray topdown map + clean/annotated scene RGB tiles=99/99 nav_fill=1.00 frame_fill=0.53",
+    "[topdown_cam] slice_H=2.5 median_depth=2.41 slice_ok=True edge_black_fill_px=1379 edge_white_fill_px=0 -> 2 dir(s)",
+    "[evidence_grounding] dec_002: frontiers=4 selected=0 guided_target=[-1.9875916095311557, 3.1586730034855623, -7.639385236870909]",
+    "[entity_grounding] dec_002: cands=5 clusters=3 baseline=3 consensus=0 applied=True vlm_source=anchor_nav_vlm_real",
+    "[guided_move] round=2 actions=69/70 end_dist=0.18 teleported=False",
+    "[endpoint_panorama] goal=2 stop_reason=max_rounds_reached views=12 dir=<fresh_run>/artifacts/EndpointGrounding/goal_02/panorama",
+    "[topdown_cam] slice_H=2.5 median_depth=1.72 slice_ok=True edge_black_fill_px=0 edge_white_fill_px=0 -> 1 dir(s)",
+    "[endpoint_grounding] candidates=72 counts={'unreachable': 35, 'bad_viewpoint': 18, 'too_close': 13, 'feasible': 4, 'too_far': 2} selected=yes target_rgb_points=27",
+    "[topdown_global] <fresh_run>/artifacts/EndpointGrounding/goal_02: saved gray topdown map + clean/annotated scene RGB tiles=99/99 nav_fill=1.00 frame_fill=0.53",
+    "[topdown_cam] slice_H=2.5 median_depth=1.72 slice_ok=True edge_black_fill_px=0 edge_white_fill_px=0 -> 2 dir(s)",
+    "[evidence_grounding] dec_003: frontiers=4 selected=0 guided_target=[-4.207927190291496, 3.1133780479431152, -0.5767514478414046]",
+    "[entity_grounding] dec_003: cands=5 clusters=3 baseline=3 consensus=0 applied=True vlm_source=anchor_nav_vlm_real",
+    "[guided_move] round=3 actions=79/82 end_dist=0.22 teleported=False",
+    "[endpoint_panorama] goal=3 stop_reason=max_rounds_reached views=12 dir=<fresh_run>/artifacts/EndpointGrounding/goal_03/panorama",
+    "[topdown_cam] slice_H=2.5 median_depth=2.17 slice_ok=True edge_black_fill_px=0 edge_white_fill_px=181 -> 1 dir(s)",
+    "[endpoint_grounding] candidates=72 counts={'unreachable': 52, 'bad_viewpoint': 17, 'too_far': 3} selected=none target_rgb_points=41",
+    "[topdown_global] <fresh_run>/artifacts/EndpointGrounding/goal_03: saved gray topdown map + clean/annotated scene RGB tiles=99/99 nav_fill=1.00 frame_fill=0.53",
+    "[topdown_cam] slice_H=2.5 median_depth=2.17 slice_ok=True edge_black_fill_px=0 edge_white_fill_px=181 -> 2 dir(s)",
+    "[evidence_grounding] dec_004: frontiers=4 selected=0 guided_target=[-4.110465003260076, 3.1184764028461376, -7.151927101995106]",
+    "[entity_grounding] dec_004: cands=5 clusters=2 baseline=3 consensus=0 applied=True vlm_source=anchor_nav_vlm_real",
+    "[guided_move] round=4 actions=50/52 end_dist=0.23 teleported=False",
+    "[endpoint_panorama] goal=4 stop_reason=max_rounds_reached views=12 dir=<fresh_run>/artifacts/EndpointGrounding/final/panorama",
+    "[topdown_cam] slice_H=2.5 median_depth=1.68 slice_ok=True edge_black_fill_px=1180 edge_white_fill_px=0 -> 1 dir(s)",
+    "[endpoint_grounding] candidates=72 counts={'too_close': 20, 'unreachable': 33, 'bad_viewpoint': 6, 'feasible': 7, 'too_far': 6} selected=yes target_rgb_points=27",
+    "[topdown_global] <fresh_run>/artifacts/EndpointGrounding/final: saved gray topdown map + clean/annotated scene RGB tiles=99/99 nav_fill=1.00 frame_fill=0.53",
+    "[log_streams] categories=endpoint_grounding,entity_grounding,evidence_grounding root=<fresh_run>/log_streams"
+  ]
+}

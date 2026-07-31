@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Direct launcher for visual-scripts/navi-visual/code/interactive_vista2mqsc_teleop.py.
+# Direct launcher for visual-scripts/navi-visual/code/navigate_to_target.py.
 #
 # Matches the project batch scripts: activates the mtu3d conda env and sets the
-# same Habitat/PQ3D runtime variables before launching the interactive script.
+# same Habitat runtime variables before launching the direct target runner.
 #
 # Usage:
 #   bash visual-scripts/navi-visual/command/run_navi_visual_direct.sh [detailed|concise] [optional_tag] [-- extra python args]
@@ -38,6 +38,17 @@ fi
 export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0}"
 export PYTHONUNBUFFERED=1
 export PYTHONPATH="/home/chenlin/krona/MTU3D:./:./hm3d-online:./hm3d-online/FastSAM:${PYTHONPATH:-}"
+USE_LOCAL_NVIDIA_580="${USE_LOCAL_NVIDIA_580:-0}"
+LOCAL_NVIDIA_ROOT="${LOCAL_NVIDIA_ROOT:-${REPO_ROOT}/local_nvidia_580_126_09/root}"
+LOCAL_NVIDIA_LIB="${LOCAL_NVIDIA_ROOT}/usr/lib/x86_64-linux-gnu"
+LOCAL_NVIDIA_EGL_JSON="${LOCAL_NVIDIA_ROOT}/usr/share/glvnd/egl_vendor.d/10_nvidia.json"
+if [ "${USE_LOCAL_NVIDIA_580}" = "1" ] && [ -d "${LOCAL_NVIDIA_LIB}" ] && [ -f "${LOCAL_NVIDIA_EGL_JSON}" ]; then
+  export LD_LIBRARY_PATH="${LOCAL_NVIDIA_LIB}${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+  export __EGL_VENDOR_LIBRARY_FILENAMES="${LOCAL_NVIDIA_EGL_JSON}"
+  export PATH="${LOCAL_NVIDIA_ROOT}/usr/bin${PATH:+:${PATH}}"
+  export NVIDIA_SMI_BIN="${LOCAL_NVIDIA_ROOT}/usr/bin/nvidia-smi"
+  echo ">>> Using local NVIDIA userspace: ${LOCAL_NVIDIA_LIB}"
+fi
 export MAGNUM_LOG=quiet
 export HABITAT_SIM_LOG=quiet
 export YOLO_VERBOSE=False
@@ -80,30 +91,28 @@ HM3D_DATA_BASE_PATH="${HM3D_DATA_BASE_PATH:-${REPO_ROOT}/datascene}"
 PQ3D_STAGE1_PATH="${PQ3D_STAGE1_PATH:-${REPO_ROOT}/checkpoint/stage1-pretrain-all}"
 PQ3D_STAGE2_PATH="${PQ3D_STAGE2_PATH:-${REPO_ROOT}/checkpoint/stage2-fine-tune-goat}"
 LOG_ROOT="${LOG_ROOT:-${REPO_ROOT}/visual-scripts/navi-visual/logs}"
-OUT_DIR="${LOG_ROOT}/direct/${RUN_TAG}"
+OUT_DIR="${OUT_DIR:-${LOG_ROOT}/direct/${RUN_TAG}}"
 PYTHON_BIN="${PYTHON_BIN:-python3}"
 
-# Headless keyboard teleop: no GUI window, control via terminal keypresses.
-# The live camera RGB view and the live TopDownMap are written to fixed files
-# under LIVE_DIR so they can be watched in any auto-refreshing image viewer.
+# Headless direct run: no GUI window. LIVE_DIR is still passed through so the
+# underlying navigator can refresh live RGB/topdown images when available.
 HEADLESS="${HEADLESS:-1}"
 LIVE_DIR="${LIVE_DIR:-${LOG_ROOT}/live}"
 
-ENABLE_VISTA2MQSC_REFINE="${ENABLE_VISTA2MQSC_REFINE:-1}"
-USE_VISTA2MQSC_FOLLOWER="${USE_VISTA2MQSC_FOLLOWER:-1}"
-DISABLE_PQ3D="${DISABLE_PQ3D:-0}"
-MQSC_USE_VLM="${MQSC_USE_VLM:-0}"
-MAX_FRONTIER_FACING="${MAX_FRONTIER_FACING:-12}"
-MAX_SAVED_FOLLOW_FRAMES="${MAX_SAVED_FOLLOW_FRAMES:-24}"
+MAX_ROUNDS="${MAX_ROUNDS:-4}"
+SEGMENT_ADVANCE_M="${SEGMENT_ADVANCE_M:-1.0}"
+ARRIVE_THRESH_M="${ARRIVE_THRESH_M:-0.7}"
+SEQUENCE_TASK_COUNT="${SEQUENCE_TASK_COUNT:-1}"
 
 mkdir -p "${OUT_DIR}"
 
 echo ">>> Navi visual direct run tag: ${RUN_TAG}"
 echo ">>> Output dir: ${OUT_DIR}"
-echo ">>> Headless: ${HEADLESS} (keyboard teleop via terminal, no GUI window)"
+echo ">>> Headless: ${HEADLESS} (direct target runner, no GUI window)"
 echo ">>> Live view: ${LIVE_DIR}/rgb.png  ${LIVE_DIR}/topdown.png"
 echo ">>> Scene: ${SCENE_NAME}"
 echo ">>> Navigation: ${NAVIGATION_TYPE} episode=${EPISODE_ID} task=${TASK_ID} instance=${INSTANCE_ID}"
+echo ">>> Direct params: max_rounds=${MAX_ROUNDS} segment_advance_m=${SEGMENT_ADVANCE_M} arrive_thresh_m=${ARRIVE_THRESH_M}"
 echo ">>> CUDA_VISIBLE_DEVICES: ${CUDA_VISIBLE_DEVICES}"
 echo ">>> Python: ${PYTHON_BIN} ($(command -v "${PYTHON_BIN}"))"
 
@@ -114,7 +123,7 @@ echo ">>> Python: ${PYTHON_BIN} ($(command -v "${PYTHON_BIN}"))"
   echo "user_tag=${USER_TAG}"
   echo "script=$0"
   echo "command=${RUN_CMD}"
-  echo "python=visual-scripts/navi-visual/code/interactive_vista2mqsc_teleop.py"
+  echo "python=visual-scripts/navi-visual/code/navigate_to_target.py"
   echo "scene_name=${SCENE_NAME}"
   echo "navigation_type=${NAVIGATION_TYPE}"
   echo "episode_id=${EPISODE_ID}"
@@ -128,12 +137,13 @@ echo ">>> Python: ${PYTHON_BIN} ($(command -v "${PYTHON_BIN}"))"
   echo "output_dir=${OUT_DIR}"
   echo "headless=${HEADLESS}"
   echo "live_dir=${LIVE_DIR}"
-  echo "enable_vista2mqsc_refine=${ENABLE_VISTA2MQSC_REFINE}"
-  echo "use_vista2mqsc_follower=${USE_VISTA2MQSC_FOLLOWER}"
-  echo "disable_pq3d=${DISABLE_PQ3D}"
-  echo "mqsc_use_vlm=${MQSC_USE_VLM}"
-  echo "max_frontier_facing=${MAX_FRONTIER_FACING}"
-  echo "max_saved_follow_frames=${MAX_SAVED_FOLLOW_FRAMES}"
+  echo "max_rounds=${MAX_ROUNDS}"
+  echo "segment_advance_m=${SEGMENT_ADVANCE_M}"
+  echo "arrive_thresh_m=${ARRIVE_THRESH_M}"
+  echo "sequence_task_count=${SEQUENCE_TASK_COUNT}"
+  echo "use_local_nvidia_580=${USE_LOCAL_NVIDIA_580}"
+  echo "local_nvidia_root=${LOCAL_NVIDIA_ROOT}"
+  echo "egl_vendor_library_filenames=${__EGL_VENDOR_LIBRARY_FILENAMES:-}"
   echo "cuda_visible_devices=${CUDA_VISIBLE_DEVICES:-}"
   echo "conda_env=${CONDA_DEFAULT_ENV:-}"
   echo "python_bin=${PYTHON_BIN}"
@@ -149,44 +159,24 @@ cp "$0" "${OUT_DIR}/run_navi_visual_direct.sh.snapshot"
 chmod +x "${OUT_DIR}/run_command.sh"
 
 PY_ARGS=(
-  "visual-scripts/navi-visual/code/interactive_vista2mqsc_teleop.py"
+  "visual-scripts/navi-visual/code/navigate_to_target.py"
   --scene_name "${SCENE_NAME}"
   --navigation_type "${NAVIGATION_TYPE}"
   --episode_id "${EPISODE_ID}"
   --task_id "${TASK_ID}"
-  --navigation_data_path "${NAVIGATION_DATA_PATH}"
-  --hm3d_data_base_path "${HM3D_DATA_BASE_PATH}"
-  --pq3d_stage1_path "${PQ3D_STAGE1_PATH}"
-  --pq3d_stage2_path "${PQ3D_STAGE2_PATH}"
   --logs_dir "${OUT_DIR}"
   --live_dir "${LIVE_DIR}"
-  --max_frontier_facing "${MAX_FRONTIER_FACING}"
-  --max_saved_follow_frames "${MAX_SAVED_FOLLOW_FRAMES}"
+  --max_rounds "${MAX_ROUNDS}"
+  --segment_advance_m "${SEGMENT_ADVANCE_M}"
+  --arrive_thresh_m "${ARRIVE_THRESH_M}"
+  --sequence_task_count "${SEQUENCE_TASK_COUNT}"
 )
-
-if [ "${HEADLESS}" = "1" ]; then
-  PY_ARGS+=(--headless)
-fi
 
 if [ "${DESC_MODE}" = "concise" ]; then
   PY_ARGS+=(--concise_description)
 fi
 if [ -n "${INSTANCE_ID}" ]; then
   PY_ARGS+=(--instance_id "${INSTANCE_ID}")
-fi
-if [ "${ENABLE_VISTA2MQSC_REFINE}" = "1" ]; then
-  PY_ARGS+=(--enable_vista2mqsc_refine)
-else
-  PY_ARGS+=(--disable_vista2mqsc_refine)
-fi
-if [ "${USE_VISTA2MQSC_FOLLOWER}" = "1" ]; then
-  PY_ARGS+=(--use_vista2mqsc_follower)
-fi
-if [ "${DISABLE_PQ3D}" = "1" ]; then
-  PY_ARGS+=(--disable_pq3d)
-fi
-if [ "${MQSC_USE_VLM}" = "1" ]; then
-  PY_ARGS+=(--mqsc_use_vlm)
 fi
 
 {

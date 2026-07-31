@@ -1,0 +1,1523 @@
+{
+  "module": "Endpoint Grounding",
+  "question": "Which viewpoint?",
+  "implementation_module": "vista_ls",
+  "policy": "Landmark-Ray Endpoint Search approximation: reachability, shell distance, visibility, and relation-verifiable viewpoint scoring",
+  "config": {
+    "candidate_radii_m": [
+      0.5,
+      0.75
+    ],
+    "shell_min_m": 0.35,
+    "shell_max_m": 1.2,
+    "min_visibility_score": 0.02,
+    "max_snap_distance_m": 0.6,
+    "nominal_object_radius_m": 0.35,
+    "illustration_radii_m": [
+      0.3,
+      0.45,
+      0.6,
+      0.85,
+      1.1,
+      1.65
+    ],
+    "illustration_angle_count": 12
+  },
+  "object_center_xyz": [
+    -2.37497,
+    3.99337,
+    -6.1985
+  ],
+  "agent_position_xyz": [
+    -2.462632894515991,
+    3.1133780479431152,
+    -5.3405303955078125
+  ],
+  "candidate_count": 72,
+  "category_counts": {
+    "too_close": 29,
+    "bad_viewpoint": 23,
+    "feasible": 13,
+    "too_far": 6,
+    "unreachable": 1
+  },
+  "selected_viewpoint": {
+    "candidate_index": 48,
+    "radius_index": 4,
+    "angle_index": 0,
+    "radius_m": 1.1,
+    "angle_rad": 0.0,
+    "xyz": [
+      -1.2749699999999997,
+      3.1133780479431152,
+      -6.1985
+    ],
+    "navigable": true,
+    "reachable": true,
+    "same_island": true,
+    "geodesic_distance_m": 1.465146780014038,
+    "center_distance_m": 1.1,
+    "surface_distance_m": 0.7500000000000001,
+    "visibility_score": 0.967,
+    "category": "feasible",
+    "selected_by_endpoint_grounding": true
+  },
+  "candidates": [
+    {
+      "candidate_index": 0,
+      "radius_index": 0,
+      "angle_index": 0,
+      "radius_m": 0.3,
+      "angle_rad": 0.0,
+      "xyz": [
+        -1.9229485988616943,
+        3.1393251419067383,
+        -6.210194110870361
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.1162548065185547,
+      "center_distance_m": 0.45217264326370427,
+      "surface_distance_m": 0.10217264326370429,
+      "visibility_score": 0.0,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 1,
+      "radius_index": 0,
+      "angle_index": 1,
+      "radius_m": 0.3,
+      "angle_rad": 0.5235987755982988,
+      "xyz": [
+        -1.9117143154144287,
+        3.1280910968780518,
+        -6.064149856567383
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.9693489074707031,
+      "center_distance_m": 0.48234405805525477,
+      "surface_distance_m": 0.1323440580552548,
+      "visibility_score": 0.0,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 2,
+      "radius_index": 0,
+      "angle_index": 2,
+      "radius_m": 0.3,
+      "angle_rad": 1.0471975511965976,
+      "xyz": [
+        -2.2249701023101807,
+        3.1133780479431152,
+        -5.672880172729492
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.4085828959941864,
+      "center_distance_m": 0.5466042189069115,
+      "surface_distance_m": 0.1966042189069115,
+      "visibility_score": 0.0,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 3,
+      "radius_index": 0,
+      "angle_index": 3,
+      "radius_m": 0.3,
+      "angle_rad": 1.5707963267948966,
+      "xyz": [
+        -2.347001075744629,
+        3.1133780479431152,
+        -5.672880172729492
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.36592167615890503,
+      "center_distance_m": 0.5263634329471237,
+      "surface_distance_m": 0.17636343294712375,
+      "visibility_score": 0.0,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 4,
+      "radius_index": 0,
+      "angle_index": 4,
+      "radius_m": 0.3,
+      "angle_rad": 2.0943951023931953,
+      "xyz": [
+        -2.347001075744629,
+        3.1133780479431152,
+        -5.672880172729492
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.36592167615890503,
+      "center_distance_m": 0.5263634329471237,
+      "surface_distance_m": 0.17636343294712375,
+      "visibility_score": 0.0,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 5,
+      "radius_index": 0,
+      "angle_index": 5,
+      "radius_m": 0.3,
+      "angle_rad": 2.6179938779914944,
+      "xyz": [
+        -2.9970016479492188,
+        3.1133780479431152,
+        -5.872880458831787
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.9680544137954712,
+      "center_distance_m": 0.7021050182422988,
+      "surface_distance_m": 0.3521050182422988,
+      "visibility_score": 0.0,
+      "category": "bad_viewpoint"
+    },
+    {
+      "candidate_index": 6,
+      "radius_index": 0,
+      "angle_index": 6,
+      "radius_m": 0.3,
+      "angle_rad": 3.141592653589793,
+      "xyz": [
+        -2.9970016479492188,
+        3.1133780479431152,
+        -5.872880458831787
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.9680544137954712,
+      "center_distance_m": 0.7021050182422988,
+      "surface_distance_m": 0.3521050182422988,
+      "visibility_score": 0.0,
+      "category": "bad_viewpoint"
+    },
+    {
+      "candidate_index": 7,
+      "radius_index": 0,
+      "angle_index": 7,
+      "radius_m": 0.3,
+      "angle_rad": 3.665191429188092,
+      "xyz": [
+        -2.397001266479492,
+        3.1633780002593994,
+        -6.7228803634643555
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.980785846710205,
+      "center_distance_m": 0.524842969172399,
+      "surface_distance_m": 0.17484296917239905,
+      "visibility_score": 0.0,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 8,
+      "radius_index": 0,
+      "angle_index": 8,
+      "radius_m": 0.3,
+      "angle_rad": 4.1887902047863905,
+      "xyz": [
+        -2.397001266479492,
+        3.1633780002593994,
+        -6.7228803634643555
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.980785846710205,
+      "center_distance_m": 0.524842969172399,
+      "surface_distance_m": 0.17484296917239905,
+      "visibility_score": 0.0,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 9,
+      "radius_index": 0,
+      "angle_index": 9,
+      "radius_m": 0.3,
+      "angle_rad": 4.71238898038469,
+      "xyz": [
+        -2.374969959259033,
+        3.1633780002593994,
+        -6.7228803634643555
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.958754539489746,
+      "center_distance_m": 0.5243803634643569,
+      "surface_distance_m": 0.17438036346435692,
+      "visibility_score": 0.333,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 10,
+      "radius_index": 0,
+      "angle_index": 10,
+      "radius_m": 0.3,
+      "angle_rad": 5.235987755982989,
+      "xyz": [
+        -2.0160751342773438,
+        3.1633780002593994,
+        -6.614978790283203
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.545908808708191,
+      "center_distance_m": 0.5497818725620585,
+      "surface_distance_m": 0.19978187256205848,
+      "visibility_score": 0.25,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 11,
+      "radius_index": 0,
+      "angle_index": 11,
+      "radius_m": 0.3,
+      "angle_rad": 5.759586531581287,
+      "xyz": [
+        -1.9346555471420288,
+        3.1510322093963623,
+        -6.362384796142578
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.269343376159668,
+      "center_distance_m": 0.4698244819103286,
+      "surface_distance_m": 0.11982448191032863,
+      "visibility_score": 0.0,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 12,
+      "radius_index": 1,
+      "angle_index": 0,
+      "radius_m": 0.45,
+      "angle_rad": 0.0,
+      "xyz": [
+        -1.9249699999999998,
+        3.1133780479431152,
+        -6.1985
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.1047167778015137,
+      "center_distance_m": 0.44999999999999996,
+      "surface_distance_m": 0.09999999999999998,
+      "visibility_score": 0.0,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 13,
+      "radius_index": 1,
+      "angle_index": 1,
+      "radius_m": 0.45,
+      "angle_rad": 0.5235987755982988,
+      "xyz": [
+        -1.9052149057388306,
+        3.121591567993164,
+        -5.979657173156738
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.884357750415802,
+      "center_distance_m": 0.5182297091493981,
+      "surface_distance_m": 0.16822970914939817,
+      "visibility_score": 0.0,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 14,
+      "radius_index": 1,
+      "angle_index": 2,
+      "radius_m": 0.45,
+      "angle_rad": 1.0471975511965976,
+      "xyz": [
+        -2.0555312633514404,
+        3.1133780479431152,
+        -5.71435022354126
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.5527556538581848,
+      "center_distance_m": 0.5800363027575739,
+      "surface_distance_m": 0.23003630275757392,
+      "visibility_score": 0.0,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 15,
+      "radius_index": 1,
+      "angle_index": 3,
+      "radius_m": 0.45,
+      "angle_rad": 1.5707963267948966,
+      "xyz": [
+        -2.347001075744629,
+        3.1133780479431152,
+        -5.672880172729492
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.36592167615890503,
+      "center_distance_m": 0.5263634329471237,
+      "surface_distance_m": 0.17636343294712375,
+      "visibility_score": 0.0,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 16,
+      "radius_index": 1,
+      "angle_index": 4,
+      "radius_m": 0.45,
+      "angle_rad": 2.0943951023931953,
+      "xyz": [
+        -2.347001075744629,
+        3.1133780479431152,
+        -5.672880172729492
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.36592167615890503,
+      "center_distance_m": 0.5263634329471237,
+      "surface_distance_m": 0.17636343294712375,
+      "visibility_score": 0.0,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 17,
+      "radius_index": 1,
+      "angle_index": 5,
+      "radius_m": 0.45,
+      "angle_rad": 2.6179938779914944,
+      "xyz": [
+        -2.9970016479492188,
+        3.1133780479431152,
+        -5.872880458831787
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.9680544137954712,
+      "center_distance_m": 0.7021050182422988,
+      "surface_distance_m": 0.3521050182422988,
+      "visibility_score": 0.0,
+      "category": "bad_viewpoint"
+    },
+    {
+      "candidate_index": 18,
+      "radius_index": 1,
+      "angle_index": 6,
+      "radius_m": 0.45,
+      "angle_rad": 3.141592653589793,
+      "xyz": [
+        -2.9970016479492188,
+        3.1133780479431152,
+        -5.872880458831787
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.9680544137954712,
+      "center_distance_m": 0.7021050182422988,
+      "surface_distance_m": 0.3521050182422988,
+      "visibility_score": 0.0,
+      "category": "bad_viewpoint"
+    },
+    {
+      "candidate_index": 19,
+      "radius_index": 1,
+      "angle_index": 7,
+      "radius_m": 0.45,
+      "angle_rad": 3.665191429188092,
+      "xyz": [
+        -2.397001266479492,
+        3.1633780002593994,
+        -6.7228803634643555
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.980785846710205,
+      "center_distance_m": 0.524842969172399,
+      "surface_distance_m": 0.17484296917239905,
+      "visibility_score": 0.0,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 20,
+      "radius_index": 1,
+      "angle_index": 8,
+      "radius_m": 0.45,
+      "angle_rad": 4.1887902047863905,
+      "xyz": [
+        -2.397001266479492,
+        3.1633780002593994,
+        -6.7228803634643555
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.980785846710205,
+      "center_distance_m": 0.524842969172399,
+      "surface_distance_m": 0.17484296917239905,
+      "visibility_score": 0.0,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 21,
+      "radius_index": 1,
+      "angle_index": 9,
+      "radius_m": 0.45,
+      "angle_rad": 4.71238898038469,
+      "xyz": [
+        -2.374969959259033,
+        3.1633780002593994,
+        -6.7228803634643555
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.958754539489746,
+      "center_distance_m": 0.5243803634643569,
+      "surface_distance_m": 0.17438036346435692,
+      "visibility_score": 0.333,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 22,
+      "radius_index": 1,
+      "angle_index": 10,
+      "radius_m": 0.45,
+      "angle_rad": 5.235987755982989,
+      "xyz": [
+        -2.05142879486084,
+        3.1633780002593994,
+        -6.6621174812316895
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.6048319339752197,
+      "center_distance_m": 0.56534952049729,
+      "surface_distance_m": 0.21534952049729006,
+      "visibility_score": 0.0,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 23,
+      "radius_index": 1,
+      "angle_index": 11,
+      "radius_m": 0.45,
+      "angle_rad": 5.759586531581287,
+      "xyz": [
+        -1.9396268129348755,
+        3.156003475189209,
+        -6.4270100593566895
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.3343498706817627,
+      "center_distance_m": 0.4916711683139632,
+      "surface_distance_m": 0.1416711683139632,
+      "visibility_score": 0.5,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 24,
+      "radius_index": 2,
+      "angle_index": 0,
+      "radius_m": 0.6,
+      "angle_rad": 0.0,
+      "xyz": [
+        -1.7749699999999997,
+        3.1133780479431152,
+        -6.1985
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.124686360359192,
+      "center_distance_m": 0.6000000000000001,
+      "surface_distance_m": 0.2500000000000001,
+      "visibility_score": 0.857,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 25,
+      "radius_index": 2,
+      "angle_index": 1,
+      "radius_m": 0.6,
+      "angle_rad": 0.5235987755982988,
+      "xyz": [
+        -1.8553547577293366,
+        3.1133780479431152,
+        -5.8985
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.8247095942497253,
+      "center_distance_m": 0.6,
+      "surface_distance_m": 0.25,
+      "visibility_score": 0.167,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 26,
+      "radius_index": 2,
+      "angle_index": 2,
+      "radius_m": 0.6,
+      "angle_rad": 1.0471975511965976,
+      "xyz": [
+        -2.0749699999999995,
+        3.1133780479431152,
+        -5.678884757729337
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.514554500579834,
+      "center_distance_m": 0.6,
+      "surface_distance_m": 0.25,
+      "visibility_score": 0.0,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 27,
+      "radius_index": 2,
+      "angle_index": 3,
+      "radius_m": 0.6,
+      "angle_rad": 1.5707963267948966,
+      "xyz": [
+        -2.347001075744629,
+        3.1133780479431152,
+        -5.598499774932861
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.29154127836227417,
+      "center_distance_m": 0.6006517550166818,
+      "surface_distance_m": 0.2506517550166818,
+      "visibility_score": 0.0,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 28,
+      "radius_index": 2,
+      "angle_index": 4,
+      "radius_m": 0.6,
+      "angle_rad": 2.0943951023931953,
+      "xyz": [
+        -2.502054452896118,
+        3.1133780479431152,
+        -5.419511318206787
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.0882725641131401,
+      "center_distance_m": 0.7892869088803092,
+      "surface_distance_m": 0.4392869088803092,
+      "visibility_score": 0.0,
+      "category": "bad_viewpoint"
+    },
+    {
+      "candidate_index": 29,
+      "radius_index": 2,
+      "angle_index": 5,
+      "radius_m": 0.6,
+      "angle_rad": 2.6179938779914944,
+      "xyz": [
+        -2.9970016479492188,
+        3.1133780479431152,
+        -5.872880458831787
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.9680544137954712,
+      "center_distance_m": 0.7021050182422988,
+      "surface_distance_m": 0.3521050182422988,
+      "visibility_score": 0.0,
+      "category": "bad_viewpoint"
+    },
+    {
+      "candidate_index": 30,
+      "radius_index": 2,
+      "angle_index": 6,
+      "radius_m": 0.6,
+      "angle_rad": 3.141592653589793,
+      "xyz": [
+        -2.9970016479492188,
+        3.1133780479431152,
+        -5.872880458831787
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.9680544137954712,
+      "center_distance_m": 0.7021050182422988,
+      "surface_distance_m": 0.3521050182422988,
+      "visibility_score": 0.0,
+      "category": "bad_viewpoint"
+    },
+    {
+      "candidate_index": 31,
+      "radius_index": 2,
+      "angle_index": 7,
+      "radius_m": 0.6,
+      "angle_rad": 3.665191429188092,
+      "xyz": [
+        -2.397001266479492,
+        3.1633780002593994,
+        -6.7228803634643555
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.980785846710205,
+      "center_distance_m": 0.524842969172399,
+      "surface_distance_m": 0.17484296917239905,
+      "visibility_score": 0.0,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 32,
+      "radius_index": 2,
+      "angle_index": 8,
+      "radius_m": 0.6,
+      "angle_rad": 4.1887902047863905,
+      "xyz": [
+        -2.397001266479492,
+        3.1633780002593994,
+        -6.7228803634643555
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.980785846710205,
+      "center_distance_m": 0.524842969172399,
+      "surface_distance_m": 0.17484296917239905,
+      "visibility_score": 0.0,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 33,
+      "radius_index": 2,
+      "angle_index": 9,
+      "radius_m": 0.6,
+      "angle_rad": 4.71238898038469,
+      "xyz": [
+        -2.37497,
+        3.1133780479431152,
+        -6.7985
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.9731638431549072,
+      "center_distance_m": 0.5999999999999996,
+      "surface_distance_m": 0.24999999999999967,
+      "visibility_score": 0.667,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 34,
+      "radius_index": 2,
+      "angle_index": 10,
+      "radius_m": 0.6,
+      "angle_rad": 5.235987755982989,
+      "xyz": [
+        -2.0749699999999995,
+        3.1133780479431152,
+        -6.718115242270663
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.669517159461975,
+      "center_distance_m": 0.6,
+      "surface_distance_m": 0.25,
+      "visibility_score": 0.167,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 35,
+      "radius_index": 2,
+      "angle_index": 11,
+      "radius_m": 0.6,
+      "angle_rad": 5.759586531581287,
+      "xyz": [
+        -1.8553547577293368,
+        3.1133780479431152,
+        -6.4985
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.403955101966858,
+      "center_distance_m": 0.5999999999999998,
+      "surface_distance_m": 0.24999999999999978,
+      "visibility_score": 0.571,
+      "category": "too_close"
+    },
+    {
+      "candidate_index": 36,
+      "radius_index": 3,
+      "angle_index": 0,
+      "radius_m": 0.85,
+      "angle_rad": 0.0,
+      "xyz": [
+        -1.5249699999999997,
+        3.1133780479431152,
+        -6.1985
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.2709581851959229,
+      "center_distance_m": 0.8500000000000001,
+      "surface_distance_m": 0.5000000000000001,
+      "visibility_score": 0.947,
+      "category": "feasible"
+    },
+    {
+      "candidate_index": 37,
+      "radius_index": 3,
+      "angle_index": 1,
+      "radius_m": 0.85,
+      "angle_rad": 0.5235987755982988,
+      "xyz": [
+        -1.638848406783227,
+        3.1133780479431152,
+        -5.7735
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.9306360483169556,
+      "center_distance_m": 0.8499999999999999,
+      "surface_distance_m": 0.4999999999999999,
+      "visibility_score": 0.667,
+      "category": "bad_viewpoint"
+    },
+    {
+      "candidate_index": 38,
+      "radius_index": 3,
+      "angle_index": 2,
+      "radius_m": 0.85,
+      "angle_rad": 1.0471975511965976,
+      "xyz": [
+        -1.9499699999999998,
+        3.1133780479431152,
+        -5.462378406783227
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.5269441604614258,
+      "center_distance_m": 0.8500000000000004,
+      "surface_distance_m": 0.5000000000000004,
+      "visibility_score": 0.556,
+      "category": "bad_viewpoint"
+    },
+    {
+      "candidate_index": 39,
+      "radius_index": 3,
+      "angle_index": 3,
+      "radius_m": 0.85,
+      "angle_rad": 1.5707963267948966,
+      "xyz": [
+        -2.37497,
+        3.1133780479431152,
+        -5.3485000000000005
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.08802443742752075,
+      "center_distance_m": 0.8499999999999996,
+      "surface_distance_m": 0.49999999999999967,
+      "visibility_score": 0.278,
+      "category": "bad_viewpoint"
+    },
+    {
+      "candidate_index": 40,
+      "radius_index": 3,
+      "angle_index": 4,
+      "radius_m": 0.85,
+      "angle_rad": 2.0943951023931953,
+      "xyz": [
+        -2.868234634399414,
+        3.1133780479431152,
+        -5.394113540649414
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.43595030903816223,
+      "center_distance_m": 0.9435823098891585,
+      "surface_distance_m": 0.5935823098891585,
+      "visibility_score": 0.045,
+      "category": "bad_viewpoint"
+    },
+    {
+      "candidate_index": 41,
+      "radius_index": 3,
+      "angle_index": 5,
+      "radius_m": 0.85,
+      "angle_rad": 2.6179938779914944,
+      "xyz": [
+        -3.1110915932167726,
+        3.1133780479431152,
+        -5.7735
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.8934208154678345,
+      "center_distance_m": 0.8499999999999999,
+      "surface_distance_m": 0.4999999999999999,
+      "visibility_score": 0.444,
+      "category": "bad_viewpoint"
+    },
+    {
+      "candidate_index": 42,
+      "radius_index": 3,
+      "angle_index": 6,
+      "radius_m": 0.85,
+      "angle_rad": 3.141592653589793,
+      "xyz": [
+        -3.2249701023101807,
+        3.1341023445129395,
+        -5.872880458831787
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.0362637042999268,
+      "center_distance_m": 0.9102352770124412,
+      "surface_distance_m": 0.5602352770124412,
+      "visibility_score": 0.0,
+      "category": "bad_viewpoint"
+    },
+    {
+      "candidate_index": 43,
+      "radius_index": 3,
+      "angle_index": 7,
+      "radius_m": 0.85,
+      "angle_rad": 3.665191429188092,
+      "xyz": [
+        -3.6970014572143555,
+        3.1133780479431152,
+        -6.622879981994629
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 2.1039774417877197,
+      "center_distance_m": 1.3884759785398069,
+      "surface_distance_m": 1.038475978539807,
+      "visibility_score": 0.07,
+      "category": "bad_viewpoint"
+    },
+    {
+      "candidate_index": 44,
+      "radius_index": 3,
+      "angle_index": 8,
+      "radius_m": 0.85,
+      "angle_rad": 4.1887902047863905,
+      "xyz": [
+        -2.397001266479492,
+        3.157496213912964,
+        -6.934621810913086
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 2.0480310916900635,
+      "center_distance_m": 0.7364514221621487,
+      "surface_distance_m": 0.3864514221621487,
+      "visibility_score": 0.0,
+      "category": "bad_viewpoint"
+    },
+    {
+      "candidate_index": 45,
+      "radius_index": 3,
+      "angle_index": 9,
+      "radius_m": 0.85,
+      "angle_rad": 4.71238898038469,
+      "xyz": [
+        -2.37497,
+        3.1133780479431152,
+        -7.0485
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 2.1118249893188477,
+      "center_distance_m": 0.8499999999999996,
+      "surface_distance_m": 0.49999999999999967,
+      "visibility_score": 0.889,
+      "category": "feasible"
+    },
+    {
+      "candidate_index": 46,
+      "radius_index": 3,
+      "angle_index": 10,
+      "radius_m": 0.85,
+      "angle_rad": 5.235987755982989,
+      "xyz": [
+        -1.9499699999999998,
+        3.1133780479431152,
+        -6.934621593216773
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.8400129079818726,
+      "center_distance_m": 0.8500000000000004,
+      "surface_distance_m": 0.5000000000000004,
+      "visibility_score": 0.667,
+      "category": "bad_viewpoint"
+    },
+    {
+      "candidate_index": 47,
+      "radius_index": 3,
+      "angle_index": 11,
+      "radius_m": 0.85,
+      "angle_rad": 5.759586531581287,
+      "xyz": [
+        -1.6388484067832272,
+        3.1133780479431152,
+        -6.623500000000001
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.5707221031188965,
+      "center_distance_m": 0.8500000000000002,
+      "surface_distance_m": 0.5000000000000002,
+      "visibility_score": 0.778,
+      "category": "feasible"
+    },
+    {
+      "candidate_index": 48,
+      "radius_index": 4,
+      "angle_index": 0,
+      "radius_m": 1.1,
+      "angle_rad": 0.0,
+      "xyz": [
+        -1.2749699999999997,
+        3.1133780479431152,
+        -6.1985
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.465146780014038,
+      "center_distance_m": 1.1,
+      "surface_distance_m": 0.7500000000000001,
+      "visibility_score": 0.967,
+      "category": "feasible",
+      "selected_by_endpoint_grounding": true
+    },
+    {
+      "candidate_index": 49,
+      "radius_index": 4,
+      "angle_index": 1,
+      "radius_m": 1.1,
+      "angle_rad": 0.5235987755982988,
+      "xyz": [
+        -1.4223420558371171,
+        3.1133780479431152,
+        -5.6485
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.0849195718765259,
+      "center_distance_m": 1.1,
+      "surface_distance_m": 0.7500000000000001,
+      "visibility_score": 0.793,
+      "category": "feasible"
+    },
+    {
+      "candidate_index": 50,
+      "radius_index": 4,
+      "angle_index": 2,
+      "radius_m": 1.1,
+      "angle_rad": 1.0471975511965976,
+      "xyz": [
+        -1.8249699999999995,
+        3.1133780479431152,
+        -5.2458720558371175
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.644650399684906,
+      "center_distance_m": 1.1000000000000003,
+      "surface_distance_m": 0.7500000000000003,
+      "visibility_score": 0.733,
+      "category": "feasible"
+    },
+    {
+      "candidate_index": 51,
+      "radius_index": 4,
+      "angle_index": 3,
+      "radius_m": 1.1,
+      "angle_rad": 1.5707963267948966,
+      "xyz": [
+        -2.378434658050537,
+        3.1133780479431152,
+        -5.1435394287109375
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.21423067152500153,
+      "center_distance_m": 1.054966260517346,
+      "surface_distance_m": 0.704966260517346,
+      "visibility_score": 0.536,
+      "category": "bad_viewpoint"
+    },
+    {
+      "candidate_index": 52,
+      "radius_index": 4,
+      "angle_index": 4,
+      "radius_m": 1.1,
+      "angle_rad": 2.0943951023931953,
+      "xyz": [
+        -2.9249699999999996,
+        3.1133780479431152,
+        -5.2458720558371175
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.471927672624588,
+      "center_distance_m": 1.1,
+      "surface_distance_m": 0.7500000000000001,
+      "visibility_score": 0.267,
+      "category": "bad_viewpoint"
+    },
+    {
+      "candidate_index": 53,
+      "radius_index": 4,
+      "angle_index": 5,
+      "radius_m": 1.1,
+      "angle_rad": 2.6179938779914944,
+      "xyz": [
+        -3.3275979441628825,
+        3.1133780479431152,
+        -5.6485
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.9577551484107971,
+      "center_distance_m": 1.1,
+      "surface_distance_m": 0.7500000000000001,
+      "visibility_score": 0.655,
+      "category": "bad_viewpoint"
+    },
+    {
+      "candidate_index": 54,
+      "radius_index": 4,
+      "angle_index": 6,
+      "radius_m": 1.1,
+      "angle_rad": 3.141592653589793,
+      "xyz": [
+        -3.733445405960083,
+        3.1498217582702637,
+        -6.22199821472168
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.699796199798584,
+      "center_distance_m": 1.3586786208274269,
+      "surface_distance_m": 1.008678620827427,
+      "visibility_score": 0.048,
+      "category": "bad_viewpoint"
+    },
+    {
+      "candidate_index": 55,
+      "radius_index": 4,
+      "angle_index": 7,
+      "radius_m": 1.1,
+      "angle_rad": 3.665191429188092,
+      "xyz": [
+        -3.6970014572143555,
+        3.1133780479431152,
+        -6.622879981994629
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 2.1039774417877197,
+      "center_distance_m": 1.3884759785398069,
+      "surface_distance_m": 1.038475978539807,
+      "visibility_score": 0.07,
+      "category": "bad_viewpoint"
+    },
+    {
+      "candidate_index": 56,
+      "radius_index": 4,
+      "angle_index": 8,
+      "radius_m": 1.1,
+      "angle_rad": 4.1887902047863905,
+      "xyz": [
+        -2.397001266479492,
+        3.151482343673706,
+        -7.151127815246582
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 2.2036612033843994,
+      "center_distance_m": 0.9528825379259325,
+      "surface_distance_m": 0.6028825379259325,
+      "visibility_score": 0.0,
+      "category": "bad_viewpoint"
+    },
+    {
+      "candidate_index": 57,
+      "radius_index": 4,
+      "angle_index": 9,
+      "radius_m": 1.1,
+      "angle_rad": 4.71238898038469,
+      "xyz": [
+        -2.37497,
+        3.1133780479431152,
+        -7.298500000000001
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 2.3180530071258545,
+      "center_distance_m": 1.1000000000000005,
+      "surface_distance_m": 0.7500000000000006,
+      "visibility_score": 0.931,
+      "category": "feasible"
+    },
+    {
+      "candidate_index": 58,
+      "radius_index": 4,
+      "angle_index": 10,
+      "radius_m": 1.1,
+      "angle_rad": 5.235987755982989,
+      "xyz": [
+        -1.8249699999999995,
+        3.1133780479431152,
+        -7.151127944162883
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 2.0572261810302734,
+      "center_distance_m": 1.1000000000000003,
+      "surface_distance_m": 0.7500000000000003,
+      "visibility_score": 0.8,
+      "category": "feasible"
+    },
+    {
+      "candidate_index": 59,
+      "radius_index": 4,
+      "angle_index": 11,
+      "radius_m": 1.1,
+      "angle_rad": 5.759586531581287,
+      "xyz": [
+        -1.4223420558371176,
+        3.1133780479431152,
+        -6.748500000000001
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.7729485034942627,
+      "center_distance_m": 1.1,
+      "surface_distance_m": 0.7500000000000001,
+      "visibility_score": 0.867,
+      "category": "feasible"
+    },
+    {
+      "candidate_index": 60,
+      "radius_index": 5,
+      "angle_index": 0,
+      "radius_m": 1.65,
+      "angle_rad": 0.0,
+      "xyz": [
+        -0.7249699999999999,
+        3.1133780479431152,
+        -6.1985
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.937933087348938,
+      "center_distance_m": 1.65,
+      "surface_distance_m": 1.2999999999999998,
+      "visibility_score": 0.982,
+      "category": "too_far"
+    },
+    {
+      "candidate_index": 61,
+      "radius_index": 5,
+      "angle_index": 1,
+      "radius_m": 1.65,
+      "angle_rad": 0.5235987755982988,
+      "xyz": [
+        -1.021204948425293,
+        3.1133780479431152,
+        -5.448676586151123
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.445479154586792,
+      "center_distance_m": 1.547551280837263,
+      "surface_distance_m": 1.197551280837263,
+      "visibility_score": 0.9,
+      "category": "feasible"
+    },
+    {
+      "candidate_index": 62,
+      "radius_index": 5,
+      "angle_index": 2,
+      "radius_m": 1.65,
+      "angle_rad": 1.0471975511965976,
+      "xyz": [
+        -1.549970030784607,
+        3.1133780479431152,
+        -4.9728803634643555
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.9846247434616089,
+      "center_distance_m": 1.4774195215534296,
+      "surface_distance_m": 1.1274195215534295,
+      "visibility_score": 0.83,
+      "category": "feasible"
+    },
+    {
+      "candidate_index": 63,
+      "radius_index": 5,
+      "angle_index": 3,
+      "radius_m": 1.65,
+      "angle_rad": 1.5707963267948966,
+      "xyz": [
+        -2.4204931259155273,
+        3.1133780479431152,
+        -5.140304088592529
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.2046126425266266,
+      "center_distance_m": 1.0591746512792914,
+      "surface_distance_m": 0.7091746512792915,
+      "visibility_score": 0.536,
+      "category": "bad_viewpoint"
+    },
+    {
+      "candidate_index": 64,
+      "radius_index": 5,
+      "angle_index": 4,
+      "radius_m": 1.65,
+      "angle_rad": 2.0943951023931953,
+      "xyz": [
+        -3.1718244552612305,
+        3.1320838928222656,
+        -4.797703742980957
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 0.8932879567146301,
+      "center_distance_m": 1.6115852991846984,
+      "surface_distance_m": 1.2615852991846985,
+      "visibility_score": 0.566,
+      "category": "too_far"
+    },
+    {
+      "candidate_index": 65,
+      "radius_index": 5,
+      "angle_index": 5,
+      "radius_m": 1.65,
+      "angle_rad": 2.6179938779914944,
+      "xyz": [
+        -3.8039119162443233,
+        3.1133780479431152,
+        -5.3735
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.3433935642242432,
+      "center_distance_m": 1.6499999999999997,
+      "surface_distance_m": 1.2999999999999998,
+      "visibility_score": 0.8,
+      "category": "too_far"
+    },
+    {
+      "candidate_index": 66,
+      "radius_index": 5,
+      "angle_index": 6,
+      "radius_m": 1.65,
+      "angle_rad": 3.141592653589793,
+      "xyz": [
+        -4.02497,
+        3.1133780479431152,
+        -6.1985
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 1.8433947563171387,
+      "center_distance_m": 1.65,
+      "surface_distance_m": 1.2999999999999998,
+      "visibility_score": 0.273,
+      "category": "too_far"
+    },
+    {
+      "candidate_index": 67,
+      "radius_index": 5,
+      "angle_index": 7,
+      "radius_m": 1.65,
+      "angle_rad": 3.665191429188092,
+      "xyz": [
+        -3.897001266479492,
+        3.119666814804077,
+        -7.023499965667725
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 2.51484751701355,
+      "center_distance_m": 1.7312435182529677,
+      "surface_distance_m": 1.3812435182529677,
+      "visibility_score": 0.034,
+      "category": "too_far"
+    },
+    {
+      "candidate_index": 68,
+      "radius_index": 5,
+      "angle_index": 8,
+      "radius_m": 1.65,
+      "angle_rad": 4.1887902047863905,
+      "xyz": [
+        -3.1999700000000004,
+        3.1133780479431152,
+        -7.627441916244323
+      ],
+      "navigable": false,
+      "reachable": false,
+      "same_island": false,
+      "geodesic_distance_m": Infinity,
+      "center_distance_m": 1.6499999999999997,
+      "surface_distance_m": 1.2999999999999998,
+      "visibility_score": 0.0,
+      "category": "unreachable"
+    },
+    {
+      "candidate_index": 69,
+      "radius_index": 5,
+      "angle_index": 9,
+      "radius_m": 1.65,
+      "angle_rad": 4.71238898038469,
+      "xyz": [
+        -2.3749700000000002,
+        3.1133780479431152,
+        -7.8485
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 2.824673891067505,
+      "center_distance_m": 1.6499999999999995,
+      "surface_distance_m": 1.2999999999999994,
+      "visibility_score": 0.964,
+      "category": "too_far"
+    },
+    {
+      "candidate_index": 70,
+      "radius_index": 5,
+      "angle_index": 10,
+      "radius_m": 1.65,
+      "angle_rad": 5.235987755982989,
+      "xyz": [
+        -1.6502349376678467,
+        3.1633780002593994,
+        -7.514643669128418
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 2.43790864944458,
+      "center_distance_m": 1.5024896233786122,
+      "surface_distance_m": 1.1524896233786124,
+      "visibility_score": 0.875,
+      "category": "feasible"
+    },
+    {
+      "candidate_index": 71,
+      "radius_index": 5,
+      "angle_index": 11,
+      "radius_m": 1.65,
+      "angle_rad": 5.759586531581287,
+      "xyz": [
+        -1.1047241687774658,
+        3.142239570617676,
+        -7.03792667388916
+      ],
+      "navigable": true,
+      "reachable": true,
+      "same_island": true,
+      "geodesic_distance_m": 2.186159610748291,
+      "center_distance_m": 1.5225510213371651,
+      "surface_distance_m": 1.1725510213371653,
+      "visibility_score": 0.918,
+      "category": "feasible"
+    }
+  ],
+  "target_rgb": {
+    "raw_photo": "vista_ls_target_rgb_raw.png",
+    "points_overlay": "vista_ls_target_rgb_points.png (+ _info.json legend metadata)",
+    "projected_candidate_count": 22,
+    "camera_position_xyz": [
+      -2.462632894515991,
+      4.423377990722656,
+      -5.3405303955078125
+    ],
+    "hfov_deg": 42.0,
+    "resolution_wh": [
+      640,
+      480
+    ]
+  }
+}

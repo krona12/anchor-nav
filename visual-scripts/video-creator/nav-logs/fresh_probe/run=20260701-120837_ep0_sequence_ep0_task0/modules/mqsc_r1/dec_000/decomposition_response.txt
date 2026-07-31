@@ -1,0 +1,1 @@
+{"target_desc":"wardrobe","target_aliases":["tall brown wardrobe"],"anchor_primary":["bed","Mickey Mouse plush toy"],"anchor_support":["plain white sheets","light teal pillows"],"room_context":["bedroom"],"relations":""}

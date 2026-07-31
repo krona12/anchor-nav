@@ -1,20 +1,22 @@
-"""Module-process visualization for the three anchor_nav decision modules.
+"""Module-process visualization for the LANDER-Nav grounding process.
 
 This driver produces faithful per-module PROCESS LOGS (prompts, VLM input/output,
-decisions, and visualizations). TFFS is routed through the real
-hm3d-online/anchor_nav/tffs.py implementation; MQSC-R1 and VISTA-LS still use
-lightweight visual process reconstructions where full PQ3D state is unavailable.
+decisions, and visualizations). Evidence Grounding is routed through the real
+hm3d-online/anchor_nav/tffs.py implementation; Entity Grounding and Endpoint
+Grounding use lightweight visual process reconstructions where full PQ3D state is
+unavailable.
 At sampled decision points it dumps a self-contained log folder per module:
 
-  modules/tffs/dec_XXX/      Task-Facing Frontier Selection  (real frontier rerank, VLM per frontier view)
-  modules/mqsc_r1/dec_XXX/   MQSC-R1 spatial consensus        (text decomposition VLM + footprint clustering)
-  modules/vista_ls/final/    VISTA-LS viewpoint correction    (ring candidates: unreachable / too-close / bad-view / selected)
+  modules/tffs/dec_XXX/      Evidence Grounding: Which frontier?
+  modules/mqsc_r1/dec_XXX/   Entity Grounding: Which object?
+  modules/vista_ls/final/    Endpoint Grounding: Which viewpoint?
 
-Every prompt and raw response is written to disk. The route follows the TFFS
-selected frontier between decision rounds when available, so the trajectory log
-reflects the frontier selector.
+Every prompt and raw response is written to disk. The route follows the Evidence
+Grounding selected frontier between decision rounds when available, so the
+trajectory log reflects the frontier selector.
 
-Every visualization carries a legend explaining its markers/colors.
+Images stay pixel-clean: marker legends are written to sibling *_info.json files
+instead of being burned into the image as white panels.
 """
 from __future__ import annotations
 
@@ -53,6 +55,16 @@ import vista_ls  # noqa: E402  (VistaLsConfig)
 import habitat_sim.utils.common as hsu  # noqa: E402
 from pic.joint import _save_rgb_jpg, _subsample_frames_evenly, stitch_panorama  # noqa: E402
 from frontier_utils import get_polar_angle, map_coors_to_pixel  # noqa: E402
+
+EVIDENCE_MODULE = "Evidence Grounding"
+EVIDENCE_QUESTION = "Which frontier?"
+EVIDENCE_TITLE = f"{EVIDENCE_MODULE}: {EVIDENCE_QUESTION}"
+ENTITY_MODULE = "Entity Grounding"
+ENTITY_QUESTION = "Which object?"
+ENTITY_TITLE = f"{ENTITY_MODULE}: {ENTITY_QUESTION}"
+ENDPOINT_MODULE = "Endpoint Grounding"
+ENDPOINT_QUESTION = "Which viewpoint?"
+ENDPOINT_TITLE = f"{ENDPOINT_MODULE}: {ENDPOINT_QUESTION}"
 
 
 def _load_teleop() -> Any:
@@ -106,9 +118,15 @@ def _write_json(path: Path, payload: Any) -> None:
 
 def call_vlm(
     *, prompt: str, image_path: Optional[str], tag: str, model: str = "gpt-4o-mini",
-    max_tokens: int = 256, simulated_fn=None,
+    max_tokens: int = 256,
 ) -> Dict[str, Any]:
-    """Call the anchor_nav VLM client directly and capture full I/O."""
+    """Call the anchor_nav VLM client directly and capture full I/O.
+
+    This visual driver is intentionally strict: a VLM/network/key failure should
+    stop the run so the batch monitor can surface and repair it. Returning fake
+    responses here would make the module logs look valid while hiding the real
+    failure mode.
+    """
     rec: Dict[str, Any] = {
         "tag": tag,
         "vlm_client_file": vlm_client.__file__,
@@ -123,79 +141,69 @@ def call_vlm(
     try:
         with _no_proxy():
             raw = vlm_client.chat(text=prompt, image_path=image_path, model=model, max_tokens=max_tokens)
-        rec.update({"raw_response": str(raw), "source": "anchor_nav_vlm_real", "ok": True})
-    except Exception as exc:  # network/key/etc. -> labelled simulated fallback
+    except Exception as exc:
         rec["error"] = f"{type(exc).__name__}: {exc}"
-        raw = simulated_fn() if simulated_fn is not None else "{}"
-        rec.update({"raw_response": str(raw), "source": "simulated_fallback", "ok": False})
+        raise RuntimeError(f"real VLM call failed for {tag}: {rec['error']}") from exc
+    rec.update({"raw_response": str(raw), "source": "anchor_nav_vlm_real", "ok": True})
     return rec
 
 
 # ----------------------------- drawing helpers -----------------------------
-def _draw_legend(img_bgr: np.ndarray, title: str, entries: List[Tuple[Tuple[int, int, int], str]]) -> None:
-    """Draw a titled legend box (top-left) with colored swatches + labels."""
-    pad, sw, line_h = 8, 16, 20
-    n = len(entries) + 1
-    box_w = 12 + sw + 8 + 250
-    box_h = pad * 2 + n * line_h
-    x0, y0 = 6, 6
-    overlay = img_bgr.copy()
-    cv2.rectangle(overlay, (x0, y0), (x0 + box_w, y0 + box_h), (255, 255, 255), -1)
-    cv2.addWeighted(overlay, 0.82, img_bgr, 0.18, 0, img_bgr)
-    cv2.rectangle(img_bgr, (x0, y0), (x0 + box_w, y0 + box_h), (40, 40, 40), 1)
-    y = y0 + pad + 14
-    cv2.putText(img_bgr, title, (x0 + 8, y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
-    y += line_h
-    for color, label in entries:
-        cv2.rectangle(img_bgr, (x0 + 10, y - 12), (x0 + 10 + sw, y), color, -1)
-        cv2.rectangle(img_bgr, (x0 + 10, y - 12), (x0 + 10 + sw, y), (40, 40, 40), 1)
-        cv2.putText(img_bgr, label, (x0 + 10 + sw + 8, y), cv2.FONT_HERSHEY_SIMPLEX, 0.44, (0, 0, 0), 1, cv2.LINE_AA)
-        y += line_h
-
-
-def _save_raw_and_legend(img_markers: np.ndarray, base_path: Path, title: str,
-                         entries: List[Tuple[Tuple[int, int, int], str]]) -> None:
-    """Save the marker image twice: the raw (no-legend) version for the user to
-    relabel, and a copy with the legend drawn on top."""
+def _save_marker_image(img_markers: np.ndarray, base_path: Path, title: str,
+                       entries: List[Tuple[Tuple[int, int, int], str]]) -> None:
+    """Save a clean marker image and keep legend metadata out of the pixels."""
     base_path.parent.mkdir(parents=True, exist_ok=True)
     cv2.imwrite(str(base_path.with_name(base_path.name + ".png")), img_markers)
-    leg = img_markers.copy()
-    _draw_legend(leg, title, entries)
-    cv2.imwrite(str(base_path.with_name(base_path.name + "_legend.png")), leg)
+    _write_json(
+        base_path.with_name(base_path.name + "_info.json"),
+        {
+            "title": title,
+            "legend": [
+                {"color_bgr": [int(c) for c in color], "label": str(label)}
+                for color, label in entries
+            ],
+            "note": "Legend is stored as metadata so no white legend panel is burned into the image.",
+        },
+    )
 
 
-def _fill_border_connected_black_bgr(img_bgr: np.ndarray, fill: Tuple[int, int, int] = (184, 184, 184)) -> Tuple[np.ndarray, int]:
+def _fill_border_connected_extreme_bgr(img_bgr: np.ndarray, fill: Tuple[int, int, int] = (184, 184, 184)) -> Tuple[np.ndarray, int, int]:
     """Replace simulator no-geometry background touching the image edge.
 
     Downward RGB sensors can render empty space outside the captured mesh as
-    pure black.  Keep real dark content inside the scene, but neutralize the
-    edge-connected background so the local topdown RGB is not mistaken for a
-    black-bordered map.
+    pure black or pure white depending on scene/material state. Keep real dark
+    or white content inside the scene, but neutralize only the edge-connected
+    background so the local topdown RGB is not mistaken for a bordered map.
     """
     img = np.asarray(img_bgr, dtype=np.uint8).copy()
-    near_black = (img.max(axis=2) <= 8).astype(np.uint8)
-    if near_black.size == 0 or int(near_black.sum()) == 0:
-        return img, 0
-    h, w = near_black.shape
-    mask = np.zeros((h + 2, w + 2), dtype=np.uint8)
-    work = near_black.copy()
-    seeds: List[Tuple[int, int]] = []
-    xs = np.where(work[0, :] > 0)[0]
-    seeds.extend((int(x), 0) for x in xs)
-    xs = np.where(work[h - 1, :] > 0)[0]
-    seeds.extend((int(x), h - 1) for x in xs)
-    ys = np.where(work[:, 0] > 0)[0]
-    seeds.extend((0, int(y)) for y in ys)
-    ys = np.where(work[:, w - 1] > 0)[0]
-    seeds.extend((w - 1, int(y)) for y in ys)
-    for seed in seeds:
-        if work[seed[1], seed[0]] > 0:
-            cv2.floodFill(work, mask, seed, 2)
-    edge_background = work == 2
-    replaced = int(edge_background.sum())
-    if replaced > 0:
+
+    def _edge_connected(mask_in: np.ndarray) -> np.ndarray:
+        mask_bin = (np.asarray(mask_in) > 0).astype(np.uint8)
+        if mask_bin.size == 0 or int(mask_bin.sum()) == 0:
+            return np.zeros_like(mask_bin, dtype=bool)
+        h, w = mask_bin.shape
+        flood_mask = np.zeros((h + 2, w + 2), dtype=np.uint8)
+        work = mask_bin.copy()
+        seeds: List[Tuple[int, int]] = []
+        xs = np.where(work[0, :] > 0)[0]
+        seeds.extend((int(x), 0) for x in xs)
+        xs = np.where(work[h - 1, :] > 0)[0]
+        seeds.extend((int(x), h - 1) for x in xs)
+        ys = np.where(work[:, 0] > 0)[0]
+        seeds.extend((0, int(y)) for y in ys)
+        ys = np.where(work[:, w - 1] > 0)[0]
+        seeds.extend((w - 1, int(y)) for y in ys)
+        for seed in seeds:
+            if work[seed[1], seed[0]] > 0:
+                cv2.floodFill(work, flood_mask, seed, 2)
+        return work == 2
+
+    black_bg = _edge_connected(img.max(axis=2) <= 8)
+    white_bg = _edge_connected(img.min(axis=2) >= 247)
+    edge_background = np.logical_or(black_bg, white_bg)
+    if bool(np.any(edge_background)):
         img[edge_background] = fill
-    return img, replaced
+    return img, int(black_bg.sum()), int(white_bg.sum())
 
 
 def render_topdown_cam(nav: Any, sim: Any, base_paths: List[Path], log: List[str],
@@ -228,7 +236,7 @@ def render_topdown_cam(nav: Any, sim: Any, base_paths: List[Path], log: List[str
     if chosen is None:
         chosen = float(candidates[-1])  # lowest slice already rendered
     rgb_bgr = cv2.cvtColor(np.asarray(obs["topdown_rgb"][:, :, :3], dtype=np.uint8), cv2.COLOR_RGB2BGR)
-    rgb_bgr, edge_black_fill_px = _fill_border_connected_black_bgr(rgb_bgr)
+    rgb_bgr, edge_black_fill_px, edge_white_fill_px = _fill_border_connected_extreme_bgr(rgb_bgr)
     depth = np.asarray(obs["topdown_depth"], dtype=np.float32)
     dep_vis = cv2.cvtColor(_VIS._depth_to_rgb(depth), cv2.COLOR_RGB2BGR)
     slice_ok = bool(med >= 0.5 * chosen)  # only flags true ceiling occlusion
@@ -244,34 +252,52 @@ def render_topdown_cam(nav: Any, sim: Any, base_paths: List[Path], log: List[str
                 "median_depth_m": float(med),
                 "slice_ok": bool(slice_ok),
                 "edge_connected_black_fill_px": int(edge_black_fill_px),
-                "uncovered_fill": "neutral_gray_for_edge_connected_no_geometry_black",
+                "edge_connected_white_fill_px": int(edge_white_fill_px),
+                "uncovered_fill": "neutral_gray_for_edge_connected_no_geometry_black_or_white",
                 "note": "Clean local RGB photo; robot marker is stored in decision metadata, not drawn into the image.",
             },
         )
     log.append(
         f"[topdown_cam] slice_H={chosen:.1f} median_depth={med:.2f} "
-        f"slice_ok={slice_ok} edge_black_fill_px={edge_black_fill_px} -> {len(base_paths)} dir(s)"
+        f"slice_ok={slice_ok} edge_black_fill_px={edge_black_fill_px} "
+        f"edge_white_fill_px={edge_white_fill_px} -> {len(base_paths)} dir(s)"
     )
     return {
         "slice_height_m": chosen,
         "median_depth_m": med,
         "slice_ok": slice_ok,
         "edge_connected_black_fill_px": edge_black_fill_px,
+        "edge_connected_white_fill_px": edge_white_fill_px,
     }
 
 
-def _base_topdown_bgr(nav: Any) -> np.ndarray:
-    rgb = nav.VIS_NAV._base_rgb_floor(nav.top_down_map, nav.fog) if hasattr(nav, "VIS_NAV") else None
-    if rgb is None:
-        rgb = _VIS._base_rgb_floor(nav.top_down_map, nav.fog)
+def _base_topdown_bgr(nav: Any, sim: Any) -> np.ndarray:
+    rgb = render_gray_topdown_rgb(
+        nav,
+        sim,
+        fog=nav.fog.copy(),
+        agent_state=nav.agent.get_state(),
+        target=getattr(nav, "current_target", None),
+        is_final=bool(getattr(nav, "current_target_is_final", False)),
+        frontiers=[],
+        selected_frontier_idx=None,
+    )
     return cv2.cvtColor(rgb.copy(), cv2.COLOR_RGB2BGR)
 
 
-def _global_topdown_bgr(nav: Any, *, fog: bool) -> np.ndarray:
+def _global_topdown_bgr(nav: Any, sim: Any, *, fog: bool) -> np.ndarray:
     fog_mask = nav.fog if fog else np.ones_like(nav.fog)
-    rgb = nav.VIS_NAV._base_rgb_floor(nav.top_down_map, fog_mask) if hasattr(nav, "VIS_NAV") else None
-    if rgb is None:
-        rgb = _VIS._base_rgb_floor(nav.top_down_map, fog_mask)
+    rgb = render_gray_topdown_rgb(
+        nav,
+        sim,
+        fog=fog_mask,
+        agent_state=nav.agent.get_state(),
+        target=None,
+        is_final=False,
+        frontiers=[],
+        selected_frontier_idx=None,
+        draw_path=False,
+    )
     return cv2.cvtColor(rgb.copy(), cv2.COLOR_RGB2BGR)
 
 
@@ -516,35 +542,16 @@ def _project_rgbd_tile_to_map(
     return rr, cc, colors, score.astype(np.float32)
 
 
-def _fill_uncovered_by_dilation(mosaic: np.ndarray, filled: np.ndarray, max_iter: int = 96) -> Tuple[np.ndarray, np.ndarray]:
-    out = np.asarray(mosaic, dtype=np.uint8).copy()
-    known = (np.asarray(filled) > 0).astype(np.uint8)
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (7, 7))
-    for _ in range(int(max_iter)):
-        holes = known == 0
-        if not bool(np.any(holes)):
-            break
-        dilated_img = cv2.dilate(out, kernel)
-        dilated_known = cv2.dilate(known, kernel)
-        take = np.logical_and(holes, dilated_known > 0)
-        if not bool(np.any(take)):
-            break
-        out[take] = dilated_img[take]
-        known[take] = 1
-    return out, known
-
-
 def render_global_topdown_scene_rgb(nav: Any, sim: Any) -> Tuple[np.ndarray, Dict[str, Any]]:
     """Build a full-map RGB bird's-eye mosaic from many local downward RGB views."""
     cache = getattr(nav, "_global_topdown_scene_rgb_cache", None)
     if isinstance(cache, dict) and cache.get("shape") == list(nav.top_down_map.shape[:2]):
         return np.asarray(cache["image_bgr"], dtype=np.uint8).copy(), dict(cache.get("info", {}))
 
-    base = _global_topdown_bgr(nav, fog=False)
+    base = _global_topdown_bgr(nav, sim, fog=False)
     sensors = sim.get_agent(0)._sensors
     if "topdown_rgb" not in sensors or "topdown_depth" not in sensors:
-        info = {"ok": False, "reason": "topdown_rgbd_sensors_missing", "source": "navmesh_color_fallback"}
-        return base, info
+        raise RuntimeError("topdown RGBD sensors are required for topdown_scene_rgb.png")
 
     mpp = float(getattr(nav, "VIS_meters_per_px", 0.05))
     fov = float(getattr(nav.args, "topdown_cam_hfov", 90.0))
@@ -557,8 +564,7 @@ def render_global_topdown_scene_rgb(nav: Any, sim: Any) -> Tuple[np.ndarray, Dic
     navigable = np.asarray(nav.top_down_map) > 0
     ys, xs = np.where(navigable)
     if ys.size == 0:
-        info = {"ok": False, "reason": "empty_topdown_map", "source": "navmesh_color_fallback"}
-        return base, info
+        raise RuntimeError("empty topdown map; cannot build topdown_scene_rgb.png")
     r0, r1 = int(ys.min()), int(ys.max())
     c0, c1 = int(xs.min()), int(xs.max())
 
@@ -680,6 +686,48 @@ def render_global_topdown_scene_rgb(nav: Any, sim: Any) -> Tuple[np.ndarray, Dic
     return mosaic, info
 
 
+def _annotate_scene_rgb_bgr(
+    *,
+    nav: Any,
+    sim: Any,
+    scene_bgr: np.ndarray,
+    agent_state: Optional[Any],
+    target: Optional[np.ndarray],
+    is_final: bool,
+    frontiers: Optional[List[np.ndarray]],
+    selected_frontier_idx: Optional[int],
+) -> np.ndarray:
+    """Draw navigation state on a copy of the clean scene RGB map."""
+    img = np.asarray(scene_bgr, dtype=np.uint8).copy()
+    shape = img.shape[:2]
+    path_pixels = list(getattr(nav, "path_pixels", []) or [])
+    for prev, nxt in zip(path_pixels[:-1], path_pixels[1:]):
+        p0 = _VIS._clamp_rc((int(prev[0]), int(prev[1])), shape)
+        p1 = _VIS._clamp_rc((int(nxt[0]), int(nxt[1])), shape)
+        cv2.line(img, (p0[1], p0[0]), (p1[1], p1[0]), (255, 120, 20), 2, cv2.LINE_AA)
+
+    goal_positions = list(getattr(getattr(nav, "ctx", None), "goal_positions", []) or [])
+    for gp in goal_positions:
+        _VIS._draw_star(img, _rc(gp, nav, sim), (0, 165, 255), size=9)
+
+    if frontiers is not None:
+        for idx, fw in enumerate(frontiers):
+            selected = selected_frontier_idx is not None and int(idx) == int(selected_frontier_idx)
+            _VIS._draw_circle(img, _rc(fw, nav, sim), (255, 0, 255) if selected else (170, 170, 170),
+                              radius=6 if selected else 4)
+
+    used_target = target if target is not None else getattr(nav, "current_target", None)
+    if used_target is not None:
+        trc = _VIS._clamp_rc(_rc(np.asarray(used_target, dtype=float), nav, sim), shape)
+        color = (0, 0, 255) if bool(is_final) else (0, 120, 255)
+        cv2.drawMarker(img, (trc[1], trc[0]), color, cv2.MARKER_CROSS, 18, 2, cv2.LINE_AA)
+
+    st = agent_state if agent_state is not None else nav.agent.get_state()
+    arc = _VIS._clamp_rc(_rc(np.asarray(st.position, dtype=float), nav, sim), shape)
+    _VIS._draw_agent_arrow(img, arc, float(get_polar_angle(st)), (0, 0, 255), size=11)
+    return img
+
+
 def save_global_topdown_maps(
     *,
     nav: Any,
@@ -691,10 +739,12 @@ def save_global_topdown_maps(
     agent_state: Optional[Any] = None,
     log: Optional[List[str]] = None,
 ) -> None:
-    """Save the two global map artifacts used in the demo.
+    """Save the global map artifacts used in the demo.
 
     1. ``topdown_map.png``: the single gray TopDown Map theme.
     2. ``topdown_scene_rgb.png``: a clean full-scene RGB bird's-eye projection.
+    3. ``topdown_scene_rgb_annotated.png``: the same RGB projection with
+       trajectory, agent, target, and frontier overlays.
 
     Older duplicate names such as topdown_map_rgb/topdown_navmesh_rgb are no
     longer emitted because they did not actually encode different image types.
@@ -713,9 +763,38 @@ def save_global_topdown_maps(
     scene_rgb, scene_info = render_global_topdown_scene_rgb(nav, sim)
     _write_json(out_dir / "topdown_scene_rgb_info.json", scene_info)
     cv2.imwrite(str(out_dir / "topdown_scene_rgb.png"), scene_rgb)
+    scene_annotated = _annotate_scene_rgb_bgr(
+        nav=nav,
+        sim=sim,
+        scene_bgr=scene_rgb,
+        agent_state=agent_state,
+        target=getattr(nav, "current_target", None),
+        is_final=bool(getattr(nav, "current_target_is_final", False)),
+        frontiers=frontiers,
+        selected_frontier_idx=selected_frontier_idx,
+    )
+    cv2.imwrite(str(out_dir / "topdown_scene_rgb_annotated.png"), scene_annotated)
+    _write_json(
+        out_dir / "topdown_scene_rgb_annotated_info.json",
+        {
+            "source": "global_topdown_rgb_annotation",
+            "base_image": "topdown_scene_rgb.png",
+            "file": "topdown_scene_rgb_annotated.png",
+            "note": "The base RGB map remains available without overlays or legend panels.",
+            "overlays": {
+                "blue_line": "trajectory",
+                "red_arrow": "agent_position_and_heading",
+                "orange_star": "goal",
+                "gray_circle": "frontier",
+                "magenta_circle": "selected_frontier",
+                "red_cross": "final_target",
+                "blue_cross": "non_final_target",
+            },
+        },
+    )
     if log is not None:
         log.append(
-            f"[topdown_global] {out_dir}: saved gray topdown map + clean scene RGB "
+            f"[topdown_global] {out_dir}: saved gray topdown map + clean/annotated scene RGB "
             f"tiles={scene_info.get('successful_tile_count', 0)}/{scene_info.get('tile_count', 0)} "
             f"nav_fill={float(scene_info.get('filled_navigable_ratio', 0.0)):.2f} "
             f"frame_fill={float(scene_info.get('filled_frame_ratio', 0.0)):.2f}"
@@ -734,15 +813,290 @@ def _forward_xz(state) -> np.ndarray:
     return np.asarray([f[0], f[2]], dtype=float)
 
 
+def _look_at_quat_xz(origin: np.ndarray, target: np.ndarray) -> Any:
+    origin = np.asarray(origin, dtype=float).reshape(3)
+    target = np.asarray(target, dtype=float).reshape(3)
+    dx = float(target[0] - origin[0])
+    dz = float(target[2] - origin[2])
+    yaw = 0.0 if math.hypot(dx, dz) < 1e-6 else math.atan2(-dx, -dz)
+    return [0.0, math.sin(yaw / 2.0), 0.0, math.cos(yaw / 2.0)]
+
+
 _M = None  # teleop module handle, set in main
 
 
-# ----------------------------- Real TFFS rerank -----------------------------
+# ----------------------------- log stream indexes -----------------------------
+def _rel_to(root: Path, path: Path) -> str:
+    try:
+        return str(path.resolve().relative_to(root.resolve()))
+    except Exception:
+        return str(path)
+
+
+def _existing_rel_paths(root: Path, paths: List[Path]) -> List[str]:
+    out: List[str] = []
+    for p in paths:
+        if p.exists() and p.is_file() and p.stat().st_size > 0:
+            out.append(_rel_to(root, p))
+    return out
+
+
+def _glob_rel_paths(root: Path, pattern_root: Path, pattern: str) -> List[str]:
+    if not pattern_root.exists():
+        return []
+    return [_rel_to(root, p) for p in sorted(pattern_root.glob(pattern)) if p.is_file() and p.stat().st_size > 0]
+
+
+def write_log_stream_indexes(out_dir: Path, rounds: int) -> Dict[str, Any]:
+    """Write compact indexes for the human-facing log flows.
+
+    Images are not duplicated here.  Each stream points to the clean images,
+    annotated images, prompts, responses, and JSON decisions already written by
+    the module folders.
+    """
+    streams_dir = out_dir / "log_streams"
+    streams: Dict[str, Dict[str, Any]] = {
+        "topdown_map_evolution": {
+            "description": "Gray TopDown Map process with trajectory, frontiers, selected frontier/target, and module overlays.",
+            "entries": [],
+        },
+        "rgb_map_evolution": {
+            "description": "Full-scene top-down RGB process. Each step keeps a clean RGB map and an annotated RGB map.",
+            "entries": [],
+        },
+        "task_decomposition_vlm": {
+            "description": "Entity Grounding VLM prompts, raw responses, parsed landmark roles, and decision JSON.",
+            "entries": [],
+        },
+        "evidence_grounding_vlm": {
+            "description": "Evidence Grounding frontier-selection VLM prompts, raw responses, panorama inputs, and frontier map images.",
+            "entries": [],
+        },
+        "entity_grounding": {
+            "description": "Entity Grounding candidate footprints, landmark-anchored spatial votes, and selected object point.",
+            "entries": [],
+        },
+    }
+
+    def add(category: str, payload: Dict[str, Any]) -> None:
+        streams[category]["entries"].append(_jsonable(payload))
+
+    for dec in range(max(0, int(rounds))):
+        dtag = f"dec_{dec:03d}"
+        tdir = out_dir / "modules" / "tffs" / dtag
+        mdir = out_dir / "modules" / "mqsc_r1" / dtag
+        for module_name, mod_dir, overlay_name in (
+            (EVIDENCE_MODULE, tdir, "tffs_frontiers_topdown.png"),
+            (ENTITY_MODULE, mdir, "mqsc_r1_clusters_topdown.png"),
+        ):
+            add(
+                "topdown_map_evolution",
+                {
+                    "decision": dec,
+                    "module": module_name,
+                    "images": _existing_rel_paths(
+                        out_dir,
+                        [
+                            mod_dir / "topdown_map.png",
+                            mod_dir / overlay_name,
+                        ],
+                    ),
+                    "metadata": _existing_rel_paths(
+                        out_dir,
+                        [
+                            mod_dir / "topdown_map_info.json",
+                            mod_dir / overlay_name.replace(".png", "_info.json"),
+                        ],
+                    ),
+                },
+            )
+            add(
+                "rgb_map_evolution",
+                {
+                    "decision": dec,
+                    "module": module_name,
+                    "clean_rgb": _existing_rel_paths(out_dir, [mod_dir / "topdown_scene_rgb.png"]),
+                    "annotated_rgb": _existing_rel_paths(out_dir, [mod_dir / "topdown_scene_rgb_annotated.png"]),
+                    "local_topdown_rgb": _existing_rel_paths(out_dir, [mod_dir / "topdown_cam_rgb.png"]),
+                    "metadata": _existing_rel_paths(
+                        out_dir,
+                        [
+                            mod_dir / "topdown_scene_rgb_info.json",
+                            mod_dir / "topdown_scene_rgb_annotated_info.json",
+                            mod_dir / "topdown_cam_info.json",
+                        ],
+                    ),
+                },
+            )
+
+        add(
+            "task_decomposition_vlm",
+            {
+                "decision": dec,
+                "module": ENTITY_MODULE,
+                "prompt": _existing_rel_paths(out_dir, [mdir / "decomposition_prompt.txt"]),
+                "response": _existing_rel_paths(out_dir, [mdir / "decomposition_response.txt"]),
+                "images": _existing_rel_paths(
+                    out_dir,
+                    [
+                        mdir / "topdown_map.png",
+                        mdir / "topdown_scene_rgb.png",
+                        mdir / "topdown_scene_rgb_annotated.png",
+                        mdir / "mqsc_r1_clusters_topdown.png",
+                    ],
+                ),
+                "image_role": "context_only_text_vlm_has_no_direct_image_input",
+                "decision_json": _existing_rel_paths(out_dir, [mdir / "mqsc_r1_decision.json"]),
+            },
+        )
+        add(
+            "evidence_grounding_vlm",
+            {
+                "decision": dec,
+                "module": EVIDENCE_MODULE,
+                "panorama_inputs": _glob_rel_paths(out_dir, tdir / "panorama", "view_*.png")
+                + _existing_rel_paths(out_dir, [tdir / "panorama" / "current_decision_panorama_vfv_order.jpg"]),
+                "prompts": _glob_rel_paths(out_dir, tdir / "prompts", "frontier_*_prompt.txt"),
+                "responses": _glob_rel_paths(out_dir, tdir / "prompts", "frontier_*_response.txt"),
+                "decision_json": _existing_rel_paths(out_dir, [tdir / "tffs_decision.json"]),
+                "images": _existing_rel_paths(
+                    out_dir,
+                    [
+                        tdir / "tffs_frontiers_topdown.png",
+                        tdir / "topdown_map.png",
+                        tdir / "topdown_scene_rgb_annotated.png",
+                    ],
+                ),
+            },
+        )
+        add(
+            "entity_grounding",
+            {
+                "decision": dec,
+                "module": ENTITY_MODULE,
+                "prompt": _existing_rel_paths(out_dir, [mdir / "decomposition_prompt.txt"]),
+                "response": _existing_rel_paths(out_dir, [mdir / "decomposition_response.txt"]),
+                "images": _existing_rel_paths(out_dir, [mdir / "mqsc_r1_clusters_topdown.png", mdir / "topdown_map.png"]),
+                "metadata": _existing_rel_paths(out_dir, [mdir / "mqsc_r1_clusters_topdown_info.json"]),
+                "decision_json": _existing_rel_paths(out_dir, [mdir / "mqsc_r1_decision.json"]),
+            },
+        )
+
+    vdir = out_dir / "modules" / "vista_ls" / "final"
+    add(
+        "topdown_map_evolution",
+        {
+            "decision": "final",
+            "module": ENDPOINT_MODULE,
+            "images": _existing_rel_paths(
+                out_dir,
+                [
+                    vdir / "topdown_map.png",
+                    vdir / "vista_ls_candidates_topdown.png",
+                    vdir / "vista_ls_candidates_zoom.png",
+                    out_dir / "trajectory" / "route_start_to_goal.png",
+                ],
+            ),
+            "metadata": _existing_rel_paths(
+                out_dir,
+                [
+                    vdir / "topdown_map_info.json",
+                    vdir / "vista_ls_candidates_topdown_info.json",
+                    vdir / "vista_ls_candidates_zoom_info.json",
+                    out_dir / "trajectory" / "route_start_to_goal_info.json",
+                ],
+            ),
+        },
+    )
+    add(
+        "rgb_map_evolution",
+        {
+            "decision": "final",
+            "module": ENDPOINT_MODULE,
+            "clean_rgb": _existing_rel_paths(out_dir, [vdir / "topdown_scene_rgb.png"]),
+            "annotated_rgb": _existing_rel_paths(out_dir, [vdir / "topdown_scene_rgb_annotated.png"]),
+            "local_topdown_rgb": _existing_rel_paths(out_dir, [vdir / "topdown_cam_rgb.png"]),
+            "metadata": _existing_rel_paths(
+                out_dir,
+                [
+                    vdir / "topdown_scene_rgb_info.json",
+                    vdir / "topdown_scene_rgb_annotated_info.json",
+                    vdir / "topdown_cam_info.json",
+                ],
+            ),
+        },
+    )
+
+    manifest: Dict[str, Any] = {
+        "version": "navi_visual_log_streams_v1",
+        "root": str(out_dir),
+        "note": "Indexes reference existing artifacts; no duplicate images are created. Legend data stays in *_info.json so clean/no-legend images remain available.",
+        "categories": {},
+    }
+    for name, payload in streams.items():
+        index_rel = f"log_streams/{name}/index.json"
+        index_payload = {
+            "category": name,
+            "description": payload["description"],
+            "entry_count": len(payload["entries"]),
+            "entries": payload["entries"],
+        }
+        _write_json(out_dir / index_rel, index_payload)
+        manifest["categories"][name] = {
+            "description": payload["description"],
+            "index": index_rel,
+            "entry_count": len(payload["entries"]),
+        }
+    _write_json(streams_dir / "manifest.json", manifest)
+    return manifest
+
+
+# ----------------------------- Evidence Grounding rerank -----------------------------
+def _save_tffs_frontier_overlay(
+    *,
+    nav: Any,
+    sim: Any,
+    ctx: Any,
+    dec_dir: Path,
+    frontiers: List[np.ndarray],
+    agent_state: Any,
+    baseline_idx: int,
+    selected_idx: int,
+    fused: np.ndarray,
+    title: str,
+) -> None:
+    img = _base_topdown_bgr(nav, sim)
+    agent_xyz = np.asarray(agent_state.position, dtype=float).reshape(3)
+    for gp in ctx.goal_positions:
+        _VIS._draw_star(img, _rc(gp, nav, sim), (0, 165, 255), size=10)
+    for fi, f in enumerate(frontiers):
+        rcix = _rc(f, nav, sim)
+        col = (180, 180, 180)
+        if fi == baseline_idx:
+            col = (0, 220, 220)
+        if fi == selected_idx:
+            col = (255, 0, 255)
+        r = 7 if (fi == selected_idx or fi == baseline_idx) else 5
+        _VIS._draw_circle(img, rcix, col, radius=r)
+        label_score = float(fused[fi]) if fi < fused.size else float("nan")
+        cv2.putText(img, f"{fi}:{label_score:.2f}", (rcix[1] + 8, rcix[0]),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 0, 0), 1, cv2.LINE_AA)
+    arc = _rc(agent_xyz, nav, sim)
+    _VIS._draw_agent_arrow(img, arc, float(get_polar_angle(agent_state)), (255, 0, 0), size=12)
+    _save_marker_image(img, dec_dir / "tffs_frontiers_topdown", title, [
+        ((0, 165, 255), "goal / target object"),
+        ((255, 0, 0), "agent (pos + heading)"),
+        ((0, 220, 220), "baseline frontier (max logit)"),
+        ((255, 0, 255), "selected frontier"),
+        ((180, 180, 180), "other frontier  [label = idx:fused_score]"),
+    ])
+
+
 def simulate_tffs(*, nav, sim, ctx, goal, dec_dir: Path, frontiers, views, agent_state, log) -> Dict[str, Any]:
     cfg = tffs.TffsConfig(vlm_call_interval=5)
     agent_xyz = np.asarray(agent_state.position, dtype=float).reshape(3)
     # Frontier prior for this visualization driver: closer-to-goal frontiers get
-    # a stronger baseline logit, then real TFFS can rerank with current views.
+    # a stronger baseline logit, then Evidence Grounding can rerank with current views.
     dists = np.asarray([np.linalg.norm((np.asarray(f) - goal)[[0, 2]]) for f in frontiers], dtype=float)
     logits = (-dists).astype(float)
     baseline_idx = int(np.argmax(logits)) if len(frontiers) else -1
@@ -765,7 +1119,9 @@ def simulate_tffs(*, nav, sim, ctx, goal, dec_dir: Path, frontiers, views, agent
             "frontier_logits_source": "visual_sim_negative_distance_to_goal_prior",
         },
     )
-    result["module"] = "tffs"
+    result["module"] = EVIDENCE_MODULE
+    result["question"] = EVIDENCE_QUESTION
+    result["implementation_module"] = "tffs"
     result["real_tffs_file"] = str(Path(tffs.__file__).resolve())
     result["frontier_distance_to_goal_m"] = [float(x) for x in dists.tolist()]
     _write_json(dec_dir / "tffs_decision.json", result)
@@ -782,67 +1138,44 @@ def simulate_tffs(*, nav, sim, ctx, goal, dec_dir: Path, frontiers, views, agent
         with open(prompt_dir / f"frontier_{fi:02d}_response.txt", "w", encoding="utf-8") as f:
             f.write(str(score.get("raw", "")))
 
-    # Visualization (with legend).
-    img = _base_topdown_bgr(nav)
     fused = np.asarray(result.get("fused_score", []), dtype=float).reshape(-1)
     rerank_idx = int(result.get("rerank_frontier_index", baseline_idx))
     selected_idx = int(result.get("selected_frontier_index", selected_idx))
     applied = bool(result.get("tffs_applied", False))
-    for gp in ctx.goal_positions:
-        _VIS._draw_star(img, _rc(gp, nav, sim), (0, 165, 255), size=10)
-    for fi, f in enumerate(frontiers):
-        rcix = _rc(f, nav, sim)
-        col = (180, 180, 180)  # default frontier gray
-        if fi == baseline_idx:
-            col = (0, 220, 220)  # baseline = yellow
-        if fi == selected_idx and applied:
-            col = (255, 0, 255)  # TFS-selected = magenta
-        r = 7 if (fi == selected_idx or fi == baseline_idx) else 5
-        _VIS._draw_circle(img, rcix, col, radius=r)
-        label_score = float(fused[fi]) if fi < fused.size else float("nan")
-        cv2.putText(img, f"{fi}:{label_score:.2f}", (rcix[1] + 8, rcix[0]),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 0, 0), 1, cv2.LINE_AA)
-    arc = _rc(agent_xyz, nav, sim)
-    _VIS._draw_agent_arrow(img, arc, float(get_polar_angle(agent_state)), (255, 0, 0), size=12)
-    _save_raw_and_legend(img, dec_dir / "tffs_frontiers_topdown", "TFS frontier rerank", [
-        ((0, 165, 255), "goal / target object"),
-        ((255, 0, 0), "agent (pos + heading)"),
-        ((0, 220, 220), "baseline frontier (max logit)"),
-        ((255, 0, 255), "TFS-selected frontier (VLM rerank)"),
-        ((180, 180, 180), "other frontier  [label = idx:fused_score]"),
-    ])
+    _save_tffs_frontier_overlay(
+        nav=nav,
+        sim=sim,
+        ctx=ctx,
+        dec_dir=dec_dir,
+        frontiers=list(frontiers),
+        agent_state=agent_state,
+        baseline_idx=baseline_idx,
+        selected_idx=selected_idx if 0 <= selected_idx < len(frontiers) else baseline_idx,
+        fused=fused,
+        title=f"{EVIDENCE_TITLE} rerank",
+    )
     save_global_topdown_maps(
         nav=nav,
         sim=sim,
         out_dir=dec_dir,
-        title="TFFS global top-down",
+        title=f"{EVIDENCE_TITLE} global top-down",
         frontiers=list(frontiers),
         selected_frontier_idx=selected_idx if 0 <= selected_idx < len(frontiers) else None,
         agent_state=agent_state,
     )
-    log.append(f"[tffs] {dec_dir.name}: frontiers={len(frontiers)} baseline={baseline_idx} "
+    log.append(f"[evidence_grounding] {dec_dir.name}: frontiers={len(frontiers)} baseline={baseline_idx} "
                f"rerank={rerank_idx} selected={selected_idx} applied={applied} "
                f"gate={result.get('gate_reason', '')} vlm_calls={result.get('vlm_call_count', 0)}")
     return result
 
 
-# ----------------------------- MQSC-R1 simulation -----------------------------
-def _simulated_decompose(sentence: str) -> str:
-    words = [w for w in sentence.lower().replace(",", " ").split() if len(w) > 2]
-    return json.dumps({
-        "target_desc": " ".join(words[:3]) if words else "target object",
-        "target_aliases": [], "anchor_primary": words[3:5], "anchor_support": words[5:8],
-        "room_context": [], "relations": ["near"],
-    })
-
-
+# ----------------------------- Entity Grounding simulation -----------------------------
 def simulate_mqsc(*, nav, sim, ctx, goal, dec_dir: Path, agent_state, decompose_cache: Dict[str, Any], log) -> Dict[str, Any]:
     cfg = mqsc_r1.MqscR1Config()
     # 1. VLM text decomposition (cached across rounds; sentence is fixed).
     if "vlm" not in decompose_cache:
         prompt = mqsc_r1.build_decomposition_prompt(ctx.sentence, task_type=ctx.task_level)
-        vlm_rec = call_vlm(prompt=prompt, image_path=None, tag="mqsc_decompose",
-                           simulated_fn=lambda: _simulated_decompose(ctx.sentence))
+        vlm_rec = call_vlm(prompt=prompt, image_path=None, tag="mqsc_decompose")
         try:
             roles = mqsc_r1.parse_json_object(vlm_rec["raw_response"])
         except Exception as exc:
@@ -882,7 +1215,7 @@ def simulate_mqsc(*, nav, sim, ctx, goal, dec_dir: Path, agent_state, decompose_
     radius = np.full((len(cands),), 0.30, dtype=float)
     n = len(cands)
     # Fake logits: a lone distractor gets the single highest logit; the cluster
-    # has higher AGGREGATE consensus -> demonstrates MQSC overriding the baseline.
+    # has higher aggregate spatial evidence -> demonstrates landmark-anchored voting.
     logits = np.array([1.1, 0.9, 0.8] + [1.6, 0.5][: max(0, n - 3)], dtype=float)[:n]
     probs = mqsc_r1._softmax(logits, cfg.temperature)
     comps = mqsc_r1._connected_components(list(range(n)), xy, radius, float(cfg.cluster_eps))
@@ -900,7 +1233,9 @@ def simulate_mqsc(*, nav, sim, ctx, goal, dec_dir: Path, agent_state, decompose_
     applied = bool(consensus_idx != baseline_idx)
 
     result = {
-        "module": "mqsc_r1",
+        "module": ENTITY_MODULE,
+        "question": ENTITY_QUESTION,
+        "implementation_module": "mqsc_r1",
         "prompt_version": mqsc_r1.PROMPT_VERSION,
         "sentence": ctx.sentence,
         "decomposition": {"vlm": vlm_rec, "parsed_roles": _jsonable(roles)},
@@ -923,7 +1258,7 @@ def simulate_mqsc(*, nav, sim, ctx, goal, dec_dir: Path, agent_state, decompose_
         f.write(vlm_rec["raw_response"])
 
     # Visualization (with legend): footprints colored per cluster.
-    img = _base_topdown_bgr(nav)
+    img = _base_topdown_bgr(nav, sim)
     cluster_colors = [(0, 200, 0), (200, 120, 0), (0, 120, 200), (160, 0, 160)]
     member_to_comp = {}
     for ci, comp in enumerate(comps):
@@ -939,7 +1274,7 @@ def simulate_mqsc(*, nav, sim, ctx, goal, dec_dir: Path, agent_state, decompose_
         if i == baseline_idx:
             tag.append("base")
         if i == consensus_idx:
-            tag.append("MQSC")
+            tag.append("entity")
         label = f"{i}:{probs[i]:.2f}" + (("[" + ",".join(tag) + "]") if tag else "")
         cv2.putText(img, label, (rcix[1] + 8, rcix[0]), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 0, 0), 1, cv2.LINE_AA)
     if 0 <= baseline_idx < n:
@@ -948,20 +1283,20 @@ def simulate_mqsc(*, nav, sim, ctx, goal, dec_dir: Path, agent_state, decompose_
     if 0 <= consensus_idx < n:
         s = _rc(cands[consensus_idx], nav, sim)
         cv2.drawMarker(img, (s[1], s[0]), (255, 0, 255), cv2.MARKER_STAR, 20, 2)
-    _save_raw_and_legend(img, dec_dir / "mqsc_r1_clusters_topdown", "MQSC-R1 spatial consensus", [
+    _save_marker_image(img, dec_dir / "mqsc_r1_clusters_topdown", ENTITY_TITLE, [
         ((0, 200, 0), "cluster A (connected, footprint dist<=eps)"),
         ((200, 120, 0), "cluster B"),
         ((0, 120, 200), "cluster C / singletons"),
         ((0, 220, 220), "baseline pick (max single logit)"),
-        ((255, 0, 255), "MQSC consensus pick"),
+        ((255, 0, 255), "Entity Grounding pick"),
     ])
-    log.append(f"[mqsc_r1] {dec_dir.name}: cands={n} clusters={len(comps)} "
+    log.append(f"[entity_grounding] {dec_dir.name}: cands={n} clusters={len(comps)} "
                f"baseline={baseline_idx} consensus={consensus_idx} applied={applied} "
                f"vlm_source={vlm_rec['source']}")
     return result
 
 
-# ----------------------------- VISTA-LS simulation -----------------------------
+# ----------------------------- Endpoint Grounding simulation -----------------------------
 def _los_visibility(p_from: np.ndarray, p_to: np.ndarray, nav, sim, stop_margin_m: float = 0.45) -> float:
     """Fraction of the line-of-sight that is navigable, trimmed to stop just
     short of the object center (the target object itself occupies non-navigable
@@ -1059,14 +1394,16 @@ def simulate_vista_ls(*, nav, sim, goal, agent_state, out_dir: Path, log) -> Dic
     if feasible:
         # Best viewpoint: max visibility, tie-break shorter path.
         selected = max(feasible, key=lambda r: (r["visibility_score"], -r["geodesic_distance_m"]))
-        selected["selected_by_vista_ls"] = True
+        selected["selected_by_endpoint_grounding"] = True
 
     counts: Dict[str, int] = {}
     for r in records:
         counts[r["category"]] = counts.get(r["category"], 0) + 1
     result = {
-        "module": "vista_ls",
-        "policy": "level-set ring sampling + reachability/shell/visibility viewpoint scoring",
+        "module": ENDPOINT_MODULE,
+        "question": ENDPOINT_QUESTION,
+        "implementation_module": "vista_ls",
+        "policy": "Landmark-Ray Endpoint Search approximation: reachability, shell distance, visibility, and relation-verifiable viewpoint scoring",
         "config": {"candidate_radii_m": list(cfg.candidate_radii_m), "shell_min_m": cfg.shell_min_m,
                    "shell_max_m": cfg.shell_max_m, "min_visibility_score": cfg.min_visibility_score,
                    "max_snap_distance_m": cfg.max_snap_distance_m,
@@ -1082,7 +1419,7 @@ def simulate_vista_ls(*, nav, sim, goal, agent_state, out_dir: Path, log) -> Dic
     _write_json(out_dir / "vista_ls_decision.json", result)
 
     # Visualization (with legend): points colored by category, selected = star.
-    img = _base_topdown_bgr(nav)
+    img = _base_topdown_bgr(nav, sim)
     cat_color = {
         "unreachable": (0, 0, 230), "too_close": (0, 140, 255), "too_far": (120, 120, 120),
         "bad_viewpoint": (0, 220, 220), "feasible": (0, 200, 0),
@@ -1107,7 +1444,7 @@ def simulate_vista_ls(*, nav, sim, goal, agent_state, out_dir: Path, log) -> Dic
         ((0, 140, 255), "too close (surface < shell_min=0.35m)"),
         ((0, 220, 220), "bad viewpoint (occluded, low visibility)"),
         ((0, 200, 0), "feasible candidate"),
-        ((255, 0, 255), "VISTA-LS selected (best viewpoint)"),
+        ((255, 0, 255), "Endpoint Grounding selected viewpoint"),
         ((255, 0, 0), "agent (pos + heading)"),
     ]
     # Zoomed crop around the candidate ring (the points are tiny on the full map).
@@ -1120,44 +1457,45 @@ def simulate_vista_ls(*, nav, sim, goal, agent_state, out_dir: Path, log) -> Dic
     if crop.size > 0:
         scale = max(1.0, 540.0 / max(crop.shape[1], 1))
         zoom = cv2.resize(crop, (int(crop.shape[1] * scale), int(crop.shape[0] * scale)), interpolation=cv2.INTER_NEAREST)
-        _save_raw_and_legend(zoom, out_dir / "vista_ls_candidates_zoom", "VISTA-LS viewpoint selection (zoom)", legend)
-    _save_raw_and_legend(img, out_dir / "vista_ls_candidates_topdown", "VISTA-LS viewpoint selection", legend)
+        _save_marker_image(zoom, out_dir / "vista_ls_candidates_zoom", f"{ENDPOINT_TITLE} (zoom)", legend)
+    _save_marker_image(img, out_dir / "vista_ls_candidates_topdown", ENDPOINT_TITLE, legend)
 
     # ---- Final target RGB result + point sampling projected onto the camera image ----
+    # This target-verification camera is temporary.  Do not route it through
+    # nav.step_action(), or the navigation camera stays tilted for later frames.
     import quaternion as _q
     agent = nav.agent
-
-    def _herr() -> float:
-        st = agent.get_state()
-        f = hsu.quat_rotate_vector(st.rotation, np.array([0.0, 0.0, -1.0]))
+    saved_state = _M._state_copy(agent.get_state())
+    saved_prev_state = _M._state_copy(getattr(nav, "prev_state", saved_state))
+    n_tilt = 0
+    try:
+        st = _M.habitat_sim.AgentState()
+        st.position = np.asarray(saved_state.position, dtype=float).reshape(3)
+        st.rotation = _look_at_quat_xz(st.position, center)
+        agent.set_state(st)
         to = center - np.asarray(st.position, dtype=float).reshape(3)
-        return math.degrees(math.atan2(float(f[0]) * float(to[2]) - float(f[2]) * float(to[0]),
-                                       float(f[0]) * float(to[0]) + float(f[2]) * float(to[2])))
+        planar = float(np.linalg.norm(to[[0, 2]]))
+        drop = float(st.position[1]) + 1.31 - float(center[1])
+        n_tilt = max(0, min(3, int(round(math.degrees(math.atan2(max(drop, 0.0), max(planar, 1e-3))) / 30.0))))
+        for _ in range(n_tilt):
+            sim.step("look_down")
 
-    if abs(_herr()) > 15.0:
-        before = abs(_herr())
-        nav.step_action("turn_left", 1, status_prefix="vista_face")
-        turn = "turn_left" if abs(_herr()) < before else "turn_right"
-        for _ in range(11):
-            if abs(_herr()) <= 15.0:
+        obs = sim.get_sensor_observations()
+        rgb_bgr = cv2.cvtColor(np.asarray(obs["color_sensor"][:, :, :3], dtype=np.uint8), cv2.COLOR_RGB2BGR)
+        H, W = rgb_bgr.shape[:2]
+        cv2.imwrite(str(out_dir / "vista_ls_target_rgb_raw.png"), rgb_bgr)  # the extracted target photo
+
+        sst = agent.get_state().sensor_states["color_sensor"]
+        C = np.asarray(sst.position, dtype=float).reshape(3)
+        Rcw = _q.as_rotation_matrix(sst.rotation)  # camera->world
+    finally:
+        for _ in range(n_tilt):
+            try:
+                sim.step("look_up")
+            except Exception:
                 break
-            nav.step_action(turn, 1, status_prefix="vista_face")
-    st = agent.get_state()
-    to = center - np.asarray(st.position, dtype=float).reshape(3)
-    planar = float(np.linalg.norm(to[[0, 2]]))
-    drop = float(st.position[1]) + 1.31 - float(center[1])
-    n_tilt = max(0, min(3, int(round(math.degrees(math.atan2(max(drop, 0.0), max(planar, 1e-3))) / 30.0))))
-    for _ in range(n_tilt):
-        nav.step_action("look_down", 1, status_prefix="vista_tilt")
-
-    obs = sim.get_sensor_observations()
-    rgb_bgr = cv2.cvtColor(np.asarray(obs["color_sensor"][:, :, :3], dtype=np.uint8), cv2.COLOR_RGB2BGR)
-    H, W = rgb_bgr.shape[:2]
-    cv2.imwrite(str(out_dir / "vista_ls_target_rgb_raw.png"), rgb_bgr)  # the extracted target photo
-
-    sst = agent.get_state().sensor_states["color_sensor"]
-    C = np.asarray(sst.position, dtype=float).reshape(3)
-    Rcw = _q.as_rotation_matrix(sst.rotation)  # camera->world
+        agent.set_state(saved_state)
+        nav.prev_state = saved_prev_state
     hfov = float(nav.args.hfov if nav.args.hfov > 0 else 42.0)
     fx = (W / 2.0) / math.tan(math.radians(hfov) / 2.0)
     fy, cx, cy = fx, W / 2.0, H / 2.0
@@ -1187,22 +1525,22 @@ def simulate_vista_ls(*, nav, sim, goal, agent_state, out_dir: Path, log) -> Dic
         uvs = _project(selected["xyz"])
         if uvs and 0 <= uvs[0] < W and 0 <= uvs[1] < H:
             cv2.drawMarker(proj, (int(uvs[0]), int(uvs[1])), (255, 0, 255), cv2.MARKER_STAR, 24, 3)
-    _save_raw_and_legend(proj, out_dir / "vista_ls_target_rgb_points", "VISTA-LS points on target RGB", [
+    _save_marker_image(proj, out_dir / "vista_ls_target_rgb_points", "Endpoint Grounding points on target RGB", [
         ((0, 165, 255), "object center (target)"),
         ((0, 0, 230), "unreachable"),
         ((0, 140, 255), "too close"),
         ((0, 220, 220), "bad viewpoint"),
         ((0, 200, 0), "feasible candidate"),
-        ((255, 0, 255), "VISTA-LS selected (best viewpoint)"),
+        ((255, 0, 255), "Endpoint Grounding selected viewpoint"),
     ])
     result["target_rgb"] = {
         "raw_photo": "vista_ls_target_rgb_raw.png",
-        "points_overlay": "vista_ls_target_rgb_points.png (+ _legend)",
+        "points_overlay": "vista_ls_target_rgb_points.png (+ _info.json legend metadata)",
         "projected_candidate_count": int(drawn),
         "camera_position_xyz": C.tolist(), "hfov_deg": hfov, "resolution_wh": [W, H],
     }
     _write_json(out_dir / "vista_ls_decision.json", result)
-    log.append(f"[vista_ls] candidates={len(records)} counts={counts} "
+    log.append(f"[endpoint_grounding] candidates={len(records)} counts={counts} "
                f"selected={'yes' if selected else 'none'} target_rgb_points={drawn}")
     return result
 
@@ -1297,10 +1635,58 @@ def main() -> None:
         if len(frontiers) >= 2:
             tffs_result = simulate_tffs(nav=nav, sim=sim, ctx=ctx, goal=goal, dec_dir=mod_dir / "tffs" / dtag,
                                         frontiers=frontiers, views=views, agent_state=agent_state, log=log)
+        elif len(frontiers) == 1:
+            agent_xyz = np.asarray(agent_state.position, dtype=float).reshape(3)
+            selected_idx = 0
+            dists = np.asarray([np.linalg.norm((np.asarray(f) - goal)[[0, 2]]) for f in frontiers], dtype=float)
+            fused = (-dists).astype(float)
+            tffs_result = {
+                "module": EVIDENCE_MODULE,
+                "question": EVIDENCE_QUESTION,
+                "implementation_module": "tffs",
+                "single_frontier_direct": True,
+                "decision_idx": int(rounds),
+                "frontier_count": 1,
+                "baseline_frontier_index": 0,
+                "selected_frontier_index": 0,
+                "rerank_frontier_index": 0,
+                "tffs_applied": False,
+                "branch_is_frontier": True,
+                "frontier_logits_source": "visual_sim_negative_distance_to_goal_prior",
+                "frontier_distance_to_goal_m": [float(x) for x in dists.tolist()],
+                "fused_score": [float(x) for x in fused.tolist()],
+                "vlm_interval_allowed": False,
+                "vlm_call_count": 0,
+                "vlm_scores": [],
+                "gate_reason": "single_frontier_direct_no_vlm",
+                "real_tffs_file": str(Path(tffs.__file__).resolve()),
+                "agent_pose": {"position": agent_xyz.tolist(), "heading_xz": _forward_xz(agent_state).tolist()},
+            }
+            _write_json(mod_dir / "tffs" / dtag / "tffs_decision.json", tffs_result)
+            _save_tffs_frontier_overlay(
+                nav=nav,
+                sim=sim,
+                ctx=ctx,
+                dec_dir=mod_dir / "tffs" / dtag,
+                frontiers=list(frontiers),
+                agent_state=agent_state,
+                baseline_idx=0,
+                selected_idx=selected_idx,
+                fused=fused,
+                title=f"{EVIDENCE_TITLE} direct selection",
+            )
+            save_global_topdown_maps(
+                nav=nav, sim=sim, out_dir=mod_dir / "tffs" / dtag,
+                title=f"{EVIDENCE_TITLE} global top-down", frontiers=list(frontiers),
+                selected_frontier_idx=selected_idx, agent_state=agent_state,
+            )
+            log.append(f"[evidence_grounding] {dtag}: one frontier -> direct selected=0, no VLM rerank")
         else:
-            log.append(f"[tffs] {dtag}: skipped (only {len(frontiers)} frontier)")
+            log.append(f"[evidence_grounding] {dtag}: skipped (only {len(frontiers)} frontier)")
             _write_json(mod_dir / "tffs" / dtag / "tffs_decision.json", {
-                "module": "tffs",
+                "module": EVIDENCE_MODULE,
+                "question": EVIDENCE_QUESTION,
+                "implementation_module": "tffs",
                 "skipped": True,
                 "skip_reason": f"only_{len(frontiers)}_frontier",
                 "decision_idx": int(rounds),
@@ -1312,14 +1698,14 @@ def main() -> None:
             })
             save_global_topdown_maps(
                 nav=nav, sim=sim, out_dir=mod_dir / "tffs" / dtag,
-                title="TFFS skipped global top-down", frontiers=list(frontiers),
+                title=f"{EVIDENCE_TITLE} skipped global top-down", frontiers=list(frontiers),
                 selected_frontier_idx=None, agent_state=agent_state,
             )
         simulate_mqsc(nav=nav, sim=sim, ctx=ctx, goal=goal, dec_dir=mod_dir / "mqsc_r1" / dtag,
                       agent_state=agent_state, decompose_cache=decompose_cache, log=log)
         save_global_topdown_maps(
             nav=nav, sim=sim, out_dir=mod_dir / "mqsc_r1" / dtag,
-            title="MQSC-R1 global top-down", frontiers=list(frontiers),
+            title=f"{ENTITY_TITLE} global top-down", frontiers=list(frontiers),
             selected_frontier_idx=None, agent_state=agent_state,
         )
 
@@ -1347,9 +1733,9 @@ def main() -> None:
                 break
         rounds += 1
 
-    # VISTA-LS at the final stop (viewpoint correction toward the object).
+    # Endpoint Grounding at the final stop (viewpoint correction toward the object).
     stop_reason = "arrived" if planar_to_goal() <= cli.arrive_thresh_m else "max_rounds_reached"
-    print(f"[module_sim] stop_reason={stop_reason} (to_goal={planar_to_goal():.2f}m). Running final panorama + VISTA-LS viewpoint sim.", flush=True)
+    print(f"[module_sim] stop_reason={stop_reason} (to_goal={planar_to_goal():.2f}m). Running final panorama + Endpoint Grounding viewpoint sim.", flush=True)
     final_pano_dir = mod_dir / "final_panorama"
     final_views = scan_and_capture(nav, sim, final_pano_dir)
     log.append(f"[final_panorama] stop_reason={stop_reason} views={len(final_views)} dir={final_pano_dir}")
@@ -1357,23 +1743,34 @@ def main() -> None:
                       out_dir=mod_dir / "vista_ls" / "final", log=log)
     save_global_topdown_maps(
         nav=nav, sim=sim, out_dir=mod_dir / "vista_ls" / "final",
-        title="VISTA-LS final global top-down", frontiers=list(getattr(nav, "current_frontiers", [])),
+        title=f"{ENDPOINT_TITLE} final global top-down", frontiers=list(getattr(nav, "current_frontiers", [])),
         selected_frontier_idx=None, agent_state=agent.get_state(), log=log,
     )
 
-    nav.save_trajectory_snapshot("route_start_to_goal.png")
-    # Add a legend to the trajectory image (the review noted it had none).
-    traj_path = out_dir / "trajectory" / "route_start_to_goal.png"
-    if traj_path.exists():
-        timg = cv2.imread(str(traj_path))
-        # Colors match VIS_NAV CLR_* converted RGB->BGR (only markers actually drawn here).
-        _draw_legend(timg, "Trajectory overview", [
-            ((0, 200, 0), "start position"),
-            ((0, 165, 255), "goal / target object"),
-            ((0, 200, 200), "walked path (line)"),
-            ((0, 255, 255), "agent end (pos + heading arrow)"),
-        ])
-        cv2.imwrite(str(out_dir / "trajectory" / "route_start_to_goal_legend.png"), timg)
+    traj_rgb = render_gray_topdown_rgb(
+        nav,
+        sim,
+        fog=np.ones_like(nav.fog),
+        agent_state=agent.get_state(),
+        target=goal,
+        is_final=True,
+        frontiers=[],
+        selected_frontier_idx=None,
+    )
+    traj_dir = out_dir / "trajectory"
+    traj_dir.mkdir(parents=True, exist_ok=True)
+    cv2.imwrite(str(traj_dir / "route_start_to_goal.png"), cv2.cvtColor(traj_rgb, cv2.COLOR_RGB2BGR))
+    _write_json(out_dir / "trajectory" / "route_start_to_goal_info.json", {
+        "title": "Trajectory overview",
+        "note": "No legend image is generated; keep rendered map pixels clean.",
+    })
+
+    log_streams = write_log_stream_indexes(out_dir, rounds)
+    log.append(
+        "[log_streams] categories="
+        + ",".join(sorted(log_streams.get("categories", {}).keys()))
+        + f" root={out_dir / 'log_streams'}"
+    )
 
     _write_json(out_dir / "module_sim_summary.json", {
         "scene_name": ctx.scene_name, "episode_id": int(ctx.episode_id), "sentence": ctx.sentence,
@@ -1381,8 +1778,9 @@ def main() -> None:
         "stop_reason": stop_reason,
         "vlm_client_file": vlm_client.__file__,
         "topdown_map": _jsonable(getattr(nav, "topdown_map_info", {})),
-        "modules": {"tffs": "modules/tffs/dec_XXX", "mqsc_r1": "modules/mqsc_r1/dec_XXX",
-                    "final_panorama": "modules/final_panorama", "vista_ls": "modules/vista_ls/final"},
+        "modules": {EVIDENCE_MODULE: "modules/tffs/dec_XXX", ENTITY_MODULE: "modules/mqsc_r1/dec_XXX",
+                    "final_panorama": "modules/final_panorama", ENDPOINT_MODULE: "modules/vista_ls/final"},
+        "log_streams": log_streams,
         "log": log,
     })
     sim.close()

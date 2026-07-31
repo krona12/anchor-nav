@@ -1,0 +1,46 @@
+{
+  "title": "MQSC-R1 spatial consensus",
+  "legend": [
+    {
+      "color_bgr": [
+        0,
+        200,
+        0
+      ],
+      "label": "cluster A (connected, footprint dist<=eps)"
+    },
+    {
+      "color_bgr": [
+        200,
+        120,
+        0
+      ],
+      "label": "cluster B"
+    },
+    {
+      "color_bgr": [
+        0,
+        120,
+        200
+      ],
+      "label": "cluster C / singletons"
+    },
+    {
+      "color_bgr": [
+        0,
+        220,
+        220
+      ],
+      "label": "baseline pick (max single logit)"
+    },
+    {
+      "color_bgr": [
+        255,
+        0,
+        255
+      ],
+      "label": "MQSC consensus pick"
+    }
+  ],
+  "note": "Legend is stored as metadata so no white legend panel is burned into the image."
+}

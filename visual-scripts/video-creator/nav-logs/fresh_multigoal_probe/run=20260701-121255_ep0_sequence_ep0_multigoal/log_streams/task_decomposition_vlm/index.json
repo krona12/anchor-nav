@@ -1,0 +1,67 @@
+{
+  "category": "task_decomposition_vlm",
+  "description": "MQSC task decomposition VLM prompts, raw responses, parsed roles, and decision JSON.",
+  "entry_count": 3,
+  "entries": [
+    {
+      "decision": 0,
+      "module": "mqsc_r1",
+      "prompt": [
+        "modules/mqsc_r1/dec_000/decomposition_prompt.txt"
+      ],
+      "response": [
+        "modules/mqsc_r1/dec_000/decomposition_response.txt"
+      ],
+      "images": [
+        "modules/mqsc_r1/dec_000/topdown_map.png",
+        "modules/mqsc_r1/dec_000/topdown_scene_rgb.png",
+        "modules/mqsc_r1/dec_000/topdown_scene_rgb_annotated.png",
+        "modules/mqsc_r1/dec_000/mqsc_r1_clusters_topdown.png"
+      ],
+      "image_role": "context_only_text_vlm_has_no_direct_image_input",
+      "decision_json": [
+        "modules/mqsc_r1/dec_000/mqsc_r1_decision.json"
+      ]
+    },
+    {
+      "decision": 1,
+      "module": "mqsc_r1",
+      "prompt": [
+        "modules/mqsc_r1/dec_001/decomposition_prompt.txt"
+      ],
+      "response": [
+        "modules/mqsc_r1/dec_001/decomposition_response.txt"
+      ],
+      "images": [
+        "modules/mqsc_r1/dec_001/topdown_map.png",
+        "modules/mqsc_r1/dec_001/topdown_scene_rgb.png",
+        "modules/mqsc_r1/dec_001/topdown_scene_rgb_annotated.png",
+        "modules/mqsc_r1/dec_001/mqsc_r1_clusters_topdown.png"
+      ],
+      "image_role": "context_only_text_vlm_has_no_direct_image_input",
+      "decision_json": [
+        "modules/mqsc_r1/dec_001/mqsc_r1_decision.json"
+      ]
+    },
+    {
+      "decision": 2,
+      "module": "mqsc_r1",
+      "prompt": [
+        "modules/mqsc_r1/dec_002/decomposition_prompt.txt"
+      ],
+      "response": [
+        "modules/mqsc_r1/dec_002/decomposition_response.txt"
+      ],
+      "images": [
+        "modules/mqsc_r1/dec_002/topdown_map.png",
+        "modules/mqsc_r1/dec_002/topdown_scene_rgb.png",
+        "modules/mqsc_r1/dec_002/topdown_scene_rgb_annotated.png",
+        "modules/mqsc_r1/dec_002/mqsc_r1_clusters_topdown.png"
+      ],
+      "image_role": "context_only_text_vlm_has_no_direct_image_input",
+      "decision_json": [
+        "modules/mqsc_r1/dec_002/mqsc_r1_decision.json"
+      ]
+    }
+  ]
+}

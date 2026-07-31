@@ -1,0 +1,287 @@
+{
+  "category": "evidence_grounding",
+  "description": "Evidence Grounding / Which frontier? prompts, panorama evidence, map context, and selected frontier artifacts.",
+  "entry_count": 5,
+  "entries": [
+    {
+      "decision": 0,
+      "module": "Evidence Grounding",
+      "question": "Which frontier?",
+      "panorama_inputs": [
+        "artifacts/EvidenceGrounding/dec_000/panorama/view_00.png",
+        "artifacts/EvidenceGrounding/dec_000/panorama/view_01.png",
+        "artifacts/EvidenceGrounding/dec_000/panorama/view_02.png",
+        "artifacts/EvidenceGrounding/dec_000/panorama/view_03.png",
+        "artifacts/EvidenceGrounding/dec_000/panorama/view_04.png",
+        "artifacts/EvidenceGrounding/dec_000/panorama/view_05.png",
+        "artifacts/EvidenceGrounding/dec_000/panorama/view_06.png",
+        "artifacts/EvidenceGrounding/dec_000/panorama/view_07.png",
+        "artifacts/EvidenceGrounding/dec_000/panorama/view_08.png",
+        "artifacts/EvidenceGrounding/dec_000/panorama/view_09.png",
+        "artifacts/EvidenceGrounding/dec_000/panorama/view_10.png",
+        "artifacts/EvidenceGrounding/dec_000/panorama/view_11.png",
+        "artifacts/EvidenceGrounding/dec_000/panorama/current_decision_panorama_vfv_order.jpg"
+      ],
+      "prompts": [
+        "artifacts/EvidenceGrounding/dec_000/prompts/frontier_00_prompt.txt",
+        "artifacts/EvidenceGrounding/dec_000/prompts/frontier_01_prompt.txt",
+        "artifacts/EvidenceGrounding/dec_000/prompts/frontier_02_prompt.txt",
+        "artifacts/EvidenceGrounding/dec_000/prompts/frontier_03_prompt.txt"
+      ],
+      "responses": [
+        "artifacts/EvidenceGrounding/dec_000/prompts/frontier_00_response.txt",
+        "artifacts/EvidenceGrounding/dec_000/prompts/frontier_01_response.txt",
+        "artifacts/EvidenceGrounding/dec_000/prompts/frontier_02_response.txt",
+        "artifacts/EvidenceGrounding/dec_000/prompts/frontier_03_response.txt"
+      ],
+      "decision_json": [
+        "artifacts/EvidenceGrounding/dec_000/evidence_decision.json"
+      ],
+      "images": [
+        "artifacts/EvidenceGrounding/dec_000/evidence_frontiers_topdown.png",
+        "artifacts/EvidenceGrounding/dec_000/topdown_map.png",
+        "artifacts/EvidenceGrounding/dec_000/topdown_scene_rgb_annotated.png"
+      ],
+      "clean_rgb": [
+        "artifacts/EvidenceGrounding/dec_000/topdown_scene_rgb.png"
+      ],
+      "annotated_rgb": [
+        "artifacts/EvidenceGrounding/dec_000/topdown_scene_rgb_annotated.png"
+      ],
+      "local_topdown_rgb": [
+        "artifacts/EvidenceGrounding/dec_000/topdown_cam_rgb.png"
+      ],
+      "metadata": [
+        "artifacts/EvidenceGrounding/dec_000/topdown_map_info.json",
+        "artifacts/EvidenceGrounding/dec_000/evidence_frontiers_topdown_info.json",
+        "artifacts/EvidenceGrounding/dec_000/topdown_scene_rgb_info.json",
+        "artifacts/EvidenceGrounding/dec_000/topdown_scene_rgb_annotated_info.json",
+        "artifacts/EvidenceGrounding/dec_000/topdown_cam_info.json"
+      ]
+    },
+    {
+      "decision": 1,
+      "module": "Evidence Grounding",
+      "question": "Which frontier?",
+      "panorama_inputs": [
+        "artifacts/EvidenceGrounding/dec_001/panorama/view_00.png",
+        "artifacts/EvidenceGrounding/dec_001/panorama/view_01.png",
+        "artifacts/EvidenceGrounding/dec_001/panorama/view_02.png",
+        "artifacts/EvidenceGrounding/dec_001/panorama/view_03.png",
+        "artifacts/EvidenceGrounding/dec_001/panorama/view_04.png",
+        "artifacts/EvidenceGrounding/dec_001/panorama/view_05.png",
+        "artifacts/EvidenceGrounding/dec_001/panorama/view_06.png",
+        "artifacts/EvidenceGrounding/dec_001/panorama/view_07.png",
+        "artifacts/EvidenceGrounding/dec_001/panorama/view_08.png",
+        "artifacts/EvidenceGrounding/dec_001/panorama/view_09.png",
+        "artifacts/EvidenceGrounding/dec_001/panorama/view_10.png",
+        "artifacts/EvidenceGrounding/dec_001/panorama/view_11.png",
+        "artifacts/EvidenceGrounding/dec_001/panorama/current_decision_panorama_vfv_order.jpg"
+      ],
+      "prompts": [
+        "artifacts/EvidenceGrounding/dec_001/prompts/frontier_00_prompt.txt",
+        "artifacts/EvidenceGrounding/dec_001/prompts/frontier_01_prompt.txt",
+        "artifacts/EvidenceGrounding/dec_001/prompts/frontier_02_prompt.txt",
+        "artifacts/EvidenceGrounding/dec_001/prompts/frontier_03_prompt.txt"
+      ],
+      "responses": [
+        "artifacts/EvidenceGrounding/dec_001/prompts/frontier_00_response.txt",
+        "artifacts/EvidenceGrounding/dec_001/prompts/frontier_01_response.txt",
+        "artifacts/EvidenceGrounding/dec_001/prompts/frontier_02_response.txt",
+        "artifacts/EvidenceGrounding/dec_001/prompts/frontier_03_response.txt"
+      ],
+      "decision_json": [
+        "artifacts/EvidenceGrounding/dec_001/evidence_decision.json"
+      ],
+      "images": [
+        "artifacts/EvidenceGrounding/dec_001/evidence_frontiers_topdown.png",
+        "artifacts/EvidenceGrounding/dec_001/topdown_map.png",
+        "artifacts/EvidenceGrounding/dec_001/topdown_scene_rgb_annotated.png"
+      ],
+      "clean_rgb": [
+        "artifacts/EvidenceGrounding/dec_001/topdown_scene_rgb.png"
+      ],
+      "annotated_rgb": [
+        "artifacts/EvidenceGrounding/dec_001/topdown_scene_rgb_annotated.png"
+      ],
+      "local_topdown_rgb": [
+        "artifacts/EvidenceGrounding/dec_001/topdown_cam_rgb.png"
+      ],
+      "metadata": [
+        "artifacts/EvidenceGrounding/dec_001/topdown_map_info.json",
+        "artifacts/EvidenceGrounding/dec_001/evidence_frontiers_topdown_info.json",
+        "artifacts/EvidenceGrounding/dec_001/topdown_scene_rgb_info.json",
+        "artifacts/EvidenceGrounding/dec_001/topdown_scene_rgb_annotated_info.json",
+        "artifacts/EvidenceGrounding/dec_001/topdown_cam_info.json"
+      ]
+    },
+    {
+      "decision": 2,
+      "module": "Evidence Grounding",
+      "question": "Which frontier?",
+      "panorama_inputs": [
+        "artifacts/EvidenceGrounding/dec_002/panorama/view_00.png",
+        "artifacts/EvidenceGrounding/dec_002/panorama/view_01.png",
+        "artifacts/EvidenceGrounding/dec_002/panorama/view_02.png",
+        "artifacts/EvidenceGrounding/dec_002/panorama/view_03.png",
+        "artifacts/EvidenceGrounding/dec_002/panorama/view_04.png",
+        "artifacts/EvidenceGrounding/dec_002/panorama/view_05.png",
+        "artifacts/EvidenceGrounding/dec_002/panorama/view_06.png",
+        "artifacts/EvidenceGrounding/dec_002/panorama/view_07.png",
+        "artifacts/EvidenceGrounding/dec_002/panorama/view_08.png",
+        "artifacts/EvidenceGrounding/dec_002/panorama/view_09.png",
+        "artifacts/EvidenceGrounding/dec_002/panorama/view_10.png",
+        "artifacts/EvidenceGrounding/dec_002/panorama/view_11.png",
+        "artifacts/EvidenceGrounding/dec_002/panorama/current_decision_panorama_vfv_order.jpg"
+      ],
+      "prompts": [
+        "artifacts/EvidenceGrounding/dec_002/prompts/frontier_00_prompt.txt",
+        "artifacts/EvidenceGrounding/dec_002/prompts/frontier_01_prompt.txt",
+        "artifacts/EvidenceGrounding/dec_002/prompts/frontier_02_prompt.txt",
+        "artifacts/EvidenceGrounding/dec_002/prompts/frontier_03_prompt.txt"
+      ],
+      "responses": [
+        "artifacts/EvidenceGrounding/dec_002/prompts/frontier_00_response.txt",
+        "artifacts/EvidenceGrounding/dec_002/prompts/frontier_01_response.txt",
+        "artifacts/EvidenceGrounding/dec_002/prompts/frontier_02_response.txt",
+        "artifacts/EvidenceGrounding/dec_002/prompts/frontier_03_response.txt"
+      ],
+      "decision_json": [
+        "artifacts/EvidenceGrounding/dec_002/evidence_decision.json"
+      ],
+      "images": [
+        "artifacts/EvidenceGrounding/dec_002/evidence_frontiers_topdown.png",
+        "artifacts/EvidenceGrounding/dec_002/topdown_map.png",
+        "artifacts/EvidenceGrounding/dec_002/topdown_scene_rgb_annotated.png"
+      ],
+      "clean_rgb": [
+        "artifacts/EvidenceGrounding/dec_002/topdown_scene_rgb.png"
+      ],
+      "annotated_rgb": [
+        "artifacts/EvidenceGrounding/dec_002/topdown_scene_rgb_annotated.png"
+      ],
+      "local_topdown_rgb": [
+        "artifacts/EvidenceGrounding/dec_002/topdown_cam_rgb.png"
+      ],
+      "metadata": [
+        "artifacts/EvidenceGrounding/dec_002/topdown_map_info.json",
+        "artifacts/EvidenceGrounding/dec_002/evidence_frontiers_topdown_info.json",
+        "artifacts/EvidenceGrounding/dec_002/topdown_scene_rgb_info.json",
+        "artifacts/EvidenceGrounding/dec_002/topdown_scene_rgb_annotated_info.json",
+        "artifacts/EvidenceGrounding/dec_002/topdown_cam_info.json"
+      ]
+    },
+    {
+      "decision": 3,
+      "module": "Evidence Grounding",
+      "question": "Which frontier?",
+      "panorama_inputs": [
+        "artifacts/EvidenceGrounding/dec_003/panorama/view_00.png",
+        "artifacts/EvidenceGrounding/dec_003/panorama/view_01.png",
+        "artifacts/EvidenceGrounding/dec_003/panorama/view_02.png",
+        "artifacts/EvidenceGrounding/dec_003/panorama/view_03.png",
+        "artifacts/EvidenceGrounding/dec_003/panorama/view_04.png",
+        "artifacts/EvidenceGrounding/dec_003/panorama/view_05.png",
+        "artifacts/EvidenceGrounding/dec_003/panorama/view_06.png",
+        "artifacts/EvidenceGrounding/dec_003/panorama/view_07.png",
+        "artifacts/EvidenceGrounding/dec_003/panorama/view_08.png",
+        "artifacts/EvidenceGrounding/dec_003/panorama/view_09.png",
+        "artifacts/EvidenceGrounding/dec_003/panorama/view_10.png",
+        "artifacts/EvidenceGrounding/dec_003/panorama/view_11.png",
+        "artifacts/EvidenceGrounding/dec_003/panorama/current_decision_panorama_vfv_order.jpg"
+      ],
+      "prompts": [
+        "artifacts/EvidenceGrounding/dec_003/prompts/frontier_00_prompt.txt",
+        "artifacts/EvidenceGrounding/dec_003/prompts/frontier_01_prompt.txt",
+        "artifacts/EvidenceGrounding/dec_003/prompts/frontier_02_prompt.txt",
+        "artifacts/EvidenceGrounding/dec_003/prompts/frontier_03_prompt.txt"
+      ],
+      "responses": [
+        "artifacts/EvidenceGrounding/dec_003/prompts/frontier_00_response.txt",
+        "artifacts/EvidenceGrounding/dec_003/prompts/frontier_01_response.txt",
+        "artifacts/EvidenceGrounding/dec_003/prompts/frontier_02_response.txt",
+        "artifacts/EvidenceGrounding/dec_003/prompts/frontier_03_response.txt"
+      ],
+      "decision_json": [
+        "artifacts/EvidenceGrounding/dec_003/evidence_decision.json"
+      ],
+      "images": [
+        "artifacts/EvidenceGrounding/dec_003/evidence_frontiers_topdown.png",
+        "artifacts/EvidenceGrounding/dec_003/topdown_map.png",
+        "artifacts/EvidenceGrounding/dec_003/topdown_scene_rgb_annotated.png"
+      ],
+      "clean_rgb": [
+        "artifacts/EvidenceGrounding/dec_003/topdown_scene_rgb.png"
+      ],
+      "annotated_rgb": [
+        "artifacts/EvidenceGrounding/dec_003/topdown_scene_rgb_annotated.png"
+      ],
+      "local_topdown_rgb": [
+        "artifacts/EvidenceGrounding/dec_003/topdown_cam_rgb.png"
+      ],
+      "metadata": [
+        "artifacts/EvidenceGrounding/dec_003/topdown_map_info.json",
+        "artifacts/EvidenceGrounding/dec_003/evidence_frontiers_topdown_info.json",
+        "artifacts/EvidenceGrounding/dec_003/topdown_scene_rgb_info.json",
+        "artifacts/EvidenceGrounding/dec_003/topdown_scene_rgb_annotated_info.json",
+        "artifacts/EvidenceGrounding/dec_003/topdown_cam_info.json"
+      ]
+    },
+    {
+      "decision": 4,
+      "module": "Evidence Grounding",
+      "question": "Which frontier?",
+      "panorama_inputs": [
+        "artifacts/EvidenceGrounding/dec_004/panorama/view_00.png",
+        "artifacts/EvidenceGrounding/dec_004/panorama/view_01.png",
+        "artifacts/EvidenceGrounding/dec_004/panorama/view_02.png",
+        "artifacts/EvidenceGrounding/dec_004/panorama/view_03.png",
+        "artifacts/EvidenceGrounding/dec_004/panorama/view_04.png",
+        "artifacts/EvidenceGrounding/dec_004/panorama/view_05.png",
+        "artifacts/EvidenceGrounding/dec_004/panorama/view_06.png",
+        "artifacts/EvidenceGrounding/dec_004/panorama/view_07.png",
+        "artifacts/EvidenceGrounding/dec_004/panorama/view_08.png",
+        "artifacts/EvidenceGrounding/dec_004/panorama/view_09.png",
+        "artifacts/EvidenceGrounding/dec_004/panorama/view_10.png",
+        "artifacts/EvidenceGrounding/dec_004/panorama/view_11.png",
+        "artifacts/EvidenceGrounding/dec_004/panorama/current_decision_panorama_vfv_order.jpg"
+      ],
+      "prompts": [
+        "artifacts/EvidenceGrounding/dec_004/prompts/frontier_00_prompt.txt",
+        "artifacts/EvidenceGrounding/dec_004/prompts/frontier_01_prompt.txt",
+        "artifacts/EvidenceGrounding/dec_004/prompts/frontier_02_prompt.txt",
+        "artifacts/EvidenceGrounding/dec_004/prompts/frontier_03_prompt.txt"
+      ],
+      "responses": [
+        "artifacts/EvidenceGrounding/dec_004/prompts/frontier_00_response.txt",
+        "artifacts/EvidenceGrounding/dec_004/prompts/frontier_01_response.txt",
+        "artifacts/EvidenceGrounding/dec_004/prompts/frontier_02_response.txt",
+        "artifacts/EvidenceGrounding/dec_004/prompts/frontier_03_response.txt"
+      ],
+      "decision_json": [
+        "artifacts/EvidenceGrounding/dec_004/evidence_decision.json"
+      ],
+      "images": [
+        "artifacts/EvidenceGrounding/dec_004/evidence_frontiers_topdown.png",
+        "artifacts/EvidenceGrounding/dec_004/topdown_map.png",
+        "artifacts/EvidenceGrounding/dec_004/topdown_scene_rgb_annotated.png"
+      ],
+      "clean_rgb": [
+        "artifacts/EvidenceGrounding/dec_004/topdown_scene_rgb.png"
+      ],
+      "annotated_rgb": [
+        "artifacts/EvidenceGrounding/dec_004/topdown_scene_rgb_annotated.png"
+      ],
+      "local_topdown_rgb": [
+        "artifacts/EvidenceGrounding/dec_004/topdown_cam_rgb.png"
+      ],
+      "metadata": [
+        "artifacts/EvidenceGrounding/dec_004/topdown_map_info.json",
+        "artifacts/EvidenceGrounding/dec_004/evidence_frontiers_topdown_info.json",
+        "artifacts/EvidenceGrounding/dec_004/topdown_scene_rgb_info.json",
+        "artifacts/EvidenceGrounding/dec_004/topdown_scene_rgb_annotated_info.json",
+        "artifacts/EvidenceGrounding/dec_004/topdown_cam_info.json"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "ok": true,
+  "errors": [],
+  "fresh_run_dir": "/home/chenlin/krona/anchor-nav/visual-scripts/video-creator/nav-logs/fresh_multigoal_probe/run=20260701-121255_ep0_sequence_ep0_multigoal",
+  "videos": {
+    "topdown": "/home/chenlin/krona/anchor-nav/visual-scripts/video-creator/output-fresh-test/run=20260701-122042/navi_process_fresh_topdown.mp4",
+    "rgbmap": "/home/chenlin/krona/anchor-nav/visual-scripts/video-creator/output-fresh-test/run=20260701-122042/navi_process_fresh_rgbmap.mp4"
+  },
+  "video_stats": {
+    "topdown": {
+      "ok": true,
+      "frames": 294,
+      "fps": 5.0,
+      "duration_s": 58.8,
+      "width": 1920,
+      "height": 720,
+      "low_variance_frames": 0,
+      "right_edge_black_bad_frames": 0,
+      "right_edge_black_check": "skipped_for_semantic_topdown",
+      "review_sheet": "/home/chenlin/krona/anchor-nav/visual-scripts/video-creator/output-fresh-test/run=20260701-122042/navi_process_fresh_topdown_review_sheet.jpg"
+    },
+    "rgbmap": {
+      "ok": true,
+      "frames": 294,
+      "fps": 5.0,
+      "duration_s": 58.8,
+      "width": 1920,
+      "height": 720,
+      "low_variance_frames": 0,
+      "right_edge_black_bad_frames": 0,
+      "right_edge_black_check": "enabled_for_rgb_map",
+      "review_sheet": "/home/chenlin/krona/anchor-nav/visual-scripts/video-creator/output-fresh-test/run=20260701-122042/navi_process_fresh_rgbmap_review_sheet.jpg"
+    }
+  },
+  "source_policy": "fresh_navigation_logs_only",
+  "topdown_black_note": "Top-down map uses black/gray semantic occupancy; RGB edge-black is checked separately.",
+  "goal_count": 3,
+  "decision_rounds": 3
+}

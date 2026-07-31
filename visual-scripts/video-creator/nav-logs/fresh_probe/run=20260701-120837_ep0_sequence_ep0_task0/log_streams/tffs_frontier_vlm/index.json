@@ -1,0 +1,46 @@
+{
+  "category": "tffs_frontier_vlm",
+  "description": "TFFS frontier-selection VLM prompts, raw responses, panorama inputs, and frontier map images.",
+  "entry_count": 1,
+  "entries": [
+    {
+      "decision": 0,
+      "module": "tffs",
+      "panorama_inputs": [
+        "modules/tffs/dec_000/panorama/view_00.png",
+        "modules/tffs/dec_000/panorama/view_01.png",
+        "modules/tffs/dec_000/panorama/view_02.png",
+        "modules/tffs/dec_000/panorama/view_03.png",
+        "modules/tffs/dec_000/panorama/view_04.png",
+        "modules/tffs/dec_000/panorama/view_05.png",
+        "modules/tffs/dec_000/panorama/view_06.png",
+        "modules/tffs/dec_000/panorama/view_07.png",
+        "modules/tffs/dec_000/panorama/view_08.png",
+        "modules/tffs/dec_000/panorama/view_09.png",
+        "modules/tffs/dec_000/panorama/view_10.png",
+        "modules/tffs/dec_000/panorama/view_11.png",
+        "modules/tffs/dec_000/panorama/current_decision_panorama_vfv_order.jpg"
+      ],
+      "prompts": [
+        "modules/tffs/dec_000/prompts/frontier_00_prompt.txt",
+        "modules/tffs/dec_000/prompts/frontier_01_prompt.txt",
+        "modules/tffs/dec_000/prompts/frontier_02_prompt.txt",
+        "modules/tffs/dec_000/prompts/frontier_03_prompt.txt"
+      ],
+      "responses": [
+        "modules/tffs/dec_000/prompts/frontier_00_response.txt",
+        "modules/tffs/dec_000/prompts/frontier_01_response.txt",
+        "modules/tffs/dec_000/prompts/frontier_02_response.txt",
+        "modules/tffs/dec_000/prompts/frontier_03_response.txt"
+      ],
+      "decision_json": [
+        "modules/tffs/dec_000/tffs_decision.json"
+      ],
+      "images": [
+        "modules/tffs/dec_000/tffs_frontiers_topdown.png",
+        "modules/tffs/dec_000/topdown_map.png",
+        "modules/tffs/dec_000/topdown_scene_rgb_annotated.png"
+      ]
+    }
+  ]
+}

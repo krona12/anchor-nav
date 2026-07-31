@@ -1,0 +1,54 @@
+{
+  "title": "Endpoint Grounding points on target RGB",
+  "legend": [
+    {
+      "color_bgr": [
+        0,
+        165,
+        255
+      ],
+      "label": "object center (target)"
+    },
+    {
+      "color_bgr": [
+        0,
+        0,
+        230
+      ],
+      "label": "unreachable"
+    },
+    {
+      "color_bgr": [
+        0,
+        140,
+        255
+      ],
+      "label": "too close"
+    },
+    {
+      "color_bgr": [
+        0,
+        220,
+        220
+      ],
+      "label": "bad viewpoint"
+    },
+    {
+      "color_bgr": [
+        0,
+        200,
+        0
+      ],
+      "label": "feasible candidate"
+    },
+    {
+      "color_bgr": [
+        255,
+        0,
+        255
+      ],
+      "label": "Endpoint Grounding selected viewpoint"
+    }
+  ],
+  "note": "Legend is stored as metadata so no white legend panel is burned into the image."
+}

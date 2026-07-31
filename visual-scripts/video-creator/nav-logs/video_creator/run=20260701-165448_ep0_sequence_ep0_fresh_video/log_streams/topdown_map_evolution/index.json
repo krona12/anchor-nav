@@ -1,0 +1,146 @@
+{
+  "category": "topdown_map_evolution",
+  "description": "Gray TopDown Map process with trajectory, frontiers, selected frontier/target, and module overlays.",
+  "entry_count": 11,
+  "entries": [
+    {
+      "decision": 0,
+      "module": "Evidence Grounding",
+      "images": [
+        "artifacts/EvidenceGrounding/dec_000/topdown_map.png",
+        "artifacts/EvidenceGrounding/dec_000/evidence_frontiers_topdown.png"
+      ],
+      "metadata": [
+        "artifacts/EvidenceGrounding/dec_000/topdown_map_info.json",
+        "artifacts/EvidenceGrounding/dec_000/evidence_frontiers_topdown_info.json"
+      ]
+    },
+    {
+      "decision": 0,
+      "module": "Entity Grounding",
+      "images": [
+        "artifacts/EntityGrounding/dec_000/topdown_map.png",
+        "artifacts/EntityGrounding/dec_000/entity_clusters_topdown.png"
+      ],
+      "metadata": [
+        "artifacts/EntityGrounding/dec_000/topdown_map_info.json",
+        "artifacts/EntityGrounding/dec_000/entity_clusters_topdown_info.json"
+      ]
+    },
+    {
+      "decision": 1,
+      "module": "Evidence Grounding",
+      "images": [
+        "artifacts/EvidenceGrounding/dec_001/topdown_map.png",
+        "artifacts/EvidenceGrounding/dec_001/evidence_frontiers_topdown.png"
+      ],
+      "metadata": [
+        "artifacts/EvidenceGrounding/dec_001/topdown_map_info.json",
+        "artifacts/EvidenceGrounding/dec_001/evidence_frontiers_topdown_info.json"
+      ]
+    },
+    {
+      "decision": 1,
+      "module": "Entity Grounding",
+      "images": [
+        "artifacts/EntityGrounding/dec_001/topdown_map.png",
+        "artifacts/EntityGrounding/dec_001/entity_clusters_topdown.png"
+      ],
+      "metadata": [
+        "artifacts/EntityGrounding/dec_001/topdown_map_info.json",
+        "artifacts/EntityGrounding/dec_001/entity_clusters_topdown_info.json"
+      ]
+    },
+    {
+      "decision": 2,
+      "module": "Evidence Grounding",
+      "images": [
+        "artifacts/EvidenceGrounding/dec_002/topdown_map.png",
+        "artifacts/EvidenceGrounding/dec_002/evidence_frontiers_topdown.png"
+      ],
+      "metadata": [
+        "artifacts/EvidenceGrounding/dec_002/topdown_map_info.json",
+        "artifacts/EvidenceGrounding/dec_002/evidence_frontiers_topdown_info.json"
+      ]
+    },
+    {
+      "decision": 2,
+      "module": "Entity Grounding",
+      "images": [
+        "artifacts/EntityGrounding/dec_002/topdown_map.png",
+        "artifacts/EntityGrounding/dec_002/entity_clusters_topdown.png"
+      ],
+      "metadata": [
+        "artifacts/EntityGrounding/dec_002/topdown_map_info.json",
+        "artifacts/EntityGrounding/dec_002/entity_clusters_topdown_info.json"
+      ]
+    },
+    {
+      "decision": 3,
+      "module": "Evidence Grounding",
+      "images": [
+        "artifacts/EvidenceGrounding/dec_003/topdown_map.png",
+        "artifacts/EvidenceGrounding/dec_003/evidence_frontiers_topdown.png"
+      ],
+      "metadata": [
+        "artifacts/EvidenceGrounding/dec_003/topdown_map_info.json",
+        "artifacts/EvidenceGrounding/dec_003/evidence_frontiers_topdown_info.json"
+      ]
+    },
+    {
+      "decision": 3,
+      "module": "Entity Grounding",
+      "images": [
+        "artifacts/EntityGrounding/dec_003/topdown_map.png",
+        "artifacts/EntityGrounding/dec_003/entity_clusters_topdown.png"
+      ],
+      "metadata": [
+        "artifacts/EntityGrounding/dec_003/topdown_map_info.json",
+        "artifacts/EntityGrounding/dec_003/entity_clusters_topdown_info.json"
+      ]
+    },
+    {
+      "decision": 4,
+      "module": "Evidence Grounding",
+      "images": [
+        "artifacts/EvidenceGrounding/dec_004/topdown_map.png",
+        "artifacts/EvidenceGrounding/dec_004/evidence_frontiers_topdown.png"
+      ],
+      "metadata": [
+        "artifacts/EvidenceGrounding/dec_004/topdown_map_info.json",
+        "artifacts/EvidenceGrounding/dec_004/evidence_frontiers_topdown_info.json"
+      ]
+    },
+    {
+      "decision": 4,
+      "module": "Entity Grounding",
+      "images": [
+        "artifacts/EntityGrounding/dec_004/topdown_map.png",
+        "artifacts/EntityGrounding/dec_004/entity_clusters_topdown.png"
+      ],
+      "metadata": [
+        "artifacts/EntityGrounding/dec_004/topdown_map_info.json",
+        "artifacts/EntityGrounding/dec_004/entity_clusters_topdown_info.json"
+      ]
+    },
+    {
+      "decision": "final",
+      "module": "Endpoint Grounding",
+      "decision_json": [
+        "artifacts/EndpointGrounding/final/endpoint_decision.json"
+      ],
+      "images": [
+        "artifacts/EndpointGrounding/final/topdown_map.png",
+        "artifacts/EndpointGrounding/final/endpoint_candidates_topdown.png",
+        "artifacts/EndpointGrounding/final/endpoint_candidates_zoom.png",
+        "trajectory/route_start_to_goal.png"
+      ],
+      "metadata": [
+        "artifacts/EndpointGrounding/final/topdown_map_info.json",
+        "artifacts/EndpointGrounding/final/endpoint_candidates_topdown_info.json",
+        "artifacts/EndpointGrounding/final/endpoint_candidates_zoom_info.json",
+        "trajectory/route_start_to_goal_info.json"
+      ]
+    }
+  ]
+}

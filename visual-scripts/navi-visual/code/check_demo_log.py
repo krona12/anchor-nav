@@ -18,6 +18,22 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple
 import cv2
 import numpy as np
 
+FORBIDDEN_IMAGE_NAMES = {
+    "topdown_fog.png",
+    "topdown_full.png",
+    "frontiers_on_topdown.png",
+    "explored_map.png",
+    "unexplored_map.png",
+    "explored_unexplored_map.png",
+    "topdown_map_fog.png",
+    "topdown_map_rgb.png",
+    "topdown_navmesh_rgb.png",
+    "topdown_scene_rgb_raw.png",
+    "topdown_scene_rgb_mosaic.png",
+}
+FORBIDDEN_IMAGE_SUFFIXES = ("_legend.png", "_rgb_raw.png")
+FORBIDDEN_DIR_NAMES = {"topdown_maps", "topdown_rgb", "frontiers", "exploration_maps"}
+
 
 def _read_json(path: Path) -> Dict[str, Any]:
     with path.open("r", encoding="utf-8") as f:
@@ -68,6 +84,54 @@ def _image_stats(path: Path) -> Dict[str, Any]:
         "mean": float(np.mean(arr.astype(np.float32))),
         "nonzero_ratio": float(np.count_nonzero(arr) / max(1, arr.size)),
     }
+
+
+def _edge_ratios(path: Path, border_frac: float = 0.04) -> Dict[str, float]:
+    img = cv2.imread(str(path), cv2.IMREAD_COLOR)
+    if img is None:
+        return {"black": 1.0, "white": 1.0}
+    h, w = img.shape[:2]
+    bw = max(1, int(round(min(h, w) * float(border_frac))))
+    edge = np.concatenate(
+        [
+            img[:bw, :, :].reshape(-1, 3),
+            img[-bw:, :, :].reshape(-1, 3),
+            img[:, :bw, :].reshape(-1, 3),
+            img[:, -bw:, :].reshape(-1, 3),
+        ],
+        axis=0,
+    )
+    return {
+        "black": float((edge.max(axis=1) <= 8).mean()),
+        "white": float((edge.min(axis=1) >= 247).mean()),
+    }
+
+
+def _check_edge_limit(
+    errors: List[str],
+    path: Path,
+    label: str,
+    *,
+    black_limit: float,
+    white_limit: float,
+) -> None:
+    if not path.exists():
+        return
+    edge = _edge_ratios(path)
+    if edge["black"] > float(black_limit) or edge["white"] > float(white_limit):
+        errors.append(f"{label}: black/white edge ratio too high {edge}: {path}")
+
+
+def _append_forbidden_artifact_errors(errors: List[str], run_dir: Path) -> None:
+    for path in run_dir.rglob("*"):
+        if any(part in FORBIDDEN_DIR_NAMES for part in path.parts):
+            errors.append(f"forbidden old visual artifact directory still exists: {path}")
+            continue
+        if not path.is_file():
+            continue
+        name = path.name
+        if name in FORBIDDEN_IMAGE_NAMES or any(name.endswith(suffix) for suffix in FORBIDDEN_IMAGE_SUFFIXES):
+            errors.append(f"forbidden old/duplicate visual artifact still exists: {path}")
 
 
 def _glob_images(root: Path, patterns: Iterable[str]) -> List[Path]:
@@ -162,8 +226,8 @@ def _check_decision_flow(dec_dir: Path, errors: List[str], warnings: List[str]) 
         ),
         "global_topdown": _check_images(
             label=f"{dec_dir.name}/global_topdown",
-            paths=_glob_images(dec_dir / "global_topdown", ["topdown_map.png", "topdown_scene_rgb.png"]),
-            min_count=2,
+            paths=_glob_images(dec_dir / "global_topdown", ["topdown_map.png", "topdown_scene_rgb.png", "topdown_scene_rgb_annotated.png"]),
+            min_count=3,
             errors=errors,
             warnings=warnings,
             sample_count=6,
@@ -177,6 +241,42 @@ def _check_decision_flow(dec_dir: Path, errors: List[str], warnings: List[str]) 
             sample_count=1,
         ),
     }
+    map_info_path = dec_dir / "topdown_map_info.json"
+    if map_info_path.exists():
+        map_info = _read_json(map_info_path)
+        if map_info.get("source") != "single_gray_topdown_theme":
+            errors.append(f"{dec_dir}: topdown_map should use single gray theme: {map_info}")
+    scene_info_path = dec_dir / "global_topdown" / "topdown_scene_rgb_info.json"
+    if scene_info_path.exists():
+        scene_info = _read_json(scene_info_path)
+        if scene_info.get("source") != "global_topdown_rgb_tile_mosaic":
+            errors.append(f"{dec_dir}: scene RGB source should be RGBD tile mosaic: {scene_info}")
+        for key in ("fallback_filled_px", "dilation_filled_px", "inpainted_uncovered_px"):
+            if int(scene_info.get(key, 0) or 0) != 0:
+                errors.append(f"{dec_dir}: scene RGB should not use legacy blur/ghost filling: {key}={scene_info.get(key)}")
+        if "no_patch_fallback" not in str(scene_info.get("paste_mode", "")):
+            errors.append(f"{dec_dir}: scene RGB paste_mode should disable patch fallback: {scene_info.get('paste_mode')}")
+    annotated_info_path = dec_dir / "global_topdown" / "topdown_scene_rgb_annotated_info.json"
+    if annotated_info_path.exists():
+        annotated_info = _read_json(annotated_info_path)
+        if annotated_info.get("source") != "global_topdown_rgb_annotation":
+            errors.append(f"{dec_dir}: annotated scene RGB source should be annotation metadata: {annotated_info}")
+        if annotated_info.get("base_image") != "topdown_scene_rgb.png":
+            errors.append(f"{dec_dir}: annotated scene RGB should reference clean base image: {annotated_info}")
+    _check_edge_limit(
+        errors,
+        dec_dir / "global_topdown" / "topdown_scene_rgb.png",
+        f"{dec_dir.name}/global_topdown_scene_rgb",
+        black_limit=0.03,
+        white_limit=0.03,
+    )
+    _check_edge_limit(
+        errors,
+        dec_dir / "local_topdown_rgb" / "robot_center_rgb.png",
+        f"{dec_dir.name}/local_topdown_rgb",
+        black_limit=0.05,
+        white_limit=0.05,
+    )
     return {
         "decision_dir": str(dec_dir),
         "ok": True,
@@ -195,6 +295,7 @@ def check_run(run_dir: Path) -> Tuple[bool, Dict[str, Any]]:
     warnings: List[str] = []
     summary_path = run_dir / "demo_visual_summary.json"
     summary = _read_json(summary_path) if summary_path.exists() else {}
+    _append_forbidden_artifact_errors(errors, run_dir)
     if not summary_path.exists():
         errors.append(f"missing demo_visual_summary.json under {run_dir}")
     elif summary.get("ok") is False:

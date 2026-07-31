@@ -1,0 +1,133 @@
+{
+  "category": "rgb_map_evolution",
+  "description": "Full-scene top-down RGB process. Each step keeps a clean RGB map and an annotated RGB map.",
+  "entry_count": 7,
+  "entries": [
+    {
+      "decision": 0,
+      "module": "tffs",
+      "clean_rgb": [
+        "modules/tffs/dec_000/topdown_scene_rgb.png"
+      ],
+      "annotated_rgb": [
+        "modules/tffs/dec_000/topdown_scene_rgb_annotated.png"
+      ],
+      "local_topdown_rgb": [
+        "modules/tffs/dec_000/topdown_cam_rgb.png"
+      ],
+      "metadata": [
+        "modules/tffs/dec_000/topdown_scene_rgb_info.json",
+        "modules/tffs/dec_000/topdown_scene_rgb_annotated_info.json",
+        "modules/tffs/dec_000/topdown_cam_info.json"
+      ]
+    },
+    {
+      "decision": 0,
+      "module": "mqsc_r1",
+      "clean_rgb": [
+        "modules/mqsc_r1/dec_000/topdown_scene_rgb.png"
+      ],
+      "annotated_rgb": [
+        "modules/mqsc_r1/dec_000/topdown_scene_rgb_annotated.png"
+      ],
+      "local_topdown_rgb": [
+        "modules/mqsc_r1/dec_000/topdown_cam_rgb.png"
+      ],
+      "metadata": [
+        "modules/mqsc_r1/dec_000/topdown_scene_rgb_info.json",
+        "modules/mqsc_r1/dec_000/topdown_scene_rgb_annotated_info.json",
+        "modules/mqsc_r1/dec_000/topdown_cam_info.json"
+      ]
+    },
+    {
+      "decision": 1,
+      "module": "tffs",
+      "clean_rgb": [
+        "modules/tffs/dec_001/topdown_scene_rgb.png"
+      ],
+      "annotated_rgb": [
+        "modules/tffs/dec_001/topdown_scene_rgb_annotated.png"
+      ],
+      "local_topdown_rgb": [
+        "modules/tffs/dec_001/topdown_cam_rgb.png"
+      ],
+      "metadata": [
+        "modules/tffs/dec_001/topdown_scene_rgb_info.json",
+        "modules/tffs/dec_001/topdown_scene_rgb_annotated_info.json",
+        "modules/tffs/dec_001/topdown_cam_info.json"
+      ]
+    },
+    {
+      "decision": 1,
+      "module": "mqsc_r1",
+      "clean_rgb": [
+        "modules/mqsc_r1/dec_001/topdown_scene_rgb.png"
+      ],
+      "annotated_rgb": [
+        "modules/mqsc_r1/dec_001/topdown_scene_rgb_annotated.png"
+      ],
+      "local_topdown_rgb": [
+        "modules/mqsc_r1/dec_001/topdown_cam_rgb.png"
+      ],
+      "metadata": [
+        "modules/mqsc_r1/dec_001/topdown_scene_rgb_info.json",
+        "modules/mqsc_r1/dec_001/topdown_scene_rgb_annotated_info.json",
+        "modules/mqsc_r1/dec_001/topdown_cam_info.json"
+      ]
+    },
+    {
+      "decision": 2,
+      "module": "tffs",
+      "clean_rgb": [
+        "modules/tffs/dec_002/topdown_scene_rgb.png"
+      ],
+      "annotated_rgb": [
+        "modules/tffs/dec_002/topdown_scene_rgb_annotated.png"
+      ],
+      "local_topdown_rgb": [
+        "modules/tffs/dec_002/topdown_cam_rgb.png"
+      ],
+      "metadata": [
+        "modules/tffs/dec_002/topdown_scene_rgb_info.json",
+        "modules/tffs/dec_002/topdown_scene_rgb_annotated_info.json",
+        "modules/tffs/dec_002/topdown_cam_info.json"
+      ]
+    },
+    {
+      "decision": 2,
+      "module": "mqsc_r1",
+      "clean_rgb": [
+        "modules/mqsc_r1/dec_002/topdown_scene_rgb.png"
+      ],
+      "annotated_rgb": [
+        "modules/mqsc_r1/dec_002/topdown_scene_rgb_annotated.png"
+      ],
+      "local_topdown_rgb": [
+        "modules/mqsc_r1/dec_002/topdown_cam_rgb.png"
+      ],
+      "metadata": [
+        "modules/mqsc_r1/dec_002/topdown_scene_rgb_info.json",
+        "modules/mqsc_r1/dec_002/topdown_scene_rgb_annotated_info.json",
+        "modules/mqsc_r1/dec_002/topdown_cam_info.json"
+      ]
+    },
+    {
+      "decision": "final",
+      "module": "vista_ls",
+      "clean_rgb": [
+        "modules/vista_ls/final/topdown_scene_rgb.png"
+      ],
+      "annotated_rgb": [
+        "modules/vista_ls/final/topdown_scene_rgb_annotated.png"
+      ],
+      "local_topdown_rgb": [
+        "modules/vista_ls/final/topdown_cam_rgb.png"
+      ],
+      "metadata": [
+        "modules/vista_ls/final/topdown_scene_rgb_info.json",
+        "modules/vista_ls/final/topdown_scene_rgb_annotated_info.json",
+        "modules/vista_ls/final/topdown_cam_info.json"
+      ]
+    }
+  ]
+}

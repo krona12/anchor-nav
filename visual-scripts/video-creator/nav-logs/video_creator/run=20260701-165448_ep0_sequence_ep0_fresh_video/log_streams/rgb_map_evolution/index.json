@@ -1,0 +1,205 @@
+{
+  "category": "rgb_map_evolution",
+  "description": "Full-scene top-down RGB process. Each step keeps a clean RGB map and an annotated RGB map.",
+  "entry_count": 11,
+  "entries": [
+    {
+      "decision": 0,
+      "module": "Evidence Grounding",
+      "clean_rgb": [
+        "artifacts/EvidenceGrounding/dec_000/topdown_scene_rgb.png"
+      ],
+      "annotated_rgb": [
+        "artifacts/EvidenceGrounding/dec_000/topdown_scene_rgb_annotated.png"
+      ],
+      "local_topdown_rgb": [
+        "artifacts/EvidenceGrounding/dec_000/topdown_cam_rgb.png"
+      ],
+      "metadata": [
+        "artifacts/EvidenceGrounding/dec_000/topdown_scene_rgb_info.json",
+        "artifacts/EvidenceGrounding/dec_000/topdown_scene_rgb_annotated_info.json",
+        "artifacts/EvidenceGrounding/dec_000/topdown_cam_info.json"
+      ]
+    },
+    {
+      "decision": 0,
+      "module": "Entity Grounding",
+      "clean_rgb": [
+        "artifacts/EntityGrounding/dec_000/topdown_scene_rgb.png"
+      ],
+      "annotated_rgb": [
+        "artifacts/EntityGrounding/dec_000/topdown_scene_rgb_annotated.png"
+      ],
+      "local_topdown_rgb": [
+        "artifacts/EntityGrounding/dec_000/topdown_cam_rgb.png"
+      ],
+      "metadata": [
+        "artifacts/EntityGrounding/dec_000/topdown_scene_rgb_info.json",
+        "artifacts/EntityGrounding/dec_000/topdown_scene_rgb_annotated_info.json",
+        "artifacts/EntityGrounding/dec_000/topdown_cam_info.json"
+      ]
+    },
+    {
+      "decision": 1,
+      "module": "Evidence Grounding",
+      "clean_rgb": [
+        "artifacts/EvidenceGrounding/dec_001/topdown_scene_rgb.png"
+      ],
+      "annotated_rgb": [
+        "artifacts/EvidenceGrounding/dec_001/topdown_scene_rgb_annotated.png"
+      ],
+      "local_topdown_rgb": [
+        "artifacts/EvidenceGrounding/dec_001/topdown_cam_rgb.png"
+      ],
+      "metadata": [
+        "artifacts/EvidenceGrounding/dec_001/topdown_scene_rgb_info.json",
+        "artifacts/EvidenceGrounding/dec_001/topdown_scene_rgb_annotated_info.json",
+        "artifacts/EvidenceGrounding/dec_001/topdown_cam_info.json"
+      ]
+    },
+    {
+      "decision": 1,
+      "module": "Entity Grounding",
+      "clean_rgb": [
+        "artifacts/EntityGrounding/dec_001/topdown_scene_rgb.png"
+      ],
+      "annotated_rgb": [
+        "artifacts/EntityGrounding/dec_001/topdown_scene_rgb_annotated.png"
+      ],
+      "local_topdown_rgb": [
+        "artifacts/EntityGrounding/dec_001/topdown_cam_rgb.png"
+      ],
+      "metadata": [
+        "artifacts/EntityGrounding/dec_001/topdown_scene_rgb_info.json",
+        "artifacts/EntityGrounding/dec_001/topdown_scene_rgb_annotated_info.json",
+        "artifacts/EntityGrounding/dec_001/topdown_cam_info.json"
+      ]
+    },
+    {
+      "decision": 2,
+      "module": "Evidence Grounding",
+      "clean_rgb": [
+        "artifacts/EvidenceGrounding/dec_002/topdown_scene_rgb.png"
+      ],
+      "annotated_rgb": [
+        "artifacts/EvidenceGrounding/dec_002/topdown_scene_rgb_annotated.png"
+      ],
+      "local_topdown_rgb": [
+        "artifacts/EvidenceGrounding/dec_002/topdown_cam_rgb.png"
+      ],
+      "metadata": [
+        "artifacts/EvidenceGrounding/dec_002/topdown_scene_rgb_info.json",
+        "artifacts/EvidenceGrounding/dec_002/topdown_scene_rgb_annotated_info.json",
+        "artifacts/EvidenceGrounding/dec_002/topdown_cam_info.json"
+      ]
+    },
+    {
+      "decision": 2,
+      "module": "Entity Grounding",
+      "clean_rgb": [
+        "artifacts/EntityGrounding/dec_002/topdown_scene_rgb.png"
+      ],
+      "annotated_rgb": [
+        "artifacts/EntityGrounding/dec_002/topdown_scene_rgb_annotated.png"
+      ],
+      "local_topdown_rgb": [
+        "artifacts/EntityGrounding/dec_002/topdown_cam_rgb.png"
+      ],
+      "metadata": [
+        "artifacts/EntityGrounding/dec_002/topdown_scene_rgb_info.json",
+        "artifacts/EntityGrounding/dec_002/topdown_scene_rgb_annotated_info.json",
+        "artifacts/EntityGrounding/dec_002/topdown_cam_info.json"
+      ]
+    },
+    {
+      "decision": 3,
+      "module": "Evidence Grounding",
+      "clean_rgb": [
+        "artifacts/EvidenceGrounding/dec_003/topdown_scene_rgb.png"
+      ],
+      "annotated_rgb": [
+        "artifacts/EvidenceGrounding/dec_003/topdown_scene_rgb_annotated.png"
+      ],
+      "local_topdown_rgb": [
+        "artifacts/EvidenceGrounding/dec_003/topdown_cam_rgb.png"
+      ],
+      "metadata": [
+        "artifacts/EvidenceGrounding/dec_003/topdown_scene_rgb_info.json",
+        "artifacts/EvidenceGrounding/dec_003/topdown_scene_rgb_annotated_info.json",
+        "artifacts/EvidenceGrounding/dec_003/topdown_cam_info.json"
+      ]
+    },
+    {
+      "decision": 3,
+      "module": "Entity Grounding",
+      "clean_rgb": [
+        "artifacts/EntityGrounding/dec_003/topdown_scene_rgb.png"
+      ],
+      "annotated_rgb": [
+        "artifacts/EntityGrounding/dec_003/topdown_scene_rgb_annotated.png"
+      ],
+      "local_topdown_rgb": [
+        "artifacts/EntityGrounding/dec_003/topdown_cam_rgb.png"
+      ],
+      "metadata": [
+        "artifacts/EntityGrounding/dec_003/topdown_scene_rgb_info.json",
+        "artifacts/EntityGrounding/dec_003/topdown_scene_rgb_annotated_info.json",
+        "artifacts/EntityGrounding/dec_003/topdown_cam_info.json"
+      ]
+    },
+    {
+      "decision": 4,
+      "module": "Evidence Grounding",
+      "clean_rgb": [
+        "artifacts/EvidenceGrounding/dec_004/topdown_scene_rgb.png"
+      ],
+      "annotated_rgb": [
+        "artifacts/EvidenceGrounding/dec_004/topdown_scene_rgb_annotated.png"
+      ],
+      "local_topdown_rgb": [
+        "artifacts/EvidenceGrounding/dec_004/topdown_cam_rgb.png"
+      ],
+      "metadata": [
+        "artifacts/EvidenceGrounding/dec_004/topdown_scene_rgb_info.json",
+        "artifacts/EvidenceGrounding/dec_004/topdown_scene_rgb_annotated_info.json",
+        "artifacts/EvidenceGrounding/dec_004/topdown_cam_info.json"
+      ]
+    },
+    {
+      "decision": 4,
+      "module": "Entity Grounding",
+      "clean_rgb": [
+        "artifacts/EntityGrounding/dec_004/topdown_scene_rgb.png"
+      ],
+      "annotated_rgb": [
+        "artifacts/EntityGrounding/dec_004/topdown_scene_rgb_annotated.png"
+      ],
+      "local_topdown_rgb": [
+        "artifacts/EntityGrounding/dec_004/topdown_cam_rgb.png"
+      ],
+      "metadata": [
+        "artifacts/EntityGrounding/dec_004/topdown_scene_rgb_info.json",
+        "artifacts/EntityGrounding/dec_004/topdown_scene_rgb_annotated_info.json",
+        "artifacts/EntityGrounding/dec_004/topdown_cam_info.json"
+      ]
+    },
+    {
+      "decision": "final",
+      "module": "Endpoint Grounding",
+      "clean_rgb": [
+        "artifacts/EndpointGrounding/final/topdown_scene_rgb.png"
+      ],
+      "annotated_rgb": [
+        "artifacts/EndpointGrounding/final/topdown_scene_rgb_annotated.png"
+      ],
+      "local_topdown_rgb": [
+        "artifacts/EndpointGrounding/final/topdown_cam_rgb.png"
+      ],
+      "metadata": [
+        "artifacts/EndpointGrounding/final/topdown_scene_rgb_info.json",
+        "artifacts/EndpointGrounding/final/topdown_scene_rgb_annotated_info.json",
+        "artifacts/EndpointGrounding/final/topdown_cam_info.json"
+      ]
+    }
+  ]
+}

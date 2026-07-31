@@ -1,0 +1,15 @@
+{
+  "source": "global_topdown_rgb_annotation",
+  "base_image": "topdown_scene_rgb.png",
+  "file": "topdown_scene_rgb_annotated.png",
+  "note": "The base RGB map remains available without overlays or legend panels.",
+  "overlays": {
+    "blue_line": "trajectory",
+    "red_arrow": "agent_position_and_heading",
+    "orange_star": "goal",
+    "gray_circle": "frontier",
+    "magenta_circle": "selected_frontier",
+    "red_cross": "final_target",
+    "blue_cross": "non_final_target"
+  }
+}

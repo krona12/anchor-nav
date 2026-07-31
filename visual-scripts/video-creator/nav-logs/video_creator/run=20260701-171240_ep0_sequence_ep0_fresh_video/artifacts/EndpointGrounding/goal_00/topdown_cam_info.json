@@ -1,0 +1,10 @@
+{
+  "source": "robot_center_downward_rgbd_camera",
+  "slice_height_m": 2.1,
+  "median_depth_m": 1.8622710704803467,
+  "slice_ok": true,
+  "edge_connected_black_fill_px": 0,
+  "edge_connected_white_fill_px": 0,
+  "uncovered_fill": "neutral_gray_for_edge_connected_no_geometry_black_or_white",
+  "note": "Clean local RGB photo; robot marker is stored in decision metadata, not drawn into the image."
+}

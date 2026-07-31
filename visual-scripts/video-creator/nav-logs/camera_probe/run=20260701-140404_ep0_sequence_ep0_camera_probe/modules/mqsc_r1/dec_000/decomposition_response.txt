@@ -1,0 +1,1 @@
+{"target_desc":"wardrobe","target_aliases":["tall wardrobe"],"anchor_primary":["white-sheeted bed"],"anchor_support":[],"room_context":[],"relations":[]}

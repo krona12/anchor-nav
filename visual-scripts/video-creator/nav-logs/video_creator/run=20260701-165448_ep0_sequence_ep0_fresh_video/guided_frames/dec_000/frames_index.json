@@ -1,0 +1,7548 @@
+{
+  "source": "fresh_guided_move",
+  "round": 0,
+  "goal_index": 0,
+  "target_xyz": [
+    -2.2284757689397248,
+    3.1133780479431152,
+    -5.589214510689636
+  ],
+  "frame_count": 69,
+  "frames": [
+    {
+      "frame": 0,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_left",
+      "rgb": "frame_0000_rgb.png",
+      "topdown": "frame_0000_topdown.png",
+      "step_count": 13,
+      "position_xyz": [
+        -4.03902006149292,
+        3.1133780479431152,
+        -0.06032000109553337
+      ],
+      "agent_pixel_rc": [
+        456,
+        386
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ]
+      ],
+      "heading_xz": [
+        0.9740956894921213,
+        0.22613621495211444
+      ],
+      "color_sensor_forward_xyz": [
+        0.9740956894921213,
+        0.0,
+        0.22613621495211444
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 1,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_left",
+      "rgb": "frame_0001_rgb.png",
+      "topdown": "frame_0001_topdown.png",
+      "step_count": 14,
+      "position_xyz": [
+        -4.03902006149292,
+        3.1133780479431152,
+        -0.06032000109553337
+      ],
+      "agent_pixel_rc": [
+        456,
+        386
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ]
+      ],
+      "heading_xz": [
+        0.9566597206858252,
+        -0.2912081365918868
+      ],
+      "color_sensor_forward_xyz": [
+        0.9566597206858252,
+        0.0,
+        -0.2912081365918868
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 2,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_left",
+      "rgb": "frame_0002_rgb.png",
+      "topdown": "frame_0002_topdown.png",
+      "step_count": 15,
+      "position_xyz": [
+        -4.03902006149292,
+        3.1133780479431152,
+        -0.06032000109553337
+      ],
+      "agent_pixel_rc": [
+        456,
+        386
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ]
+      ],
+      "heading_xz": [
+        0.6828875512515751,
+        -0.7305235056763248
+      ],
+      "color_sensor_forward_xyz": [
+        0.6828875512515751,
+        0.0,
+        -0.7305235056763248
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 3,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_left",
+      "rgb": "frame_0003_rgb.png",
+      "topdown": "frame_0003_topdown.png",
+      "step_count": 16,
+      "position_xyz": [
+        -4.03902006149292,
+        3.1133780479431152,
+        -0.06032000109553337
+      ],
+      "agent_pixel_rc": [
+        456,
+        386
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ]
+      ],
+      "heading_xz": [
+        0.2261362218366763,
+        -0.9740956878938709
+      ],
+      "color_sensor_forward_xyz": [
+        0.2261362218366763,
+        0.0,
+        -0.9740956878938709
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 4,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_left",
+      "rgb": "frame_0004_rgb.png",
+      "topdown": "frame_0004_topdown.png",
+      "step_count": 17,
+      "position_xyz": [
+        -4.03902006149292,
+        3.1133780479431152,
+        -0.06032000109553337
+      ],
+      "agent_pixel_rc": [
+        456,
+        386
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ]
+      ],
+      "heading_xz": [
+        -0.29120811012030223,
+        -0.9566597287438006
+      ],
+      "color_sensor_forward_xyz": [
+        -0.29120811012030223,
+        0.0,
+        -0.9566597287438006
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 5,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0005_rgb.png",
+      "topdown": "frame_0005_topdown.png",
+      "step_count": 18,
+      "position_xyz": [
+        -4.111822128295898,
+        3.1133780479431152,
+        -0.2994849383831024
+      ],
+      "agent_pixel_rc": [
+        445,
+        383
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ]
+      ],
+      "heading_xz": [
+        -0.29120811012030223,
+        -0.9566597287438006
+      ],
+      "color_sensor_forward_xyz": [
+        -0.29120811012030223,
+        0.0,
+        -0.9566597287438006
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 6,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_left",
+      "rgb": "frame_0006_rgb.png",
+      "topdown": "frame_0006_topdown.png",
+      "step_count": 19,
+      "position_xyz": [
+        -4.111822128295898,
+        3.1133780479431152,
+        -0.2994849383831024
+      ],
+      "agent_pixel_rc": [
+        445,
+        383
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ]
+      ],
+      "heading_xz": [
+        -0.7305234680055868,
+        -0.6828875915500958
+      ],
+      "color_sensor_forward_xyz": [
+        -0.7305234680055868,
+        0.0,
+        -0.6828875915500958
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 7,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0007_rgb.png",
+      "topdown": "frame_0007_topdown.png",
+      "step_count": 20,
+      "position_xyz": [
+        -4.294453144073486,
+        3.1133780479431152,
+        -0.4702068567276001
+      ],
+      "agent_pixel_rc": [
+        437,
+        374
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ]
+      ],
+      "heading_xz": [
+        -0.7305234680055868,
+        -0.6828875915500958
+      ],
+      "color_sensor_forward_xyz": [
+        -0.7305234680055868,
+        0.0,
+        -0.6828875915500958
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 8,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0008_rgb.png",
+      "topdown": "frame_0008_topdown.png",
+      "step_count": 21,
+      "position_xyz": [
+        -4.477084159851074,
+        3.1133780479431152,
+        -0.6409287452697754
+      ],
+      "agent_pixel_rc": [
+        429,
+        366
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ]
+      ],
+      "heading_xz": [
+        -0.7305234680055868,
+        -0.6828875915500958
+      ],
+      "color_sensor_forward_xyz": [
+        -0.7305234680055868,
+        0.0,
+        -0.6828875915500958
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 9,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0009_rgb.png",
+      "topdown": "frame_0009_topdown.png",
+      "step_count": 22,
+      "position_xyz": [
+        -4.659715175628662,
+        3.1133780479431152,
+        -0.8116506338119507
+      ],
+      "agent_pixel_rc": [
+        421,
+        357
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ]
+      ],
+      "heading_xz": [
+        -0.7305234680055868,
+        -0.6828875915500958
+      ],
+      "color_sensor_forward_xyz": [
+        -0.7305234680055868,
+        0.0,
+        -0.6828875915500958
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 10,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_right",
+      "rgb": "frame_0010_rgb.png",
+      "topdown": "frame_0010_topdown.png",
+      "step_count": 23,
+      "position_xyz": [
+        -4.659715175628662,
+        3.1133780479431152,
+        -0.8116506338119507
+      ],
+      "agent_pixel_rc": [
+        421,
+        357
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ]
+      ],
+      "heading_xz": [
+        -0.29120806513225106,
+        -0.956659742438204
+      ],
+      "color_sensor_forward_xyz": [
+        -0.29120806513225106,
+        0.0,
+        -0.956659742438204
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 11,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0011_rgb.png",
+      "topdown": "frame_0011_topdown.png",
+      "step_count": 24,
+      "position_xyz": [
+        -4.732517242431641,
+        3.1133780479431152,
+        -1.0508155822753906
+      ],
+      "agent_pixel_rc": [
+        410,
+        354
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ]
+      ],
+      "heading_xz": [
+        -0.29120806513225106,
+        -0.956659742438204
+      ],
+      "color_sensor_forward_xyz": [
+        -0.29120806513225106,
+        0.0,
+        -0.956659742438204
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 12,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0012_rgb.png",
+      "topdown": "frame_0012_topdown.png",
+      "step_count": 25,
+      "position_xyz": [
+        -4.805319309234619,
+        3.1133780479431152,
+        -1.2899805307388306
+      ],
+      "agent_pixel_rc": [
+        399,
+        351
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ]
+      ],
+      "heading_xz": [
+        -0.29120806513225106,
+        -0.956659742438204
+      ],
+      "color_sensor_forward_xyz": [
+        -0.29120806513225106,
+        0.0,
+        -0.956659742438204
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 13,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0013_rgb.png",
+      "topdown": "frame_0013_topdown.png",
+      "step_count": 26,
+      "position_xyz": [
+        -4.878121376037598,
+        3.1133780479431152,
+        -1.5291454792022705
+      ],
+      "agent_pixel_rc": [
+        388,
+        347
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ]
+      ],
+      "heading_xz": [
+        -0.29120806513225106,
+        -0.956659742438204
+      ],
+      "color_sensor_forward_xyz": [
+        -0.29120806513225106,
+        0.0,
+        -0.956659742438204
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 14,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_left",
+      "rgb": "frame_0014_rgb.png",
+      "topdown": "frame_0014_topdown.png",
+      "step_count": 27,
+      "position_xyz": [
+        -4.878121376037598,
+        3.1133780479431152,
+        -1.5291454792022705
+      ],
+      "agent_pixel_rc": [
+        388,
+        347
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ]
+      ],
+      "heading_xz": [
+        -0.7305234729274312,
+        -0.6828875862849204
+      ],
+      "color_sensor_forward_xyz": [
+        -0.7305234729274312,
+        0.0,
+        -0.6828875862849204
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 15,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0015_rgb.png",
+      "topdown": "frame_0015_topdown.png",
+      "step_count": 28,
+      "position_xyz": [
+        -5.0607523918151855,
+        3.1133780479431152,
+        -1.6998673677444458
+      ],
+      "agent_pixel_rc": [
+        380,
+        339
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ]
+      ],
+      "heading_xz": [
+        -0.7305234729274312,
+        -0.6828875862849204
+      ],
+      "color_sensor_forward_xyz": [
+        -0.7305234729274312,
+        0.0,
+        -0.6828875862849204
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 16,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0016_rgb.png",
+      "topdown": "frame_0016_topdown.png",
+      "step_count": 29,
+      "position_xyz": [
+        -5.243383407592773,
+        3.1133780479431152,
+        -1.870589256286621
+      ],
+      "agent_pixel_rc": [
+        372,
+        331
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ]
+      ],
+      "heading_xz": [
+        -0.7305234729274312,
+        -0.6828875862849204
+      ],
+      "color_sensor_forward_xyz": [
+        -0.7305234729274312,
+        0.0,
+        -0.6828875862849204
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 17,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_right",
+      "rgb": "frame_0017_rgb.png",
+      "topdown": "frame_0017_topdown.png",
+      "step_count": 30,
+      "position_xyz": [
+        -5.243383407592773,
+        3.1133780479431152,
+        -1.870589256286621
+      ],
+      "agent_pixel_rc": [
+        372,
+        331
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ]
+      ],
+      "heading_xz": [
+        -0.29120806513225106,
+        -0.956659742438204
+      ],
+      "color_sensor_forward_xyz": [
+        -0.29120806513225106,
+        0.0,
+        -0.956659742438204
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 18,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0018_rgb.png",
+      "topdown": "frame_0018_topdown.png",
+      "step_count": 31,
+      "position_xyz": [
+        -5.316185474395752,
+        3.1133780479431152,
+        -2.1097540855407715
+      ],
+      "agent_pixel_rc": [
+        361,
+        327
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ]
+      ],
+      "heading_xz": [
+        -0.29120806513225106,
+        -0.956659742438204
+      ],
+      "color_sensor_forward_xyz": [
+        -0.29120806513225106,
+        0.0,
+        -0.956659742438204
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 19,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_left",
+      "rgb": "frame_0019_rgb.png",
+      "topdown": "frame_0019_topdown.png",
+      "step_count": 32,
+      "position_xyz": [
+        -5.316185474395752,
+        3.1133780479431152,
+        -2.1097540855407715
+      ],
+      "agent_pixel_rc": [
+        361,
+        327
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ]
+      ],
+      "heading_xz": [
+        -0.7305234729274312,
+        -0.6828875862849204
+      ],
+      "color_sensor_forward_xyz": [
+        -0.7305234729274312,
+        0.0,
+        -0.6828875862849204
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 20,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0020_rgb.png",
+      "topdown": "frame_0020_topdown.png",
+      "step_count": 33,
+      "position_xyz": [
+        -5.49881649017334,
+        3.1133780479431152,
+        -2.2804760932922363
+      ],
+      "agent_pixel_rc": [
+        353,
+        319
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ]
+      ],
+      "heading_xz": [
+        -0.7305234729274312,
+        -0.6828875862849204
+      ],
+      "color_sensor_forward_xyz": [
+        -0.7305234729274312,
+        0.0,
+        -0.6828875862849204
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 21,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_right",
+      "rgb": "frame_0021_rgb.png",
+      "topdown": "frame_0021_topdown.png",
+      "step_count": 34,
+      "position_xyz": [
+        -5.49881649017334,
+        3.1133780479431152,
+        -2.2804760932922363
+      ],
+      "agent_pixel_rc": [
+        353,
+        319
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ]
+      ],
+      "heading_xz": [
+        -0.29120806513225106,
+        -0.956659742438204
+      ],
+      "color_sensor_forward_xyz": [
+        -0.29120806513225106,
+        0.0,
+        -0.956659742438204
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 22,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0022_rgb.png",
+      "topdown": "frame_0022_topdown.png",
+      "step_count": 35,
+      "position_xyz": [
+        -5.571618556976318,
+        3.1133780479431152,
+        -2.5196409225463867
+      ],
+      "agent_pixel_rc": [
+        342,
+        316
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ]
+      ],
+      "heading_xz": [
+        -0.29120806513225106,
+        -0.956659742438204
+      ],
+      "color_sensor_forward_xyz": [
+        -0.29120806513225106,
+        0.0,
+        -0.956659742438204
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 23,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_left",
+      "rgb": "frame_0023_rgb.png",
+      "topdown": "frame_0023_topdown.png",
+      "step_count": 36,
+      "position_xyz": [
+        -5.571618556976318,
+        3.1133780479431152,
+        -2.5196409225463867
+      ],
+      "agent_pixel_rc": [
+        342,
+        316
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ]
+      ],
+      "heading_xz": [
+        -0.7305234729274312,
+        -0.6828875862849204
+      ],
+      "color_sensor_forward_xyz": [
+        -0.7305234729274312,
+        0.0,
+        -0.6828875862849204
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 24,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0024_rgb.png",
+      "topdown": "frame_0024_topdown.png",
+      "step_count": 37,
+      "position_xyz": [
+        -5.754249572753906,
+        3.1133780479431152,
+        -2.6903629302978516
+      ],
+      "agent_pixel_rc": [
+        335,
+        307
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ]
+      ],
+      "heading_xz": [
+        -0.7305234729274312,
+        -0.6828875862849204
+      ],
+      "color_sensor_forward_xyz": [
+        -0.7305234729274312,
+        0.0,
+        -0.6828875862849204
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 25,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0025_rgb.png",
+      "topdown": "frame_0025_topdown.png",
+      "step_count": 38,
+      "position_xyz": [
+        -5.936880588531494,
+        3.1133780479431152,
+        -2.8610849380493164
+      ],
+      "agent_pixel_rc": [
+        327,
+        299
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ]
+      ],
+      "heading_xz": [
+        -0.7305234729274312,
+        -0.6828875862849204
+      ],
+      "color_sensor_forward_xyz": [
+        -0.7305234729274312,
+        0.0,
+        -0.6828875862849204
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 26,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_right",
+      "rgb": "frame_0026_rgb.png",
+      "topdown": "frame_0026_topdown.png",
+      "step_count": 39,
+      "position_xyz": [
+        -5.936880588531494,
+        3.1133780479431152,
+        -2.8610849380493164
+      ],
+      "agent_pixel_rc": [
+        327,
+        299
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ]
+      ],
+      "heading_xz": [
+        -0.29120806513225106,
+        -0.956659742438204
+      ],
+      "color_sensor_forward_xyz": [
+        -0.29120806513225106,
+        0.0,
+        -0.956659742438204
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 27,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_right",
+      "rgb": "frame_0027_rgb.png",
+      "topdown": "frame_0027_topdown.png",
+      "step_count": 40,
+      "position_xyz": [
+        -5.936880588531494,
+        3.1133780479431152,
+        -2.8610849380493164
+      ],
+      "agent_pixel_rc": [
+        327,
+        299
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ]
+      ],
+      "heading_xz": [
+        0.22613630836176674,
+        -0.9740956678070752
+      ],
+      "color_sensor_forward_xyz": [
+        0.22613630836176674,
+        0.0,
+        -0.9740956678070752
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 28,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0028_rgb.png",
+      "topdown": "frame_0028_topdown.png",
+      "step_count": 41,
+      "position_xyz": [
+        -5.897001266479492,
+        3.1133780479431152,
+        -3.0328667163848877
+      ],
+      "agent_pixel_rc": [
+        319,
+        301
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ]
+      ],
+      "heading_xz": [
+        0.22613630836176674,
+        -0.9740956678070752
+      ],
+      "color_sensor_forward_xyz": [
+        0.22613630836176674,
+        0.0,
+        -0.9740956678070752
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 29,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_left",
+      "rgb": "frame_0029_rgb.png",
+      "topdown": "frame_0029_topdown.png",
+      "step_count": 42,
+      "position_xyz": [
+        -5.897001266479492,
+        3.1133780479431152,
+        -3.0328667163848877
+      ],
+      "agent_pixel_rc": [
+        319,
+        301
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ]
+      ],
+      "heading_xz": [
+        -0.29120806513225106,
+        -0.956659742438204
+      ],
+      "color_sensor_forward_xyz": [
+        -0.29120806513225106,
+        0.0,
+        -0.956659742438204
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 30,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_left",
+      "rgb": "frame_0030_rgb.png",
+      "topdown": "frame_0030_topdown.png",
+      "step_count": 43,
+      "position_xyz": [
+        -5.897001266479492,
+        3.1133780479431152,
+        -3.0328667163848877
+      ],
+      "agent_pixel_rc": [
+        319,
+        301
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ]
+      ],
+      "heading_xz": [
+        -0.7305234729274312,
+        -0.6828875862849204
+      ],
+      "color_sensor_forward_xyz": [
+        -0.7305234729274312,
+        0.0,
+        -0.6828875862849204
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 31,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0031_rgb.png",
+      "topdown": "frame_0031_topdown.png",
+      "step_count": 44,
+      "position_xyz": [
+        -6.07963228225708,
+        3.1133780479431152,
+        -3.2035884857177734
+      ],
+      "agent_pixel_rc": [
+        311,
+        292
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ]
+      ],
+      "heading_xz": [
+        -0.7305234729274312,
+        -0.6828875862849204
+      ],
+      "color_sensor_forward_xyz": [
+        -0.7305234729274312,
+        0.0,
+        -0.6828875862849204
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 32,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_right",
+      "rgb": "frame_0032_rgb.png",
+      "topdown": "frame_0032_topdown.png",
+      "step_count": 45,
+      "position_xyz": [
+        -6.07963228225708,
+        3.1133780479431152,
+        -3.2035884857177734
+      ],
+      "agent_pixel_rc": [
+        311,
+        292
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ]
+      ],
+      "heading_xz": [
+        -0.29120806513225106,
+        -0.956659742438204
+      ],
+      "color_sensor_forward_xyz": [
+        -0.29120806513225106,
+        0.0,
+        -0.956659742438204
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 33,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0033_rgb.png",
+      "topdown": "frame_0033_topdown.png",
+      "step_count": 46,
+      "position_xyz": [
+        -6.152434349060059,
+        3.1133780479431152,
+        -3.442753314971924
+      ],
+      "agent_pixel_rc": [
+        300,
+        289
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ]
+      ],
+      "heading_xz": [
+        -0.29120806513225106,
+        -0.956659742438204
+      ],
+      "color_sensor_forward_xyz": [
+        -0.29120806513225106,
+        0.0,
+        -0.956659742438204
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 34,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_right",
+      "rgb": "frame_0034_rgb.png",
+      "topdown": "frame_0034_topdown.png",
+      "step_count": 47,
+      "position_xyz": [
+        -6.152434349060059,
+        3.1133780479431152,
+        -3.442753314971924
+      ],
+      "agent_pixel_rc": [
+        300,
+        289
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ]
+      ],
+      "heading_xz": [
+        0.22613630836176674,
+        -0.9740956678070752
+      ],
+      "color_sensor_forward_xyz": [
+        0.22613630836176674,
+        0.0,
+        -0.9740956678070752
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 35,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0035_rgb.png",
+      "topdown": "frame_0035_topdown.png",
+      "step_count": 48,
+      "position_xyz": [
+        -6.095900058746338,
+        3.1133780479431152,
+        -3.686277151107788
+      ],
+      "agent_pixel_rc": [
+        289,
+        291
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ]
+      ],
+      "heading_xz": [
+        0.22613630836176674,
+        -0.9740956678070752
+      ],
+      "color_sensor_forward_xyz": [
+        0.22613630836176674,
+        0.0,
+        -0.9740956678070752
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 36,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_left",
+      "rgb": "frame_0036_rgb.png",
+      "topdown": "frame_0036_topdown.png",
+      "step_count": 49,
+      "position_xyz": [
+        -6.095900058746338,
+        3.1133780479431152,
+        -3.686277151107788
+      ],
+      "agent_pixel_rc": [
+        289,
+        291
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ]
+      ],
+      "heading_xz": [
+        -0.29120806513225106,
+        -0.956659742438204
+      ],
+      "color_sensor_forward_xyz": [
+        -0.29120806513225106,
+        0.0,
+        -0.956659742438204
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 37,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0037_rgb.png",
+      "topdown": "frame_0037_topdown.png",
+      "step_count": 50,
+      "position_xyz": [
+        -6.168702125549316,
+        3.1133780479431152,
+        -3.9254419803619385
+      ],
+      "agent_pixel_rc": [
+        278,
+        288
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ]
+      ],
+      "heading_xz": [
+        -0.29120806513225106,
+        -0.956659742438204
+      ],
+      "color_sensor_forward_xyz": [
+        -0.29120806513225106,
+        0.0,
+        -0.956659742438204
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 38,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_right",
+      "rgb": "frame_0038_rgb.png",
+      "topdown": "frame_0038_topdown.png",
+      "step_count": 51,
+      "position_xyz": [
+        -6.168702125549316,
+        3.1133780479431152,
+        -3.9254419803619385
+      ],
+      "agent_pixel_rc": [
+        278,
+        288
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ]
+      ],
+      "heading_xz": [
+        0.22613630836176674,
+        -0.9740956678070752
+      ],
+      "color_sensor_forward_xyz": [
+        0.22613630836176674,
+        0.0,
+        -0.9740956678070752
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 39,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0039_rgb.png",
+      "topdown": "frame_0039_topdown.png",
+      "step_count": 52,
+      "position_xyz": [
+        -6.112167835235596,
+        3.1133780479431152,
+        -4.168965816497803
+      ],
+      "agent_pixel_rc": [
+        267,
+        291
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ]
+      ],
+      "heading_xz": [
+        0.22613630836176674,
+        -0.9740956678070752
+      ],
+      "color_sensor_forward_xyz": [
+        0.22613630836176674,
+        0.0,
+        -0.9740956678070752
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 40,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0040_rgb.png",
+      "topdown": "frame_0040_topdown.png",
+      "step_count": 53,
+      "position_xyz": [
+        -6.055633544921875,
+        3.1133780479431152,
+        -4.412489891052246
+      ],
+      "agent_pixel_rc": [
+        255,
+        293
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ]
+      ],
+      "heading_xz": [
+        0.22613630836176674,
+        -0.9740956678070752
+      ],
+      "color_sensor_forward_xyz": [
+        0.22613630836176674,
+        0.0,
+        -0.9740956678070752
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 41,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0041_rgb.png",
+      "topdown": "frame_0041_topdown.png",
+      "step_count": 54,
+      "position_xyz": [
+        -5.999099254608154,
+        3.1133780479431152,
+        -4.6560139656066895
+      ],
+      "agent_pixel_rc": [
+        244,
+        296
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ]
+      ],
+      "heading_xz": [
+        0.22613630836176674,
+        -0.9740956678070752
+      ],
+      "color_sensor_forward_xyz": [
+        0.22613630836176674,
+        0.0,
+        -0.9740956678070752
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 42,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0042_rgb.png",
+      "topdown": "frame_0042_topdown.png",
+      "step_count": 55,
+      "position_xyz": [
+        -5.942564964294434,
+        3.1133780479431152,
+        -4.899538040161133
+      ],
+      "agent_pixel_rc": [
+        233,
+        298
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ],
+        [
+          233,
+          298
+        ]
+      ],
+      "heading_xz": [
+        0.22613630836176674,
+        -0.9740956678070752
+      ],
+      "color_sensor_forward_xyz": [
+        0.22613630836176674,
+        0.0,
+        -0.9740956678070752
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 43,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_right",
+      "rgb": "frame_0043_rgb.png",
+      "topdown": "frame_0043_topdown.png",
+      "step_count": 56,
+      "position_xyz": [
+        -5.942564964294434,
+        3.1133780479431152,
+        -4.899538040161133
+      ],
+      "agent_pixel_rc": [
+        233,
+        298
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ],
+        [
+          233,
+          298
+        ]
+      ],
+      "heading_xz": [
+        0.6828875917546527,
+        -0.7305234678143686
+      ],
+      "color_sensor_forward_xyz": [
+        0.6828875917546527,
+        0.0,
+        -0.7305234678143686
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 44,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_right",
+      "rgb": "frame_0044_rgb.png",
+      "topdown": "frame_0044_topdown.png",
+      "step_count": 57,
+      "position_xyz": [
+        -5.942564964294434,
+        3.1133780479431152,
+        -4.899538040161133
+      ],
+      "agent_pixel_rc": [
+        233,
+        298
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ],
+        [
+          233,
+          298
+        ]
+      ],
+      "heading_xz": [
+        0.9566597206858252,
+        -0.2912081365918868
+      ],
+      "color_sensor_forward_xyz": [
+        0.9566597206858252,
+        0.0,
+        -0.2912081365918868
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 45,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0045_rgb.png",
+      "topdown": "frame_0045_topdown.png",
+      "step_count": 58,
+      "position_xyz": [
+        -5.703400135040283,
+        3.1133780479431152,
+        -4.972340106964111
+      ],
+      "agent_pixel_rc": [
+        230,
+        309
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ],
+        [
+          233,
+          298
+        ],
+        [
+          230,
+          309
+        ]
+      ],
+      "heading_xz": [
+        0.9566597206858252,
+        -0.2912081365918868
+      ],
+      "color_sensor_forward_xyz": [
+        0.9566597206858252,
+        0.0,
+        -0.2912081365918868
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 46,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0046_rgb.png",
+      "topdown": "frame_0046_topdown.png",
+      "step_count": 59,
+      "position_xyz": [
+        -5.464235305786133,
+        3.1133780479431152,
+        -5.04514217376709
+      ],
+      "agent_pixel_rc": [
+        226,
+        320
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ],
+        [
+          233,
+          298
+        ],
+        [
+          230,
+          309
+        ],
+        [
+          226,
+          320
+        ]
+      ],
+      "heading_xz": [
+        0.9566597206858252,
+        -0.2912081365918868
+      ],
+      "color_sensor_forward_xyz": [
+        0.9566597206858252,
+        0.0,
+        -0.2912081365918868
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 47,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0047_rgb.png",
+      "topdown": "frame_0047_topdown.png",
+      "step_count": 60,
+      "position_xyz": [
+        -5.225070476531982,
+        3.1169915199279785,
+        -5.117944240570068
+      ],
+      "agent_pixel_rc": [
+        223,
+        331
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ],
+        [
+          233,
+          298
+        ],
+        [
+          230,
+          309
+        ],
+        [
+          226,
+          320
+        ],
+        [
+          223,
+          331
+        ]
+      ],
+      "heading_xz": [
+        0.9566597206858252,
+        -0.2912081365918868
+      ],
+      "color_sensor_forward_xyz": [
+        0.9566597206858252,
+        0.0,
+        -0.2912081365918868
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 48,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0048_rgb.png",
+      "topdown": "frame_0048_topdown.png",
+      "step_count": 61,
+      "position_xyz": [
+        -4.985905647277832,
+        3.125661611557007,
+        -5.190746307373047
+      ],
+      "agent_pixel_rc": [
+        220,
+        342
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ],
+        [
+          233,
+          298
+        ],
+        [
+          230,
+          309
+        ],
+        [
+          226,
+          320
+        ],
+        [
+          223,
+          331
+        ],
+        [
+          220,
+          342
+        ]
+      ],
+      "heading_xz": [
+        0.9566597206858252,
+        -0.2912081365918868
+      ],
+      "color_sensor_forward_xyz": [
+        0.9566597206858252,
+        0.0,
+        -0.2912081365918868
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 49,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0049_rgb.png",
+      "topdown": "frame_0049_topdown.png",
+      "step_count": 62,
+      "position_xyz": [
+        -4.746740818023682,
+        3.1320343017578125,
+        -5.263548374176025
+      ],
+      "agent_pixel_rc": [
+        216,
+        353
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ],
+        [
+          233,
+          298
+        ],
+        [
+          230,
+          309
+        ],
+        [
+          226,
+          320
+        ],
+        [
+          223,
+          331
+        ],
+        [
+          220,
+          342
+        ],
+        [
+          216,
+          353
+        ]
+      ],
+      "heading_xz": [
+        0.9566597206858252,
+        -0.2912081365918868
+      ],
+      "color_sensor_forward_xyz": [
+        0.9566597206858252,
+        0.0,
+        -0.2912081365918868
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 50,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0050_rgb.png",
+      "topdown": "frame_0050_topdown.png",
+      "step_count": 63,
+      "position_xyz": [
+        -4.507575988769531,
+        3.138406991958618,
+        -5.336350440979004
+      ],
+      "agent_pixel_rc": [
+        213,
+        364
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ],
+        [
+          233,
+          298
+        ],
+        [
+          230,
+          309
+        ],
+        [
+          226,
+          320
+        ],
+        [
+          223,
+          331
+        ],
+        [
+          220,
+          342
+        ],
+        [
+          216,
+          353
+        ],
+        [
+          213,
+          364
+        ]
+      ],
+      "heading_xz": [
+        0.9566597206858252,
+        -0.2912081365918868
+      ],
+      "color_sensor_forward_xyz": [
+        0.9566597206858252,
+        0.0,
+        -0.2912081365918868
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 51,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_right",
+      "rgb": "frame_0051_rgb.png",
+      "topdown": "frame_0051_topdown.png",
+      "step_count": 64,
+      "position_xyz": [
+        -4.507575988769531,
+        3.138406991958618,
+        -5.336350440979004
+      ],
+      "agent_pixel_rc": [
+        213,
+        364
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ],
+        [
+          233,
+          298
+        ],
+        [
+          230,
+          309
+        ],
+        [
+          226,
+          320
+        ],
+        [
+          223,
+          331
+        ],
+        [
+          220,
+          342
+        ],
+        [
+          216,
+          353
+        ],
+        [
+          213,
+          364
+        ]
+      ],
+      "heading_xz": [
+        0.9740956894921213,
+        0.22613621495211444
+      ],
+      "color_sensor_forward_xyz": [
+        0.9740956894921213,
+        0.0,
+        0.22613621495211444
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 52,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0052_rgb.png",
+      "topdown": "frame_0052_topdown.png",
+      "step_count": 65,
+      "position_xyz": [
+        -4.264051914215088,
+        3.1436784267425537,
+        -5.279816627502441
+      ],
+      "agent_pixel_rc": [
+        215,
+        376
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ],
+        [
+          233,
+          298
+        ],
+        [
+          230,
+          309
+        ],
+        [
+          226,
+          320
+        ],
+        [
+          223,
+          331
+        ],
+        [
+          220,
+          342
+        ],
+        [
+          216,
+          353
+        ],
+        [
+          213,
+          364
+        ],
+        [
+          215,
+          376
+        ]
+      ],
+      "heading_xz": [
+        0.9740956894921213,
+        0.22613621495211444
+      ],
+      "color_sensor_forward_xyz": [
+        0.9740956894921213,
+        0.0,
+        0.22613621495211444
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 53,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0053_rgb.png",
+      "topdown": "frame_0053_topdown.png",
+      "step_count": 66,
+      "position_xyz": [
+        -4.0205278396606445,
+        3.1489498615264893,
+        -5.223282814025879
+      ],
+      "agent_pixel_rc": [
+        218,
+        387
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ],
+        [
+          233,
+          298
+        ],
+        [
+          230,
+          309
+        ],
+        [
+          226,
+          320
+        ],
+        [
+          223,
+          331
+        ],
+        [
+          220,
+          342
+        ],
+        [
+          216,
+          353
+        ],
+        [
+          213,
+          364
+        ],
+        [
+          215,
+          376
+        ],
+        [
+          218,
+          387
+        ]
+      ],
+      "heading_xz": [
+        0.9740956894921213,
+        0.22613621495211444
+      ],
+      "color_sensor_forward_xyz": [
+        0.9740956894921213,
+        0.0,
+        0.22613621495211444
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 54,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_left",
+      "rgb": "frame_0054_rgb.png",
+      "topdown": "frame_0054_topdown.png",
+      "step_count": 67,
+      "position_xyz": [
+        -4.0205278396606445,
+        3.1489498615264893,
+        -5.223282814025879
+      ],
+      "agent_pixel_rc": [
+        218,
+        387
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ],
+        [
+          233,
+          298
+        ],
+        [
+          230,
+          309
+        ],
+        [
+          226,
+          320
+        ],
+        [
+          223,
+          331
+        ],
+        [
+          220,
+          342
+        ],
+        [
+          216,
+          353
+        ],
+        [
+          213,
+          364
+        ],
+        [
+          215,
+          376
+        ],
+        [
+          218,
+          387
+        ]
+      ],
+      "heading_xz": [
+        0.9566597206858252,
+        -0.2912081365918868
+      ],
+      "color_sensor_forward_xyz": [
+        0.9566597206858252,
+        0.0,
+        -0.2912081365918868
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 55,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0055_rgb.png",
+      "topdown": "frame_0055_topdown.png",
+      "step_count": 68,
+      "position_xyz": [
+        -3.781363010406494,
+        3.155322551727295,
+        -5.296084880828857
+      ],
+      "agent_pixel_rc": [
+        215,
+        398
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ],
+        [
+          233,
+          298
+        ],
+        [
+          230,
+          309
+        ],
+        [
+          226,
+          320
+        ],
+        [
+          223,
+          331
+        ],
+        [
+          220,
+          342
+        ],
+        [
+          216,
+          353
+        ],
+        [
+          213,
+          364
+        ],
+        [
+          215,
+          376
+        ],
+        [
+          218,
+          387
+        ],
+        [
+          215,
+          398
+        ]
+      ],
+      "heading_xz": [
+        0.9566597206858252,
+        -0.2912081365918868
+      ],
+      "color_sensor_forward_xyz": [
+        0.9566597206858252,
+        0.0,
+        -0.2912081365918868
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 56,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0056_rgb.png",
+      "topdown": "frame_0056_topdown.png",
+      "step_count": 69,
+      "position_xyz": [
+        -3.5421981811523438,
+        3.1616952419281006,
+        -5.368886947631836
+      ],
+      "agent_pixel_rc": [
+        211,
+        409
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ],
+        [
+          233,
+          298
+        ],
+        [
+          230,
+          309
+        ],
+        [
+          226,
+          320
+        ],
+        [
+          223,
+          331
+        ],
+        [
+          220,
+          342
+        ],
+        [
+          216,
+          353
+        ],
+        [
+          213,
+          364
+        ],
+        [
+          215,
+          376
+        ],
+        [
+          218,
+          387
+        ],
+        [
+          215,
+          398
+        ],
+        [
+          211,
+          409
+        ]
+      ],
+      "heading_xz": [
+        0.9566597206858252,
+        -0.2912081365918868
+      ],
+      "color_sensor_forward_xyz": [
+        0.9566597206858252,
+        0.0,
+        -0.2912081365918868
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 57,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_right",
+      "rgb": "frame_0057_rgb.png",
+      "topdown": "frame_0057_topdown.png",
+      "step_count": 70,
+      "position_xyz": [
+        -3.5421981811523438,
+        3.1616952419281006,
+        -5.368886947631836
+      ],
+      "agent_pixel_rc": [
+        211,
+        409
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ],
+        [
+          233,
+          298
+        ],
+        [
+          230,
+          309
+        ],
+        [
+          226,
+          320
+        ],
+        [
+          223,
+          331
+        ],
+        [
+          220,
+          342
+        ],
+        [
+          216,
+          353
+        ],
+        [
+          213,
+          364
+        ],
+        [
+          215,
+          376
+        ],
+        [
+          218,
+          387
+        ],
+        [
+          215,
+          398
+        ],
+        [
+          211,
+          409
+        ]
+      ],
+      "heading_xz": [
+        0.9740956894921213,
+        0.22613621495211444
+      ],
+      "color_sensor_forward_xyz": [
+        0.9740956894921213,
+        0.0,
+        0.22613621495211444
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 58,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0058_rgb.png",
+      "topdown": "frame_0058_topdown.png",
+      "step_count": 71,
+      "position_xyz": [
+        -3.2986743450164795,
+        3.1523690223693848,
+        -5.312353134155273
+      ],
+      "agent_pixel_rc": [
+        214,
+        420
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ],
+        [
+          233,
+          298
+        ],
+        [
+          230,
+          309
+        ],
+        [
+          226,
+          320
+        ],
+        [
+          223,
+          331
+        ],
+        [
+          220,
+          342
+        ],
+        [
+          216,
+          353
+        ],
+        [
+          213,
+          364
+        ],
+        [
+          215,
+          376
+        ],
+        [
+          218,
+          387
+        ],
+        [
+          215,
+          398
+        ],
+        [
+          211,
+          409
+        ],
+        [
+          214,
+          420
+        ]
+      ],
+      "heading_xz": [
+        0.9740956894921213,
+        0.22613621495211444
+      ],
+      "color_sensor_forward_xyz": [
+        0.9740956894921213,
+        0.0,
+        0.22613621495211444
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 59,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0059_rgb.png",
+      "topdown": "frame_0059_topdown.png",
+      "step_count": 72,
+      "position_xyz": [
+        -3.0551505088806152,
+        3.1230695247650146,
+        -5.255819320678711
+      ],
+      "agent_pixel_rc": [
+        217,
+        431
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ],
+        [
+          233,
+          298
+        ],
+        [
+          230,
+          309
+        ],
+        [
+          226,
+          320
+        ],
+        [
+          223,
+          331
+        ],
+        [
+          220,
+          342
+        ],
+        [
+          216,
+          353
+        ],
+        [
+          213,
+          364
+        ],
+        [
+          215,
+          376
+        ],
+        [
+          218,
+          387
+        ],
+        [
+          215,
+          398
+        ],
+        [
+          211,
+          409
+        ],
+        [
+          214,
+          420
+        ],
+        [
+          217,
+          431
+        ]
+      ],
+      "heading_xz": [
+        0.9740956894921213,
+        0.22613621495211444
+      ],
+      "color_sensor_forward_xyz": [
+        0.9740956894921213,
+        0.0,
+        0.22613621495211444
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 60,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_left",
+      "rgb": "frame_0060_rgb.png",
+      "topdown": "frame_0060_topdown.png",
+      "step_count": 73,
+      "position_xyz": [
+        -3.0551505088806152,
+        3.1230695247650146,
+        -5.255819320678711
+      ],
+      "agent_pixel_rc": [
+        217,
+        431
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ],
+        [
+          233,
+          298
+        ],
+        [
+          230,
+          309
+        ],
+        [
+          226,
+          320
+        ],
+        [
+          223,
+          331
+        ],
+        [
+          220,
+          342
+        ],
+        [
+          216,
+          353
+        ],
+        [
+          213,
+          364
+        ],
+        [
+          215,
+          376
+        ],
+        [
+          218,
+          387
+        ],
+        [
+          215,
+          398
+        ],
+        [
+          211,
+          409
+        ],
+        [
+          214,
+          420
+        ],
+        [
+          217,
+          431
+        ]
+      ],
+      "heading_xz": [
+        0.9566597206858252,
+        -0.2912081365918868
+      ],
+      "color_sensor_forward_xyz": [
+        0.9566597206858252,
+        0.0,
+        -0.2912081365918868
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 61,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0061_rgb.png",
+      "topdown": "frame_0061_topdown.png",
+      "step_count": 74,
+      "position_xyz": [
+        -2.815985679626465,
+        3.1133780479431152,
+        -5.3286213874816895
+      ],
+      "agent_pixel_rc": [
+        213,
+        442
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ],
+        [
+          233,
+          298
+        ],
+        [
+          230,
+          309
+        ],
+        [
+          226,
+          320
+        ],
+        [
+          223,
+          331
+        ],
+        [
+          220,
+          342
+        ],
+        [
+          216,
+          353
+        ],
+        [
+          213,
+          364
+        ],
+        [
+          215,
+          376
+        ],
+        [
+          218,
+          387
+        ],
+        [
+          215,
+          398
+        ],
+        [
+          211,
+          409
+        ],
+        [
+          214,
+          420
+        ],
+        [
+          217,
+          431
+        ],
+        [
+          213,
+          442
+        ]
+      ],
+      "heading_xz": [
+        0.9566597206858252,
+        -0.2912081365918868
+      ],
+      "color_sensor_forward_xyz": [
+        0.9566597206858252,
+        0.0,
+        -0.2912081365918868
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 62,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_right",
+      "rgb": "frame_0062_rgb.png",
+      "topdown": "frame_0062_topdown.png",
+      "step_count": 75,
+      "position_xyz": [
+        -2.815985679626465,
+        3.1133780479431152,
+        -5.3286213874816895
+      ],
+      "agent_pixel_rc": [
+        213,
+        442
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ],
+        [
+          233,
+          298
+        ],
+        [
+          230,
+          309
+        ],
+        [
+          226,
+          320
+        ],
+        [
+          223,
+          331
+        ],
+        [
+          220,
+          342
+        ],
+        [
+          216,
+          353
+        ],
+        [
+          213,
+          364
+        ],
+        [
+          215,
+          376
+        ],
+        [
+          218,
+          387
+        ],
+        [
+          215,
+          398
+        ],
+        [
+          211,
+          409
+        ],
+        [
+          214,
+          420
+        ],
+        [
+          217,
+          431
+        ],
+        [
+          213,
+          442
+        ]
+      ],
+      "heading_xz": [
+        0.9740956894921213,
+        0.22613621495211444
+      ],
+      "color_sensor_forward_xyz": [
+        0.9740956894921213,
+        0.0,
+        0.22613621495211444
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 63,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_right",
+      "rgb": "frame_0063_rgb.png",
+      "topdown": "frame_0063_topdown.png",
+      "step_count": 76,
+      "position_xyz": [
+        -2.815985679626465,
+        3.1133780479431152,
+        -5.3286213874816895
+      ],
+      "agent_pixel_rc": [
+        213,
+        442
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ],
+        [
+          233,
+          298
+        ],
+        [
+          230,
+          309
+        ],
+        [
+          226,
+          320
+        ],
+        [
+          223,
+          331
+        ],
+        [
+          220,
+          342
+        ],
+        [
+          216,
+          353
+        ],
+        [
+          213,
+          364
+        ],
+        [
+          215,
+          376
+        ],
+        [
+          218,
+          387
+        ],
+        [
+          215,
+          398
+        ],
+        [
+          211,
+          409
+        ],
+        [
+          214,
+          420
+        ],
+        [
+          217,
+          431
+        ],
+        [
+          213,
+          442
+        ]
+      ],
+      "heading_xz": [
+        0.7305234680055868,
+        0.6828875915500958
+      ],
+      "color_sensor_forward_xyz": [
+        0.7305234680055868,
+        0.0,
+        0.6828875915500958
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 64,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0064_rgb.png",
+      "topdown": "frame_0064_topdown.png",
+      "step_count": 77,
+      "position_xyz": [
+        -2.633354902267456,
+        3.1133780479431152,
+        -5.157899379730225
+      ],
+      "agent_pixel_rc": [
+        221,
+        451
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ],
+        [
+          233,
+          298
+        ],
+        [
+          230,
+          309
+        ],
+        [
+          226,
+          320
+        ],
+        [
+          223,
+          331
+        ],
+        [
+          220,
+          342
+        ],
+        [
+          216,
+          353
+        ],
+        [
+          213,
+          364
+        ],
+        [
+          215,
+          376
+        ],
+        [
+          218,
+          387
+        ],
+        [
+          215,
+          398
+        ],
+        [
+          211,
+          409
+        ],
+        [
+          214,
+          420
+        ],
+        [
+          217,
+          431
+        ],
+        [
+          213,
+          442
+        ],
+        [
+          221,
+          451
+        ]
+      ],
+      "heading_xz": [
+        0.7305234680055868,
+        0.6828875915500958
+      ],
+      "color_sensor_forward_xyz": [
+        0.7305234680055868,
+        0.0,
+        0.6828875915500958
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 65,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_left",
+      "rgb": "frame_0065_rgb.png",
+      "topdown": "frame_0065_topdown.png",
+      "step_count": 78,
+      "position_xyz": [
+        -2.633354902267456,
+        3.1133780479431152,
+        -5.157899379730225
+      ],
+      "agent_pixel_rc": [
+        221,
+        451
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ],
+        [
+          233,
+          298
+        ],
+        [
+          230,
+          309
+        ],
+        [
+          226,
+          320
+        ],
+        [
+          223,
+          331
+        ],
+        [
+          220,
+          342
+        ],
+        [
+          216,
+          353
+        ],
+        [
+          213,
+          364
+        ],
+        [
+          215,
+          376
+        ],
+        [
+          218,
+          387
+        ],
+        [
+          215,
+          398
+        ],
+        [
+          211,
+          409
+        ],
+        [
+          214,
+          420
+        ],
+        [
+          217,
+          431
+        ],
+        [
+          213,
+          442
+        ],
+        [
+          221,
+          451
+        ]
+      ],
+      "heading_xz": [
+        0.9740956894921213,
+        0.22613621495211444
+      ],
+      "color_sensor_forward_xyz": [
+        0.9740956894921213,
+        0.0,
+        0.22613621495211444
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 66,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_left",
+      "rgb": "frame_0066_rgb.png",
+      "topdown": "frame_0066_topdown.png",
+      "step_count": 79,
+      "position_xyz": [
+        -2.633354902267456,
+        3.1133780479431152,
+        -5.157899379730225
+      ],
+      "agent_pixel_rc": [
+        221,
+        451
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ],
+        [
+          233,
+          298
+        ],
+        [
+          230,
+          309
+        ],
+        [
+          226,
+          320
+        ],
+        [
+          223,
+          331
+        ],
+        [
+          220,
+          342
+        ],
+        [
+          216,
+          353
+        ],
+        [
+          213,
+          364
+        ],
+        [
+          215,
+          376
+        ],
+        [
+          218,
+          387
+        ],
+        [
+          215,
+          398
+        ],
+        [
+          211,
+          409
+        ],
+        [
+          214,
+          420
+        ],
+        [
+          217,
+          431
+        ],
+        [
+          213,
+          442
+        ],
+        [
+          221,
+          451
+        ]
+      ],
+      "heading_xz": [
+        0.9566597206858252,
+        -0.2912081365918868
+      ],
+      "color_sensor_forward_xyz": [
+        0.9566597206858252,
+        0.0,
+        -0.2912081365918868
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 67,
+      "round": 0,
+      "goal_index": 0,
+      "action": "turn_left",
+      "rgb": "frame_0067_rgb.png",
+      "topdown": "frame_0067_topdown.png",
+      "step_count": 80,
+      "position_xyz": [
+        -2.633354902267456,
+        3.1133780479431152,
+        -5.157899379730225
+      ],
+      "agent_pixel_rc": [
+        221,
+        451
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ],
+        [
+          233,
+          298
+        ],
+        [
+          230,
+          309
+        ],
+        [
+          226,
+          320
+        ],
+        [
+          223,
+          331
+        ],
+        [
+          220,
+          342
+        ],
+        [
+          216,
+          353
+        ],
+        [
+          213,
+          364
+        ],
+        [
+          215,
+          376
+        ],
+        [
+          218,
+          387
+        ],
+        [
+          215,
+          398
+        ],
+        [
+          211,
+          409
+        ],
+        [
+          214,
+          420
+        ],
+        [
+          217,
+          431
+        ],
+        [
+          213,
+          442
+        ],
+        [
+          221,
+          451
+        ]
+      ],
+      "heading_xz": [
+        0.6828875512515751,
+        -0.7305235056763248
+      ],
+      "color_sensor_forward_xyz": [
+        0.6828875512515751,
+        0.0,
+        -0.7305235056763248
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    },
+    {
+      "frame": 68,
+      "round": 0,
+      "goal_index": 0,
+      "action": "move_forward",
+      "rgb": "frame_0068_rgb.png",
+      "topdown": "frame_0068_topdown.png",
+      "step_count": 81,
+      "position_xyz": [
+        -2.462632894515991,
+        3.1133780479431152,
+        -5.3405303955078125
+      ],
+      "agent_pixel_rc": [
+        213,
+        458
+      ],
+      "path_pixels_rc": [
+        [
+          456,
+          386
+        ],
+        [
+          445,
+          383
+        ],
+        [
+          437,
+          374
+        ],
+        [
+          429,
+          366
+        ],
+        [
+          421,
+          357
+        ],
+        [
+          410,
+          354
+        ],
+        [
+          399,
+          351
+        ],
+        [
+          388,
+          347
+        ],
+        [
+          380,
+          339
+        ],
+        [
+          372,
+          331
+        ],
+        [
+          361,
+          327
+        ],
+        [
+          353,
+          319
+        ],
+        [
+          342,
+          316
+        ],
+        [
+          335,
+          307
+        ],
+        [
+          327,
+          299
+        ],
+        [
+          319,
+          301
+        ],
+        [
+          311,
+          292
+        ],
+        [
+          300,
+          289
+        ],
+        [
+          289,
+          291
+        ],
+        [
+          278,
+          288
+        ],
+        [
+          267,
+          291
+        ],
+        [
+          255,
+          293
+        ],
+        [
+          244,
+          296
+        ],
+        [
+          233,
+          298
+        ],
+        [
+          230,
+          309
+        ],
+        [
+          226,
+          320
+        ],
+        [
+          223,
+          331
+        ],
+        [
+          220,
+          342
+        ],
+        [
+          216,
+          353
+        ],
+        [
+          213,
+          364
+        ],
+        [
+          215,
+          376
+        ],
+        [
+          218,
+          387
+        ],
+        [
+          215,
+          398
+        ],
+        [
+          211,
+          409
+        ],
+        [
+          214,
+          420
+        ],
+        [
+          217,
+          431
+        ],
+        [
+          213,
+          442
+        ],
+        [
+          221,
+          451
+        ],
+        [
+          213,
+          458
+        ]
+      ],
+      "heading_xz": [
+        0.6828875512515751,
+        -0.7305235056763248
+      ],
+      "color_sensor_forward_xyz": [
+        0.6828875512515751,
+        0.0,
+        -0.7305235056763248
+      ],
+      "color_sensor_pitch_deg": 0.0,
+      "color_sensor_down_tilt_deg": 0.0
+    }
+  ]
+}

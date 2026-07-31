@@ -1,0 +1,1 @@
+{"target_desc":"bathroom cabinet","target_aliases":["cabinet","bathroom storage"],"anchor_primary":["blue shower curtain"],"anchor_support":["sink","toilet"],"room_context":["bathroom"],"relations":""}

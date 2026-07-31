@@ -1,0 +1,186 @@
+{
+  "created_at": "2026-07-01T14:06:49",
+  "source_policy": "fresh_navigation_logs_only",
+  "fresh_run_dir": "/home/chenlin/krona/anchor-nav/visual-scripts/video-creator/nav-logs/camera_probe/run=20260701-140404_ep0_sequence_ep0_camera_probe",
+  "scene": "00800-TEEsavR23oF",
+  "episode_id": 0,
+  "multi_goal_sequence": true,
+  "description_style": "concise",
+  "goal_count": 3,
+  "decision_rounds": 3,
+  "frame_count": {
+    "topdown": 347,
+    "rgbmap": 347
+  },
+  "fps": 5,
+  "resolution": [
+    1920,
+    720
+  ],
+  "goals": [
+    {
+      "goal_index": 0,
+      "task_id": 0,
+      "task_level": "instance",
+      "sentence": "tall wardrobe near white-sheeted bed",
+      "decision_rounds": 1,
+      "final_planar_distance_to_goal_m": 0.8624364471121351,
+      "stop_reason": "max_rounds_reached",
+      "vista_dir": "modules/vista_ls/goal_00"
+    },
+    {
+      "goal_index": 1,
+      "task_id": 1,
+      "task_level": "region",
+      "sentence": "blanket in the office that has computer desk beside couch",
+      "decision_rounds": 1,
+      "final_planar_distance_to_goal_m": 1.3586071416949388,
+      "stop_reason": "max_rounds_reached",
+      "vista_dir": "modules/vista_ls/goal_01"
+    },
+    {
+      "goal_index": 2,
+      "task_id": 2,
+      "task_level": "region",
+      "sentence": "nightstand in the bedroom that has white-sheeted bed",
+      "decision_rounds": 1,
+      "final_planar_distance_to_goal_m": 1.2889524013511033,
+      "stop_reason": "max_rounds_reached",
+      "vista_dir": "modules/vista_ls/final"
+    }
+  ],
+  "videos": {
+    "topdown": "/home/chenlin/krona/anchor-nav/visual-scripts/video-creator/output-camera-probe/run=20260701-140537/navi_process_fresh_topdown.mp4",
+    "rgbmap": "/home/chenlin/krona/anchor-nav/visual-scripts/video-creator/output-camera-probe/run=20260701-140537/navi_process_fresh_rgbmap.mp4"
+  },
+  "timeline": {
+    "timeline_items": 191,
+    "navigation_items": 182,
+    "module_items": 9,
+    "module_sequence": [
+      {
+        "goal_index": 0,
+        "round_index": 0,
+        "active_module": "Evidence Grounding",
+        "step": 13,
+        "duration_frames": 20
+      },
+      {
+        "goal_index": 0,
+        "round_index": 0,
+        "active_module": "Entity Grounding",
+        "step": 13,
+        "duration_frames": 17
+      },
+      {
+        "goal_index": 0,
+        "round_index": 0,
+        "active_module": "Endpoint Grounding",
+        "step": 81,
+        "duration_frames": 18
+      },
+      {
+        "goal_index": 1,
+        "round_index": 1,
+        "active_module": "Evidence Grounding",
+        "step": 106,
+        "duration_frames": 20
+      },
+      {
+        "goal_index": 1,
+        "round_index": 1,
+        "active_module": "Entity Grounding",
+        "step": 106,
+        "duration_frames": 17
+      },
+      {
+        "goal_index": 1,
+        "round_index": 1,
+        "active_module": "Endpoint Grounding",
+        "step": 149,
+        "duration_frames": 18
+      },
+      {
+        "goal_index": 2,
+        "round_index": 2,
+        "active_module": "Evidence Grounding",
+        "step": 174,
+        "duration_frames": 20
+      },
+      {
+        "goal_index": 2,
+        "round_index": 2,
+        "active_module": "Entity Grounding",
+        "step": 174,
+        "duration_frames": 17
+      },
+      {
+        "goal_index": 2,
+        "round_index": 2,
+        "active_module": "Endpoint Grounding",
+        "step": 242,
+        "duration_frames": 18
+      }
+    ],
+    "variants": {
+      "topdown": {
+        "frames": 347,
+        "navigation_frames": 182,
+        "module_call_frames": 165
+      },
+      "rgbmap": {
+        "frames": 347,
+        "navigation_frames": 182,
+        "module_call_frames": 165
+      }
+    }
+  },
+  "fresh_source_check": {
+    "ok": true,
+    "source_root": "/home/chenlin/krona/anchor-nav/visual-scripts/video-creator/nav-logs/camera_probe/run=20260701-140404_ep0_sequence_ep0_camera_probe",
+    "unique_source_files": 427,
+    "external_sources": [],
+    "missing_sources": [],
+    "old_source_hits": [],
+    "forbidden_source_tokens": [
+      "visual-output",
+      "navi-visual/logs"
+    ]
+  },
+  "navigation_camera_level_check": {
+    "ok": true,
+    "checked_navigation_frames": 364,
+    "missing_pose_metric_frames": 0,
+    "max_allowed_down_tilt_deg": 8.0,
+    "max_seen_down_tilt_deg": 0.0,
+    "bad_frames": [],
+    "bad_frame_count": 0
+  },
+  "video_stats": {
+    "topdown": {
+      "ok": true,
+      "frames": 347,
+      "fps": 5.0,
+      "duration_s": 69.4,
+      "width": 1920,
+      "height": 720,
+      "low_variance_frames": 0,
+      "right_edge_black_bad_frames": 0,
+      "right_edge_black_check": "skipped_for_semantic_topdown",
+      "review_sheet": "/home/chenlin/krona/anchor-nav/visual-scripts/video-creator/output-camera-probe/run=20260701-140537/navi_process_fresh_topdown_review_sheet.jpg"
+    },
+    "rgbmap": {
+      "ok": true,
+      "frames": 347,
+      "fps": 5.0,
+      "duration_s": 69.4,
+      "width": 1920,
+      "height": 720,
+      "low_variance_frames": 0,
+      "right_edge_black_bad_frames": 0,
+      "right_edge_black_check": "enabled_for_rgb_map",
+      "review_sheet": "/home/chenlin/krona/anchor-nav/visual-scripts/video-creator/output-camera-probe/run=20260701-140537/navi_process_fresh_rgbmap_review_sheet.jpg"
+    }
+  },
+  "audit_ok": true
+}

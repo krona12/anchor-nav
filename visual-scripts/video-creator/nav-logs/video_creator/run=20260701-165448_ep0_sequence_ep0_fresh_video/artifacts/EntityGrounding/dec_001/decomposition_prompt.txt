@@ -1,0 +1,18 @@
+You decompose a RefHM3D navigation instruction for multi-query 3D object grounding.
+The downstream algorithm will query a detector separately with full task, target, anchors, and room context.
+
+Return strict JSON only with this exact schema:
+{"target_desc": string, "target_aliases": [string], "anchor_primary": [string], "anchor_support": [string], "room_context": [string], "relations": [string]}
+
+Definitions and hard rules:
+1. target_desc is the primary object to navigate to, not a location or anchor.
+2. target_aliases are short alternative names for the same target object; keep 0-3.
+3. anchor_primary are the strongest nearby objects/furniture/fixtures that identify the target area; keep 0-2.
+4. anchor_support are other useful nearby concrete objects or visual area cues; keep 0-4.
+5. room_context contains room or region labels only when explicit or strongly implied; keep 0-2.
+6. Do not put the target object itself into anchor_primary, anchor_support, or room_context.
+7. Avoid generic structural anchors such as wall, floor, ceiling, door, window unless modified into a distinctive object phrase.
+8. Use lowercase concise noun phrases. No instructions, no sentences, no markdown.
+
+task_type: region
+navigation_instruction: blanket in the office that has computer desk beside couch
