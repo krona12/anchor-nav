@@ -1,1 +1,0 @@
-{"target_desc":"wardrobe","target_aliases":["tall closet","armoire"],"anchor_primary":["bed","nightstand"],"anchor_support":["lamp","rug"],"room_context":["bedroom"],"relations":""}

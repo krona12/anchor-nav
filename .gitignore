@@ -176,37 +176,17 @@ hm3d-online/SAM2
 
 # Accidental shell redirect artifact
 /ls
-local_nvidia_580_126_09/
-output_logs/
-output_process/
-visual-output/
-local_nvidia_580_126_09/
-output_logs/
-output_process/
-visual-output/
 
-# Keep key_logs
-!key_logs/
-!key_logs/**/*.log
+# Local dependencies, model files, and evaluation artifacts
+third_party/
+*.pt
+*.bin
+*.safetensors
+output_dirs*/
+key_logs/
+.superpowers/
 
-# Ignore navigation visual logs
-visual-scripts/navi-visual/logs/
-
-# Keep selected single-goal experiment JSON results only.
-!output_logs/
-output_logs/*
-!output_logs/anchor/
-output_logs/anchor/*
-!output_logs/anchor/single_goal/
-output_logs/anchor/single_goal/*
-!output_logs/anchor/single_goal/baseline/
-output_logs/anchor/single_goal/baseline/**
-!output_logs/anchor/single_goal/baseline/**/
-!output_logs/anchor/single_goal/baseline/*/refhm3d_single_goal_*.json
-!output_logs/anchor/single_goal/baseline/*/refhm3d_single_goal_concisedesc_*.json
-!output_logs/anchor/single_goal/vista2mqsc_sam2/
-output_logs/anchor/single_goal/vista2mqsc_sam2/**
-!output_logs/anchor/single_goal/vista2mqsc_sam2/**/
-!output_logs/anchor/single_goal/vista2mqsc_sam2/*/refhm3d_single_goal_vista2mqsc_refine1_*.json
-!output_logs/anchor/single_goal/vista2mqsc_sam2/*/refhm3d_single_goal_vista2mqsc_refine1_concisedesc_*.json
-output_logs/anchor/single_goal/vista2mqsc_sam2/*/refhm3d_single_goal_vista2mqsc_refine1_effectiveness*.json
+# Machine-local credentials and agent settings
+/.ssh/
+/.claude/
+/.cache-smoke-*/

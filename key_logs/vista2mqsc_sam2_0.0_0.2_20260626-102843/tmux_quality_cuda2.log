@@ -1,9 +1,0 @@
-Skipping local NVIDIA 580.126.09 user-space libraries; kernel driver is:
-NVRM version: NVIDIA UNIX x86_64 Kernel Module  580.159.03  Fri Apr 24 06:16:47 UTC 2026
-nvidia-smi failed before starting Habitat-Sim:
-Failed to initialize NVML: Driver/library version mismatch
-NVML library version: 580.126
-Loaded kernel module:
-NVRM version: NVIDIA UNIX x86_64 Kernel Module  580.159.03  Fri Apr 24 06:16:47 UTC 2026
-GCC version:  gcc version 12.3.0 (Ubuntu 12.3.0-1ubuntu1~22.04.3) 
-Habitat-Sim EGL rendering requires matching NVIDIA kernel/user-space driver libraries.

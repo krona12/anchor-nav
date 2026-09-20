@@ -1,3 +1,1 @@
-from .cim import CIMModule
-
-__all__ = ["CIMModule"]
+"""Optional MQSC/VISTA modules retained as experiment templates."""

@@ -1,7 +1,0 @@
-timestamp=20260626-104636
-balanced_session=vista2mqsc_sam2_balanced_cuda1
-quality_session=vista2mqsc_sam2_quality_cuda2
-balanced_cuda=1
-quality_cuda=2
-balanced_log=key_logs/vista2mqsc_sam2_0.0_0.2_20260626-104636/tmux_balanced_cuda1.log
-quality_log=key_logs/vista2mqsc_sam2_0.0_0.2_20260626-104636/tmux_quality_cuda2.log

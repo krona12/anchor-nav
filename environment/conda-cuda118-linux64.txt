@@ -1,0 +1,25 @@
+# Exact tested linux-64 Conda packages; official URLs plus MD5.
+# conda create -p <prefix> --file <this file>
+@EXPLICIT
+https://conda.anaconda.org/conda-forge/linux-64/_openmp_mutex-4.5-20_gnu.conda#a9f577daf3de00bca7c3c76c0ecbd1de
+https://conda.anaconda.org/nvidia/label/cuda-11.8.0/linux-64/cuda-cccl-11.8.89-0.tar.bz2#9c48a93deca9c86ab9393c717b55c89d
+https://conda.anaconda.org/nvidia/label/cuda-11.8.0/linux-64/cuda-cudart-11.8.89-0.tar.bz2#b68c7ef3eda01e95d5903fb508c5e440
+https://conda.anaconda.org/nvidia/label/cuda-11.8.0/linux-64/cuda-cudart-dev-11.8.89-0.tar.bz2#fda2522594365c493121c517d3cc5a29
+https://conda.anaconda.org/nvidia/label/cuda-11.8.0/linux-64/cuda-nvcc-11.8.89-0.tar.bz2#33f9af6dac16b94a7dc1111a18fd19bf
+https://conda.anaconda.org/nvidia/label/cuda-11.8.0/linux-64/cuda-nvtx-11.8.86-0.tar.bz2#1825ffc3feb608f2752073935e90bb49
+https://conda.anaconda.org/nvidia/label/cuda-11.8.0/linux-64/libcublas-11.11.3.6-0.tar.bz2#7700a48c99151d2b77e7838aa0852da9
+https://conda.anaconda.org/nvidia/label/cuda-11.8.0/linux-64/libcublas-dev-11.11.3.6-0.tar.bz2#d2097d064d1437dbbcce39c3e8018a4e
+https://conda.anaconda.org/nvidia/label/cuda-11.8.0/linux-64/libcurand-10.3.0.86-0.tar.bz2#e0358f66f787e409b29becd898d5983f
+https://conda.anaconda.org/nvidia/label/cuda-11.8.0/linux-64/libcurand-dev-10.3.0.86-0.tar.bz2#5639b483c7c51ce2acb578444c0e10ce
+https://conda.anaconda.org/nvidia/label/cuda-11.8.0/linux-64/libcusolver-11.4.1.48-0.tar.bz2#a497123295be4e0bd221da5bf215f8b8
+https://conda.anaconda.org/nvidia/label/cuda-11.8.0/linux-64/libcusolver-dev-11.4.1.48-0.tar.bz2#eef8b2209666925de40dc52dc2bd0036
+https://conda.anaconda.org/nvidia/label/cuda-11.8.0/linux-64/libcusparse-11.7.5.86-0.tar.bz2#853c37fabd07b5b91d3007afc82c3ed4
+https://conda.anaconda.org/nvidia/label/cuda-11.8.0/linux-64/libcusparse-dev-11.7.5.86-0.tar.bz2#e0c8805b9b08087d1cce37bcc270a3e4
+https://conda.anaconda.org/conda-forge/linux-64/libgcc-16.2.0-ha9f2e26_5.conda#3b62b92f0f082b67c59618ebf07617a7
+https://conda.anaconda.org/conda-forge/linux-64/libgfortran-16.2.0-h69a702a_5.conda#34ddf93e56ee44924ce76a614e5fb379
+https://conda.anaconda.org/conda-forge/linux-64/libgfortran5-16.2.0-h6b99dfc_5.conda#a7eb3f9540094247ec8a2fa800cf9bbf
+https://conda.anaconda.org/conda-forge/linux-64/libgomp-16.2.0-he0feb66_5.conda#af44890f8a2beefd3a83805a59a65014
+https://conda.anaconda.org/conda-forge/linux-64/libopenblas-0.3.34-pthreads_hf13c14d_2.conda#7e19fcd73d7f0997d3cb3326d2586a86
+https://conda.anaconda.org/conda-forge/linux-64/libstdcxx-16.2.0-h934c35e_5.conda#75b43a2912a0354204696708e4f34b8d
+https://conda.anaconda.org/conda-forge/linux-64/ninja-1.13.2-h171cf75_1.conda#2db7a395d7dc2b6ed5effaf68fb99443
+https://conda.anaconda.org/conda-forge/linux-64/openblas-0.3.34-pthreads_h299a788_2.conda#ab87254bcec5982981123ff34a1a13f9

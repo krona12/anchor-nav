@@ -42,8 +42,9 @@ def _tqdm_print(msg: str) -> None:
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+for import_root in (SCRIPT_DIR / "FastSAM", SCRIPT_DIR, PROJECT_ROOT):
+    if str(import_root) not in sys.path:
+        sys.path.insert(0, str(import_root))
 
 from common.embodied_utils.simulator import HabitatSimulator
 from data_utils import PQ3DModel
@@ -143,7 +144,7 @@ def resolve_scene_path(hm3d_root: str, scene_name: str) -> str:
     scene_dir = Path(hm3d_root) / scene_name
     candidates = [scene_dir / f"{short_scene_name}.basis.glb", scene_dir / f"{short_scene_name}.glb"]
     for candidate in candidates:
-        if candidate.exists():
+        if candidate.is_file():
             return str(candidate)
     raise FileNotFoundError(f"Scene asset not found for {scene_name}; checked={candidates}")
 
@@ -889,7 +890,7 @@ def main() -> None:
     parser.add_argument("--hm3d_data_base_path", type=str, default=str(PROJECT_ROOT / "datascene"))
     parser.add_argument("--pq3d_stage1_path", type=str, default=str(PROJECT_ROOT / "checkpoint/stage1-pretrain-all"))
     parser.add_argument("--pq3d_stage2_path", type=str, default=str(PROJECT_ROOT / "checkpoint/stage2-fine-tune-goat"))
-    parser.add_argument("--output_log_dir", type=str, default=str(PROJECT_ROOT / "output_logs/anchor/vista2mqsc"))
+    parser.add_argument("--output_log_dir", type=str, default=str(PROJECT_ROOT / "output_logs/anchor/vista2mqsc_sequence"))
     parser.add_argument(
         "--task_levels",
         type=str,
@@ -951,6 +952,8 @@ def main() -> None:
     parser.add_argument("--vistals_size_tie_ratio", type=float, default=0.85)
     parser.add_argument("--vistals_apply_task_levels", type=str, default="object,room,region,instance")
     args = parser.parse_args()
+    if not 0.0 <= args.start_ratio < args.end_ratio <= 1.0:
+        parser.error("Expected 0 <= --start_ratio < --end_ratio <= 1")
 
     global MQSC_R1_CFG, VISTALS_CFG, VISTA2MQSC_VISTALS_APPLY_TASK_LEVELS
     MQSC_R1_CFG = MqscR1Config(
@@ -1009,6 +1012,9 @@ def main() -> None:
     enabled_task_levels = {x.strip() for x in str(args.task_levels).split(",") if x.strip()}
     if not enabled_task_levels:
         enabled_task_levels = set(TASK_LEVEL_ORDER)
+    invalid_task_levels = enabled_task_levels - set(TASK_LEVEL_ORDER)
+    if invalid_task_levels:
+        parser.error(f"Unknown --task_levels: {sorted(invalid_task_levels)}; choose from {TASK_LEVEL_ORDER}")
     _tqdm_print(
         f"[Vista2MQSCRefine1] cfg start_ratio={args.start_ratio} end_ratio={args.end_ratio} "
         f"levels={sorted(enabled_task_levels)} max_steps={args.max_steps} "
@@ -1026,7 +1032,14 @@ def main() -> None:
     scene_data_paths = sorted(navigation_data_root.rglob("*.json.gz"))
     if not scene_data_paths:
         raise FileNotFoundError(f"No *.json.gz found under navigation_data_path={navigation_data_root}")
-    scene_data_paths = scene_data_paths[int(args.start_ratio * len(scene_data_paths)): int(args.end_ratio * len(scene_data_paths))]
+    num_scene = len(scene_data_paths)
+    scene_data_paths = scene_data_paths[int(args.start_ratio * num_scene):int(args.end_ratio * num_scene)]
+    if not scene_data_paths:
+        parser.error(f"No scenes selected from {num_scene} annotations; widen --start_ratio/--end_ratio")
+    scene_asset_paths = {
+        path.name.split(".")[0]: resolve_scene_path(os.path.expanduser(args.hm3d_data_base_path), path.name.split(".")[0])
+        for path in scene_data_paths
+    }
     _tqdm_print(f"[Vista2MQSCRefine1] selected_scenes={len(scene_data_paths)}")
 
     out_name = f"refhm3d_seq_vista2mqsc_refine1_{args.start_ratio}_{args.end_ratio}.json"
@@ -1090,9 +1103,9 @@ def main() -> None:
             if episode_key in existing_episodes:
                 continue
 
-            sim_settings = OmegaConf.load("configs/habitat/goat_sim_config.yaml")
-            goat_agent_setting = OmegaConf.load("configs/habitat/goat_agent_config.yaml")
-            sim_settings["scene"] = resolve_scene_path(os.path.expanduser(args.hm3d_data_base_path), scene_name)
+            sim_settings = OmegaConf.load(PROJECT_ROOT / "configs/habitat/goat_sim_config.yaml")
+            goat_agent_setting = OmegaConf.load(PROJECT_ROOT / "configs/habitat/goat_agent_config.yaml")
+            sim_settings["scene"] = scene_asset_paths[scene_name]
             abstract_sim = HabitatSimulator(sim_settings, goat_agent_setting)
             sim = abstract_sim.simulator
             agent = abstract_sim.agent

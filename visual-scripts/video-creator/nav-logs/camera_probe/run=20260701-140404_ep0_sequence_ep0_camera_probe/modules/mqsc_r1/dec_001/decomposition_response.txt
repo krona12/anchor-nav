@@ -1,1 +1,0 @@
-{"target_desc":"blanket","target_aliases":["throw","cover"],"anchor_primary":["computer desk","couch"],"anchor_support":["lamp","bookshelf"],"room_context":["office"],"relations":"beside"}

@@ -1,1 +1,0 @@
-{"target_desc":"side table","target_aliases":["end table","nightstand"],"anchor_primary":["office chair","desk"],"anchor_support":["lamp","bookshelf","computer"],"room_context":["office"],"relations":"next to"}

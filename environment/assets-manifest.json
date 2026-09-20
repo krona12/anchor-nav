@@ -1,0 +1,689 @@
+{
+  "scope": "MTU3D inference on LangMap; excludes unused training and other benchmark resources",
+  "verified_at_utc": "2026-09-20T04:50:20.644489+00:00",
+  "public_required_assets_complete": true,
+  "full_benchmark_ready": true,
+  "model_file_count": 14,
+  "model_bytes": 4140465091,
+  "model_files": [
+    {
+      "source": "https://huggingface.co/openai/clip-vit-large-patch14/resolve/32bd64288804d66eefd0ccbe215aa642df71cc41/config.json",
+      "path": "checkpoint/clip-vit-large-patch14/config.json",
+      "bytes": 4519,
+      "sha256": "8a09b467700c58138c29d53c605b34ebc69beaadd13274a8a2af8ad2c2f4032a",
+      "verified": true
+    },
+    {
+      "source": "https://huggingface.co/facebook/dinov2-large/resolve/47b73eefe95e8d44ec3623f8890bd894b6ea2d6c/config.json",
+      "path": "checkpoint/dinov2-large/config.json",
+      "bytes": 549,
+      "sha256": "12df51c069a2dc1305e34ba71ef58bc2407ea553b75f4722a1715c1bce3bbed0",
+      "verified": true
+    },
+    {
+      "source": "https://huggingface.co/openai/clip-vit-large-patch14/resolve/32bd64288804d66eefd0ccbe215aa642df71cc41/merges.txt",
+      "path": "checkpoint/clip-vit-large-patch14/merges.txt",
+      "bytes": 524619,
+      "sha256": "9fd691f7c8039210e0fced15865466c65820d09b63988b0174bfe25de299051a",
+      "verified": true
+    },
+    {
+      "source": "https://github.com/ultralytics/assets/releases/download/v8.3.0/FastSAM-x.pt",
+      "path": "hm3d-online/FastSAM/FastSAM-x.pt",
+      "bytes": 144972346,
+      "sha256": "752cadc2828edb1cd4bc4f9eb587100631af06ea2108f4c9ed56df4755701e76",
+      "verified": true
+    },
+    {
+      "source": "https://huggingface.co/bigai/MTU3D/resolve/b368c81ac25bc36797b91dcf68e567694d4efb30/stage1-pretrain-all/pytorch_model.bin",
+      "path": "checkpoint/stage1-pretrain-all/pytorch_model.bin",
+      "bytes": 348120545,
+      "sha256": "8d064237059b673eb0d93594fcc9d1f927afa4e8bd4fbb9ec0199c87bef42de0",
+      "verified": true
+    },
+    {
+      "source": "https://huggingface.co/bigai/MTU3D/resolve/b368c81ac25bc36797b91dcf68e567694d4efb30/stage2-fine-tune-goat/pytorch_model.bin",
+      "path": "checkpoint/stage2-fine-tune-goat/pytorch_model.bin",
+      "bytes": 715591853,
+      "sha256": "7cee579a00f85b802ddaafc4c649f56228b6eb8090b6ff5e06c3ff9470500162",
+      "verified": true
+    },
+    {
+      "source": "https://huggingface.co/facebook/dinov2-large/resolve/47b73eefe95e8d44ec3623f8890bd894b6ea2d6c/model.safetensors",
+      "path": "checkpoint/dinov2-large/model.safetensors",
+      "bytes": 1217522888,
+      "sha256": "399fba97a95f22c36834418bc69373364a99af3a1153da1c0fb31db567c92e23",
+      "verified": true
+    },
+    {
+      "source": "https://huggingface.co/facebook/dinov2-large/resolve/47b73eefe95e8d44ec3623f8890bd894b6ea2d6c/preprocessor_config.json",
+      "path": "checkpoint/dinov2-large/preprocessor_config.json",
+      "bytes": 436,
+      "sha256": "14e780d86fa1861f8751f868d7f45425b5feb55c38ca26f152ca5097ab30f828",
+      "verified": true
+    },
+    {
+      "source": "https://huggingface.co/openai/clip-vit-large-patch14/resolve/32bd64288804d66eefd0ccbe215aa642df71cc41/model.safetensors",
+      "path": "checkpoint/clip-vit-large-patch14/model.safetensors",
+      "bytes": 1710540580,
+      "sha256": "a2bf730a0c7debf160f7a6b50b3aaf3703e7e88ac73de7a314903141db026dcb",
+      "verified": true
+    },
+    {
+      "source": "https://huggingface.co/openai/clip-vit-large-patch14/resolve/32bd64288804d66eefd0ccbe215aa642df71cc41/preprocessor_config.json",
+      "path": "checkpoint/clip-vit-large-patch14/preprocessor_config.json",
+      "bytes": 316,
+      "sha256": "910e70b3956ac9879ebc90b22fb3bc8a75b6a0677814500101a4c072bd7857bd",
+      "verified": true
+    },
+    {
+      "source": "https://huggingface.co/openai/clip-vit-large-patch14/resolve/32bd64288804d66eefd0ccbe215aa642df71cc41/special_tokens_map.json",
+      "path": "checkpoint/clip-vit-large-patch14/special_tokens_map.json",
+      "bytes": 389,
+      "sha256": "f8c0d6c39aee3f8431078ef6646567b0aba7f2246e9c54b8b99d55c22b707cbf",
+      "verified": true
+    },
+    {
+      "source": "https://huggingface.co/openai/clip-vit-large-patch14/resolve/32bd64288804d66eefd0ccbe215aa642df71cc41/tokenizer.json",
+      "path": "checkpoint/clip-vit-large-patch14/tokenizer.json",
+      "bytes": 2224003,
+      "sha256": "a83e0809aa4c3af7208b2df632a7a69668c6d48775b3c3fe4e1b1199d1f8b8f4",
+      "verified": true
+    },
+    {
+      "source": "https://huggingface.co/openai/clip-vit-large-patch14/resolve/32bd64288804d66eefd0ccbe215aa642df71cc41/tokenizer_config.json",
+      "path": "checkpoint/clip-vit-large-patch14/tokenizer_config.json",
+      "bytes": 905,
+      "sha256": "deef455e52fa5e8151e339add0582e4235f066009601360999d3a9cda83b1129",
+      "verified": true
+    },
+    {
+      "source": "https://huggingface.co/openai/clip-vit-large-patch14/resolve/32bd64288804d66eefd0ccbe215aa642df71cc41/vocab.json",
+      "path": "checkpoint/clip-vit-large-patch14/vocab.json",
+      "bytes": 961143,
+      "sha256": "3f0c4f7d2086b61b38487075278ea9ed04edb53a03cbb045b86c27190fa8fb69",
+      "verified": true
+    }
+  ],
+  "annotations": {
+    "scene_count": 36,
+    "sequence_count": 720,
+    "subtask_count": 3600,
+    "files": [
+      {
+        "path": "LangMap_Annotations/00800-TEEsavR23oF.json.gz",
+        "bytes": 65024,
+        "sha256": "29a562a3881835f1c13421000c9eb73d6f2f743b33ec752f6cfff6ee839f8ddb",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00802-wcojb4TFT35.json.gz",
+        "bytes": 96716,
+        "sha256": "c5aa6ccbfeaa4360ea4796e6ea833e7383919f8e1d3fe859fe98454843456e18",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00803-k1cupFYWXJ6.json.gz",
+        "bytes": 58467,
+        "sha256": "dce9d71c6e33b4f716920e9bdff5ec99480be0ce839ef423ed19980b17203c75",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00808-y9hTuugGdiq.json.gz",
+        "bytes": 121556,
+        "sha256": "0e0e6dc92ef4ff1651b2499df79f914ea396d89ea98564669efc7c0c5100dbc8",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00810-CrMo8WxCyVb.json.gz",
+        "bytes": 75424,
+        "sha256": "7eb7bef67d1a81184e5833db4bceee65a8c8183f8e8c9758bb26e95593451353",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00813-svBbv1Pavdk.json.gz",
+        "bytes": 47469,
+        "sha256": "aa1c5d89fbea034f49fa6b27b94d522694c13c9e9ce3fe3ea6fd04b853bbafe6",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00814-p53SfW6mjZe.json.gz",
+        "bytes": 130642,
+        "sha256": "c8e4b219b24d5869b053bc41d6ab150d4c60a55658ef3837515acb4549ba3e26",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00815-h1zeeAwLh9Z.json.gz",
+        "bytes": 97501,
+        "sha256": "d02173d07a9d6587af0204f64fc6d9bc2ef73150ceebe4eb9a92f0d180321773",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00820-mL8ThkuaVTM.json.gz",
+        "bytes": 41675,
+        "sha256": "005536c5a0fda3af311f80c7e43d51f91d9b22ef15faf1c95c3e84595b4f7af5",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00821-eF36g7L6Z9M.json.gz",
+        "bytes": 124953,
+        "sha256": "263ccb15e2a689615fd7c698eee1ab33b6ffd1af1429cc1b9d112da5667ee200",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00823-7MXmsvcQjpJ.json.gz",
+        "bytes": 112937,
+        "sha256": "f67e20d43f2930791bf5316a8a1adfd11abf0ccf9ef4be4b870181378a1bea5c",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00824-Dd4bFSTQ8gi.json.gz",
+        "bytes": 81014,
+        "sha256": "435118629e1c68e0a6ee0452943bbbfe0406411df573cd3238833224e70de602",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00827-BAbdmeyTvMZ.json.gz",
+        "bytes": 62075,
+        "sha256": "a88729ccdc8ec6f9144ba6aca0c3b4107a58d1a2c3277575fb4b36170c6f21e8",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00829-QaLdnwvtxbs.json.gz",
+        "bytes": 35526,
+        "sha256": "15733e9c284af4bc82c09c77c9ccff7900b027125d8864aa2aa6d5c29e82a5a1",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00831-yr17PDCnDDW.json.gz",
+        "bytes": 112125,
+        "sha256": "e8ac308d2247436fd748106565db6572294326d73e690c2feae4ae7a64072819",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00832-qyAac8rV8Zk.json.gz",
+        "bytes": 59230,
+        "sha256": "0b60383814fe901eaddc209088b04107bbe47cbd0b5452af02612b53706f0dbc",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00835-q3zU7Yy5E5s.json.gz",
+        "bytes": 54335,
+        "sha256": "d00bd454bad674b90824668729fd69182848453fe828d67b795ff8abaf79eba2",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00839-zt1RVoi7PcG.json.gz",
+        "bytes": 97890,
+        "sha256": "f7d4b0109582041af909661c8bdd5a67a88820aaefaf0a1e98b01490dafc6646",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00843-DYehNKdT76V.json.gz",
+        "bytes": 33445,
+        "sha256": "60333f0a00d4d092836296d1a3dca647866f667076ab5a99a58af59733577918",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00844-q5QZSEeHe5g.json.gz",
+        "bytes": 166548,
+        "sha256": "9858d4e67395dcca3446507326069fd765114c11717a40042a4a507e08cd849f",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00847-bCPU9suPUw9.json.gz",
+        "bytes": 51727,
+        "sha256": "506cddb50c5127d9dc2ed7d652256fa000c44bd58a7992b74029d127f2c460b9",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00848-ziup5kvtCCR.json.gz",
+        "bytes": 69600,
+        "sha256": "3b553df8bfd29ecd18ea4cd7eb5ef45dd5d5d0244120a6193e4622da46ff521a",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00849-a8BtkwhxdRV.json.gz",
+        "bytes": 43881,
+        "sha256": "c975ecea7216b2a45e82cf0a9caf294542b15415d6662b545d3b8fe557f35d9e",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00853-5cdEh9F2hJL.json.gz",
+        "bytes": 103396,
+        "sha256": "50c794677250879cee1cf50d5106eddc1b7f49f9de996b1986ca3656fb98f3d8",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00861-GLAQ4DNUx5U.json.gz",
+        "bytes": 69230,
+        "sha256": "1378e04550482c68dad0cd7bfc4925038d671ef2278fc957a866ea8d19fce930",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00862-LT9Jq6dN3Ea.json.gz",
+        "bytes": 157042,
+        "sha256": "8f4d4cc22dc86ef47d74376ff0399a5e2afc8228bdaa131bffd563e49128bf7d",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00869-MHPLjHsuG27.json.gz",
+        "bytes": 45410,
+        "sha256": "6ccf6f1d6c39fdfeb65ab8550cda471716085ce893127e33b6a6fd98731e7a9d",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00871-VBzV5z6i1WS.json.gz",
+        "bytes": 92343,
+        "sha256": "712e9929d87322c00209ee6ae66f0e9e67466a905b4bd103b176edc08a8fba82",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00873-bxsVRursffK.json.gz",
+        "bytes": 65563,
+        "sha256": "8f33e54d9f4465f761b6ed2e612fecf240901e2b51bfc0444c025ec1a426c1d7",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00876-mv2HUxq3B53.json.gz",
+        "bytes": 115598,
+        "sha256": "0a700d3a2f9b19eb349b498e6c62b75ed0c7af71290fdc53b36caf0a14acacb0",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00877-4ok3usBNeis.json.gz",
+        "bytes": 64097,
+        "sha256": "1e2f820210f862cdc617f9e03cf028db9ffafe089fb532240e63c55d8be3e0bc",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00878-XB4GS9ShBRE.json.gz",
+        "bytes": 40127,
+        "sha256": "9adb3f8f48fe59508d9e97678aeac1efa2b534716a082d2e18a81570c77ab930",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00880-Nfvxx8J5NCo.json.gz",
+        "bytes": 59317,
+        "sha256": "6926e7bfb0436e268c7d708eb542f274ba2c569b4de44e82a2888928def76c20",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00890-6s7QHgap2fW.json.gz",
+        "bytes": 76275,
+        "sha256": "7c36fe89131f9fa8e09d6a82c8a9935333383ace700f1aac08db4df8f243c327",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00891-cvZr5TUy5C5.json.gz",
+        "bytes": 130767,
+        "sha256": "399aed22a5dfd89efe7c1ef7ebde8678fb26845ab79891959346434d8fc926db",
+        "sequences": 20,
+        "subtasks": 100
+      },
+      {
+        "path": "LangMap_Annotations/00894-HY1NcmCgn3n.json.gz",
+        "bytes": 57814,
+        "sha256": "726b1992ab0f4852eb585635e0f7cd9ecb2b08af3e7a72db89935b566092296f",
+        "sequences": 20,
+        "subtasks": 100
+      }
+    ]
+  },
+  "hm3d": {
+    "available_scene_ids": [
+      "00800-TEEsavR23oF",
+      "00802-wcojb4TFT35",
+      "00803-k1cupFYWXJ6",
+      "00808-y9hTuugGdiq",
+      "00810-CrMo8WxCyVb",
+      "00813-svBbv1Pavdk",
+      "00814-p53SfW6mjZe",
+      "00815-h1zeeAwLh9Z",
+      "00820-mL8ThkuaVTM",
+      "00821-eF36g7L6Z9M",
+      "00823-7MXmsvcQjpJ",
+      "00824-Dd4bFSTQ8gi",
+      "00827-BAbdmeyTvMZ",
+      "00829-QaLdnwvtxbs",
+      "00831-yr17PDCnDDW",
+      "00832-qyAac8rV8Zk",
+      "00835-q3zU7Yy5E5s",
+      "00839-zt1RVoi7PcG",
+      "00843-DYehNKdT76V",
+      "00844-q5QZSEeHe5g",
+      "00847-bCPU9suPUw9",
+      "00848-ziup5kvtCCR",
+      "00849-a8BtkwhxdRV",
+      "00853-5cdEh9F2hJL",
+      "00861-GLAQ4DNUx5U",
+      "00862-LT9Jq6dN3Ea",
+      "00869-MHPLjHsuG27",
+      "00871-VBzV5z6i1WS",
+      "00873-bxsVRursffK",
+      "00876-mv2HUxq3B53",
+      "00877-4ok3usBNeis",
+      "00878-XB4GS9ShBRE",
+      "00880-Nfvxx8J5NCo",
+      "00890-6s7QHgap2fW",
+      "00891-cvZr5TUy5C5",
+      "00894-HY1NcmCgn3n"
+    ],
+    "files": [
+      {
+        "path": "datascene/00800-TEEsavR23oF/TEEsavR23oF.basis.glb",
+        "bytes": 30544140,
+        "sha256": "56efe1b85e17d010f6ecc942ab56fe82ed32a53c58599ffe3dc74327c20525e9",
+        "archive_member": "00800-TEEsavR23oF/TEEsavR23oF.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00802-wcojb4TFT35/wcojb4TFT35.basis.glb",
+        "bytes": 46195688,
+        "sha256": "075e243b372458df4055a55e27c93885ba44ae8c36b4bc4446e0393c60c14540",
+        "archive_member": "00802-wcojb4TFT35/wcojb4TFT35.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00803-k1cupFYWXJ6/k1cupFYWXJ6.basis.glb",
+        "bytes": 50545876,
+        "sha256": "57a09e19c89eef3a331d1f17ccc52a6f588ed5dcf872f89cf40dbd82470e6e3e",
+        "archive_member": "00803-k1cupFYWXJ6/k1cupFYWXJ6.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00808-y9hTuugGdiq/y9hTuugGdiq.basis.glb",
+        "bytes": 43907600,
+        "sha256": "67a188a10c8d664b454e20fbf631613500b982ec742a211e0c577cab6aeaf418",
+        "archive_member": "00808-y9hTuugGdiq/y9hTuugGdiq.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00810-CrMo8WxCyVb/CrMo8WxCyVb.basis.glb",
+        "bytes": 32001468,
+        "sha256": "c7db85a13e6be94f93ac027b7fb74a518630175ab59f72ad337a06249b85e861",
+        "archive_member": "00810-CrMo8WxCyVb/CrMo8WxCyVb.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00813-svBbv1Pavdk/svBbv1Pavdk.basis.glb",
+        "bytes": 21608044,
+        "sha256": "f84c25a56544d0c85935e9449e45c378fc5435e327fabb4c9174e28dd385ce57",
+        "archive_member": "00813-svBbv1Pavdk/svBbv1Pavdk.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00814-p53SfW6mjZe/p53SfW6mjZe.basis.glb",
+        "bytes": 52721272,
+        "sha256": "271641c7be83abc7ffd93e396fd64ea559ddbe0dd6b7ec7eaf62f7d1932d6d27",
+        "archive_member": "00814-p53SfW6mjZe/p53SfW6mjZe.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00815-h1zeeAwLh9Z/h1zeeAwLh9Z.basis.glb",
+        "bytes": 53416768,
+        "sha256": "51528bb22c3edd8b506bed810a559d728dd48f1d09ee879abc49349a401b27e1",
+        "archive_member": "00815-h1zeeAwLh9Z/h1zeeAwLh9Z.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00820-mL8ThkuaVTM/mL8ThkuaVTM.basis.glb",
+        "bytes": 24964048,
+        "sha256": "d8900210a7823373d5b79699b2a667b19a9b481269e1ba1f717ac92f80f4b8a1",
+        "archive_member": "00820-mL8ThkuaVTM/mL8ThkuaVTM.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00821-eF36g7L6Z9M/eF36g7L6Z9M.basis.glb",
+        "bytes": 79566156,
+        "sha256": "e299adaa8ea09fff72528a4fbb302448d2226a60b3f4ab4de267ab59e40ffef2",
+        "archive_member": "00821-eF36g7L6Z9M/eF36g7L6Z9M.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.glb",
+        "bytes": 61220820,
+        "sha256": "5322fdc85fe7af36d1bed189970ee0102867d18a0fa1a8222bcd9eb24d586318",
+        "archive_member": "00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.glb",
+        "bytes": 24743724,
+        "sha256": "1cba0b073567b8d89ca4e9c4f9b54cd86443e8d57410b2765236cfb7fdc74b50",
+        "archive_member": "00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.glb",
+        "bytes": 26571324,
+        "sha256": "ca47ebc44e9bf0eaf2e450eb44f4de8ecf9e41eebda50b340b7b58d37790fa31",
+        "archive_member": "00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.glb",
+        "bytes": 19656528,
+        "sha256": "acfabc0994b4e2769d0c53a6542166800892df084a3d9611d4ab4aa73d2a8b0e",
+        "archive_member": "00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00831-yr17PDCnDDW/yr17PDCnDDW.basis.glb",
+        "bytes": 53383948,
+        "sha256": "8d6be03c3110a21adfcb3e545ec99f07c5aae7923fcdbbfbcac73addc63bdf54",
+        "archive_member": "00831-yr17PDCnDDW/yr17PDCnDDW.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.glb",
+        "bytes": 25401228,
+        "sha256": "2223688fdb71e9bd73ac6e2d384b216950b1e3b89c1206710e23a93aa1e0ba1e",
+        "archive_member": "00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.glb",
+        "bytes": 23910372,
+        "sha256": "f599aeedb3b0fb6f51403cecc84aeac22b827623577f54dc69f1be2b30f87416",
+        "archive_member": "00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00839-zt1RVoi7PcG/zt1RVoi7PcG.basis.glb",
+        "bytes": 37704068,
+        "sha256": "e731a0d3a5235e218938a1655ec763d63dea11d421c2e88d8139fc33b24026ca",
+        "archive_member": "00839-zt1RVoi7PcG/zt1RVoi7PcG.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00843-DYehNKdT76V/DYehNKdT76V.basis.glb",
+        "bytes": 24592180,
+        "sha256": "a0aec6e55825e1c8ee50436e1ca7c123b8f10f2dbfdc88372357c39706e3a319",
+        "archive_member": "00843-DYehNKdT76V/DYehNKdT76V.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00844-q5QZSEeHe5g/q5QZSEeHe5g.basis.glb",
+        "bytes": 53197568,
+        "sha256": "c1cf2b9268d637a90cd34d1f229fa49ce605d9a53674ae6286b7c8452e9ab01f",
+        "archive_member": "00844-q5QZSEeHe5g/q5QZSEeHe5g.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00847-bCPU9suPUw9/bCPU9suPUw9.basis.glb",
+        "bytes": 42365784,
+        "sha256": "481211674aa108f6474b0c08695d5a4a9360c2cc8bb86704d9c5f7c6fa8d83e6",
+        "archive_member": "00847-bCPU9suPUw9/bCPU9suPUw9.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00848-ziup5kvtCCR/ziup5kvtCCR.basis.glb",
+        "bytes": 25338796,
+        "sha256": "918ecf7eafb55518a6b10deab9721474a08e6da3e13045580612b7e25202071d",
+        "archive_member": "00848-ziup5kvtCCR/ziup5kvtCCR.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00849-a8BtkwhxdRV/a8BtkwhxdRV.basis.glb",
+        "bytes": 36382860,
+        "sha256": "d48f025841f1bac5b07173523f32781f57e4b08eb7f11c0f47031b9a278c18bc",
+        "archive_member": "00849-a8BtkwhxdRV/a8BtkwhxdRV.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00853-5cdEh9F2hJL/5cdEh9F2hJL.basis.glb",
+        "bytes": 29834632,
+        "sha256": "139dcb5542263b4e00a1daee7054f252253bcd02fb4ac51904886cda9f0cd8b6",
+        "archive_member": "00853-5cdEh9F2hJL/5cdEh9F2hJL.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00861-GLAQ4DNUx5U/GLAQ4DNUx5U.basis.glb",
+        "bytes": 38530336,
+        "sha256": "d2271f8fbf57aad34a2d1e03565d5bb9e85503e05eb5f8b9fd47fa66d8983577",
+        "archive_member": "00861-GLAQ4DNUx5U/GLAQ4DNUx5U.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00862-LT9Jq6dN3Ea/LT9Jq6dN3Ea.basis.glb",
+        "bytes": 55413584,
+        "sha256": "8c01a71f49a9fb2e5956d20559815379025d4d7ba8a7eab274180d30966cf4ac",
+        "archive_member": "00862-LT9Jq6dN3Ea/LT9Jq6dN3Ea.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00869-MHPLjHsuG27/MHPLjHsuG27.basis.glb",
+        "bytes": 18736544,
+        "sha256": "fbe80b72c9a939fae628572c432b6f2c436bac9aaa9d6895c90c7d8d1d09d69f",
+        "archive_member": "00869-MHPLjHsuG27/MHPLjHsuG27.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00871-VBzV5z6i1WS/VBzV5z6i1WS.basis.glb",
+        "bytes": 30014796,
+        "sha256": "e3a9ee6c4651ba5175e3c7256097a7ffcd49af5f28aa5dbe3e7c56672f9346cf",
+        "archive_member": "00871-VBzV5z6i1WS/VBzV5z6i1WS.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00873-bxsVRursffK/bxsVRursffK.basis.glb",
+        "bytes": 23536100,
+        "sha256": "e38a09b7e7c9efbaa54babd52529436cc03a0deb0fb5213970279e2770da0fb8",
+        "archive_member": "00873-bxsVRursffK/bxsVRursffK.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00876-mv2HUxq3B53/mv2HUxq3B53.basis.glb",
+        "bytes": 43462304,
+        "sha256": "50e618c9a1416eb9b5b7ecc514811d18b5830025fb25f3dc2354f83c56581a2c",
+        "archive_member": "00876-mv2HUxq3B53/mv2HUxq3B53.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00877-4ok3usBNeis/4ok3usBNeis.basis.glb",
+        "bytes": 23601632,
+        "sha256": "f66665cea56e7da7f0862bff989b5f4911764d4768a221dbebb642e8c7ad353b",
+        "archive_member": "00877-4ok3usBNeis/4ok3usBNeis.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00878-XB4GS9ShBRE/XB4GS9ShBRE.basis.glb",
+        "bytes": 38713676,
+        "sha256": "5a830430952622486692b5acd9827e1e5b0f9c830f431426a6a9315b67dbe5e8",
+        "archive_member": "00878-XB4GS9ShBRE/XB4GS9ShBRE.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.glb",
+        "bytes": 23159840,
+        "sha256": "c794eb86a4385d7fe9854ad332e2925ab215db0edc7711256710c2c307384573",
+        "archive_member": "00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00890-6s7QHgap2fW/6s7QHgap2fW.basis.glb",
+        "bytes": 28026924,
+        "sha256": "cc8a22a3c62160e2ff035bd00e764494dd9a609c5bb7b1fb0c429a05aaaf8344",
+        "archive_member": "00890-6s7QHgap2fW/6s7QHgap2fW.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00891-cvZr5TUy5C5/cvZr5TUy5C5.basis.glb",
+        "bytes": 52949148,
+        "sha256": "6546eb52bf729e5a2cc8f24c3aa9f3d0c7745a341399643de907add21ed42f81",
+        "archive_member": "00891-cvZr5TUy5C5/cvZr5TUy5C5.basis.glb",
+        "verified": true
+      },
+      {
+        "path": "datascene/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.glb",
+        "bytes": 39717648,
+        "sha256": "19c508695fb6be58afa79e3214a44611af7a8d3523f7c0024d11bc6faa8416c2",
+        "archive_member": "00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.glb",
+        "verified": true
+      }
+    ],
+    "missing_scene_ids": [],
+    "required_archive": "https://api.matterport.com/resources/habitat/hm3d-val-habitat-v0.2.tar",
+    "public_example_archive_source": "https://media.githubusercontent.com/media/matterport/habitat-matterport-3dresearch/main/example/hm3d-example-habitat-v0.2.tar",
+    "public_example_archive_sha256": "bbafcfb13e84f404e95fb99022f0d6702571be795f3f711ad396d0bae5b33ef7",
+    "provided_archive": {
+      "path": "hm3d-val-habitat-v0.2.tar",
+      "sha256": "04c97761cb16ed8bd6f6600d4211ab10b9d3649d981401b527f0c0264a60371b",
+      "origin": "user transfer",
+      "tar_structure_validated": true,
+      "all_glb_headers_validated": true,
+      "official_checksum_verified": false,
+      "bytes": 3530618880
+    },
+    "public_example_archive_bytes": 161792000
+  },
+  "unused_resources_not_downloaded": [
+    "SceneVerse training data",
+    "embodied_base",
+    "embodied_feat",
+    "embodied_vle",
+    "embodied_bench_data",
+    "stage2-pretrain-all",
+    "stage2-fine-tune-ovon",
+    "stage2-fine-tune-sg3d",
+    "HM3D training meshes and semantic annotations",
+    "duplicate model formats"
+  ],
+  "path_base": "repository root; all path fields are portable relative paths",
+  "verification_note": "Verified/status fields describe the audit at verified_at_utc, not availability in a new clone; run download_assets.py --verify-only --require-scenes to check this machine."
+}

@@ -5,25 +5,24 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
 import requests
-import urllib3
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # NOTE for future VLM module development:
 # Some servers export HTTP(S)/ALL proxy variables globally, and this endpoint may
 # fail or hang when requests goes through that proxy. If a module needs direct
 # no-proxy VLM calls, clear HTTP_PROXY/HTTPS_PROXY/ALL_PROXY (upper and lower
 # case) around the call and set NO_PROXY=no_proxy="*"; restore the original
-# environment afterwards. See anchor_nav.step.no_proxy_env for a small scoped
-# context-manager example. This client intentionally preserves requests' default
+# environment afterwards. This client intentionally preserves requests' default
 # environment behavior so existing modules keep their current network semantics.
 
-API_KEY = os.environ.get("ZZZ_API_KEY", "sk-zk28106fd788bebc27a554683dd2777e6b668a40d4167fa9")
 BASE_URL = "https://api.zhizengzeng.com/v1/chat/completions"
 DEFAULT_MODEL = "gpt-4o-mini"
 
 
-def _current_api_key() -> str:
-    return os.environ.get("ZZZ_API_KEY", API_KEY)
+def _current_api_key():
+    key = os.environ.get("ZZZ_API_KEY", "").strip()
+    if not key:
+        raise RuntimeError("Set ZZZ_API_KEY before running a VLM analysis template.")
+    return key
 
 
 def _post_chat(payload: Dict[str, Any], timeout: int = 60) -> str:
@@ -32,7 +31,7 @@ def _post_chat(payload: Dict[str, Any], timeout: int = 60) -> str:
         json=payload,
         headers={"Authorization": f"Bearer {_current_api_key()}", "Content-Type": "application/json"},
         timeout=timeout,
-        verify=False,
+        verify=True,
     )
     resp.raise_for_status()
     return resp.json()["choices"][0]["message"]["content"].strip()
