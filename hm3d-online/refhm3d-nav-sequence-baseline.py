@@ -6,12 +6,14 @@ import datetime
 import random
 from pathlib import Path
 
-sys.stdout.reconfigure(line_buffering=True)
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(line_buffering=True)
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+for import_root in (SCRIPT_DIR / "FastSAM", SCRIPT_DIR, PROJECT_ROOT):
+    if str(import_root) not in sys.path:
+        sys.path.insert(0, str(import_root))
 
 from habitat.utils.visualizations import maps
 import json
@@ -156,7 +158,7 @@ def resolve_scene_path(hm3d_root: str, scene_name: str) -> str:
         scene_dir / f"{short_scene_name}.glb",
     ]
     for candidate in candidates:
-        if candidate.exists():
+        if candidate.is_file():
             return str(candidate)
     raise FileNotFoundError(
         f"Scene asset not found for {scene_name}. Checked: {[str(x) for x in candidates]}"
@@ -219,29 +221,29 @@ parser.add_argument("--concise_description", action="store_true", help="Use conc
 parser.add_argument(
     "--navigation_data_path",
     type=str,
-    default="/home/chenlin/krona/anchor-nav/LangMap_Annotations",
+    default=str(PROJECT_ROOT / "LangMap_Annotations"),
     help="Path to RefHM3D sequence dataset root (recursive search for *.json.gz)",
 )
 parser.add_argument(
     "--hm3d_data_base_path",
     type=str,
-    default="/home/chenlin/krona/MTU3D/datascene",
+    default=str(PROJECT_ROOT / "datascene"),
     help="Path to HM3D scene folder",
 )
 parser.add_argument(
     "--pq3d_stage1_path",
     type=str,
-    default="/home/chenlin/krona/MTU3D/checkpoint/stage1-pretrain-all",
+    default=str(PROJECT_ROOT / "checkpoint/stage1-pretrain-all"),
 )
 parser.add_argument(
     "--pq3d_stage2_path",
     type=str,
-    default="/home/chenlin/krona/MTU3D/checkpoint/stage2-fine-tune-goat",
+    default=str(PROJECT_ROOT / "checkpoint/stage2-fine-tune-goat"),
 )
 parser.add_argument(
     "--output_log_dir",
     type=str,
-    default="./output_logs/baseline",
+    default=str(PROJECT_ROOT / "output_logs/baseline"),
     help="Output directory for both logs and metric json",
 )
 parser.add_argument(
@@ -250,19 +252,21 @@ parser.add_argument(
     default="object,room,region,instance",
     help="Comma-separated task levels to execute, e.g. instance or region,instance",
 )
-parser.add_argument("--seed", type=int, default=1234, help="Random seed for reproducible baseline/ACSD comparison")
+parser.add_argument("--seed", type=int, default=1234, help="Random seed for reproducible evaluation")
 args = parser.parse_args()
+if not 0.0 <= args.start_ratio < args.end_ratio <= 1.0:
+    parser.error("Expected 0 <= --start_ratio < --end_ratio <= 1")
 
 output_log_dir = os.path.expanduser(args.output_log_dir)
 _setup_run_logging(output_log_dir)
 set_reproducibility_seed(args.seed)
-print(
-    "[baseline] 输出 JSON 每条记录含 task_level（object|room|region|instance），"
-    "与 vlmcore refine 及 test_scripts/aggregate_shard_results.py --by-level 一致"
-)
+print("[baseline] 输出 JSON 每条记录含 task_level（object|room|region|instance）")
 enabled_task_levels = {x.strip() for x in args.task_levels.split(",") if x.strip()}
 if not enabled_task_levels:
     enabled_task_levels = {"object", "room", "region", "instance"}
+invalid_task_levels = enabled_task_levels - set(TASK_LEVEL_ORDER)
+if invalid_task_levels:
+    parser.error(f"Unknown --task_levels: {sorted(invalid_task_levels)}; choose from {TASK_LEVEL_ORDER}")
 print(f"[baseline] enabled_task_levels={sorted(enabled_task_levels)}")
 
 black_task_ids = []
@@ -296,6 +300,12 @@ if len(scene_data_paths) == 0:
     )
 num_scene = len(scene_data_paths)
 scene_data_paths = scene_data_paths[int(start_ratio * num_scene):int(end_ratio * num_scene)]
+if not scene_data_paths:
+    parser.error(f"No scenes selected from {num_scene} annotations; widen --start_ratio/--end_ratio")
+scene_asset_paths = {
+    path.name.split(".")[0]: resolve_scene_path(hm3d_data_base_path, path.name.split(".")[0])
+    for path in scene_data_paths
+}
 scene_data_list_for_print = [p.name for p in scene_data_paths]
 print(f"\n\nTotal selected number of scenes {len(scene_data_paths)}: {scene_data_list_for_print}\n\n")
 
@@ -352,9 +362,9 @@ for scene_data_path in tqdm(scene_data_paths, desc="*** Scene ***"):
             print("_".join([scene_name, navigation_type, str(episode_id)]), " already processed, skipped")
             continue
 
-        sim_settings = OmegaConf.load("configs/habitat/goat_sim_config.yaml")
-        goat_agent_setting = OmegaConf.load("configs/habitat/goat_agent_config.yaml")
-        sim_settings["scene"] = resolve_scene_path(hm3d_data_base_path, scene_name)
+        sim_settings = OmegaConf.load(PROJECT_ROOT / "configs/habitat/goat_sim_config.yaml")
+        goat_agent_setting = OmegaConf.load(PROJECT_ROOT / "configs/habitat/goat_agent_config.yaml")
+        sim_settings["scene"] = scene_asset_paths[scene_name]
         abstract_sim = HabitatSimulator(sim_settings, goat_agent_setting)
         sim = abstract_sim.simulator
         agent = abstract_sim.agent

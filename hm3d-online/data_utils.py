@@ -30,7 +30,9 @@ from merge_utils import RepresentationManager
 import time
 
 # 与仓库内 hm3d-online/FastSAM/FastSAM-x.pt 对齐，不依赖 cwd，避免误用相对路径导致加载失败或走网络
-_FASTSAM_WEIGHT = Path(__file__).resolve().parent / "FastSAM" / "FastSAM-x.pt"
+_PROJECT_ROOT = Path(__file__).resolve().parents[1]
+_FASTSAM_WEIGHT = _PROJECT_ROOT / "hm3d-online" / "FastSAM" / "FastSAM-x.pt"
+_CONFIG_DIR = _PROJECT_ROOT / "configs" / "embodied-pq3d-final"
 
 
 def timeit(func):
@@ -292,9 +294,10 @@ class PQ3DModel:
     def __init__(self, stage1_dir, stage2_dir, min_decision_num=None):
         # get four models, sam, dino, pq3d stage1, pq3d stage2
         # dino
-        dinov2_local_path = '/home/chenlin/.cache/huggingface/hub/models--facebook--dinov2-large/snapshots/47b73eefe95e8d44ec3623f8890bd894b6ea2d6c'
-        processor = AutoImageProcessor.from_pretrained(dinov2_local_path)
-        model = AutoModel.from_pretrained(dinov2_local_path).cuda()
+        dinov2_model = os.path.expanduser(os.environ.get("DINOV2_MODEL", "facebook/dinov2-large"))
+        clip_model = os.path.expanduser(os.environ.get("CLIP_MODEL", "openai/clip-vit-large-patch14"))
+        processor = AutoImageProcessor.from_pretrained(dinov2_model)
+        model = AutoModel.from_pretrained(dinov2_model).cuda()
         model.eval()
         img_backbone = [processor, model]
         self.image_backbone = img_backbone
@@ -308,10 +311,9 @@ class PQ3DModel:
         mask_generator = FastSAM(str(fastsam_ckpt))
         self.mask_generator = mask_generator
         # pq3d stage1
-        config_path = "../configs/embodied-pq3d-final"
         config_name = "embodied_scan_instseg.yaml"
         GlobalHydra.instance().clear() 
-        hydra.initialize(config_path=config_path)
+        hydra.initialize_config_dir(config_dir=str(_CONFIG_DIR), version_base=None)
         cfg = hydra.compose(config_name=config_name)
         self.pq3d_stage1 = EmbodiedPQ3DInstSegModel(cfg)
         self.pq3d_stage1.load_state_dict(torch.load(os.path.join(stage1_dir, 'pytorch_model.bin'), map_location='cpu'))
@@ -320,17 +322,16 @@ class PQ3DModel:
         # merge manager
         self.representation_manager = RepresentationManager()
         # pq3d stage2
-        config_path = "../configs/embodied-pq3d-final"
         config_name = "embodied_vle.yaml"
         GlobalHydra.instance().clear() 
-        hydra.initialize(config_path=config_path)
+        hydra.initialize_config_dir(config_dir=str(_CONFIG_DIR), version_base=None)
         cfg = hydra.compose(config_name=config_name)
+        OmegaConf.update(cfg, "model.txt_encoder.args.weights", clip_model, force_add=True)
         self.pq3d_stage2 = Query3DVLE(cfg)
         self.pq3d_stage2.load_state_dict(torch.load(os.path.join(stage2_dir, 'pytorch_model.bin'), map_location='cpu'), strict=False)
         self.pq3d_stage2.eval()
         self.pq3d_stage2.cuda()
-        clip_local_path = '/home/chenlin/.cache/huggingface/hub/models--openai--clip-vit-large-patch14/snapshots/32bd64288804d66eefd0ccbe215aa642df71cc41'
-        self.tokenizer = AutoTokenizer.from_pretrained(clip_local_path)
+        self.tokenizer = AutoTokenizer.from_pretrained(clip_model)
         # decision params
         self.frontier_selection_mode = 'model'
         self.min_decision_num = min_decision_num if min_decision_num is not None else 3

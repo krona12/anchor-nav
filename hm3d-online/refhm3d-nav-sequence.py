@@ -2,7 +2,17 @@ from collections import defaultdict
 import gzip
 import os
 import sys
-sys.stdout.reconfigure(line_buffering=True)
+from pathlib import Path
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(line_buffering=True)
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = SCRIPT_DIR.parent
+for import_root in (SCRIPT_DIR / "FastSAM", SCRIPT_DIR, PROJECT_ROOT):
+    if str(import_root) not in sys.path:
+        sys.path.insert(0, str(import_root))
+
 from habitat.utils.visualizations import maps
 from habitat_sim import Simulator as Sim
 import json
@@ -11,7 +21,14 @@ import numpy as np
 from omegaconf import OmegaConf
 import torch
 from common.embodied_utils.simulator import HabitatSimulator
-from frontier_utils import visualize_numpy_data, convert_meters_to_pixel, detect_frontier_waypoints, get_closest_waypoint, get_polar_angle, map_coors_to_pixel, pixel_to_map_coors, reveal_fog_of_war
+from frontier_utils import (
+    convert_meters_to_pixel,
+    detect_frontier_waypoints,
+    get_polar_angle,
+    map_coors_to_pixel,
+    pixel_to_map_coors,
+    reveal_fog_of_war,
+)
 import cv2
 from data_utils import PQ3DModel
 from tqdm import tqdm
@@ -37,13 +54,39 @@ def print(*args, **kwargs):
 
 
 import argparse
-from utils import sequence_compute_metric_results
+
+
+def sequence_compute_metric_results(result_dict: dict) -> None:
+    rows = result_dict.get("sequence", [])
+    if not rows:
+        print("[Metrics] sequence count: 0")
+        return
+    avg_sr = sum(float(row.get("sr", 0)) for row in rows) / len(rows)
+    avg_spl = sum(float(row.get("spl", 0)) for row in rows) / len(rows)
+    print(f"[Metrics] sequence count: {len(rows)}, avg_sr: {avg_sr:.6f}, avg_spl: {avg_spl:.6f}")
+
+
+def resolve_scene_path(hm3d_root: str, scene_name: str) -> str:
+    short_scene_name = scene_name.split("-")[-1]
+    scene_dir = Path(hm3d_root) / scene_name
+    candidates = [scene_dir / f"{short_scene_name}.basis.glb", scene_dir / f"{short_scene_name}.glb"]
+    for candidate in candidates:
+        if candidate.is_file():
+            return str(candidate)
+    raise FileNotFoundError(f"Scene asset not found for {scene_name}; checked={candidates}")
 
 parser = argparse.ArgumentParser(description="Run RefHM3D evaluation with hyperparameters")
 parser.add_argument("--start_ratio", type=float, default=0.0, help="Dataset start ratio (e.g., 0.0)")
 parser.add_argument("--end_ratio", type=float, default=0.2, help="Dataset end ratio (e.g., 0.2)")
 parser.add_argument("--concise_description", action="store_true", help="Use concise descriptions instead of detailed ones")
+parser.add_argument("--navigation_data_path", type=str, default=str(PROJECT_ROOT / "LangMap_Annotations"))
+parser.add_argument("--hm3d_data_base_path", type=str, default=str(PROJECT_ROOT / "datascene"))
+parser.add_argument("--pq3d_stage1_path", type=str, default=str(PROJECT_ROOT / "checkpoint/stage1-pretrain-all"))
+parser.add_argument("--pq3d_stage2_path", type=str, default=str(PROJECT_ROOT / "checkpoint/stage2-fine-tune-goat"))
+parser.add_argument("--output_log_dir", type=str, default=str(PROJECT_ROOT / "output_logs/sequence"))
 args = parser.parse_args()
+if not 0.0 <= args.start_ratio < args.end_ratio <= 1.0:
+    parser.error("Expected 0 <= --start_ratio < --end_ratio <= 1")
 
 
 black_task_ids = \
@@ -53,9 +96,9 @@ print(f"NUMBER OF BLACK IDS: {len(black_task_ids)}")
 
 ckpt = "goat" # ovon  goat
 # hyperparameter
-hm3d_data_base_path = "../temp_datasets/hm3d/val"
-pq3d_stage1_path = "checkpoint/stage1-pretrain-all"
-pq3d_stage2_path = f"checkpoint/stage2-fine-tune-{ckpt}"
+hm3d_data_base_path = os.path.expanduser(args.hm3d_data_base_path)
+pq3d_stage1_path = os.path.expanduser(args.pq3d_stage1_path)
+pq3d_stage2_path = os.path.expanduser(args.pq3d_stage2_path)
 enable_visualization = False
 decision_num_min = 3
 visible_radius = 3
@@ -67,21 +110,28 @@ use_api = False
 ##########################
 concise_description_tag = args.concise_description  # comprehensive text or concise text
 start_ratio, end_ratio = args.start_ratio, args.end_ratio
-folder_name = f"output_dirs_newjson_{ckpt}ckpt_newspl"
-folder_name = f"toy"
+folder_name = os.path.expanduser(args.output_log_dir)
 os.makedirs(folder_name, exist_ok=True)
 if concise_description_tag:
-    output_path = f"./{folder_name}/refhm3d_seq_concisedesc_{start_ratio}_{end_ratio}.json"
+    output_path = os.path.join(folder_name, f"refhm3d_seq_concisedesc_{start_ratio}_{end_ratio}.json")
 else:
-    output_path = f"./{folder_name}/refhm3d_seq_{start_ratio}_{end_ratio}.json"
+    output_path = os.path.join(folder_name, f"refhm3d_seq_{start_ratio}_{end_ratio}.json")
 # ***************************
 # LOAD DATASET
 # ******************************
-navigation_data_path = "../temp_datasets/refhm3d_final_new"
-scene_data_list = sorted([x for x in os.listdir(navigation_data_path) if x.endswith(".json.gz")])
-num_scene = len(scene_data_list)
-scene_data_list = scene_data_list[int(start_ratio * num_scene):int(end_ratio * num_scene)]
-print(f"\n\nTotal selected number of scenes {len(scene_data_list)}: {scene_data_list}\n\n")
+navigation_data_root = Path(args.navigation_data_path).expanduser()
+scene_data_paths = sorted(navigation_data_root.rglob("*.json.gz"))
+if not scene_data_paths:
+    raise FileNotFoundError(f"No *.json.gz found under navigation_data_path={navigation_data_root}")
+num_scene = len(scene_data_paths)
+scene_data_paths = scene_data_paths[int(start_ratio * num_scene):int(end_ratio * num_scene)]
+if not scene_data_paths:
+    parser.error(f"No scenes selected from {num_scene} annotations; widen --start_ratio/--end_ratio")
+scene_asset_paths = {
+    path.name.split(".")[0]: resolve_scene_path(hm3d_data_base_path, path.name.split(".")[0])
+    for path in scene_data_paths
+}
+print(f"\n\nTotal selected number of scenes {len(scene_data_paths)}: {[p.name for p in scene_data_paths]}\n\n")
 ##########################
 
 
@@ -98,12 +148,13 @@ else:
 # load pq3d model
 pq3d_model = PQ3DModel(pq3d_stage1_path, pq3d_stage2_path, min_decision_num=decision_num_min)
 
-for scene_data_file in tqdm(scene_data_list, desc=f"*** Scene ***"):
+for scene_data_path in tqdm(scene_data_paths, desc=f"*** Scene ***"):
     ##########################
     # ADELAIDE: LOAD OUR DATA [same for different models]
     ##########################
+    scene_data_file = scene_data_path.name
     scene_name = scene_data_file.split(".")[0]  # 00800-TEEsavR23oF
-    with gzip.open(os.path.join(navigation_data_path, scene_data_file), 'rt', encoding='utf-8') as f:
+    with gzip.open(scene_data_path, 'rt', encoding='utf-8') as f:
         scene_data = json.load(f)
         region_to_annot_dict = scene_data['region_annotation']
         episode_mapping = {"object": scene_data['episodes_by_object_level'],
@@ -131,9 +182,9 @@ for scene_data_file in tqdm(scene_data_list, desc=f"*** Scene ***"):
             continue
 
         ''' get simulator '''
-        sim_settings = OmegaConf.load('configs/habitat/goat_sim_config.yaml')
-        goat_agent_setting = OmegaConf.load('configs/habitat/goat_agent_config.yaml')
-        sim_settings['scene'] = os.path.join(hm3d_data_base_path, scene_name, f"{scene_name.split('-')[-1]}.basis.glb")
+        sim_settings = OmegaConf.load(PROJECT_ROOT / 'configs/habitat/goat_sim_config.yaml')
+        goat_agent_setting = OmegaConf.load(PROJECT_ROOT / 'configs/habitat/goat_agent_config.yaml')
+        sim_settings['scene'] = scene_asset_paths[scene_name]
         abstract_sim = HabitatSimulator(sim_settings, goat_agent_setting)
         sim = abstract_sim.simulator
         agent = abstract_sim.agent
@@ -166,14 +217,21 @@ for scene_data_file in tqdm(scene_data_list, desc=f"*** Scene ***"):
                 sentence = f"{cur_task['object_category']} in the {cur_task['room_name'].lower()}"
                 goal_category = cur_task['object_category']
             elif task_type == 'region':
-                region_desc = region_to_annot_dict[cur_task['region_id']]['shortest_description'] if concise_description_tag \
-                    else region_to_annot_dict[cur_task['region_id']]['comprehensive_description']
+                region_info = region_to_annot_dict[cur_task['region_id']]
+                region_desc = (
+                    region_info.get('concise_description') or region_info.get('shortest_description', '')
+                ) if concise_description_tag else (
+                    region_info.get('detailed_description') or region_info.get('comprehensive_description', '')
+                )
                 sentence = (f"{cur_task['object_category']} in the {region_to_annot_dict[cur_task['region_id']]['region_category'].lower()} "
                             f"that has {region_desc}")
                 goal_category = cur_task['object_category']
             elif task_type == 'instance':
-                sentence = all_navigation_goals_dict[cur_task['instance_id']]['annot_unique_concise_description'] if concise_description_tag \
-                    else all_navigation_goals_dict[cur_task['instance_id']]['annot_unique_normal_description']
+                instance_info = all_navigation_goals_dict[cur_task['instance_id']]
+                sentence = instance_info['annot_unique_concise_description'] if concise_description_tag else (
+                    instance_info.get('annot_unique_detailed_description')
+                    or instance_info.get('annot_unique_normal_description', '')
+                )
                 goal_category = goals[0]['object_category']
             print(f"\n\nBegin to process [{'_'.join([scene_name, navigation_type, str(episode_id), str(idx)])}] type: [{task_type}], Question: [{sentence}]\n")
 

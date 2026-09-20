@@ -1,1 +1,0 @@
-{"target_context": 1.0, "anchor_context": 1.0, "room_context": 1.0, "negative": 0.0, "confidence": 0.99, "reason": "guided visualization selects the route waypoint"}
